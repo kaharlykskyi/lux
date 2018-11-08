@@ -5,6 +5,11 @@
     <!-- Content -->
     <div id="content">
 
+        <!-- Filter -->
+        @component('component.filter')
+
+        @endcomponent
+
         <!-- Shipping Info -->
         <section class="shipping-info">
             <div class="container">

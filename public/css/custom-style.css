@@ -20,3 +20,118 @@
     font-size: 80%;
     color: #dc3545;
 }
+
+.filter-section .nav-tabs li{
+    width: 33%;
+    background: #0a95da;
+    margin-right: 0.5%;
+    padding: 0;
+    border-radius: 15px 15px 0 0;
+}
+
+.filter-section .nav-tabs li:last-child{
+    margin-right: 0;
+}
+
+.filter-section .nav-tabs>li>a{
+    border-radius: 15px 15px 0 0;
+    margin-right: 0;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: -apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+
+.filter-section .nav-tabs>li.active>a,
+.filter-section .nav-tabs>li.active>a:hover{
+    border-top: 2px solid #0088cc;
+    border-left: 2px solid #0088cc;
+    border-right: 2px solid #0088cc;
+    margin-bottom: -1px;
+    color: #0088cc;
+}
+
+.filter-section .nav-tabs{
+    border-bottom: 2px solid #0088cc;
+}
+
+.filter-section .tab-content{
+    border-left: 2px solid #0088cc;
+    border-right: 2px solid #0088cc;
+    border-bottom: 2px solid #0088cc;
+    border-radius: 0 0 15px 15px;
+}
+
+
+.filter-section .nav-tabs>li>a:hover {
+     border-color: transparent transparent transparent;
+}
+
+.filter-section .btn-round{
+    padding: 10px;
+    border: none;
+    width: 100%;
+}
+
+.filter-section .form-control{
+    border-radius: 20px;
+    padding-left: 25px;
+    height: 40px;
+    border: 2px solid #ccc;
+}
+
+.filter-section .form-control:hover,
+.filter-section .form-control:focus{
+    border: 2px solid #0088cc;
+}
+
+.filter-section .link{
+    color: #0088cc;
+    font-weight: normal;
+    font-size: 16px;
+}
+
+.link.bold{
+    font-weight: bold;
+}
+
+.hover-tooltip.right{
+    position: absolute;
+    right: 20px;
+    top: 12px;
+}
+
+.filter-section .border-bottom{
+    border-bottom: 1px solid;
+}
+
+.hover-tooltip .fa{
+    color: #0088cc;
+    font-size: 16px;
+    margin-left: 5px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.filter-section .search-car__list{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+.filter-section .search-car__list li{
+    border: 2px solid #ccc;
+    padding: 10px 15px;
+    border-radius: 15px;
+    width: 150px;
+}
+
+.filter-section .search-car__list li span{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    text-align: center;
+}
