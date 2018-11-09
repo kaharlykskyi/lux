@@ -13,6 +13,24 @@
         @endcomponent
 
         <div class="container margin-top-20">
+            @if(!isset(Auth::user()->email_verified_at))
+                <div class="row padding-10">
+                    <div class="col-md-12">
+                        <div class="alert alert-danger" role="alert">
+                            <strong>{{ __('Електронный адрес не подтверждён!!! ') }}</strong>
+                            {{ __('Если вы не получили письмо') }},
+                            <a class="text-danger" href="{{ route('verification.resend') }}">
+                                <em>{{ __('нажмите здесь, чтобы запросить снова') }}</em>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            @if(session('status'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('status') }}
+                </div>
+            @endif
             <div class="row" id="tabs">
                 <div class="col-md-3">
                     <div class="panel panel-primary">
@@ -27,7 +45,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-9 tab-item active" id="tabs-0">
+                <div class="col-md-9 tab-item active">
                     <div class="panel panel-primary">
                         <div class="panel-heading">Личный кабинет</div>
                         <div class="panel-body panel-profile">
@@ -86,7 +104,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">Личные данные</div>
                         <div class="panel-body panel-profile">
-                            <form type="POST" action="{{route('change_user_info')}}">
+                            <form type="POST" class="ajax-form ajax2" action="{{route('change_user_info')}}">
                                 @csrf
                                 <ul class="row login-sec">
                                     <li class="col-sm-12">
@@ -106,6 +124,13 @@
                                     </li>
                                     <li class="col-sm-12">
                                         <label>{{__('Адрес електронной почты')}}
+                                            @if(isset(Auth::user()->email_verified_at))
+                                                <i class="fa fa-check text-success" aria-hidden="true" title="Подтверждён"></i>
+                                            @else
+                                                <a class="text-danger" href="{{ route('verification.resend') }}">
+                                                    <i class="fa fa-times" aria-hidden="true" title="Не подтверждён"></i>
+                                                </a>
+                                            @endif
                                             <input type="email" class="form-control" name="email" value="{{ Auth::user()->email }}" required>
                                         </label>
                                     </li>
@@ -116,12 +141,12 @@
                                     </li>
                                     <li class="col-sm-12">
                                         <label>{{__('Страна')}}
-                                            <input id="country" oninput="getCountry($(this))" type="text" class="form-control{{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" value="{{ $user_country->name }}" required>
+                                            <input id="country" oninput="getCountry($(this))" type="text" class="form-control" name="country" value="{{ Auth::user()->country }}" required>
                                         </label>
                                     </li>
                                     <li class="col-sm-12">
                                         <label>{{__('Город')}}
-                                            <input id="city" oninput="getCity($(this))" type="text" class="form-control{{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" value="{{ $city->name }}" required>
+                                            <input id="city" oninput="getCity($(this))" type="text" class="form-control" name="city" value="{{ Auth::user()->city }}" required>
                                         </label>
                                     </li>
                                     <li class="col-sm-12">
@@ -429,6 +454,49 @@
                 });
             });
         });
+
+        const  getCountry = (obj) => {
+            let word = $(obj).val();
+            $( "#country" ).autocomplete({
+                source: (request, response) => {
+                    $.ajax({
+                        url: `http://geohelper.info/api/v1/countries?locale%5Blang%5D=ru&locale%5BfallbackLang%5D=en&filter[name]=${word}&apiKey={{config('app.geo_key')}}`,
+                        type: 'GET',
+                        success: (data) => {
+                            response($.map(data.result, (item) => {
+                                return{
+                                    value: item.name + ` (${item.iso}/${item.iso3})`,
+                                }
+                            }));
+                        }
+                    });
+                },
+                minLength: 3
+            });
+        };
+
+        const getCity = (obj) => {
+            let word = $(obj).val();
+            let iso =  $( "#country" ).val();
+            iso = iso.split(' ',2);
+            iso = iso[1].substring(1, iso[1].length-1).split('/',2);
+            $( "#city" ).autocomplete({
+                source: (request, response) => {
+                    $.ajax({
+                        url: `http://geohelper.info/api/v1/cities?locale%5Blang%5D=ru&locale%5BfallbackLang%5D=en&filter[name]=${word}&filter[countryIso]=${iso[0].toLowerCase()}&apiKey={{config('app.geo_key')}}`,
+                        type: 'GET',
+                        success: (data) => {
+                            response($.map(data.result, (item) => {
+                                return{
+                                    value: item.name,
+                                }
+                            }));
+                        }
+                    });
+                },
+                minLength: 3
+            });
+        }
     </script>
 
 @endsection

@@ -20,18 +20,17 @@ class CreateUsersTable extends Migration
             $table->string('last_name');
             $table->string('email')->unique();
             $table->string('phone');
-            $table->unsignedInteger('country')->nullable();
-            $table->unsignedInteger('city')->nullable();
+            $table->string('country')->nullable();
+            $table->string('city')->nullable();
             $table->unsignedInteger('role')->nullable();
             $table->string('logo')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('permission',['admin','manager','user']);
             $table->rememberToken();
             $table->timestamps();
 
             $table->foreign('role')->references('id')->on('roles')->onDelete('SET NULL');
-            $table->foreign('country')->references('id')->on('country')->onDelete('SET NULL');
-            $table->foreign('city')->references('id')->on('city')->onDelete('SET NULL');
         });
     }
 

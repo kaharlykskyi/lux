@@ -132,8 +132,6 @@
                 </div>
             </div>
             <script>
-                let isoCountry = null;
-
                 const  getCountry = (obj) => {
                     let word = $(obj).val();
                     $( "#country" ).autocomplete({

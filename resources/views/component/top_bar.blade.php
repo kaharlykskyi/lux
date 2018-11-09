@@ -20,6 +20,9 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
+                                <a href="{{route('profile')}}">{{__('Профиль')}}</a>
+                            </li>
+                            <li>
                                 <a href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -29,9 +32,6 @@
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     @csrf
                                 </form>
-                            </li>
-                            <li>
-                                <a href="{{route('profile')}}">{{__('Профиль')}}</a>
                             </li>
                         </ul>
                     </li>

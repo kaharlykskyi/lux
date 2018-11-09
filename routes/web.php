@@ -20,5 +20,5 @@ Route::prefix('profile')->middleware(['auth'])->group(function () {
     Route::get('/', 'ProfileController@index')->name('profile');
     Route::post('/add-car', 'ProfileController@addCar')->name('add_car');
     Route::post('/change-password', 'ProfileController@changePassword')->name('change_password');
-    Route::post('/change-user-info', 'ProfileController@changePassword')->name('change_user_info');
+    Route::post('/change-user-info', 'ProfileController@changeUserInfo')->name('change_user_info');
 });
