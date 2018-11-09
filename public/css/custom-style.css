@@ -41,6 +41,10 @@ body .panel-primary>.panel-heading{
     background-color: transparent;
 }
 
+.panel>.panel-collapse>.list-group .list-group-item{
+    cursor: pointer;
+}
+
 /*----END GLOBAL VAR-----*/
 
 

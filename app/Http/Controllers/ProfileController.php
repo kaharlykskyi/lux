@@ -13,8 +13,10 @@ class ProfileController extends Controller
     public function index(){
         $roles = DB::table('roles')->get();
         $user_cars = DB::table('user_cars')->where('user_id', Auth::user()->id)->get();
+        $delivery_info = DB::table('delivery_info')->where('user_id', Auth::user()->id)->first();
+        $oders = DB::table('payments')->where('user_id', Auth::user()->id)->get();
 
-        return view('profile.index',compact('roles','user_cars'));
+        return view('profile.index',compact('roles','user_cars','delivery_info','oders'));
     }
 
     public function addCar(Request $request){
@@ -105,7 +107,33 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function shopInfo(Request $request){
+    public function deliveryInfo(Request $request){
+        $data = $request->except('_token');
+        $delivery_info = DB::table('delivery_info')->where('user_id', Auth::user()->id)->first();
 
+        if($delivery_info->delivery_country !== $data['delivery_country']){
+            $country = $this->parseCountry($data['delivery_country']);
+            $data['delivery_country'] = $country->name;
+            $city = $this->parseCity($data['delivery_city'],$country->id);
+            $data['delivery_city'] = $city->name;
+        } else {
+            if($delivery_info->delivery_city !== $data['delivery_city']){
+                $country = DB::table('country')->where('name', Auth::user()->country)->first();
+                $city = $this->parseCity($data['delivery_city'],$country->id);
+                $data['delivery_city'] = $city->name;
+            }
+        }
+
+
+        if(DB::table('delivery_info')->where('user_id',Auth::user()->id)->exists()){
+            DB::table('delivery_info')->where('user_id',Auth::user()->id)->update($data);
+        } else {
+            $data['user_id'] = Auth::user()->id;
+            DB::table('delivery_info')->insert($data);
+        }
+
+        return response()->json([
+            'response' => 'Данные сохранены'
+        ]);
     }
 }

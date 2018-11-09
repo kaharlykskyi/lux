@@ -146,7 +146,7 @@
                                     </li>
                                     <li class="col-sm-12">
                                         <label>{{__('Город')}}
-                                            <input id="city" oninput="getCity($(this))" type="text" class="form-control" name="city" value="{{ Auth::user()->city }}" required>
+                                            <input id="city" oninput="getCity($(this),'country')" type="text" class="form-control" name="city" value="{{ Auth::user()->city }}" required>
                                         </label>
                                     </li>
                                     <li class="col-sm-12">
@@ -173,7 +173,13 @@
                         <div class="panel-heading">Мои заказы</div>
                         <div class="panel-body panel-profile">
                             <div class="row login-sec">
+                                @forelse($oders as $oder)
 
+                                @empty
+                                    <div class="alert alert-info margin-15" role="alert">
+                                        Похоже вы еще не делали заказы, <strong>начните прямо сейчас</strong>
+                                    </div>
+                                @endforelse
                             </div>
                         </div>
                     </div>
@@ -182,19 +188,38 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">Информация о доставке</div>
                         <div class="panel-body panel-profile">
-                            <form>
+                            <form type="POST" action="{{route('change_delivery_info')}}" class="ajax-form ajax2">
                                 @csrf
                                 <ul class="row login-sec">
-{{--                                    <li class="col-sm-12">
-                                        <label>{{ __('Имя') }}
-                                            <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ Auth::user()->name }}" required autofocus>
+                                    <li class="col-sm-12">
+                                        <label>{{__('Страна')}}
+                                            <input id="delivery_country" oninput="getCountry($(this))" type="text" class="form-control" name="delivery_country" value="@isset($delivery_info){{ $delivery_info->delivery_country }}@endisset" >
                                         </label>
-                                        @if ($errors->has('name'))
-                                            <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('name') }}</strong>
-                                        </span>
-                                        @endif
-                                    </li>--}}
+                                    </li>
+                                    <li class="col-sm-12">
+                                        <label>{{__('Город')}}
+                                            <input id="delivery_city" oninput="getCity($(this),'delivery_country')" type="text" class="form-control" name="delivery_city" value="@isset($delivery_info){{ $delivery_info->delivery_city }}@endisset" >
+                                        </label>
+                                    </li>
+
+                                    <li class="col-sm-12">
+                                        <label>{{ __('Улица') }}
+                                            <input type="text" class="form-control" name="street" value="@isset($delivery_info){{ $delivery_info->street }}@endisset">
+                                        </label>
+                                    </li>
+
+                                    <li class="col-sm-12">
+                                        <label>{{ __('Дом') }}
+                                            <input type="text" class="form-control" name="house" value="@isset($delivery_info){{ $delivery_info->house }}@endisset">
+                                        </label>
+                                    </li>
+
+                                    <li class="col-sm-12">
+                                        <label>{{ __('Контактный телефон') }}
+                                            <input type="text" class="form-control" name="phone" value="@isset($delivery_info){{ $delivery_info->phone }}@endisset">
+                                        </label>
+                                    </li>
+
                                     <li class="col-sm-12 text-left">
                                         <button type="submit" class="btn-round">{{__('Сохранить')}}</button>
                                     </li>
@@ -457,7 +482,7 @@
 
         const  getCountry = (obj) => {
             let word = $(obj).val();
-            $( "#country" ).autocomplete({
+            $( "#country,#delivery_country" ).autocomplete({
                 source: (request, response) => {
                     $.ajax({
                         url: `http://geohelper.info/api/v1/countries?locale%5Blang%5D=ru&locale%5BfallbackLang%5D=en&filter[name]=${word}&apiKey={{config('app.geo_key')}}`,
@@ -475,12 +500,12 @@
             });
         };
 
-        const getCity = (obj) => {
+        const getCity = (obj,id_country) => {
             let word = $(obj).val();
-            let iso =  $( "#country" ).val();
+            let iso =  $( "#" + id_country ).val();
             iso = iso.split(' ',2);
             iso = iso[1].substring(1, iso[1].length-1).split('/',2);
-            $( "#city" ).autocomplete({
+            $( "#city,#delivery_city" ).autocomplete({
                 source: (request, response) => {
                     $.ajax({
                         url: `http://geohelper.info/api/v1/cities?locale%5Blang%5D=ru&locale%5BfallbackLang%5D=en&filter[name]=${word}&filter[countryIso]=${iso[0].toLowerCase()}&apiKey={{config('app.geo_key')}}`,
