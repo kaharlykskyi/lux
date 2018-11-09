@@ -14,7 +14,7 @@
                         @endif
                     </li>
                 @else
-                    <li class="btn-group">
+                    <li class="btn-group dropdown-list">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             {{ Auth::user()->name }} <span class="caret"></span>
                         </a>
@@ -29,6 +29,9 @@
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     @csrf
                                 </form>
+                            </li>
+                            <li>
+                                <a href="{{route('profile')}}">{{__('Профиль')}}</a>
                             </li>
                         </ul>
                     </li>
