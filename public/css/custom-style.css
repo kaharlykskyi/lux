@@ -260,6 +260,18 @@ body .panel-primary>.panel-heading{
     content: "\f1b9";
 }
 
+.profile-item-retweet > a:first-child:before  {
+    content: "\f079";
+}
+
+.profile-item-truck > a:first-child:before  {
+    content: "\f0d1";
+}
+
+.profile-item-money > a:first-child:before  {
+    content: "\f0d6";
+}
+
 .block {
     display:block;
 }

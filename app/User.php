@@ -27,4 +27,16 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function cars(){
+        return $this->hasMany('App\UserCar');
+    }
+
+    public function deliveryInfo(){
+        return $this->hasOne('App\DeliveryInfo');
+    }
+
+    public function orders(){
+        return $this->hasMany('App\Order');
+    }
 }

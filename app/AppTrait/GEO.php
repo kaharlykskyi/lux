@@ -16,7 +16,7 @@ trait GEO
     public function parseCountry($country){
         $buff = explode(' ',$country,2);
         $country_name = $buff[0];
-        $buff = explode('/',str_replace(['(',')'],'',$buff[1]));
+        $buff = isset($buff[1]) ? explode('/',str_replace(['(',')'],'',$buff[1])) : null;
         $iso = isset($buff[0])?$buff[0]:null;
         $iso3 = isset($buff[1])?$buff[1]:null;
         $flag = isset($iso)? "https://www.countryflags.io/{$iso}/flat/64.png":null;

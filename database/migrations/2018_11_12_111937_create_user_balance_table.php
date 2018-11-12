@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDeliveryInfoTable extends Migration
+class CreateUserBalanceTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,10 @@ class CreateDeliveryInfoTable extends Migration
      */
     public function up()
     {
-        Schema::create('delivery_info', function (Blueprint $table) {
+        Schema::create('user_balance', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->string('delivery_country')->nullable();
-            $table->string('delivery_city')->nullable();
-            $table->string('street')->nullable();
-            $table->string('house')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('delivery_service')->nullable();
-            $table->string('delivery_department')->nullable();
+            $table->decimal('balance',8,2);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');
@@ -36,6 +30,6 @@ class CreateDeliveryInfoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('delivery_info');
+        Schema::dropIfExists('user_balance');
     }
 }

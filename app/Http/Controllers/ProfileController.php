@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\{AppTrait\GEO, User, UserCar};
+use App\{AppTrait\GEO, DeliveryInfo, User, UserCar, UserDelivery};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Auth,DB,Hash,Validator};
 
@@ -12,11 +12,12 @@ class ProfileController extends Controller
 
     public function index(){
         $roles = DB::table('roles')->get();
-        $user_cars = DB::table('user_cars')->where('user_id', Auth::user()->id)->get();
-        $delivery_info = DB::table('delivery_info')->where('user_id', Auth::user()->id)->first();
-        $oders = DB::table('payments')->where('user_id', Auth::user()->id)->get();
+        $user = User::find(Auth::user()->id);
+        $user_cars = $user->cars;
+        $delivery_info = $user->deliveryInfo;
+        $orders = $user->orders;
 
-        return view('profile.index',compact('roles','user_cars','delivery_info','oders'));
+        return view('profile.index',compact('roles','user_cars','delivery_info','orders'));
     }
 
     public function addCar(Request $request){
@@ -109,31 +110,43 @@ class ProfileController extends Controller
 
     public function deliveryInfo(Request $request){
         $data = $request->except('_token');
-        $delivery_info = DB::table('delivery_info')->where('user_id', Auth::user()->id)->first();
 
-        if($delivery_info->delivery_country !== $data['delivery_country']){
+        if(DB::table('delivery_info')->where('user_id',Auth::user()->id)->exists()){
+            $delivery_info = DB::table('delivery_info')->where('user_id', Auth::user()->id)->first();
+
+            if($delivery_info->delivery_country !== $data['delivery_country']){
+                $country = $this->parseCountry($data['delivery_country']);
+                $data['delivery_country'] = $country->name;
+                $city = $this->parseCity($data['delivery_city'],$country->id);
+                $data['delivery_city'] = $city->name;
+            } else {
+                if($delivery_info->delivery_city !== $data['delivery_city']){
+                    $country = DB::table('country')->where('name', Auth::user()->country)->first();
+                    $city = $this->parseCity($data['delivery_city'],$country->id);
+                    $data['delivery_city'] = $city->name;
+                }
+            }
+
+           DeliveryInfo::where('user_id',Auth::user()->id)->update($data);
+        } else {
             $country = $this->parseCountry($data['delivery_country']);
             $data['delivery_country'] = $country->name;
             $city = $this->parseCity($data['delivery_city'],$country->id);
             $data['delivery_city'] = $city->name;
-        } else {
-            if($delivery_info->delivery_city !== $data['delivery_city']){
-                $country = DB::table('country')->where('name', Auth::user()->country)->first();
-                $city = $this->parseCity($data['delivery_city'],$country->id);
-                $data['delivery_city'] = $city->name;
-            }
-        }
-
-
-        if(DB::table('delivery_info')->where('user_id',Auth::user()->id)->exists()){
-            DB::table('delivery_info')->where('user_id',Auth::user()->id)->update($data);
-        } else {
             $data['user_id'] = Auth::user()->id;
-            DB::table('delivery_info')->insert($data);
+
+            $delivery_info = new DeliveryInfo();
+            $delivery_info->fill($data);
+            if(!$delivery_info->save($data)){
+                return response()->json([
+                    'response' => 'Ошибка, попробуйте ещё'
+                ]);
+            }
         }
 
         return response()->json([
             'response' => 'Данные сохранены'
         ]);
     }
+
 }

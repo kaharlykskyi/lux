@@ -36,34 +36,36 @@
                     <div class="panel panel-primary">
                         <div class="panel-collapse">
                             <ul class="list-group list-unstyled">
-                                <li id="nav-tabs-1" data-id-href="tabs-1" class="list-group-item">Личные даннные</li>
-                                <li id="nav-tabs-3" data-id-href="tabs-3" class="list-group-item">Информация о доставке</li>
-                                <li id="nav-tabs-2" data-id-href="tabs-2" class="list-group-item">Заказы</li>
-                                <li id="nav-tabs-4" data-id-href="tabs-4" class="list-group-item">Мои автомобили</li>
-                                <li id="nav-tabs-5" data-id-href="tabs-5" class="list-group-item">Смена пароля</li>
+                                <li id="nav-tabs-1" data-id-href="tabs-1" class="list-group-item">{{__('Личные даннные')}}</li>
+                                <li id="nav-tabs-3" data-id-href="tabs-3" class="list-group-item">{{__('Информация о доставке')}}</li>
+                                <li id="nav-tabs-2" data-id-href="tabs-2" class="list-group-item">{{__('Заказы')}}</li>
+                                <li id="nav-tabs-4" data-id-href="tabs-4" class="list-group-item">{{__('Мои автомобили')}}</li>
+                                <li id="nav-tabs-5" data-id-href="tabs-5" class="list-group-item">{{__('Смена пароля')}}</li>
+                                <li id="nav-tabs-6" data-id-href="tabs-6" class="list-group-item">{{__('Мои возвраты')}}</li>
+                                <li id="nav-tabs-7" data-id-href="tabs-7" class="list-group-item">{{__('Баланс')}}</li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-9 tab-item active">
                     <div class="panel panel-primary">
-                        <div class="panel-heading">Личный кабинет</div>
+                        <div class="panel-heading">{{__('Личный кабинет')}}</div>
                         <div class="panel-body panel-profile">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="profile-item profile-item-user">
                                         <a class="link-prof-item" data-id-href="tabs-1" href="#">
-                                            <span>Личные данные</span>
+                                            <span>{{__('Личные данные')}}</span>
                                         </a>
-                                        <small>В этом разделе вы можете изменить свои личные данные.</small>
+                                        <small>{{__('В этом разделе вы можете изменить свои личные данные.')}}</small>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="profile-item profile-item-delivery">
                                         <a class="link-prof-item" data-id-href="tabs-3" href="#">
-                                            <span>Информация о доставке</span>
+                                            <span>{{__('Информация о доставке')}}</span>
                                         </a>
-                                        <small>В этом разделе вы можете изменить данные доставки.</small>
+                                        <small>{{__('В этом разделе вы можете изменить данные доставки.')}}</small>
                                     </div>
                                 </div>
                             </div>
@@ -71,17 +73,17 @@
                                 <div class="col-md-6">
                                     <div class="profile-item profile-item-orders">
                                         <a class="link-prof-item" data-id-href="tabs-2" href="#">
-                                            <span>Заказы</span>
+                                            <span>{{__('Заказы')}}</span>
                                         </a>
-                                        <small>Информация о всех ваших заказах: номера, даты, состав заказов и их статусы.</small>
+                                        <small>{{__('Информация о всех ваших заказах: номера, даты, состав заказов и их статусы.')}}</small>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="profile-item profile-item-car">
                                         <a class="link-prof-item" data-id-href="tabs-4" href="#">
-                                            <span>Мои автомобили</span>
+                                            <span>{{__('Мои автомобили')}}</span>
                                         </a>
-                                        <small>Здесь можно добавить свой автомобиль.</small>
+                                        <small>{{__('Здесь можно добавить свой автомобиль.')}}</small>
                                     </div>
                                 </div>
                             </div>
@@ -89,20 +91,37 @@
                                 <div class="col-md-6">
                                     <div class="profile-item profile-item-pwd">
                                         <a class="link-prof-item" data-id-href="tabs-5" href="#">
-                                            <span>Смена пароля</span>
+                                            <span>{{__('Смена пароля')}}</span>
                                         </a>
-                                        <small>Здесь вы можете сменить свои данные для доступа в личный кабинет.</small>
+                                        <small>{{__('Здесь вы можете сменить свои данные для доступа в личный кабинет.')}}</small>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
+                                    <div class="profile-item profile-item-retweet">
+                                        <a class="link-prof-item" data-id-href="tabs-6" href="#">
+                                            <span>{{__('Мои возвраты')}}</span>
+                                        </a>
+                                        <small>{{__('Здесь вы можете просмотреть заказы которые были поданны на возврат.')}}</small>
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="profile-item profile-item-money">
+                                        <a class="link-prof-item" data-id-href="tabs-7" href="#">
+                                            <span>{{__('Баланс')}}</span>
+                                        </a>
+                                        <small>{{__('Здесь вы можете просмотреть баланс и историю пополнений.')}}</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6"></div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-9 tab-item" id="tabs-1">
                     <div class="panel panel-primary">
-                        <div class="panel-heading">Личные данные</div>
+                        <div class="panel-heading">{{__('Личные данные')}}</div>
                         <div class="panel-body panel-profile">
                             <form type="POST" class="ajax-form ajax2" action="{{route('change_user_info')}}">
                                 @csrf
@@ -170,10 +189,10 @@
                 </div>
                 <div class="col-md-9 tab-item" id="tabs-2">
                     <div class="panel panel-primary">
-                        <div class="panel-heading">Мои заказы</div>
+                        <div class="panel-heading">{{__('Мои заказы')}}</div>
                         <div class="panel-body panel-profile">
                             <div class="row login-sec">
-                                @forelse($oders as $oder)
+                                @forelse($orders as $order)
 
                                 @empty
                                     <div class="alert alert-info margin-15" role="alert">
@@ -186,7 +205,7 @@
                 </div>
                 <div class="col-md-9 tab-item" id="tabs-3">
                     <div class="panel panel-primary">
-                        <div class="panel-heading">Информация о доставке</div>
+                        <div class="panel-heading">{{__('Информация о доставке')}}</div>
                         <div class="panel-body panel-profile">
                             <form type="POST" action="{{route('change_delivery_info')}}" class="ajax-form ajax2">
                                 @csrf
@@ -220,6 +239,20 @@
                                         </label>
                                     </li>
 
+                                    <li class="col-sm-12">
+                                        <label>{{__('Служба доставки')}}
+                                            <select class="form-control" name="delivery_service" >
+                                                <option @isset($delivery_info) @if($delivery_info->delivery_service === 'Новая Почта') selected @endif @endisset value="{{__('Новая Почта')}}">{{__('Новая Почта')}}</option>
+                                            </select>
+                                        </label>
+                                    </li>
+
+                                    <li class="col-sm-12">
+                                        <label>{{ __('Номер отделения') }}
+                                            <input type="text" class="form-control" name="delivery_department" value="@isset($delivery_info){{ $delivery_info->delivery_department }}@endisset">
+                                        </label>
+                                    </li>
+
                                     <li class="col-sm-12 text-left">
                                         <button type="submit" class="btn-round">{{__('Сохранить')}}</button>
                                     </li>
@@ -230,7 +263,7 @@
                 </div>
                 <div class="col-md-9 tab-item" id="tabs-4">
                     <div class="panel panel-primary">
-                        <div class="panel-heading">Мои автомобили</div>
+                        <div class="panel-heading">{{__('Мои автомобили')}}</div>
                         <div class="panel-body panel-profile">
                             <div class="row login-sec">
                                 <div class="col-sm-12 text-right">
@@ -258,7 +291,7 @@
                 </div>
                 <div class="col-md-9 tab-item" id="tabs-5">
                     <div class="panel panel-primary">
-                        <div class="panel-heading">Смена пароля</div>
+                        <div class="panel-heading">{{__('Смена пароля')}}</div>
                         <div class="panel-body panel-profile">
                             <form class="ajax-form ajax2" type="POST" action="{{route('change_password')}}">
                                 @csrf
@@ -273,6 +306,50 @@
                                     </li>
                                 </ul>
                             </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9 tab-item" id="tabs-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">{{__('Мои возвраты')}}</div>
+                        <div class="panel-body panel-profile">
+                            <div class="alert alert-info margin-15" role="alert">
+                                Возвратов нету
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9 tab-item" id="tabs-7">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">{{__('Баланс')}}</div>
+                        <div class="panel-body panel-profile">
+                            <div class="col-sm-12">
+                                <ul class="row login-sec">
+                                    <li class="col-sm-6">
+                                        <p class="h4">Баланс: <strong>0.00</strong> грн</p>
+                                    </li>
+                                    <li class="col-sm-6 text-right">
+                                        <button type="button" class="btn-round">{{__('Пополнить баланс')}}</button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <table class="table">
+                                    <caption>{{__('История пополнений')}}</caption>
+                                    <thead>
+                                        <tr>
+                                            <th>Дата</th>
+                                            <th>Сумма</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>4324</td>
+                                            <td>23.06.18</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

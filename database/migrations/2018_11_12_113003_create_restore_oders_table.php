@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDeliveryInfoTable extends Migration
+class CreateRestoreOdersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,14 @@ class CreateDeliveryInfoTable extends Migration
      */
     public function up()
     {
-        Schema::create('delivery_info', function (Blueprint $table) {
+        Schema::create('restore_oders', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->string('delivery_country')->nullable();
-            $table->string('delivery_city')->nullable();
-            $table->string('street')->nullable();
-            $table->string('house')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('delivery_service')->nullable();
-            $table->string('delivery_department')->nullable();
+            $table->unsignedInteger('payments_id');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');
+            $table->foreign('payments_id')->references('id')->on('payments')->onDelete('CASCADE');
         });
     }
 
@@ -36,6 +31,6 @@ class CreateDeliveryInfoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('delivery_info');
+        Schema::dropIfExists('restore_oders');
     }
 }
