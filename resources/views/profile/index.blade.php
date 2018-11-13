@@ -167,13 +167,15 @@
                                         </label>
                                     </li>
                                     <li class="col-sm-12">
-                                        <label>{{__('Страна')}}
-                                            <input id="country" oninput="getCountry($(this))" type="text" class="form-control" name="country" value="{{ Auth::user()->country }}" required>
+                                        <label class="relative country">{{__('Страна')}}
+                                            <input id="country" oninput="getCountry($(this))" type="text" class="form-control" name="country" value="{{ Auth::user()->country }}" required autocomplete="off">
+                                            <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
                                         </label>
                                     </li>
                                     <li class="col-sm-12">
-                                        <label>{{__('Город')}}
-                                            <input id="city" oninput="getCity($(this),'country')" type="text" class="form-control" name="city" value="{{ Auth::user()->city }}" required>
+                                        <label class="relative city">{{__('Город')}}
+                                            <input id="city" oninput="getCity($(this),'country')" type="text" class="form-control" name="city" value="{{ Auth::user()->city }}" required autocomplete="off">
+                                            <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
                                         </label>
                                     </li>
                                     <li class="col-sm-12">
@@ -219,13 +221,15 @@
                                 @csrf
                                 <ul class="row login-sec">
                                     <li class="col-sm-12">
-                                        <label>{{__('Страна')}}
-                                            <input id="delivery_country" oninput="getCountry($(this))" type="text" class="form-control" name="delivery_country" value="@isset($delivery_info){{ $delivery_info->delivery_country }}@endisset" >
+                                        <label class="relative country">{{__('Страна')}}
+                                            <input id="delivery_country" oninput="getCountry($(this))" type="text" class="form-control" name="delivery_country" value="@isset($delivery_info){{ $delivery_info->delivery_country }}@endisset" autocomplete="off">
+                                            <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
                                         </label>
                                     </li>
                                     <li class="col-sm-12">
-                                        <label>{{__('Город')}}
-                                            <input id="delivery_city" oninput="getCity($(this),'delivery_country')" type="text" class="form-control" name="delivery_city" value="@isset($delivery_info){{ $delivery_info->delivery_city }}@endisset" >
+                                        <label class="relative city">{{__('Город')}}
+                                            <input id="delivery_city" oninput="getCity($(this),'delivery_country')" type="text" class="form-control" name="delivery_city" value="@isset($delivery_info){{ $delivery_info->delivery_city }}@endisset" autocomplete="off">
+                                            <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
                                         </label>
                                     </li>
 
@@ -370,21 +374,20 @@
                                     <table class="table table-bordered table-hover" id="creaking_account">
                                         <thead>
                                             <tr>
+                                                <th></th>
                                                 <th>Дата</th>
-                                                <th>Вид действия</th>
-                                                <th>Идентификатор</th>
-                                                <th>Описание</th>
-                                                <th>Сумма</th>
-                                                <th>НДС</th>
-                                                <th>Дата</th>
+                                                <th>Документ</th>
+                                                <th>Валюта</th>
+                                                <th>Приход</th>
+                                                <th>Расход</th>
+                                                <th>Остаток</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>23.06.18</td>
-                                                <td>Оплата</td>
-                                                <td class="relative identification-wrapper">
-                                                    KV03458HD
+                                                <td class="identification-wrapper">
+                                                    <i class="fa fa-plus-square-o" style="cursor: pointer" aria-hidden="true"></i>
                                                     <div class="identification-info">
                                                         <div class="table-responsive">
                                                             <table class="table table-bordered">
@@ -414,88 +417,13 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td >Заказ SP32454623</td>
-                                                <td>-2000</td>
-                                                <td>00.00</td>
-                                                <td>23.05.18</td>
-                                            </tr>
-                                            <tr>
                                                 <td>23.06.18</td>
-                                                <td>Оплата</td>
-                                                <td class="relative identification-wrapper">
-                                                    KV03458HD
-                                                    <div class="identification-info">
-                                                        <div class="table-responsive">
-                                                            <table class="table table-bordered">
-                                                                <thead>
-                                                                <tr>
-                                                                    <th>Дата</th>
-                                                                    <th>Вид действия</th>
-                                                                    <th>Идентификатор</th>
-                                                                    <th>Описание</th>
-                                                                    <th>Сумма</th>
-                                                                    <th>НДС</th>
-                                                                    <th>Дата</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                <tr>
-                                                                    <td>23.06.18</td>
-                                                                    <td>Оплата</td>
-                                                                    <td>Оплата</td>
-                                                                    <td >Заказ SP32454623</td>
-                                                                    <td>-2000</td>
-                                                                    <td>00.00</td>
-                                                                    <td>23.05.18</td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td >Заказ SP32454623</td>
-                                                <td>-2000</td>
-                                                <td>00.00</td>
-                                                <td>23.05.18</td>
-                                            </tr>
-                                            <tr>
-                                                <td>23.06.18</td>
-                                                <td>Оплата</td>
-                                                <td class="relative identification-wrapper">
-                                                    KV03458HD
-                                                    <div class="identification-info">
-                                                        <div class="table-responsive">
-                                                            <table class="table table-bordered">
-                                                                <thead>
-                                                                <tr>
-                                                                    <th>Дата</th>
-                                                                    <th>Вид действия</th>
-                                                                    <th>Идентификатор</th>
-                                                                    <th>Описание</th>
-                                                                    <th>Сумма</th>
-                                                                    <th>НДС</th>
-                                                                    <th>Дата</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                <tr>
-                                                                    <td>23.06.18</td>
-                                                                    <td>Оплата</td>
-                                                                    <td>Оплата</td>
-                                                                    <td >Заказ SP32454623</td>
-                                                                    <td>-2000</td>
-                                                                    <td>00.00</td>
-                                                                    <td>23.05.18</td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td >Заказ SP32454623</td>
-                                                <td>-2000</td>
-                                                <td>00.00</td>
-                                                <td>23.05.18</td>
+                                                <td>Расходная накладная №3245656</td>
+                                                <td>USD</td>
+                                                <td >354</td>
+                                                <td></td>
+                                                <td>0.00</td>
+                                                <td></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -650,6 +578,28 @@
 
     <script>
         $(document).ready(function () {
+
+            $(function($){
+                $(document).mouseup(function (e){
+                    const div = $(".identification-info");
+                    if (!div.is(e.target)
+                        && div.has(e.target).length === 0) {
+                        div.hide();
+                    }
+                });
+            });
+
+            $('.identification-wrapper i').click(function (evt) {
+                $('.identification-info').css({display: 'none'});
+                if ($(this).is(evt.target)){
+                    const y = evt.pageY - $('#creaking_account').offset().top;
+                    $(this).siblings().css({
+                        display: 'block',
+                        top: y
+                    });
+                }
+            });
+
             $('.list-group-item, a.link-prof-item').click(function (e) {
                 e.preventDefault();
                 $('.tab-item').removeClass('active');
@@ -705,21 +655,13 @@
                     }
                 });
             });
-
-            $('.identification-wrapper').click(function (evt) {
-                $('.identification-info').css({display: 'none'});
-                const y = evt.pageY - $('#creaking_account').offset().top;
-                $(this).find('.identification-info').css({
-                    display: 'block',
-                    top: y
-                });
-            });
         });
 
         const  getCountry = (obj) => {
             let word = $(obj).val();
             $( "#country,#delivery_country" ).autocomplete({
                 source: (request, response) => {
+                    $('.country .loader').css({display: 'inline-block'});
                     $.ajax({
                         url: `http://geohelper.info/api/v1/countries?locale%5Blang%5D=ru&locale%5BfallbackLang%5D=en&filter[name]=${word}&apiKey={{config('app.geo_key')}}`,
                         type: 'GET',
@@ -729,10 +671,11 @@
                                     value: item.name + ` (${item.iso}/${item.iso3})`,
                                 }
                             }));
+                            $('.country .loader').css({display: 'none'});
                         }
                     });
                 },
-                minLength: 3
+                minLength: 1
             });
         };
 
@@ -743,6 +686,7 @@
             iso = iso[1].substring(1, iso[1].length-1).split('/',2);
             $( "#city,#delivery_city" ).autocomplete({
                 source: (request, response) => {
+                    $('.city .loader').css({display: 'inline-block'});
                     $.ajax({
                         url: `http://geohelper.info/api/v1/cities?locale%5Blang%5D=ru&locale%5BfallbackLang%5D=en&filter[name]=${word}&filter[countryIso]=${iso[0].toLowerCase()}&apiKey={{config('app.geo_key')}}`,
                         type: 'GET',
@@ -752,10 +696,11 @@
                                     value: item.name,
                                 }
                             }));
+                            $('.city .loader').css({display: 'none'});
                         }
                     });
                 },
-                minLength: 3
+                minLength: 1
             });
         }
     </script>

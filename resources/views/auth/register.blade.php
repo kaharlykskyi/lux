@@ -73,8 +73,9 @@
                                     @endif
                                 </li>
                                 <li class="col-sm-12">
-                                    <label>{{__('Страна')}}
-                                        <input id="country" oninput="getCountry($(this))" type="text" class="form-control{{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" value="{{ old('country') }}" required>
+                                    <label class="relative country">{{__('Страна')}}
+                                        <input id="country" oninput="getCountry($(this))" type="text" class="form-control{{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" value="{{ old('country') }}" required autocomplete="off">
+                                        <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
                                     </label>
                                     @if ($errors->has('country'))
                                         <span class="invalid-feedback">
@@ -83,8 +84,9 @@
                                     @endif
                                 </li>
                                 <li class="col-sm-12">
-                                    <label>{{__('Город')}}
-                                        <input id="city" oninput="getCity($(this))" type="text" class="form-control{{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" value="{{ old('city') }}" required>
+                                    <label class="relative city">{{__('Город')}}
+                                        <input id="city" oninput="getCity($(this))" type="text" class="form-control{{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" value="{{ old('city') }}" required autocomplete="off">
+                                        <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
                                     </label>
                                     @if ($errors->has('city'))
                                         <span class="invalid-feedback">
@@ -136,6 +138,7 @@
                     let word = $(obj).val();
                     $( "#country" ).autocomplete({
                         source: (request, response) => {
+                            $('.country .loader').css({display: 'inline-block'});
                             $.ajax({
                                 url: `http://geohelper.info/api/v1/countries?locale%5Blang%5D=ru&locale%5BfallbackLang%5D=en&filter[name]=${word}&apiKey={{config('app.geo_key')}}`,
                                 type: 'GET',
@@ -145,10 +148,11 @@
                                             value: item.name + ` (${item.iso}/${item.iso3})`,
                                         }
                                     }));
+                                    $('.country .loader').css({display: 'none'});
                                 }
                             });
                         },
-                        minLength: 3
+                        minLength: 1
                     });
                 };
 
@@ -159,6 +163,7 @@
                     iso = iso[1].substring(1, iso[1].length-1).split('/',2);
                     $( "#city" ).autocomplete({
                         source: (request, response) => {
+                            $('.city .loader').css({display: 'inline-block'});
                             $.ajax({
                                 url: `http://geohelper.info/api/v1/cities?locale%5Blang%5D=ru&locale%5BfallbackLang%5D=en&filter[name]=${word}&filter[countryIso]=${iso[0].toLowerCase()}&apiKey={{config('app.geo_key')}}`,
                                 type: 'GET',
@@ -168,10 +173,11 @@
                                             value: item.name,
                                         }
                                     }));
+                                    $('.city .loader').css({display: 'none'});
                                 }
                             });
                         },
-                        minLength: 3
+                        minLength: 1
                     });
                 }
             </script>
