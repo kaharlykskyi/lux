@@ -133,54 +133,6 @@
                     </div>
                 </div>
             </div>
-            <script>
-                const  getCountry = (obj) => {
-                    let word = $(obj).val();
-                    $( "#country" ).autocomplete({
-                        source: (request, response) => {
-                            $('.country .loader').css({display: 'inline-block'});
-                            $.ajax({
-                                url: `http://geohelper.info/api/v1/countries?locale%5Blang%5D=ru&locale%5BfallbackLang%5D=en&filter[name]=${word}&apiKey={{config('app.geo_key')}}`,
-                                type: 'GET',
-                                success: (data) => {
-                                    response($.map(data.result, (item) => {
-                                        return{
-                                            value: item.name + ` (${item.iso}/${item.iso3})`,
-                                        }
-                                    }));
-                                    $('.country .loader').css({display: 'none'});
-                                }
-                            });
-                        },
-                        minLength: 1
-                    });
-                };
-
-                const getCity = (obj) => {
-                    let word = $(obj).val();
-                    let iso =  $( "#country" ).val();
-                    iso = iso.split(' ',2);
-                    iso = iso[1].substring(1, iso[1].length-1).split('/',2);
-                    $( "#city" ).autocomplete({
-                        source: (request, response) => {
-                            $('.city .loader').css({display: 'inline-block'});
-                            $.ajax({
-                                url: `http://geohelper.info/api/v1/cities?locale%5Blang%5D=ru&locale%5BfallbackLang%5D=en&filter[name]=${word}&filter[countryIso]=${iso[0].toLowerCase()}&apiKey={{config('app.geo_key')}}`,
-                                type: 'GET',
-                                success: (data) => {
-                                    response($.map(data.result, (item) => {
-                                        return{
-                                            value: item.name,
-                                        }
-                                    }));
-                                    $('.city .loader').css({display: 'none'});
-                                }
-                            });
-                        },
-                        minLength: 1
-                    });
-                }
-            </script>
         </section>
     </div>
 @endsection

@@ -23,3 +23,8 @@ Route::prefix('profile')->middleware(['auth'])->group(function () {
     Route::post('/change-user-info', 'ProfileController@changeUserInfo')->name('change_user_info');
     Route::post('/change-delivery-info', 'ProfileController@deliveryInfo')->name('change_delivery_info');
 });
+
+/*-------CART--------*/
+Route::prefix('cart')->middleware(['auth'])->group(function () {
+    Route::get('/', 'CartController@index')->name('cart');
+});

@@ -68,6 +68,101 @@
         <!-- End Footer -->
     </div>
 
+    <!-- CART-->
+    <div class="modal fade shopping-cart bs-example-modal-lg" id="cart" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">{{__('Корзина заказа')}}</h4>
+                </div>
+                <div class="modal-body">
+                    <section class="shopping-cart padding-bottom-30">
+                        <div class="container table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Товар</th>
+                                    <th class="text-center">Цена</th>
+                                    <th class="text-center">Количество</th>
+                                    <th class="text-center">Общая цена</th>
+                                    <th>&nbsp; </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <!-- Item Cart -->
+                                <tr>
+                                    <td><div class="media">
+                                            <div class="media-left"> <a href="#."> <img class="img-responsive" src="images/item-img-1-1.jpg" alt="" > </a> </div>
+                                            <div class="media-body">
+                                                <p>E-book Reader Lector De Libros
+                                                    Digitales 7''</p>
+                                            </div>
+                                        </div></td>
+                                    <td class="text-center padding-top-60">$200.00</td>
+                                    <td class="text-center"><!-- Quinty -->
+
+                                        <div class="quinty padding-top-20">
+                                            <input type="number" value="02">
+                                        </div></td>
+                                    <td class="text-center padding-top-60">$400.00</td>
+                                    <td class="text-center padding-top-60"><a href="#." class="remove"><i class="fa fa-close"></i></a></td>
+                                </tr>
+
+                                <!-- Item Cart -->
+                                <tr>
+                                    <td><div class="media">
+                                            <div class="media-left"> <a href="#."> <img class="img-responsive" src="images/item-img-1-2.jpg" alt="" > </a> </div>
+                                            <div class="media-body">
+                                                <p>E-book Reader Lector De Libros
+                                                    Digitales 7''</p>
+                                            </div>
+                                        </div></td>
+                                    <td class="text-center padding-top-60">$200.00</td>
+                                    <td class="text-center"><div class="quinty padding-top-20">
+                                            <input type="number" value="02">
+                                        </div></td>
+                                    <td class="text-center padding-top-60">$400.00</td>
+                                    <td class="text-center padding-top-60"><a href="#." class="remove"><i class="fa fa-close"></i></a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Promotion -->
+                            <div class="promo">
+                                <div class="coupen">
+                                    <label> Promotion Code
+                                        <input type="text" placeholder="Your code here">
+                                        <button type="submit"><i class="fa fa-arrow-circle-right"></i></button>
+                                    </label>
+                                </div>
+
+                                <!-- Grand total -->
+                                <div class="g-totel">
+                                    <h5>Grand total: <span>$500.00</span></h5>
+                                </div>
+                            </div>
+
+                            <!-- Button -->
+                            <div class="pro-btn">
+                                <a href="#." class="btn-round btn-light" data-dismiss="modal">{{__('Продолжить покупки')}}</a>
+                                <a href="#." class="btn-round">Go Payment Methods</a>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="text-center block h4">{{__('Рекомендуем также обратить внимание')}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScripts -->
     <script src="{{asset('js/vendors/wow.min.js')}}"></script>
     <script src="{{asset('js/vendors/bootstrap.min.js')}}"></script>
@@ -80,5 +175,55 @@
     <script type="text/javascript" src="{{asset('rs-plugin/js/jquery.tp.t.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('rs-plugin/js/jquery.tp.min.js')}}"></script>
     <script src="{{asset('js/main.js')}}"></script>
+    <script>
+        const  getCountry = (obj) => {
+            let word = $(obj).val();
+            $( "#country" ).autocomplete({
+                source: (request, response) => {
+                    $('.country .loader').css({display: 'inline-block'});
+                    $.ajax({
+                        url: `http://geohelper.info/api/v1/countries?locale%5Blang%5D=ru&locale%5BfallbackLang%5D=en&filter[name]=${word}&apiKey={{config('app.geo_key')}}`,
+                        type: 'GET',
+                        success: (data) => {
+                            response($.map(data.result, (item) => {
+                                return{
+                                    value: item.name + ` (${item.iso}/${item.iso3})`,
+                                }
+                            }));
+                            $('.country .loader').css({display: 'none'});
+                        }
+                    });
+                },
+                minLength: 1
+            });
+        };
+
+        const getCity = (obj) => {
+            let word = $(obj).val();
+            let iso =  $( "#country" ).val();
+            iso = iso.split(' ',2);
+            iso = iso[1].substring(1, iso[1].length-1).split('/',2);
+            $( "#city" ).autocomplete({
+                source: (request, response) => {
+                    $('.city .loader').css({display: 'inline-block'});
+                    $.ajax({
+                        url: `http://geohelper.info/api/v1/cities?locale%5Blang%5D=ru&locale%5BfallbackLang%5D=en&filter[name]=${word}&filter[countryIso]=${iso[0].toLowerCase()}&apiKey={{config('app.geo_key')}}`,
+                        type: 'GET',
+                        success: (data) => {
+                            response($.map(data.result, (item) => {
+                                return{
+                                    value: item.name,
+                                }
+                            }));
+                            $('.city .loader').css({display: 'none'});
+                        }
+                    });
+                },
+                minLength: 1
+            });
+        };
+
+
+    </script>
 </body>
 </html>

@@ -1,4 +1,8 @@
 /*----GLOBAL VAR-----*/
+*{
+    outline: none;
+}
+
 .bg-blue{
     background-color: #0088cc;
 }
@@ -338,6 +342,23 @@ body .modal-content{
     right: 0;
     top: 30px;
     display: none;
+}
+
+/*-----CART-----*/
+.shopping-cart .modal-lg{
+    width: 98%;
+}
+
+.shopping-cart .modal-header{
+    background-color: #0088cc;
+}
+
+.shopping-cart .modal-header h4{
+    color: #ffffff;
+}
+
+.shopping-cart .modal-content{
+    border: none;
 }
 
 @media only screen and (max-width : 992px) {
