@@ -272,6 +272,10 @@ body .panel-primary>.panel-heading{
     content: "\f0d6";
 }
 
+.profile-item-chart > a:first-child:before  {
+    content: "\f200";
+}
+
 .block {
     display:block;
 }
@@ -301,6 +305,17 @@ body .panel-primary>.panel-heading{
 
 .profile-wrapper .form-control{
     border-radius: 20px;
+}
+
+.identification-info{
+    position: absolute;
+    top: 0;
+    left: 5%;
+    right: 5%;
+    padding: 10px;
+    box-shadow: 0 0 21px rgba(0,0,0,.4);
+    background: #fff;
+    display: none;
 }
 
 body .modal-header{

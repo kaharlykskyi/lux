@@ -43,6 +43,7 @@
                                 <li id="nav-tabs-5" data-id-href="tabs-5" class="list-group-item">{{__('Смена пароля')}}</li>
                                 <li id="nav-tabs-6" data-id-href="tabs-6" class="list-group-item">{{__('Мои возвраты')}}</li>
                                 <li id="nav-tabs-7" data-id-href="tabs-7" class="list-group-item">{{__('Баланс')}}</li>
+                                <li id="nav-tabs-8" data-id-href="tabs-8" class="list-group-item">{{__('Взаиморасчеты')}}</li>
                             </ul>
                         </div>
                     </div>
@@ -114,7 +115,14 @@
                                         <small>{{__('Здесь вы можете просмотреть баланс и историю пополнений.')}}</small>
                                     </div>
                                 </div>
-                                <div class="col-md-6"></div>
+                                <div class="col-md-6">
+                                    <div class="profile-item profile-item-chart">
+                                        <a class="link-prof-item" data-id-href="tabs-8" href="#">
+                                            <span>{{__('Взаиморасчеты')}}</span>
+                                        </a>
+                                        <small>{{__('Здесь вы можете просмотреть все действи с вашим счётом.')}}</small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -353,6 +361,149 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-9 tab-item" id="tabs-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">{{__('Взаиморасчеты')}}</div>
+                        <div class="panel-body panel-profile">
+                            <div class="row login-sec">
+                                <div class="col-sm-12 table-responsive" style="overflow: visible;">
+                                    <table class="table table-bordered table-hover" id="creaking_account">
+                                        <thead>
+                                            <tr>
+                                                <th>Дата</th>
+                                                <th>Вид действия</th>
+                                                <th>Идентификатор</th>
+                                                <th>Описание</th>
+                                                <th>Сумма</th>
+                                                <th>НДС</th>
+                                                <th>Дата</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>23.06.18</td>
+                                                <td>Оплата</td>
+                                                <td class="relative identification-wrapper">
+                                                    KV03458HD
+                                                    <div class="identification-info">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-bordered">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>Дата</th>
+                                                                    <th>Вид действия</th>
+                                                                    <th>Идентификатор</th>
+                                                                    <th>Описание</th>
+                                                                    <th>Сумма</th>
+                                                                    <th>НДС</th>
+                                                                    <th>Дата</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                <tr>
+                                                                    <td>23.06.18</td>
+                                                                    <td>Оплата</td>
+                                                                    <td>Оплата</td>
+                                                                    <td >Заказ SP32454623</td>
+                                                                    <td>-2000</td>
+                                                                    <td>00.00</td>
+                                                                    <td>23.05.18</td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td >Заказ SP32454623</td>
+                                                <td>-2000</td>
+                                                <td>00.00</td>
+                                                <td>23.05.18</td>
+                                            </tr>
+                                            <tr>
+                                                <td>23.06.18</td>
+                                                <td>Оплата</td>
+                                                <td class="relative identification-wrapper">
+                                                    KV03458HD
+                                                    <div class="identification-info">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-bordered">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>Дата</th>
+                                                                    <th>Вид действия</th>
+                                                                    <th>Идентификатор</th>
+                                                                    <th>Описание</th>
+                                                                    <th>Сумма</th>
+                                                                    <th>НДС</th>
+                                                                    <th>Дата</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                <tr>
+                                                                    <td>23.06.18</td>
+                                                                    <td>Оплата</td>
+                                                                    <td>Оплата</td>
+                                                                    <td >Заказ SP32454623</td>
+                                                                    <td>-2000</td>
+                                                                    <td>00.00</td>
+                                                                    <td>23.05.18</td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td >Заказ SP32454623</td>
+                                                <td>-2000</td>
+                                                <td>00.00</td>
+                                                <td>23.05.18</td>
+                                            </tr>
+                                            <tr>
+                                                <td>23.06.18</td>
+                                                <td>Оплата</td>
+                                                <td class="relative identification-wrapper">
+                                                    KV03458HD
+                                                    <div class="identification-info">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-bordered">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>Дата</th>
+                                                                    <th>Вид действия</th>
+                                                                    <th>Идентификатор</th>
+                                                                    <th>Описание</th>
+                                                                    <th>Сумма</th>
+                                                                    <th>НДС</th>
+                                                                    <th>Дата</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                <tr>
+                                                                    <td>23.06.18</td>
+                                                                    <td>Оплата</td>
+                                                                    <td>Оплата</td>
+                                                                    <td >Заказ SP32454623</td>
+                                                                    <td>-2000</td>
+                                                                    <td>00.00</td>
+                                                                    <td>23.05.18</td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td >Заказ SP32454623</td>
+                                                <td>-2000</td>
+                                                <td>00.00</td>
+                                                <td>23.05.18</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -522,15 +673,14 @@
                             alert(errors_html);
                         } else {
                             $('#addedCars').append(`
-                                               <a href="#" class="list-group-item">
-                                                    <p class="list-group-item-text">VIN код: ${data.response.vin_code}</p>
-                                                    <p class="list-group-item-text">Марка: ${data.response.mark}</p>
-                                                    <p class="list-group-item-text">Год выпуска: ${data.response.year}</p>
-                                                    <p class="list-group-item-text">Модель: ${data.response.model}</p>
-                                                    <p class="list-group-item-text">Обьем двигателя: ${data.response.v_motor}</p>
-                                                    <p class="list-group-item-text">Тип двигателя: ${data.response.type_motor}</p>
-                                               </a>
-                            `);
+                                <a href="#" class="list-group-item">
+                                     <p class="list-group-item-text">VIN код: ${data.response.vin_code}</p>
+                                     <p class="list-group-item-text">Марка: ${data.response.mark}</p>
+                                     <p class="list-group-item-text">Год выпуска: ${data.response.year}</p>
+                                     <p class="list-group-item-text">Модель: ${data.response.model}</p>
+                                     <p class="list-group-item-text">Обьем двигателя: ${data.response.v_motor}</p>
+                                     <p class="list-group-item-text">Тип двигателя: ${data.response.type_motor}</p>
+                                </a>`);
                         }
                     }
                 });
@@ -553,6 +703,15 @@
                             alert(data.response)
                         }
                     }
+                });
+            });
+
+            $('.identification-wrapper').click(function (evt) {
+                $('.identification-info').css({display: 'none'});
+                const y = evt.pageY - $('#creaking_account').offset().top;
+                $(this).find('.identification-info').css({
+                    display: 'block',
+                    top: y
                 });
             });
         });
