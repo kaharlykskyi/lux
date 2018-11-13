@@ -14,21 +14,31 @@
             <li>
                 @isset(Auth::user()->id)
                     @php
-                        $cart = \Illuminate\Support\Facades\DB::table('carts')->where('user_id',Auth::user()->id);
-                        $cart_products = \Illuminate\Support\Facades\DB::table('cart_products')
-                                ->joinSub($cart,'cart',function ($join){
-                                    $join->on('cart_products.cart_id', '=', 'cart.id');
-                                })->get()
-                                /*->join('products')*/;
-
-                        dump(count($cart_products));
+                        $cart = DB::table('carts')->where([['user_id', Auth::user()->id],['oder_status', 1]])->first();
+                        if (isset($cart)){
+                            $products = DB::table('cart_products')
+                                ->where('cart_products.cart_id',$cart->id)
+                                ->join('products','products.id','=','cart_products.product_id')
+                                ->select('products.*','cart_products.count')
+                                ->get();
+                        }
                     @endphp
                 @endisset
-                <a href="#" data-toggle="modal" data-target="#cart">
-                    <span class="itm-cont">3</span>
+                <a href="#" data-toggle="modal" data-target="#cart" onclick="getCartItem('{{route('cart')}}'); return false;">
+                    <span class="itm-cont">@if(isset($products)){{count($products )}}@else{{__('0')}}@endif</span>
                     <i class="flaticon-shopping-bag"></i>
                     <strong>{{__('Корзина')}}</strong> <br>
-                    <span>3 item(s) - $500.00</span>
+                    <span>
+                        @php
+                            $sum = 0.00;
+                            if (isset($products)){
+                                foreach ($products as $product){
+                                    $sum += (double)$product->price * (integer)$product->count;
+                                }
+                            }
+                        @endphp
+                        {{$sum}} грн
+                    </span>
                 </a>
             </li>
         </ul>

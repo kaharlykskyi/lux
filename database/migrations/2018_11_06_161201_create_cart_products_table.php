@@ -17,6 +17,7 @@ class CreateCartProductsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('cart_id');
             $table->unsignedInteger('product_id');
+            $table->unsignedTinyInteger('count')->default(1);
             $table->timestamps();
 
             $table->foreign('cart_id')->references('id')->on('carts')->onDelete('CASCADE');

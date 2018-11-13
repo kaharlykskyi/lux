@@ -19,6 +19,7 @@ class CreateCartsTable extends Migration
             $table->unsignedInteger('oder_status')->nullable();
             $table->timestamps();
 
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');
             $table->foreign('oder_status')->references('id')->on('oder_status_codes')->onDelete('SET NULL');
         });
     }

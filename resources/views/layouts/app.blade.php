@@ -78,77 +78,8 @@
                 </div>
                 <div class="modal-body">
                     <section class="shopping-cart padding-bottom-30">
-                        <div class="container table-responsive">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>Товар</th>
-                                    <th class="text-center">Цена</th>
-                                    <th class="text-center">Количество</th>
-                                    <th class="text-center">Общая цена</th>
-                                    <th>&nbsp; </th>
-                                </tr>
-                                </thead>
-                                <tbody>
+                        <div class="container table-responsive" id="shopping-cart-block">
 
-                                <!-- Item Cart -->
-                                <tr>
-                                    <td><div class="media">
-                                            <div class="media-left"> <a href="#."> <img class="img-responsive" src="images/item-img-1-1.jpg" alt="" > </a> </div>
-                                            <div class="media-body">
-                                                <p>E-book Reader Lector De Libros
-                                                    Digitales 7''</p>
-                                            </div>
-                                        </div></td>
-                                    <td class="text-center padding-top-60">$200.00</td>
-                                    <td class="text-center"><!-- Quinty -->
-
-                                        <div class="quinty padding-top-20">
-                                            <input type="number" value="02">
-                                        </div></td>
-                                    <td class="text-center padding-top-60">$400.00</td>
-                                    <td class="text-center padding-top-60"><a href="#." class="remove"><i class="fa fa-close"></i></a></td>
-                                </tr>
-
-                                <!-- Item Cart -->
-                                <tr>
-                                    <td><div class="media">
-                                            <div class="media-left"> <a href="#."> <img class="img-responsive" src="images/item-img-1-2.jpg" alt="" > </a> </div>
-                                            <div class="media-body">
-                                                <p>E-book Reader Lector De Libros
-                                                    Digitales 7''</p>
-                                            </div>
-                                        </div></td>
-                                    <td class="text-center padding-top-60">$200.00</td>
-                                    <td class="text-center"><div class="quinty padding-top-20">
-                                            <input type="number" value="02">
-                                        </div></td>
-                                    <td class="text-center padding-top-60">$400.00</td>
-                                    <td class="text-center padding-top-60"><a href="#." class="remove"><i class="fa fa-close"></i></a></td>
-                                </tr>
-                                </tbody>
-                            </table>
-
-                            <!-- Promotion -->
-                            <div class="promo">
-                                <div class="coupen">
-                                    <label> Promotion Code
-                                        <input type="text" placeholder="Your code here">
-                                        <button type="submit"><i class="fa fa-arrow-circle-right"></i></button>
-                                    </label>
-                                </div>
-
-                                <!-- Grand total -->
-                                <div class="g-totel">
-                                    <h5>Grand total: <span>$500.00</span></h5>
-                                </div>
-                            </div>
-
-                            <!-- Button -->
-                            <div class="pro-btn">
-                                <a href="#." class="btn-round btn-light" data-dismiss="modal">{{__('Продолжить покупки')}}</a>
-                                <a href="#." class="btn-round">Go Payment Methods</a>
-                            </div>
                         </div>
                     </section>
                 </div>
@@ -175,6 +106,7 @@
     <script type="text/javascript" src="{{asset('rs-plugin/js/jquery.tp.t.min.js')}}"></script>
     <script type="text/javascript" src="{{asset('rs-plugin/js/jquery.tp.min.js')}}"></script>
     <script src="{{asset('js/main.js')}}"></script>
+    <script type="text/javascript" src="{{asset('js/common.js')}}"></script>
     <script>
         const  getCountry = (obj) => {
             let word = $(obj).val();
@@ -222,8 +154,6 @@
                 minLength: 1
             });
         };
-
-
     </script>
 </body>
 </html>
