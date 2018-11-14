@@ -27,4 +27,6 @@ Route::prefix('profile')->middleware(['auth'])->group(function () {
 /*-------CART--------*/
 Route::prefix('cart')->middleware(['auth'])->group(function () {
     Route::get('/', 'CartController@index')->name('cart');
+    Route::post('/product-count', 'CartController@productCount')->name('product_count');
+    Route::post('/product-delete', 'CartController@productDelete')->name('product_delete');
 });

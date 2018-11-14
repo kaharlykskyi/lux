@@ -24,11 +24,11 @@
                         }
                     @endphp
                 @endisset
-                <a href="#" data-toggle="modal" data-target="#cart" onclick="getCartItem('{{route('cart')}}'); return false;">
+                <a href="#" @guest @else data-toggle="modal" data-target="#cart" onclick="getCartItem('{{route('cart')}}'); return false;" @endguest >
                     <span class="itm-cont">@if(isset($products)){{count($products )}}@else{{__('0')}}@endif</span>
                     <i class="flaticon-shopping-bag"></i>
                     <strong>{{__('Корзина')}}</strong> <br>
-                    <span>
+                    <span id="total-price">
                         @php
                             $sum = 0.00;
                             if (isset($products)){
