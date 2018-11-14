@@ -5,6 +5,8 @@
     <!-- Content -->
     <div id="content">
 
+        <a href="{{route('product','test')}}">{{__('Ссылка на страницу продукта')}}</a>
+
         <!-- Filter -->
         @component('component.filter')
 

@@ -30,3 +30,8 @@ Route::prefix('cart')->middleware(['auth'])->group(function () {
     Route::post('/product-count', 'CartController@productCount')->name('product_count');
     Route::post('/product-delete', 'CartController@productDelete')->name('product_delete');
 });
+
+/*------PRODUCT-------*/
+Route::prefix('product')->group(function () {
+    Route::get('/{alias}', 'ProductController@index')->name('product');
+});
