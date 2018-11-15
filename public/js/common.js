@@ -45,3 +45,21 @@ function deleteProduct(product,cart,link) {
         }
     });
 }
+
+$(document).ready(function() {
+    var numItems = $('li.fancyTab').length;
+    $("li.fancyTab").width(100/numItems+'%');
+});
+
+$(window).load(function() {
+
+    $('.fancyTabs').each(function() {
+        var highestBox = 0;
+        $('.fancyTab a', this).each(function() {
+            if ($(this).height() > highestBox)
+                highestBox = $(this).height();
+        });
+        $('.fancyTab a', this).height(highestBox);
+
+    });
+});
