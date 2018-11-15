@@ -12,8 +12,12 @@ class OderStatusTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('oder_status_codes')->insert(['name'=>'Не сформирован']);
-        DB::table('oder_status_codes')->insert(['name'=>'Сформирован']);
-        DB::table('oder_status_codes')->insert(['name'=>'Оплачен']);
+        DB::table('oder_status_codes')->insert(['name'=>'формируеться']);
+        DB::table('oder_status_codes')->insert(['name'=>'создан']);
+        DB::table('oder_status_codes')->insert(['name'=>'обработан менеджером']);
+        DB::table('oder_status_codes')->insert(['name'=>'отправлен']);
+        DB::table('oder_status_codes')->insert(['name'=>'отменен']);
+        DB::table('oder_status_codes')->insert(['name'=>'выполнен']);
+        DB::table('oder_status_codes')->insert(['name'=>'оплачен']);
     }
 }
