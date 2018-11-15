@@ -75,9 +75,59 @@
                                         <div class="quinty">
                                             <input type="number" value="01">
                                         </div>
-                                        <a href="#." class="btn-round"><i class="icon-basket-loaded margin-right-5"></i> Add to Cart</a> </div>
+                                        <a href="#." class="btn-round"><i class="icon-basket-loaded margin-right-5"></i>{{__('Добавить в корзину')}}</a>
+                                        <a href="#." class="btn-round" style="background: #bbbbbb;" onclick="$('.fast-buy-block').show()">
+                                            <i class="ion-ios-stopwatch margin-right-5"></i>{{__('Заказать по фасту')}}
+                                        </a>
+                                        <div class="relative">
+                                            <div class="fast-buy-block" style="background: #fff;">
+                                                <div class="contact-info">
+                                                    <button type="button" class="close" onclick="$('.fast-buy-block').hide();"><span aria-hidden="true">&times;</span></button>
+                                                    <h5 class="text-center">{{__('Быстрый заказ')}}</h5>
+                                                    <p class="text-center">{{__('Оставте ваши контакты и мы свяжемся с вами')}}</p>
+                                                    <hr>
+                                                    <form type="POST" action="{{route('fast_buy',$product->id)}}" class="login-sec">
+                                                        @csrf
+
+                                                        <ul class="row">
+                                                            <li class="col-sm-12">
+                                                                <label>{{__('Введите Ваш номер телефона')}}
+                                                                    <input type="tel" class="form-control" name="phone" placeholder="380xxxxxxxxx" pattern="[0-9]{12}" required>
+                                                                </label>
+                                                            </li>
+                                                            <li class="col-sm-12">
+                                                                <button type="submit" class="btn-round">{{__('Заказать')}}</button>
+                                                                <button type="button" class="btn-round" onclick="$('.fast-buy-block').hide();" style="background: #bbbbbb;">{{__('Отмена')}}</button>
+                                                            </li>
+                                                        </ul>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            <script>
+                                $(document).ready(function () {
+                                    $('.fast-buy-block form').submit(function (e) {
+                                        e.preventDefault();
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: $(this).attr('action'),
+                                            data: $(this).serialize(),
+                                            success: function (data) {
+                                                $('.fast-buy-block form ul').html(`<p class="text-center">${data.response}</p>`);
+                                            },
+                                            beforeSend: function () {
+                                                $('.fast-buy-block form ul').html(
+                                                    `<li class="col-sm-12 text-center padding-20">
+                                                         <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                                                    </li>`);
+                                            }
+                                        });
+                                    })
+                                })
+                            </script>
 
                             <!-- Details Tab Section-->
                             <div class="item-tabs-sec">

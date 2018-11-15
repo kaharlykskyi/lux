@@ -55,6 +55,7 @@ body .panel-primary>.panel-heading{
 
 .relative{
     position: relative;
+    z-index: 10;
 }
 
 /*----END GLOBAL VAR-----*/
@@ -363,6 +364,15 @@ body .modal-content{
 
 .shopping-cart .modal-content{
     border: none;
+}
+
+/*-----PRODUCT PAGE-----*/
+.fast-buy-block{
+    position: absolute;
+    top: 10px;
+    width: 300px;
+    display: none;
+    right: 25px;
 }
 
 @media only screen and (max-width : 992px) {
