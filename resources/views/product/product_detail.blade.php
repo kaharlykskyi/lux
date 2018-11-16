@@ -12,8 +12,6 @@
         ])
         @endcomponent
 
-        {{$product}}
-
         <!-- Products -->
         <section class="padding-top-40 padding-bottom-60">
             <div class="container">
@@ -37,32 +35,25 @@
                                         </article>
                                     </div>
                                     <!-- Item Content -->
-                                    <div class="col-xs-7"> <span class="tags">Smartphones</span>
+                                    <div class="col-xs-7">
                                         <h5>{{$product->name}}</h5>
                                         <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
                                         <div class="row">
-                                            <div class="col-sm-6"><span class="price">{{$product->price}} грн</span></div>
+                                            <div class="col-sm-6">
+                                                @isset($product->old_price)
+                                                    <span class="tags" style="text-decoration: line-through;">{{$product->old_price}} грн</span>
+                                                    <br>
+                                                @endisset
+                                                <span class="price">{{$product->price}} грн</span>
+                                            </div>
                                             <div class="col-sm-6">
                                                 <p>Availability: <span class="in-stock">In stock</span></p>
                                             </div>
                                         </div>
                                         <!-- List Details -->
-                                        <ul class="bullet-round-list">
-                                            <li>Screen: 1920 x 1080 pixels</li>
-                                            <li>Processor: 2.5 GHz None</li>
-                                            <li>RAM: 8 GB</li>
-                                            <li>Hard Drive: Flash memory solid state</li>
-                                            <li>Graphics : Intel HD Graphics 520 Integrated</li>
-                                            <li>Card Description: Integrated</li>
-                                        </ul>
-                                        <!-- Colors -->
                                         <div class="row">
-                                            <div class="col-xs-5">
-                                                <div class="clr"> <span style="background:#068bcd"></span> <span style="background:#d4b174"></span> <span style="background:#333333"></span> </div>
-                                            </div>
-                                            <!-- Sizes -->
-                                            <div class="col-xs-7">
-                                                <div class="sizes"> <a href="#.">S</a> <a class="active" href="#.">M</a> <a href="#.">L</a> <a href="#.">XL</a> </div>
+                                            <div class="col-sm-12 padding-top-10 padding-bottom-10">
+                                                {!! $product->short_description !!}
                                             </div>
                                         </div>
                                         <!-- Compare Wishlist -->
@@ -73,9 +64,32 @@
                                         </ul>
                                         <!-- Quinty -->
                                         <div class="quinty">
-                                            <input type="number" value="01">
+                                            <input type="number" value="1" id="quinty-product">
                                         </div>
-                                        <a href="#." class="btn-round"><i class="icon-basket-loaded margin-right-5"></i>{{__('Добавить в корзину')}}</a>
+                                        <a href="#" class="btn-round" onclick="addCart();return false;"><i class="icon-basket-loaded margin-right-5"></i>{{__('Добавить в корзину')}}</a>
+                                        <script>
+                                            function addCart() {
+                                                const count = $('#quinty-product').val();
+                                                $.ajaxSetup({
+                                                    headers: {
+                                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                                    },
+
+                                                });
+
+                                                $.ajax({
+                                                    type: 'POST',
+                                                    url: '{{route('add_cart',$product->id)}}',
+                                                    data: `product_count=${count}`,
+                                                    success: function (data) {
+                                                        console.log(data.response);
+                                                        $('#total-price').text(`${data.response.sum} грн`);
+
+                                                        alert(data.response.save);
+                                                    }
+                                                });
+                                            }
+                                        </script>
                                         <a href="#." class="btn-round" style="background: #bbbbbb;" onclick="$('.fast-buy-block').show()">
                                             <i class="ion-ios-stopwatch margin-right-5"></i>{{__('Заказать по фасту')}}
                                         </a>
@@ -143,14 +157,11 @@
                                 <div class="tab-content">
                                     <div role="tabpanel" class="tab-pane fade in active" id="pro-detil">
                                         <!-- List Details -->
-                                        <ul class="bullet-round-list">
-                                            <li>Power Smartphone 7s G930F 128GB International version - Silver</li>
-                                            <li> 2G bands: GSM 850 / 900 / 1800 / 1900 3G bands: HSDPA 850 / 900 / 1900 / 2100 4G bands: LTE 700 / 800 / 850<br>
-                                                900 / 1800 / 1900 / 2100 / 2600</li>
-                                            <li> Dimensions: 142.4 x 69.6 x 7.9 mm (5.61 x 2.74 x 0.31 in) Weight 152 g (5.36 oz)</li>
-                                            <li> IP68 certified - dust proof and water resistant over 1.5 meter and 30 minutes</li>
-                                            <li> Internal: 128GB, 4 GB RAM </li>
-                                        </ul>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                {!! $product->full_description !!}
+                                            </div>
+                                        </div>
                                     </div>
                                     <div role="tabpanel" class="tab-pane fade" id="cus-rev"></div>
                                     <div role="tabpanel" class="tab-pane fade" id="ship"></div>

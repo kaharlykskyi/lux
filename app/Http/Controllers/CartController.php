@@ -31,13 +31,13 @@ class CartController extends Controller
 
         $sum = 0.00;
         $product_cost = 0.00;
-        $products = $this->getProducts($data['cart_id']);
+        $products = $this->getCartProducts($data['cart_id']);
 
         foreach ($products as $product){
             if ($product->id === (int)$data['product_id']){
-                $product_cost = (float)$product->price * $product->count;
+                $product_cost = (float)$product->price * (int)$product->count;
             }
-            $sum += (float)$product->price * $product->count;
+            $sum += (float)$product->price * (int)$product->count;
         }
 
         return response()->json([
@@ -58,7 +58,7 @@ class CartController extends Controller
         }
 
         $sum = 0.00;
-        $products = $this->getProducts($data['cart_id']);
+        $products = $this->getCartProducts($data['cart_id']);
         foreach ($products as $product){
             $sum += (float)$product->price * $product->count;
         }
@@ -66,13 +66,5 @@ class CartController extends Controller
         return response()->json([
             'response' => ['id_product' => $id_product,'sum' => (float)$sum]
         ]);
-    }
-
-    public function getProducts($cart){
-        return DB::table('cart_products')
-            ->where('cart_products.cart_id',$cart)
-            ->join('products','products.id','=','cart_products.product_id')
-            ->select('products.price','cart_products.count','products.id')
-            ->get();
     }
 }

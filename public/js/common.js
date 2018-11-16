@@ -38,7 +38,6 @@ function deleteProduct(product,cart,link) {
         url: link,
         data: `product_id=${product}&cart_id=${cart}`,
         success: function (data) {
-            console.log(data.response);
             $('#tr_product'+data.response.id_product).remove();
             $('#cart .g-totel span').text(`${data.response.sum} грн`);
             $('#total-price').text(`${data.response.sum} грн`);
@@ -47,7 +46,7 @@ function deleteProduct(product,cart,link) {
 }
 
 $(document).ready(function() {
-    var numItems = $('li.fancyTab').length;
+    const numItems = $('li.fancyTab').length;
     $("li.fancyTab").width(100/numItems+'%');
 });
 

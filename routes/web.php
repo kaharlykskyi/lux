@@ -35,4 +35,5 @@ Route::prefix('cart')->middleware(['auth'])->group(function () {
 Route::prefix('product')->group(function () {
     Route::get('/{alias}', 'ProductController@index')->name('product');
     Route::post('/fast-buy/{id}', 'ProductController@fastBuy')->name('fast_buy');
+    Route::post('/add-cart/{id}', 'ProductController@addCart')->name('add_cart');
 });

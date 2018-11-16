@@ -21,7 +21,8 @@ class CreateProductsTable extends Migration
             $table->text('full_description');
             $table->decimal('price',9,2);
             $table->decimal('old_price',9,2)->nullable();
-            $table->unsignedInteger('stock')->default(0);
+            $table->unsignedTinyInteger('stock')->default(0);
+            $table->unsignedInteger('count')->default(1);
             $table->timestamps();
         });
     }
