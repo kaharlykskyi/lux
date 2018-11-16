@@ -3,6 +3,7 @@
 return [
 
     'geo_key' => env('GEOHELPER_KEY'),
+    'novaposhta_key' => env('NOVAPOSHTA_KEY'),
 
     /*
     |--------------------------------------------------------------------------

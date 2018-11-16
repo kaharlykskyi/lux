@@ -24,7 +24,7 @@
                         }
                     @endphp
                 @endisset
-                <a href="#" @guest @else data-toggle="modal" data-target="#cart" onclick="getCartItem('{{route('cart')}}'); return false;" @endguest >
+                <a href="#" onclick="getCartItem('{{route('cart')}}'); return false;" data-toggle="modal" data-target="#cart">
                     <span class="itm-cont">@if(isset($products)){{count($products )}}@else{{__('0')}}@endif</span>
                     <i class="flaticon-shopping-bag"></i>
                     <strong>{{__('Корзина')}}</strong> <br>

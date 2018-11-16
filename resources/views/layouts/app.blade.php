@@ -80,7 +80,7 @@
                     <section class="shopping-cart padding-bottom-30">
                         <div class="container table-responsive" id="shopping-cart-block">
                             <div class="row">
-                                <div class="col-sm-12 padding-top-30 text-center">
+                                <div class="col-sm-12 padding-top-30 padding-bottom-30 text-center">
                                     <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
                                 </div>
                             </div>

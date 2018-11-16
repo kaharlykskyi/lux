@@ -52,7 +52,8 @@
 
     <!-- Grand total -->
     <div class="g-totel">
-        <h5>{{__('Общая сумма: ')}} <span>
+        <h5>{{__('Общая сумма: ')}}
+            <span>
                 @php
                     $sum = 0.00;
                         if (isset($products)){
@@ -62,12 +63,13 @@
                         }
                 @endphp
                 {{$sum}} грн
-            </span></h5>
+            </span>
+        </h5>
     </div>
 </div>
 
 <!-- Button -->
 <div class="pro-btn">
     <a href="#." class="btn-round btn-light" data-dismiss="modal">{{__('Продолжить покупки')}}</a>
-    <a href="#." class="btn-round">{{__('Оформление заказа')}}</a>
+    <a href="{{route('checkout')}}" class="btn-round">{{__('Оформление заказа')}}</a>
 </div>

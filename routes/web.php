@@ -37,3 +37,8 @@ Route::prefix('product')->group(function () {
     Route::post('/fast-buy/{id}', 'ProductController@fastBuy')->name('fast_buy');
     Route::post('/add-cart/{id}', 'ProductController@addCart')->name('add_cart');
 });
+
+/*-----CHECKOUT------*/
+Route::prefix('checkout')->group(function () {
+    Route::get('/', 'CheckoutController@index')->name('checkout');
+});
