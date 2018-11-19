@@ -20,7 +20,7 @@ function changeCount(product,cart,link) {
         success: function (data) {
             $('#price'+product).text(`${data.response.product_cost} грн`);
             $('#cart .g-totel span').text(`${data.response.sum} грн`);
-            $('#total-price').text(`${data.response.sum} грн`);
+            $('#total-price,#total-price-checkout').text(`${data.response.sum} грн`);
         }
     });
 }

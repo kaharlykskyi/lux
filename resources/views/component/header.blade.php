@@ -12,9 +12,12 @@
         <!-- Cart Part -->
         <ul class="nav navbar-right cart-pop">
             <li>
-                @isset(Auth::user()->id)
                     @php
-                        $cart = DB::table('carts')->where([['user_id', Auth::user()->id],['oder_status', 1]])->first();
+                        $cart = DB::table('carts')->where([
+                        (isset(Auth::user()->id))? ['user_id',Auth::user()->id]:['user_id',null],
+                        ['session_id',session()->getId()],
+                        ['oder_status', 1]
+                        ])->first();
                         if (isset($cart)){
                             $products = DB::table('cart_products')
                                 ->where('cart_products.cart_id',$cart->id)
@@ -22,8 +25,7 @@
                                 ->select('products.*','cart_products.count')
                                 ->get();
                         }
-                    @endphp
-                @endisset
+                @endphp
                 <a href="#" onclick="getCartItem('{{route('cart')}}'); return false;" data-toggle="modal" data-target="#cart">
                     <span class="itm-cont">@if(isset($products)){{count($products )}}@else{{__('0')}}@endif</span>
                     <i class="flaticon-shopping-bag"></i>

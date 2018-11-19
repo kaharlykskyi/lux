@@ -38,9 +38,21 @@ class ProductController extends Controller
         $count = (integer)$request->post('product_count');
         $product = Product::find((integer)$request->id);
         $cart = Cart::where([
-            ['user_id',Auth::user()->id],
+            (isset(Auth::user()->id))? ['user_id',Auth::user()->id]:['user_id',null],
+            ['session_id',session()->getId()],
             ['oder_status', 1]
         ])->first();
+
+        if (!isset($cart)){
+            $cart = new Cart();
+            $data = [
+                'user_id' => (isset(Auth::user()->id))? Auth::user()->id: null,
+                'session_id' => session()->getId(),
+                'oder_status' => 1
+            ];
+            $cart->fill($data);
+            $cart->save();
+        }
 
         if (DB::table('cart_products')->where([['cart_id',$cart->id],['product_id',$product->id]])->exists()){
             CartProduct::where([['cart_id',$cart->id],['product_id',$product->id]])->update(['count' => $count]);

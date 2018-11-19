@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class CartController extends Controller
 {
     public function index(){
-        $cart = DB::table('carts')->where([['user_id', Auth::user()->id],['oder_status', 1]])->first();
+        $cart = $this->getCart();
         $products = [];
         if (isset($cart)){
             $products = DB::table('cart_products')

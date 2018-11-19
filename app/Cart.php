@@ -8,6 +8,6 @@ class Cart extends Model
 {
     protected $table = 'carts';
 
-    protected $fillable = ['user_id','oder_status'];
+    protected $fillable = ['user_id','oder_status','session_id'];
 
 }

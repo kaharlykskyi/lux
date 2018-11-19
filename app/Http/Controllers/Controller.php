@@ -6,7 +6,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\{Auth,DB};
 
 class Controller extends BaseController
 {
@@ -18,5 +18,15 @@ class Controller extends BaseController
             ->join('products','products.id','=','cart_products.product_id')
             ->select('products.price','cart_products.count','products.id')
             ->get();
+    }
+
+    public function getCart(){
+        $cart = DB::table('carts')->where([
+            (isset(Auth::user()->id))? ['user_id',Auth::user()->id]:['user_id',null],
+            ['session_id',session()->getId()],
+            ['oder_status', 1]
+        ])->first();
+
+        return $cart;
     }
 }
