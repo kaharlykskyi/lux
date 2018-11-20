@@ -1,21 +1,22 @@
-<table class="table">
-    <thead>
-    <tr>
-        <th>Товар</th>
-        <th class="text-center">Цена</th>
-        <th class="text-center">Количество</th>
-        <th class="text-center">Общая цена</th>
-        <th>&nbsp; </th>
-    </tr>
-    </thead>
-    <tbody>
+<div class="row table-responsive">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Товар</th>
+            <th class="text-center">Цена</th>
+            <th class="text-center">Количество</th>
+            <th class="text-center">Общая цена</th>
+            <th>&nbsp; </th>
+        </tr>
+        </thead>
+        <tbody>
         <!-- Item Cart -->
         @isset($products)
             @forelse($products as $product)
                 <tr id="tr_product{{$product->id}}">
                     <td><div class="media">
                             <div class="media-left"> <a href="{{route('product',$product->alias)}}"> <img class="img-responsive" src="{{asset('images/item-img-1-1.jpg')}}" alt="{{$product->name}}" > </a> </div>
-                            <div class="media-body">
+                            <div class="media-body hidden-sm hidden-xs">
                                 <p>{{$product->short_description}}</p>
                             </div>
                         </div></td>
@@ -38,8 +39,9 @@
                 </tr>
             @endforelse
         @endisset
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
 
 <!-- Promotion -->
 <div class="promo">
@@ -70,6 +72,6 @@
 
 <!-- Button -->
 <div class="pro-btn">
-    <a href="#." class="btn-round btn-light" data-dismiss="modal">{{__('Продолжить покупки')}}</a>
-    <a href="{{route('checkout')}}" class="btn-round">{{__('Оформление заказа')}}</a>
+    <a href="#." class="btn-round btn-light margin-top-10" data-dismiss="modal">{{__('Продолжить покупки')}}</a>
+    <a href="{{route('checkout')}}" class="btn-round  margin-top-10">{{__('Оформление заказа')}}</a>
 </div>

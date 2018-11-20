@@ -40,7 +40,8 @@ class ProductController extends Controller
         if ($request->cookie('cart_session_id')){
             $cart_session_id = $request->cookie('cart_session_id');
         } else {
-            $cart_session_id = cookie('cart_session_id',session()->getId(),24*60*60);
+            $cookie = cookie('cart_session_id',session()->getId(),30*24*60*60);
+            $cart_session_id = session()->getId();
         }
 
         $cart = Cart::where([
@@ -81,12 +82,20 @@ class ProductController extends Controller
             $sum += (float)$added_product->price * (int)$added_product->count;
         }
 
-        return response()->json([
-           'response' => [
-               'sum' => $sum,
-               'save' => $save,
-               'cookie' => $cart_session_id
-           ]
-        ])->cookie($cart_session_id);
+        if (!empty($cookie)) {
+            return response()->json([
+               'response' => [
+                   'sum' => $sum,
+                   'save' => $save
+               ]
+            ])->cookie($cookie);
+        } else {
+            return response()->json([
+                'response' => [
+                    'sum' => $sum,
+                    'save' => $save
+                ]
+            ]);
+        }
     }
 }

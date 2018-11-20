@@ -9,7 +9,7 @@
 
         @endcomponent
 
-        @component('component.main_page_links')
+        @component('home.component.main_page_links')
 
         @endcomponent
 

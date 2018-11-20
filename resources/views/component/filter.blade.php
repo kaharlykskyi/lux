@@ -7,7 +7,7 @@
                 <li class="tab fancyTab active">
                     <div class="arrow-down"><div class="arrow-down-inner"></div></div>
                     <a id="tab0" href="#tabBody0" role="tab" aria-controls="tabBody0" aria-selected="true" data-toggle="tab" tabindex="0">
-                        <span class="hidden-xs">{{__('Поиск')}}</span>
+                        <span>{{__('Поиск')}}</span>
                     </a>
                     <div class="whiteBlock"></div>
                 </li>
@@ -15,7 +15,7 @@
                 <li class="tab fancyTab">
                     <div class="arrow-down"><div class="arrow-down-inner"></div></div>
                     <a id="tab1" href="#tabBody1" role="tab" aria-controls="tabBody1" aria-selected="true" data-toggle="tab" tabindex="0">
-                        <span class="hidden-xs">{{__('Подбор по авто')}}</span>
+                        <span>{{__('Подбор по авто')}}</span>
                     </a>
                     <div class="whiteBlock"></div>
                 </li>
@@ -23,7 +23,7 @@
                 <li class="tab fancyTab">
                     <div class="arrow-down"><div class="arrow-down-inner"></div></div>
                     <a id="tab2" href="#tabBody2" role="tab" aria-controls="tabBody2" aria-selected="true" data-toggle="tab" tabindex="0">
-                        <span class="hidden-xs">{{__('Подбор по vin')}}</span>
+                        <span>{{__('Подбор по vin')}}</span>
                     </a>
                     <div class="whiteBlock"></div>
                 </li>
@@ -41,7 +41,7 @@
                                             <input class="form-control" type="text" name="search" placeholder="поиск по коду товара, модели авто">
                                         </div>
                                         <div class="col-xs-12 col-sm-2">
-                                            <button type="submit" class="btn-round">{{__('Поиск')}}</button>
+                                            <button type="submit" class="btn-round btn-sm">{{__('Поиск')}}</button>
                                         </div>
                                         <div class="col-xs-12 text-right padding-top-10">
                                             <a class="link" href="">{{__('Вы искали')}}</a>
@@ -129,7 +129,7 @@
                                         <input class="form-control" type="text" name="search" placeholder="Например: JTEHT05JX02054465">
                                     </div>
                                     <div class="col-xs-12 col-sm-2">
-                                        <button type="submit" class="btn-round">{{__('Подобрать')}}</button>
+                                        <button type="submit" class="btn-round btn-sm">{{__('Подобрать')}}</button>
                                     </div>
                                     <div class="col-xs-12 text-right padding-top-10">
                                         <a class="link" href="">{{__('Просмотреные авто')}}</a>

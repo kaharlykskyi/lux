@@ -36,14 +36,6 @@
                         </ul>
                     </li>
                 @endguest
-                <li>
-                    <select class="selectpicker">
-                        <option>(USD)Dollar</option>
-                        <option>GBP</option>
-                        <option>Euro</option>
-                        <option>JPY</option>
-                    </select>
-                </li>
             </ul>
             <div class="social-top"> <a href="#."><i class="fa fa-facebook"></i></a> <a href="#."><i class="fa fa-twitter"></i></a> <a href="#."><i class="fa fa-linkedin"></i></a> <a href="#."><i class="fa fa-dribbble"></i></a> <a href="#."><i class="fa fa-pinterest"></i></a> </div>
         </div>

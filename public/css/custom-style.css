@@ -329,30 +329,22 @@ li.fancyTab.active a {
     display: block;
 }
 
-@media (max-width: 1200px) {
-
-    .fancyTab .fa {
-        font-size: 36px;
-    }
-
-    .fancyTab .hidden-xs {
-        font-size:22px;
-    }
-
+.top-bar .right-sec > ul > li{
+    padding: 0;
+    margin: 10px;
+    text-align: center;
+}
+.top-bar .right-sec li:last-child{
+    border: none;
 }
 
+.column-list{
+    display: flex;
+    flex-wrap: wrap;
+}
 
-@media (max-width: 992px) {
-
-    .fancyTab .fa {
-        font-size: 33px;
-    }
-
-    .fancyTab .hidden-xs {
-        font-size:18px;
-        font-weight:normal;
-    }
-
+.column-list .list-group-item{
+    flex-basis: 25%;
 }
 
 /*----PROFILE----*/
@@ -518,13 +510,42 @@ body .modal-content{
     right: 25px;
 }
 
+@media (max-width: 1200px) {
+
+    .fancyTab .fa {
+        font-size: 36px;
+    }
+
+    .fancyTab .hidden-xs {
+        font-size:22px;
+    }
+
+}
+
 @media only screen and (max-width : 992px) {
+    .fancyTab .fa {
+        font-size: 33px;
+    }
+
+    .fancyTab .hidden-xs {
+        font-size:18px;
+        font-weight:normal;
+    }
+
     .filter-section .search-car__list {
         flex-wrap: wrap;
     }
     .filter-section .search-car__list li {
         width: 100%;
         margin-bottom: 10px;
+    }
+
+    .padding-md-30{
+        padding-top: 30px;
+    }
+
+    .shopping-cart .promo{
+        border: none;
     }
 }
 
@@ -552,4 +573,27 @@ body .modal-content{
         color: #333;
     }
 
+    .btn-sm{
+        width: 200px !important;
+        display: block;
+        margin: 15px auto 0;
+    }
+
+    .column-list .list-group-item{
+        flex-basis: 33.333333%;
+    }
+
+    .top-bar .social-top {
+        display: block !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .column-list .list-group-item{
+        flex-basis: 100%;
+    }
+
+    .fancyTab > a {
+        font-size:13px;
+    }
 }

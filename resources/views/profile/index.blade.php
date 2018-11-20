@@ -61,7 +61,7 @@
                                         <small>{{__('В этом разделе вы можете изменить свои личные данные.')}}</small>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 padding-md-30">
                                     <div class="profile-item profile-item-delivery">
                                         <a class="link-prof-item" data-id-href="tabs-3" href="#">
                                             <span>{{__('Информация о доставке')}}</span>
@@ -79,7 +79,7 @@
                                         <small>{{__('Информация о всех ваших заказах: номера, даты, состав заказов и их статусы.')}}</small>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 padding-md-30">
                                     <div class="profile-item profile-item-car">
                                         <a class="link-prof-item" data-id-href="tabs-4" href="#">
                                             <span>{{__('Мои автомобили')}}</span>
@@ -97,7 +97,7 @@
                                         <small>{{__('Здесь вы можете сменить свои данные для доступа в личный кабинет.')}}</small>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 padding-md-30">
                                     <div class="profile-item profile-item-retweet">
                                         <a class="link-prof-item" data-id-href="tabs-6" href="#">
                                             <span>{{__('Мои возвраты')}}</span>
@@ -115,7 +115,7 @@
                                         <small>{{__('Здесь вы можете просмотреть баланс и историю пополнений.')}}</small>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 padding-md-30">
                                     <div class="profile-item profile-item-chart">
                                         <a class="link-prof-item" data-id-href="tabs-8" href="#">
                                             <span>{{__('Взаиморасчеты')}}</span>
