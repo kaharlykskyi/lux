@@ -88,6 +88,7 @@
                     </section>
                 </div>
                 <div class="col-md-4">
+                @guest
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active">
@@ -188,43 +189,6 @@
                                             </select>
                                         </label>
                                     </li>
-                                    <script>
-                                        $(document).ready(function () {
-                                            $('#delivery_department').on('focus input',function () {
-                                                const flag = ($('#delivery-service').val() === 'novaposhta');
-                                                if (flag){
-                                                    const city = $('#city').val();
-                                                    $('.delivery-department .loader').css({display: 'inline-block'});
-                                                    $('#delivery_department').autocomplete({
-                                                        source: (request, response) => {
-                                                            $.ajax({
-                                                                url: 'https://api.novaposhta.ua/v2.0/json/',
-                                                                method: "POST",
-                                                                data:JSON.stringify({
-                                                                    "apiKey": "{{config('app.novaposhta_key')}}",
-                                                                    "modelName": "AddressGeneral",
-                                                                    "calledMethod": "getWarehouses",
-                                                                    "methodProperties": {
-                                                                        "Language": "ru",
-                                                                        "CityName": `${city}`,
-                                                                    }
-                                                                }),
-                                                                success: (data) => {
-                                                                    $('.delivery-department .loader').css({display: 'none'});
-                                                                    response($.map(data.data, (item) => {
-                                                                        return{
-                                                                            value: item.DescriptionRu,
-                                                                        }
-                                                                    }));
-                                                                }
-                                                            });
-                                                        },
-                                                        minLength:0
-                                                    }).on('focus', function() { $(this).keydown(); });
-                                                }
-                                            })
-                                        });
-                                    </script>
                                     <li class="col-sm-12">
                                         <label class="relative delivery-department">{{__('Отделение  *')}}
                                             <input id="delivery_department" type="text" class="form-control{{ $errors->has('delivery_department') ? ' is-invalid' : '' }}" name="delivery_department" autocomplete="off">
@@ -259,7 +223,7 @@
                             </form>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="old_user">
-                            <form method="POST" action="{{ route('login') }}">
+                            <form method="POST" action="{{ route('checkout.old_user') }}">
                                 @csrf
 
                                 <ul class="row">
@@ -297,6 +261,118 @@
                             </form>
                         </div>
                     </div>
+                @else
+                     <div class="login-sec">
+                         @php
+                             $delivery_inf = DB::table('delivery_info')
+                             ->where('user_id',Auth::user()->id)
+                             ->join('country','country.id','=','delivery_info.delivery_country')
+                             ->join('city','city.id','=','delivery_info.delivery_city')
+                             ->select('delivery_info.*','country.name as country','city.name as city')
+                             ->first();
+                         @endphp
+                         <form method="POST" action="{{ route('checkout.create_oder') }}">
+                             @csrf
+
+                             <ul class="row">
+                                 <li class="col-sm-12">
+                                     <label>{{ __('Имя') }}
+                                         <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ Auth::user()->name }}" required autofocus>
+                                     </label>
+                                     @if ($errors->has('name'))
+                                         <span class="invalid-feedback">
+                                            <strong>{{ $errors->first('name') }}</strong>
+                                        </span>
+                                     @endif
+                                 </li>
+                                 <li class="col-sm-12">
+                                     <label>{{__('Фамилия')}}
+                                         <input type="text" class="form-control {{ $errors->has('sername') ? ' is-invalid' : '' }}" name="sername" value="{{ Auth::user()->sername }}" required>
+                                     </label>
+                                     @if ($errors->has('sername'))
+                                         <span class="invalid-feedback">
+                                            <strong>{{ $errors->first('sername') }}</strong>
+                                        </span>
+                                     @endif
+                                 </li>
+                                 <li class="col-sm-12">
+                                     <label>{{__('Отчество')}}
+                                         <input type="text" class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" value="{{ Auth::user()->last_name }}" required>
+                                     </label>
+                                     @if ($errors->has('last_name'))
+                                         <span class="invalid-feedback">
+                                            <strong>{{ $errors->first('last_name') }}</strong>
+                                        </span>
+                                     @endif
+                                 </li>
+                                 <li class="col-sm-12">
+                                     <label>{{__('Адрес електронной почты')}}
+                                         <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ Auth::user()->email  }}" required>
+                                     </label>
+                                     @if ($errors->has('email'))
+                                         <span class="invalid-feedback">
+                                            <strong>{{ $errors->first('email') }}</strong>
+                                        </span>
+                                     @endif
+                                 </li>
+                                 <li class="col-sm-12">
+                                     <label>{{__('Телефон')}}
+                                         <input type="tel" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" name="phone" value="{{ isset($delivery_inf) ? $delivery_inf->phone : '' }}" required>
+                                     </label>
+                                     @if ($errors->has('phone'))
+                                         <span class="invalid-feedback">
+                                            <strong>{{ $errors->first('phone') }}</strong>
+                                        </span>
+                                     @endif
+                                 </li>
+                                 <li class="col-sm-12">
+                                     <label class="relative country">{{__('Страна')}}
+                                         <input id="country" oninput="getCountry($(this))" type="text" class="form-control{{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" value="{{ isset($delivery_inf) ? $delivery_inf->country : '' }}" required autocomplete="off">
+                                         <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+                                     </label>
+                                     @if ($errors->has('country'))
+                                         <span class="invalid-feedback">
+                                            <strong>{{ $errors->first('country') }}</strong>
+                                        </span>
+                                     @endif
+                                 </li>
+                                 <li class="col-sm-12">
+                                     <label class="relative city">{{__('Город')}}
+                                         <input id="city" oninput="getCity($(this))" type="text" class="form-control{{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" value="{{ isset($delivery_inf) ? $delivery_inf->city : '' }}" required autocomplete="off">
+                                         <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+                                     </label>
+                                     @if ($errors->has('city'))
+                                         <span class="invalid-feedback">
+                                            <strong>{{ $errors->first('city') }}</strong>
+                                        </span>
+                                     @endif
+                                 </li>
+                                 <li class="col-sm-12">
+                                     <label>{{__('Доставка *')}}
+                                         <select id="delivery-service" name="delivery_service" class="form-control" required>
+                                             <option value="novaposhta" @if(isset($delivery_inf)) @if($delivery_inf->delivery_service === 'novaposhta') selected @endif @else selected @endif>{{__('Новая почта')}}</option>
+                                             <option value="samovivoz" @isset($delivery_inf) @if($delivery_inf->delivery_service === 'samovivoz') selected @endif @endisset>{{__('Самовывоз')}}</option>
+                                         </select>
+                                     </label>
+                                 </li>
+                                 <li class="col-sm-12">
+                                     <label class="relative delivery-department">{{__('Отделение  *')}}
+                                         <input value="@isset($delivery_inf) {{$delivery_inf->delivery_department}} @endisset" id="delivery_department" type="text" class="form-control{{ $errors->has('delivery_department') ? ' is-invalid' : '' }}" name="delivery_department" autocomplete="off">
+                                         <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+                                     </label>
+                                     @if ($errors->has('delivery_department'))
+                                         <span class="invalid-feedback">
+                                            <strong>{{ $errors->first('delivery_department') }}</strong>
+                                        </span>
+                                     @endif
+                                 </li>
+                                 <li class="col-sm-12 text-left">
+                                     <button type="submit" class="btn-round">{{__('Сформировать заказ')}}</button>
+                                 </li>
+                             </ul>
+                         </form>
+                     </div>
+                @endguest
                 </div>
             </div>
         </div>
@@ -304,5 +380,56 @@
 
     </div>
     <!-- End Content -->
+    <script>
+        $(document).ready(function () {
+            $('#delivery_department').on('focus input',function () {
+                const flag = ($('#delivery-service').val() === 'novaposhta');
+                if (flag){
+                    const city = $('#city').val();
+                    $('.delivery-department .loader').css({display: 'inline-block'});
+                    $('#delivery_department').autocomplete({
+                        source: (request, response) => {
+                            $.ajax({
+                                url: 'https://api.novaposhta.ua/v2.0/json/',
+                                method: "POST",
+                                data:JSON.stringify({
+                                    "apiKey": "{{config('app.novaposhta_key')}}",
+                                    "modelName": "AddressGeneral",
+                                    "calledMethod": "getWarehouses",
+                                    "methodProperties": {
+                                        "Language": "ru",
+                                        "CityName": `${city}`,
+                                    }
+                                }),
+                                success: (data) => {
+                                    $('.delivery-department .loader').css({display: 'none'});
+                                    response($.map(data.data, (item) => {
+                                        return{
+                                            value: item.DescriptionRu,
+                                        }
+                                    }));
+                                }
+                            });
+                        },
+                        minLength:0
+                    }).on('focus', function() { $(this).keydown(); });
+                }
+            });
+
+            $('#new_user form').submit(function (e) {
+                e.preventDefault();
+               $.post($(this).attr('action'),$(this).serialize(),function (data) {
+                   if (data.errors !== undefined){
+                       let errors_html =  ``;
+                       for (let key in data.errors){
+                           errors_html += `${data.errors[key][0]}\n`;
+                       }
+                       alert(errors_html);
+                   }
+                   console.log(data)
+               });
+            });
+        });
+    </script>
 
 @endsection

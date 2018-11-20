@@ -37,9 +37,15 @@ class ProductController extends Controller
     public function addCart(Request $request){
         $count = (integer)$request->post('product_count');
         $product = Product::find((integer)$request->id);
+        if ($request->cookie('cart_session_id')){
+            $cart_session_id = $request->cookie('cart_session_id');
+        } else {
+            $cart_session_id = cookie('cart_session_id',session()->getId(),24*60*60);
+        }
+
         $cart = Cart::where([
             (isset(Auth::user()->id))? ['user_id',Auth::user()->id]:['user_id',null],
-            ['session_id',session()->getId()],
+            ['session_id',$cart_session_id],
             ['oder_status', 1]
         ])->first();
 
@@ -47,7 +53,7 @@ class ProductController extends Controller
             $cart = new Cart();
             $data = [
                 'user_id' => (isset(Auth::user()->id))? Auth::user()->id: null,
-                'session_id' => session()->getId(),
+                'session_id' => $cart_session_id,
                 'oder_status' => 1
             ];
             $cart->fill($data);
@@ -78,8 +84,9 @@ class ProductController extends Controller
         return response()->json([
            'response' => [
                'sum' => $sum,
-               'save' => $save
+               'save' => $save,
+               'cookie' => $cart_session_id
            ]
-        ]);
+        ])->cookie($cart_session_id);
     }
 }

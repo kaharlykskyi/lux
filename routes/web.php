@@ -42,4 +42,6 @@ Route::prefix('product')->group(function () {
 Route::prefix('checkout')->group(function () {
     Route::get('/', 'CheckoutController@index')->name('checkout');
     Route::post('/new-user', 'CheckoutController@newUser')->name('checkout.new_user');
+    Route::post('/old-user', 'CheckoutController@oldUser')->name('checkout.old_user');
+    Route::post('/create-oder', 'CheckoutController@createOder')->middleware(['auth'])->name('checkout.create_oder');
 });

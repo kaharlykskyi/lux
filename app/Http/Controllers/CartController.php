@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
-    public function index(){
-        $cart = $this->getCart();
+    public function index(Request $request){
+        $cart = $this->getCart($request);
         $products = [];
         if (isset($cart)){
             $products = DB::table('cart_products')

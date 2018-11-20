@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -20,10 +21,10 @@ class Controller extends BaseController
             ->get();
     }
 
-    public function getCart(){
+    public function getCart(Request $request){
         $cart = DB::table('carts')->where([
-            (isset(Auth::user()->id))? ['user_id',Auth::user()->id]:['user_id',null],
-            ['session_id',session()->getId()],
+            isset(Auth::user()->id) ? ['user_id',Auth::user()->id]:['user_id',null],
+            ['session_id',$request->cookie('cart_session_id')],
             ['oder_status', 1]
         ])->first();
 

@@ -15,7 +15,7 @@
                     @php
                         $cart = DB::table('carts')->where([
                         (isset(Auth::user()->id))? ['user_id',Auth::user()->id]:['user_id',null],
-                        ['session_id',session()->getId()],
+                        ['session_id',Cookie::get('cart_session_id')],
                         ['oder_status', 1]
                         ])->first();
                         if (isset($cart)){
