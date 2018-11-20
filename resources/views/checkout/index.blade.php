@@ -201,52 +201,10 @@
                                         @endif
                                     </li>
                                     <li class="col-sm-12 padding-bottom-10 padding-top-10">
-                                        <script>
-                                            var map;
-                                            var infowindow;
-
-                                            function initMap() {
-                                                var pyrmont = {lat: 50.450418, lng: 30.523541};
-
-                                                map = new google.maps.Map(document.getElementById('map'), {
-                                                    center: pyrmont,
-                                                    zoom: 15
-                                                });
-
-                                                infowindow = new google.maps.InfoWindow();
-                                                var service = new google.maps.places.PlacesService(map);
-                                                service.nearbySearch({
-                                                    location: pyrmont,
-                                                    radius: 500,
-                                                    type: ['store']
-                                                }, callback);
-                                            }
-
-                                            function callback(results, status) {
-                                                if (status === google.maps.places.PlacesServiceStatus.OK) {
-                                                    for (var i = 0; i < results.length; i++) {
-                                                        createMarker(results[i]);
-                                                    }
-                                                }
-                                            }
-
-                                            function createMarker(place) {
-                                                var placeLoc = place.geometry.location;
-                                                var marker = new google.maps.Marker({
-                                                    map: map,
-                                                    position: place.geometry.location
-                                                });
-
-                                                google.maps.event.addListener(marker, 'click', function() {
-                                                    infowindow.setContent(place.name);
-                                                    infowindow.open(map, this);
-                                                });
-                                            }
-
-                                        </script>
+                                        <script src="{{asset('js/map.js')}}"></script>
                                         <div id="map" style="height: 330px;"></div>
                                         <script type="text/javascript" async defer
-                                                src="https://maps.googleapis.com/maps/api/js?v=3&libraries=places&callback=initMap&key=AIzaSyBwZCbxmC1FdisG6BKUgTC9QzKwl3P2aF4"></script>
+                                                src="https://maps.googleapis.com/maps/api/js?v=3&libraries=places&callback=initMap&key={{config('app.google_key')}}"></script>
                                     </li>
                                     <li class="col-sm-12">
                                         <label>{{__('Пароль')}}
@@ -413,6 +371,12 @@
                                             <strong>{{ $errors->first('delivery_department') }}</strong>
                                         </span>
                                      @endif
+                                 </li>
+                                 <li class="col-sm-12">
+                                    <script src="{{asset('js/map.js')}}"></script>
+                                    <div id="map" style="height: 330px;"></div>
+                                    <script type="text/javascript" async defer
+                                         src="https://maps.googleapis.com/maps/api/js?v=3&libraries=places&callback=initMap&key={{config('app.google_key')}}"></script>
                                  </li>
                                  <li class="col-sm-12 text-left">
                                      <button type="submit" class="btn-round">{{__('Сформировать заказ')}}</button>
