@@ -97,7 +97,8 @@ function getPostOfice(){
 $(document).ready(function () {
     if ($('#city').val().length > 0 && $('#delivery_department').val().length < 0){
         getPlacePost();
-    } else {
+    }
+    if($('#delivery_department').val().length > 0) {
         getPostOfice();
     }
 });
