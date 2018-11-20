@@ -107,7 +107,7 @@ $('#city').blur(function () {
     getPlacePost();
 });
 
-$('#delivery_department').change(function () {
+$('#delivery_department').blur(function () {
    if ($(this).val().length > 5){
        getPostOfice();
    }
