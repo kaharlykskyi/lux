@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             ProductsTableSeeder::class,
             CartsTableSeeder::class,
             CartProductsTableSeeder::class,
+            PagesTableSeeder::class,
         ]);
     }
 }

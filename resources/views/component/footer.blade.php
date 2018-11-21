@@ -3,10 +3,6 @@
 
         <!-- Footer Upside Links -->
         <div class="foot-link">
-            <ul>
-                <li><a href="#."> About us </a></li>
-                <li><a href="#."> Customer Service </a></li>
-            </ul>
         </div>
         <div class="row">
 
@@ -24,7 +20,13 @@
             <div class="col-md-3">
                 <h4>Categories</h4>
                 <ul class="links-footer">
-                    <li><a href="#.">Home Audio & Theater</a></li>
+                    @isset($pages)
+                        @foreach($pages as $page)
+                            @if($page->footer_column === 1)
+                                <li><a href="{{route('page',$page->alias)}}">{{$page->title}}</a></li>
+                            @endif
+                        @endforeach
+                    @endisset
                 </ul>
             </div>
 
@@ -32,7 +34,13 @@
             <div class="col-md-3">
                 <h4>Customer Services</h4>
                 <ul class="links-footer">
-                    <li><a href="#.">Shipping & Returns</a></li>
+                    @isset($pages)
+                        @foreach($pages as $page)
+                            @if($page->footer_column === 2)
+                                <li><a href="{{route('page',$page->alias)}}">{{$page->title}}</a></li>
+                            @endif
+                        @endforeach
+                    @endisset
                 </ul>
             </div>
 
@@ -40,7 +48,13 @@
             <div class="col-md-2">
                 <h4>Information</h4>
                 <ul class="links-footer">
-                    <li><a href="#.">Our Blog</a></li>
+                    @isset($pages)
+                        @foreach($pages as $page)
+                            @if($page->footer_column === 3)
+                                <li><a href="{{route('page',$page->alias)}}">{{$page->title}}</a></li>
+                            @endif
+                        @endforeach
+                    @endisset
                 </ul>
             </div>
         </div>
@@ -52,7 +66,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-6">
-                <p>Copyright © 2017 <a href="#." class="ri-li"> SmartTech </a>HTML5 template. All rights reserved</p>
+                <p>Copyright © {{date('Y')}} <a href="#." class="ri-li"> SmartTech </a>HTML5 template. All rights reserved</p>
             </div>
             <div class="col-sm-6 text-right"> <img src="{{asset('images/card-icon.png')}}" alt=""> </div>
         </div>

@@ -45,3 +45,6 @@ Route::prefix('checkout')->group(function () {
     Route::post('/old-user', 'CheckoutController@oldUser')->name('checkout.old_user');
     Route::post('/create-oder', 'CheckoutController@createOder')->middleware(['auth'])->name('checkout.create_oder');
 });
+
+/*------PAGES------*/
+Route::get('/{alias}','PageController@index')->name('page');
