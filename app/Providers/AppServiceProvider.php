@@ -15,9 +15,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $pages = Page::all();
+        if(!app()->runningInConsole() ){
+            $pages = Page::all();
 
-        View::share('pages', $pages);
+            View::share('pages', $pages);
+        }
     }
 
     /**
