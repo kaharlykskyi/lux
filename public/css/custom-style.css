@@ -15,6 +15,10 @@
     color: #ffffff;
 }
 
+.bold{
+    font-weight: 700;
+}
+
 body .form-control{
     border-radius: 20px;
     height: 40px;
@@ -508,6 +512,13 @@ body .modal-content{
     width: 300px;
     display: none;
     right: 25px;
+}
+
+/*-----SITE PAGE-----*/
+.page-content p{
+    font-size: 14px;
+    line-height: 20px;
+    margin-top: 10px;
 }
 
 @media (max-width: 1200px) {
