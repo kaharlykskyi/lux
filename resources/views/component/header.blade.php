@@ -1,6 +1,6 @@
 <header>
-    <div class="container">
-        <div class="logo"> <a href="{{ route('home') }}"><img src="{{asset('images/logo.png')}}" alt="{{ config('app.name', 'Laravel') }}" ></a> </div>
+    <div class="container" style="padding-left: 200px;">
+        <div class="logo" style="position: absolute;left: 15px;top: -30px;"> <a href="{{ route('home') }}"><img src="{{asset('images/logo.png')}}" alt="{{ config('app.name', 'Laravel') }}" ></a> </div>
         <div class="search-cate">
             <select class="selectpicker">
                 <option> All Categories</option>
@@ -14,10 +14,11 @@
             <li>
                     @php
                         $cart = DB::table('carts')->where([
-                        (isset(Auth::user()->id))? ['user_id',Auth::user()->id]:['user_id',null],
-                        ['session_id',Cookie::get('cart_session_id')],
-                        ['oder_status', 1]
-                        ])->first();
+                                isset(Auth::user()->id)
+                                    ?['user_id',Auth::user()->id]
+                                    :['session_id',Cookie::get('cart_session_id')],
+                                ['oder_status', 1]
+                            ])->first();
                         if (isset($cart)){
                             $products = DB::table('cart_products')
                                 ->where('cart_products.cart_id',$cart->id)
