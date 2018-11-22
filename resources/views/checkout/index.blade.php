@@ -394,23 +394,24 @@
     <!-- End Content -->
     <script>
         $(document).ready(function () {
-            $('#delivery_department').on('focus input',function () {
+            $('#delivery_department').on('input',function () {
                 const flag = ($('#delivery-service').val() === 'novaposhta');
-                if (flag){
+                if (flag && $(this).val().length > 0){
                     const city = $('#city').val();
-                    $('.delivery-department .loader').css({display: 'inline-block'});
                     $('#delivery_department').autocomplete({
                         source: (request, response) => {
+                            $('.delivery-department .loader').css({display: 'inline-block'});
                             $.ajax({
                                 url: 'https://api.novaposhta.ua/v2.0/json/',
                                 method: "POST",
                                 data:JSON.stringify({
                                     "apiKey": "{{config('app.novaposhta_key')}}",
-                                    "modelName": "AddressGeneral",
+                                    "modelName": "Address",
                                     "calledMethod": "getWarehouses",
                                     "methodProperties": {
                                         "Language": "ru",
                                         "CityName": `${city}`,
+                                        "FindByString": $(this).val()
                                     }
                                 }),
                                 success: (data) => {
@@ -423,8 +424,8 @@
                                 }
                             });
                         },
-                        minLength:0
-                    }).on('focus', function() { $(this).keydown(); });
+                        minLength: 0
+                    });
                 }
             });
 
@@ -438,8 +439,24 @@
                        }
                        alert(errors_html);
                    }
-                   console.log(data)
                });
+            });
+
+            if ($('#city').val().length > 0 && $('#delivery_department').val().length < 1){
+                getPlacePost('city');
+            }
+            if($('#delivery_department').val().length > 0) {
+                getPostOfice('city');
+            }
+
+            $('#city').blur(function () {
+                getPlacePost('city');
+            });
+
+            $('#delivery_department').blur(function () {
+                if ($(this).val().length > 0){
+                    getPostOfice('city');
+                }
             });
         });
     </script>

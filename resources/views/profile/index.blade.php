@@ -17,7 +17,7 @@
                 <div class="row padding-10">
                     <div class="col-md-12">
                         <div class="alert alert-danger" role="alert">
-                            <strong>{{ __('Електронный адрес не подтверждён!!! ') }}</strong>
+                            <strong>{{ __('Електронный адрес не подтверждён! ') }}</strong>
                             {{ __('Если вы не получили письмо') }},
                             <a class="text-danger" href="{{ route('verification.resend') }}">
                                 <em>{{ __('нажмите здесь, чтобы запросить снова') }}</em>
@@ -253,16 +253,24 @@
 
                                     <li class="col-sm-12">
                                         <label>{{__('Служба доставки')}}
-                                            <select class="form-control" name="delivery_service" >
-                                                <option @isset($delivery_info) @if($delivery_info->delivery_service === 'Новая Почта') selected @endif @endisset value="{{__('Новая Почта')}}">{{__('Новая Почта')}}</option>
+                                            <select class="form-control" name="delivery_service" id="delivery_service">
+                                                <option @isset($delivery_info) @if($delivery_info->delivery_service === 'novaposhta') selected @endif @endisset value="{{__('novaposhta')}}">{{__('Новая Почта')}}</option>
                                             </select>
                                         </label>
                                     </li>
 
                                     <li class="col-sm-12">
-                                        <label>{{ __('Номер отделения') }}
-                                            <input type="text" class="form-control" name="delivery_department" value="@isset($delivery_info){{ $delivery_info->delivery_department }}@endisset">
+                                        <label class="relative delivery-department">{{ __('Номер отделения') }}
+                                            <input type="text" class="form-control" id="delivery_department" name="delivery_department" value="@isset($delivery_info){{ $delivery_info->delivery_department }}@endisset" autocomplete="off">
+                                            <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
                                         </label>
+                                    </li>
+
+                                    <li class="col-sm-12">
+                                        <script src="{{asset('js/map.js')}}"></script>
+                                        <div id="map" style="height: 200px;"></div>
+                                        <script type="text/javascript" async defer
+                                                src="https://maps.googleapis.com/maps/api/js?v=3&libraries=places&callback=initMap&key={{config('app.google_key')}}"></script>
                                     </li>
 
                                     <li class="col-sm-12 text-left">
@@ -655,6 +663,61 @@
                     }
                 });
             });
+
+            if ($('#delivery_city').val().length > 0 && $('#delivery_department').val().length < 1){
+                getPlacePost('delivery_city');
+            }
+            if($('#delivery_department').val().length > 0) {
+                getPostOfice('delivery_city');
+            }
+
+            $('#delivery_city').blur(function () {
+                getPlacePost('delivery_city');
+            });
+
+            $('#delivery_department').blur(function () {
+                if ($(this).val().length > 0){
+                    getPostOfice('delivery_city');
+                }
+            });
+
+            $('#delivery_department').on('input',function () {
+                const flag = ($('#delivery_service').val() === 'novaposhta');
+                console.log(flag);
+                if (flag && $(this).val().length > 0){
+                    const city = $('#delivery_city').val();
+                    $('#delivery_department').autocomplete({
+                        source: (request, response) => {
+                            $('.delivery-department .loader').css({display: 'inline-block'});
+                            $.ajax({
+                                url: 'https://api.novaposhta.ua/v2.0/json/',
+                                method: "POST",
+                                data:JSON.stringify({
+                                    "apiKey": "{{config('app.novaposhta_key')}}",
+                                    "modelName": "Address",
+                                    "calledMethod": "getWarehouses",
+                                    "methodProperties": {
+                                        "Language": "ru",
+                                        "CityName": `${city}`,
+                                        "FindByString": $(this).val()
+                                    }
+                                }),
+                                success: (data) => {
+                                    $('.delivery-department .loader').css({display: 'none'});
+                                    response($.map(data.data, (item) => {
+                                        return{
+                                            value: item.DescriptionRu,
+                                        }
+                                    }));
+                                }
+                            });
+                        },
+                        minLength: 0
+                    });
+                }
+
+            });
+
         });
     </script>
 

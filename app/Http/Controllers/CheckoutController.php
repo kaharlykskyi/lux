@@ -127,8 +127,8 @@ class CheckoutController extends Controller
             'email' => $data['email'],
         ]);
 
-        $country = DB::table('country')->where('name',$data['country'])->first();
-        $city= DB::table('city')->where('name',$data['city'])->first();
+        $country = $this->parseCountry($data['country']);
+        $city= $this->parseCity($data['city'],$country->id);
 
         DeliveryInfo::where('user_id',Auth::user()->id)->update([
             'phone' => $data['phone'],

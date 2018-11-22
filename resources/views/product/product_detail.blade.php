@@ -37,7 +37,7 @@
                                     <!-- Item Content -->
                                     <div class="col-xs-7">
                                         <h5>{{$product->name}}</h5>
-                                        <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
+                                        <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 {{__('Отзыв(ов)')}}</span></p>
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 @isset($product->old_price)
@@ -47,7 +47,7 @@
                                                 <span class="price">{{$product->price}} грн</span>
                                             </div>
                                             <div class="col-sm-6">
-                                                <p>Availability: <span class="in-stock">In stock</span></p>
+                                                <p class="font-size-12-440">{{__('Достубность')}}: <span class="in-stock">{{__('В наличии')}}</span></p>
                                             </div>
                                         </div>
                                         <!-- List Details -->
@@ -58,40 +58,22 @@
                                         </div>
                                         <!-- Compare Wishlist -->
                                         <ul class="cmp-list">
-                                            <li><a href="#."><i class="fa fa-heart"></i> Add to Wishlist</a></li>
-                                            <li><a href="#."><i class="fa fa-navicon"></i> Add to Compare</a></li>
-                                            <li><a href="#."><i class="fa fa-envelope"></i> Email to a friend</a></li>
+                                            <li><a href="#."><i class="fa fa-heart"></i> <span class="hidden-xs">{{__('Список пожеланий')}}</span></a></li>
+                                            <li><a href="#."><i class="fa fa-navicon"></i><span class="hidden-xs"> {{__('Список сравнения')}}</span></a></li>
+                                            <li><a href="#."><i class="fa fa-envelope"></i><span class="hidden-xs"> {{__('Педилиться')}}</span></a></li>
                                         </ul>
                                         <!-- Quinty -->
-                                        <div class="quinty">
-                                            <input type="number" value="1" id="quinty-product">
+                                        <div class="add-car-block">
+                                            <div class="quinty">
+                                                <input type="number" value="1" id="quinty-product">
+                                            </div>
+                                            <a href="#" class="btn-round" onclick="addCart();return false;">
+                                                <i class="icon-basket-loaded margin-right-5"></i><span class="hidden-xs hidden-sm hidden-md">{{__('Добавить в корзину')}}</span>
+                                            </a>
                                         </div>
-                                        <a href="#" class="btn-round" onclick="addCart();return false;"><i class="icon-basket-loaded margin-right-5"></i>{{__('Добавить в корзину')}}</a>
-                                        <script>
-                                            function addCart() {
-                                                const count = $('#quinty-product').val();
-                                                $.ajaxSetup({
-                                                    headers: {
-                                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                                                    },
 
-                                                });
-
-                                                $.ajax({
-                                                    type: 'POST',
-                                                    url: '{{route('add_cart',$product->id)}}',
-                                                    data: `product_count=${count}`,
-                                                    success: function (data) {
-                                                        console.log(data.response);
-                                                        $('#total-price').text(`${data.response.sum} грн`);
-
-                                                        alert(data.response.save);
-                                                    }
-                                                });
-                                            }
-                                        </script>
                                         <a href="#." class="btn-round" style="background: #bbbbbb;" onclick="$('.fast-buy-block').show()">
-                                            <i class="ion-ios-stopwatch margin-right-5"></i>{{__('Заказать по фасту')}}
+                                            <i class="ion-ios-stopwatch margin-right-5"></i><span class="font-size-11-440">{{__('Быстрый заказ')}}</span>
                                         </a>
                                         <div class="relative">
                                             <div class="fast-buy-block" style="background: #fff;">
@@ -148,9 +130,9 @@
 
                                 <!-- Nav tabs -->
                                 <ul class="nav" role="tablist">
-                                    <li role="presentation" class="active"><a href="#pro-detil"  role="tab" data-toggle="tab">Product Details</a></li>
-                                    <li role="presentation"><a href="#cus-rev"  role="tab" data-toggle="tab">Customer Reviews</a></li>
-                                    <li role="presentation"><a href="#ship" role="tab" data-toggle="tab">Shipping & Payment</a></li>
+                                    <li role="presentation" class="active"><a href="#pro-detil"  role="tab" data-toggle="tab">{{__('Описание продукта')}}</a></li>
+                                    <li role="presentation"><a href="#cus-rev"  role="tab" data-toggle="tab">{{__('Отзывы')}}</a></li>
+                                    <li role="presentation"><a href="#ship" role="tab" data-toggle="tab">{{__('Доставка и оплата')}}</a></li>
                                 </ul>
 
                                 <!-- Tab panes -->
@@ -170,111 +152,36 @@
                         </div>
 
                         <!-- Related Products -->
-                        <section class="padding-top-30 padding-bottom-0">
-                            <!-- heading -->
-                            <div class="heading">
-                                <h2>Related Products</h2>
-                                <hr>
-                            </div>
-                            <!-- Items Slider -->
-                            <div class="item-slide-4 with-nav">
-                                <!-- Product -->
-                                <div class="product">
-                                    <article> <img class="img-responsive" src="images/item-img-1-1.jpg" alt="" >
-                                        <!-- Content -->
-                                        <span class="tag">Latop</span> <a href="#." class="tittle">Laptop Alienware 15 i7 Perfect For Playing Game</a>
-                                        <!-- Reviews -->
-                                        <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
-                                        <div class="price">$350.00 </div>
-                                        <a href="#." class="cart-btn"><i class="icon-basket-loaded"></i></a> </article>
-                                </div>
-                                <!-- Product -->
-                                <div class="product">
-                                    <article> <img class="img-responsive" src="images/item-img-1-2.jpg" alt="" > <span class="sale-tag">-25%</span>
+                        @component('product.component.related')
 
-                                        <!-- Content -->
-                                        <span class="tag">Tablets</span> <a href="#." class="tittle">Mp3 Sumergible Deportivo Slim Con 8GB</a>
-                                        <!-- Reviews -->
-                                        <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
-                                        <div class="price">$350.00 <span>$200.00</span></div>
-                                        <a href="#." class="cart-btn"><i class="icon-basket-loaded"></i></a> </article>
-                                </div>
-
-                                <!-- Product -->
-                                <div class="product">
-                                    <article> <img class="img-responsive" src="images/item-img-1-3.jpg" alt="" >
-                                        <!-- Content -->
-                                        <span class="tag">Appliances</span> <a href="#." class="tittle">Reloj Inteligente Smart Watch M26 Touch </a>
-                                        <!-- Reviews -->
-                                        <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
-                                        <div class="price">$350.00</div>
-                                        <a href="#." class="cart-btn"><i class="icon-basket-loaded"></i></a> </article>
-                                </div>
-
-                                <!-- Product -->
-                                <div class="product">
-                                    <article> <img class="img-responsive" src="images/item-img-1-4.jpg" alt="" > <span class="new-tag">New</span>
-
-                                        <!-- Content -->
-                                        <span class="tag">Accessories</span> <a href="#." class="tittle">Teclado Inalambrico Bluetooth Con Air Mouse</a>
-                                        <!-- Reviews -->
-                                        <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
-                                        <div class="price">$350.00</div>
-                                        <a href="#." class="cart-btn"><i class="icon-basket-loaded"></i></a> </article>
-                                </div>
-
-                                <!-- Product -->
-                                <div class="product">
-                                    <article> <img class="img-responsive" src="images/item-img-1-5.jpg" alt="" >
-                                        <!-- Content -->
-                                        <span class="tag">Appliances</span> <a href="#." class="tittle">Funda Para Ebook 7" 128GB full HD</a>
-                                        <!-- Reviews -->
-                                        <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
-                                        <div class="price">$350.00</div>
-                                        <a href="#." class="cart-btn"><i class="icon-basket-loaded"></i></a> </article>
-                                </div>
-
-                                <!-- Product -->
-                                <div class="product">
-                                    <article> <img class="img-responsive" src="images/item-img-1-6.jpg" alt="" > <span class="sale-tag">-25%</span>
-
-                                        <!-- Content -->
-                                        <span class="tag">Tablets</span> <a href="#." class="tittle">Mp3 Sumergible Deportivo Slim Con 8GB</a>
-                                        <!-- Reviews -->
-                                        <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
-                                        <div class="price">$350.00 <span>$200.00</span></div>
-                                        <a href="#." class="cart-btn"><i class="icon-basket-loaded"></i></a> </article>
-                                </div>
-
-                                <!-- Product -->
-                                <div class="product">
-                                    <article> <img class="img-responsive" src="images/item-img-1-7.jpg" alt="" >
-                                        <!-- Content -->
-                                        <span class="tag">Appliances</span> <a href="#." class="tittle">Reloj Inteligente Smart Watch M26 Touch </a>
-                                        <!-- Reviews -->
-                                        <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
-                                        <div class="price">$350.00</div>
-                                        <a href="#." class="cart-btn"><i class="icon-basket-loaded"></i></a> </article>
-                                </div>
-
-                                <!-- Product -->
-                                <div class="product">
-                                    <article> <img class="img-responsive" src="images/item-img-1-8.jpg" alt="" > <span class="new-tag">New</span>
-
-                                        <!-- Content -->
-                                        <span class="tag">Accessories</span> <a href="#." class="tittle">Teclado Inalambrico Bluetooth Con Air Mouse</a>
-                                        <!-- Reviews -->
-                                        <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
-                                        <div class="price">$350.00</div>
-                                        <a href="#." class="cart-btn"><i class="icon-basket-loaded"></i></a> </article>
-                                </div>
-                            </div>
-                        </section>
+                        @endcomponent
                     </div>
                 </div>
             </div>
         </section>
 
     </div>
+    <script>
+        function addCart() {
+            const count = $('#quinty-product').val();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
 
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '{{route('add_cart',$product->id)}}',
+                data: `product_count=${count}`,
+                success: function (data) {
+                    console.log(data.response);
+                    $('#total-price').text(`${data.response.sum} грн`);
+
+                    alert(data.response.save);
+                }
+            });
+        }
+    </script>
 @endsection

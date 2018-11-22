@@ -5,7 +5,15 @@ function getCartItem(link) {
 }
 
 function changeCount(product,cart,link) {
-    let count = $('#count'+product).val();
+    let count;
+    if (document.documentElement.clientWidth > 767){
+        count = $('#count'+product).val();
+    } else {
+        count = $('#count-mob'+product).val();
+    }
+    if (count.length < 1){
+        return false;
+    }
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -39,6 +47,7 @@ function deleteProduct(product,cart,link) {
         data: `product_id=${product}&cart_id=${cart}`,
         success: function (data) {
             $('#tr_product'+data.response.id_product).remove();
+            $('#li_product'+data.response.id_product).remove();
             $('#cart .g-totel span').text(`${data.response.sum} грн`);
             $('#total-price').text(`${data.response.sum} грн`);
         }

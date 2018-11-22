@@ -15,7 +15,7 @@ function initMap() {
         location: pyrmont,
         radius: 5000,
         type: ['post_office'],
-        name: 'nova poshta'
+        query: 'Новая Почта'
     }, callback);
 }
 
@@ -40,10 +40,10 @@ function createMarker(place) {
     });
 }
 
-function getPlacePost(){
+function getPlacePost(city){
     var geocoder = new google.maps.Geocoder();
     geocoder.geocode(
-        {'address': $('#city').val()},
+        {'address': $('#'+city).val()},
         function(results, status) {
             if (status === google.maps.GeocoderStatus.OK) {
                 var place = results[0].geometry.location;
@@ -60,17 +60,17 @@ function getPlacePost(){
                     location: pyrmont,
                     radius: 5000,
                     type: ['post_office'],
-                    name: 'nova poshta'
+                    query: 'Новая Почта'
                 }, callback);
             }
         }
     );
 }
 
-function getPostOfice(){
+function getPostOfice(city){
     var geocoder = new google.maps.Geocoder();
     geocoder.geocode(
-        {'address': $('#city').val() +','+ $('#delivery_department').val()},
+        {'address': $('#'+city).val() +','+ $('#delivery_department').val()},
         function(results, status) {
             if (status === google.maps.GeocoderStatus.OK) {
                 var place = results[0].geometry.location;
@@ -93,22 +93,3 @@ function getPostOfice(){
         }
     );
 }
-
-$(document).ready(function () {
-    if ($('#city').val().length > 0 && $('#delivery_department').val().length < 0){
-        getPlacePost();
-    }
-    if($('#delivery_department').val().length > 0) {
-        getPostOfice();
-    }
-});
-
-$('#city').blur(function () {
-    getPlacePost();
-});
-
-$('#delivery_department').blur(function () {
-   if ($(this).val().length > 5){
-       getPostOfice();
-   }
-});

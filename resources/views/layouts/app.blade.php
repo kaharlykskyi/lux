@@ -145,7 +145,9 @@
             let word = $(obj).val();
             let iso =  $( "#country" ).val();
             iso = iso.split(' ',2);
-            iso = iso[1].substring(1, iso[1].length-1).split('/',2);
+            if(iso[1] !== undefined){
+                iso = iso[1].substring(1, iso[1].length-1).split('/',2);
+            }
             $( "#city" ).autocomplete({
                 source: (request, response) => {
                     $('.city .loader').css({display: 'inline-block'});

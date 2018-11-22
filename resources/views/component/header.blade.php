@@ -1,6 +1,8 @@
 <header>
-    <div class="container" style="padding-left: 200px;">
-        <div class="logo" style="position: absolute;left: 15px;top: -30px;"> <a href="{{ route('home') }}"><img src="{{asset('images/logo.png')}}" alt="{{ config('app.name', 'Laravel') }}" ></a> </div>
+    <div class="container">
+        <div class="logo">
+            <a href="{{ route('home') }}"><img src="{{asset('images/logo.png')}}" alt="{{ config('app.name') }}" ></a>
+        </div>
         <div class="search-cate">
             <select class="selectpicker">
                 <option> All Categories</option>

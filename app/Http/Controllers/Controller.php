@@ -23,8 +23,9 @@ class Controller extends BaseController
 
     public function getCart(Request $request){
         $cart = DB::table('carts')->where([
-            isset(Auth::user()->id) ? ['user_id',Auth::user()->id]:['user_id',null],
-            ['session_id',$request->cookie('cart_session_id')],
+            isset(Auth::user()->id)
+                ?['user_id',Auth::user()->id]
+                :['session_id',$request->cookie('cart_session_id')],
             ['oder_status', 1]
         ])->first();
 
