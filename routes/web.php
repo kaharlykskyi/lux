@@ -48,3 +48,8 @@ Route::prefix('checkout')->group(function () {
 
 /*------PAGES------*/
 Route::get('/{alias}','PageController@index')->name('page');
+
+/*!!--------ADMIN--------!!*/
+Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth','permission']],function (){
+    Route::get('/dashboard','DashboardController@index')->name('admin.dashboard');
+});
