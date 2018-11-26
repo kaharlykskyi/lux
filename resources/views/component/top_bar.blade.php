@@ -22,6 +22,11 @@
                             <li>
                                 <a href="{{route('profile')}}">{{__('Профиль')}}</a>
                             </li>
+                            @if(Auth::user()->permission === 'admin')
+                                <li>
+                                    <a href="{{route('admin.dashboard')}}">{{__('Админ панель')}}</a>
+                                </li>
+                            @endif
                             <li>
                                 <a href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
