@@ -75,5 +75,48 @@ class PagesTableSeeder extends Seeder
             'created_at'=> Carbon::now(),
             'updated_at'=> Carbon::now(),
         ]);
+        DB::table('pages')->insert([
+            'alias' => 'kontakty',
+            'title' => 'Контакты',
+            'description' => 'описание',
+            'content' => '<!-- Conatct -->
+                <div class="contact">
+                <div class="contact-form"><!-- FORM  --><form class="contact-form" id="contact_form" method="post" onsubmit="return false" action="" role="form">
+                <div class="row">
+                <div class="col-md-8"><!-- Payment information -->
+                <div class="heading">
+                <h2>Если у вас возникли вопросы, то свяжитесь с нами ?</h2>
+                </div>
+                <ul class="row">
+                    <li class="col-sm-6"><label>Имя <input class="form-control" id="name" name="name" placeholder="" type="text" required/> </label></li>
+                    <li class="col-sm-6"><label>Телефон <input class="form-control" id="phone" name="phone" placeholder="" type="tel" required /> </label></li>
+                    <li class="col-sm-12"><label>Электронная почта <input class="form-control" id="email" name="email" placeholder="" type="text" /> </label></li>
+                    <li class="col-sm-12"><label>Коментарий<textarea class="form-control" id="message" name="message" placeholder="" rows="2"></textarea> </label></li>
+                    <li class="col-sm-12 no-margin"><button class="btn-round" id="btn_submit" onclick="proceed();" type="submit" value="submit">Отправить</button></li>
+                </ul>
+                </div>
+                <!-- Conatct Infomation -->
+                <div class="col-md-4">
+                <div class="contact-info">
+                <h5>MakeCars</h5>
+                <p>Прочакаем твою машинку!</p>
+                <hr />
+                <h6>Адресс:</h6>
+                <p>45 Grand Central Terminal New York, NY 1017 United State USA</p>
+                <h6>Phone:</h6>
+                <p>(+100) 123 456 7890</p>
+                <p>(+100) 987 654 3210</p>
+                <h6>Email:</h6>
+                <p>Support@smarttech.com Support24/7@smarttech.com</p>
+                </div>
+                </div>
+                </div>
+                </form></div>
+                </div>',
+            'user_id' => 1,
+            'footer_column' => 3,
+            'created_at'=> Carbon::now(),
+            'updated_at'=> Carbon::now(),
+        ]);
     }
 }

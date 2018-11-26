@@ -1,0 +1,35 @@
+<aside class="menu-sidebar d-none d-lg-block">
+    <div class="logo" style="overflow: hidden;">
+        <a href="{{route('admin.dashboard')}}">
+            <img style="width: 80%;" src="{{asset('images/logo.png')}}" alt="make cars" />
+        </a>
+    </div>
+    <div class="menu-sidebar__content js-scrollbar1">
+        <nav class="navbar-sidebar">
+            <ul class="list-unstyled navbar__list">
+                <li class="has-sub">
+                    <a class="js-arrow" href="#">
+                        <i class="fas fa-tachometer-alt"></i>{{__('Каталог')}}</a>
+                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                        <li>
+                            <a href="index.html">Dashboard 1</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="chart.html">
+                        <i class="fas fa-chart-bar"></i>Charts</a>
+                </li>
+                <li class="has-sub">
+                    <a class="js-arrow" href="#">
+                        <i class="fas fa-copy"></i>{{__('Управление контентом')}}</a>
+                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                        <li>
+                            <a href="{{route('admin.page.index')}}">{{__('Страници')}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>
