@@ -39,7 +39,7 @@
 
 </head>
 
-<body {{--class="animsition"--}}>
+<body {{--class="animsition"--}}> <!--TODO:uncomment on finished dev-->
 <div class="page-wrapper">
     <!-- HEADER MOBILE-->
     @component('admin.component.header_mob')@endcomponent

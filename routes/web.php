@@ -55,6 +55,8 @@ Route::post('/feedback','FeedBackController@index')->name('feedback');
 /*!!--------ADMIN--------!!*/
 Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth','permission']],function (){
     Route::get('/dashboard','DashboardController@index')->name('admin.dashboard');
+    Route::match(['get', 'post'], '/users','UserController@index')->name('admin.users');
+    Route::post('/permission','UserController@permission')->name('permission');
     Route::resources([
         'category' => 'CategoryController',
         'page' => 'PageController'
