@@ -189,7 +189,7 @@
                                             </select>
                                         </label>
                                     </li>
-                                    <li class="col-sm-12">
+                                    <li class="col-sm-12 delivery-dep" style="display:none;">
                                         <label class="relative delivery-department">{{__('Отделение  *')}}
                                             <input id="delivery_department" type="text" class="form-control{{ $errors->has('delivery_department') ? ' is-invalid' : '' }}" name="delivery_department" autocomplete="off">
                                             <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
@@ -353,7 +353,7 @@
                                          </select>
                                      </label>
                                  </li>
-                                 <li class="col-sm-12">
+                                 <li class="col-sm-12 delivery-dep" style="display: none">
                                      <label class="relative delivery-department">{{__('Отделение  *')}}
                                          <input value="@isset($delivery_inf) {{$delivery_inf->delivery_department}} @endisset" id="delivery_department" type="text" class="form-control{{ $errors->has('delivery_department') ? ' is-invalid' : '' }}" name="delivery_department" autocomplete="off">
                                          <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
@@ -386,6 +386,26 @@
     <!-- End Content -->
     <script>
         $(document).ready(function () {
+            if ($('#delivery-service').val() === 'novaposhta' && $('#city').val().length > 0){
+                $('.delivery-dep').show();
+            }
+
+            $('#delivery-service').change(function () {
+                if ($(this).val() === 'novaposhta' && $('#city').val().length > 0){
+                    $('.delivery-dep').show();
+                } else {
+                    $('.delivery-dep').hide();
+                }
+            });
+
+            $('#city').blur(function () {
+                if ($('#delivery-service').val() === 'novaposhta' && $(this).val().length > 0){
+                    $('.delivery-dep').show();
+                } else {
+                    $('.delivery-dep').hide();
+                }
+            });
+
             $('#delivery_department').on('input',function () {
                 const flag = ($('#delivery-service').val() === 'novaposhta');
                 if (flag && $(this).val().length > 0){

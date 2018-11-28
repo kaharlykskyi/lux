@@ -56,10 +56,9 @@ function getPlacePost(city){
 
                 infowindow = new google.maps.InfoWindow();
                 var service = new google.maps.places.PlacesService(map);
-                service.nearbySearch({
+                service.textSearch({
                     location: pyrmont,
                     radius: 5000,
-                    type: ['post_office'],
                     query: 'Новая Почта'
                 }, callback);
             }
@@ -83,11 +82,10 @@ function getPostOfice(city){
 
                 infowindow = new google.maps.InfoWindow();
                 var service = new google.maps.places.PlacesService(map);
-                service.nearbySearch({
+                service.textSearch({
                     location: pyrmont,
                     radius: 500,
-                    type: ['post_office'],
-                    query: results[0].formatted_address + ',Новая Почта'
+                    query: 'Новая Почта,' + $('#delivery_department').val()
                 }, callback);
             }
         }

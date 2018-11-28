@@ -174,7 +174,7 @@
                                     </li>
                                     <li class="col-sm-12">
                                         <label class="relative city">{{__('Город')}}
-                                            <input id="city" oninput="getCity($(this),'country')" type="text" class="form-control" name="city" value="{{ Auth::user()->city }}" required autocomplete="off">
+                                            <input id="city" oninput="getCity($(this),'#country')" type="text" class="form-control" name="city" value="{{ Auth::user()->city }}" required autocomplete="off">
                                             <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
                                         </label>
                                     </li>
@@ -259,7 +259,7 @@
                                         </label>
                                     </li>
 
-                                    <li class="col-sm-12">
+                                    <li class="col-sm-12 delivery-dep" style="display:none;">
                                         <label class="relative delivery-department">{{ __('Номер отделения') }}
                                             <input type="text" class="form-control" id="delivery_department" name="delivery_department" value="@isset($delivery_info){{ $delivery_info->delivery_department }}@endisset" autocomplete="off">
                                             <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
@@ -450,6 +450,26 @@
     <script>
         $(document).ready(function () {
 
+            if ($('#delivery_service').val() === 'novaposhta' && $('#delivery_city').val().length > 0){
+                $('.delivery-dep').show();
+            }
+
+            $('#delivery_service').change(function () {
+                if ($(this).val() === 'novaposhta' && $('#delivery_city').val().length > 0){
+                    $('.delivery-dep').show();
+                } else {
+                    $('.delivery-dep').hide();
+                }
+            });
+
+            $('#delivery_city').on('input',function () {
+                if ($('#delivery_service').val() === 'novaposhta' && $(this).val().length > 0){
+                    $('.delivery-dep').show();
+                } else {
+                    $('.delivery-dep').hide();
+                }
+            });
+
             $(function($){
                 $(document).mouseup(function (e){
                     const div = $(".identification-info");
@@ -569,6 +589,7 @@
                                 success: (data) => {
                                     $('.delivery-department .loader').css({display: 'none'});
                                     response($.map(data.data, (item) => {
+                                        console.log(data.data);
                                         return{
                                             value: item.DescriptionRu,
                                         }
