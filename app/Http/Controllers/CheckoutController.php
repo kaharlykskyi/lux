@@ -13,18 +13,30 @@ class CheckoutController extends Controller
 {
     use RegistersUsers, GEO;
 
+    protected $products = [];
+
+    protected $delivery_info = null;
+
     public function index(Request $request){
         $cart = $this->getCart($request);
-        $products = [];
+
         if (isset($cart)){
-            $products = DB::table('cart_products')
+            $this->products = DB::table('cart_products')
                 ->where('cart_products.cart_id',$cart->id)
                 ->join('products','products.id','=','cart_products.product_id')
                 ->select('products.*','cart_products.count','cart_products.cart_id')
                 ->get();
         }
 
-        return view('checkout.index',compact('products'));
+        if (Auth::user()){
+            $user = User::find(Auth::user()->id);
+            $this->delivery_info = $user->deliveryInfo;
+        }
+
+        return view('checkout.index')->with([
+            'products' => $this->products,
+            'delivery_inf' => $this->delivery_info
+        ]);
     }
 
     public function newUser(Request $request){
@@ -54,11 +66,11 @@ class CheckoutController extends Controller
 
         if (isset($data['country'])){
             $country = $this->parseCountry($data['country']);
-            $data['country'] = $country->id;
+            $data['country'] = "{$country->name} ({$country->alpha2})";
         }
         if (isset($data['city']) && isset($country)){
             $city = $this->parseCity($data['city'],$country->id);
-            $data['city'] = $city->id;
+            $data['city'] = $city->name;
         }
 
         $user = new User();

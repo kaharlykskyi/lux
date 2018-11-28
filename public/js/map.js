@@ -85,9 +85,9 @@ function getPostOfice(city){
                 var service = new google.maps.places.PlacesService(map);
                 service.nearbySearch({
                     location: pyrmont,
-                    radius: 300,
+                    radius: 500,
                     type: ['post_office'],
-                    query: results[0].formatted_address
+                    query: results[0].formatted_address + ',Новая Почта'
                 }, callback);
             }
         }

@@ -114,14 +114,17 @@ class ProfileController extends Controller
         if(DB::table('delivery_info')->where('user_id',Auth::user()->id)->exists()){
             $delivery_info = DB::table('delivery_info')->where('user_id', Auth::user()->id)->first();
 
-            if($delivery_info->delivery_country !== $data['delivery_country']){
+            if($delivery_info->delivery_country !== $data['delivery_country'] && isset($data['delivery_country'])){
                 $country = $this->parseCountry($data['delivery_country']);
-                $data['delivery_country'] = $country->name;
-                $city = $this->parseCity($data['delivery_city'],$country->id);
-                $data['delivery_city'] = $city->name;
+                $data['delivery_country'] = "{$country->name} ({$country->alpha2})";
+                if ($delivery_info->delivery_city !== $data['delivery_city'] && isset($data['delivery_city'])){
+                    $city = $this->parseCity($data['delivery_city'],$country->id);
+                    $data['delivery_city'] = $city->name;
+                }
             } else {
-                if($delivery_info->delivery_city !== $data['delivery_city']){
-                    $country = DB::table('country')->where('name', Auth::user()->country)->first();
+                if($delivery_info->delivery_city !== $data['delivery_city'] && isset($data['delivery_city'])){
+                    $del_country = explode(' ', $delivery_info->delivery_country,2);
+                    $country = DB::table('country')->where('name', $del_country[0])->first();
                     $city = $this->parseCity($data['delivery_city'],$country->id);
                     $data['delivery_city'] = $city->name;
                 }
@@ -129,10 +132,14 @@ class ProfileController extends Controller
 
            DeliveryInfo::where('user_id',Auth::user()->id)->update($data);
         } else {
-            $country = $this->parseCountry($data['delivery_country']);
-            $data['delivery_country'] = $country->name;
-            $city = $this->parseCity($data['delivery_city'],$country->id);
-            $data['delivery_city'] = $city->name;
+            if (isset($data['delivery_country'])){
+                $country = $this->parseCountry($data['delivery_country']);
+                $data['delivery_country'] = "{$country->name} ({$country->alpha2})";
+                if (isset($data['delivery_city'])){
+                    $city = $this->parseCity($data['delivery_city'],$country->id);
+                    $data['delivery_city'] = $city->name;
+                }
+            }
             $data['user_id'] = Auth::user()->id;
 
             $delivery_info = new DeliveryInfo();

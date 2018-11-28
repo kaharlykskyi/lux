@@ -118,10 +118,11 @@
     <script type="text/javascript" src="{{asset('rs-plugin/js/jquery.tp.min.js')}}"></script>
     <script src="{{asset('js/main.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/common.js')}}"></script>
+
     <script>
         const  getCountry = (obj) => {
             let word = $(obj).val();
-            $( "#country" ).autocomplete({
+            $( '#' + obj[0].id ).autocomplete({
                 source: (request, response) => {
                     $('.country .loader').css({display: 'inline-block'});
                     $.ajax({
@@ -138,17 +139,18 @@
                     });
                 },
                 minLength: 1
+
             });
         };
 
-        const getCity = (obj) => {
+        const getCity = (obj,element) => {
             let word = $(obj).val();
-            let iso =  $( "#country" ).val();
+            let iso =  $( element ).val();
             iso = iso.split(' ',2);
             if(iso[1] !== undefined){
                 iso = iso[1].substring(1, iso[1].length-1).split('/',2);
             }
-            $( "#city" ).autocomplete({
+            $( '#' + obj[0].id).autocomplete({
                 source: (request, response) => {
                     $('.city .loader').css({display: 'inline-block'});
                     $.ajax({

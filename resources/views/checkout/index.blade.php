@@ -172,7 +172,7 @@
                                     </li>
                                     <li class="col-sm-12">
                                         <label class="relative city">{{__('Город')}}
-                                            <input id="city" oninput="getCity($(this))" type="text" class="form-control{{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" value="{{ old('city') }}" required autocomplete="off">
+                                            <input id="city" oninput="getCity($(this),'#country')" type="text" class="form-control{{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" value="{{ old('city') }}" required autocomplete="off">
                                             <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
                                         </label>
                                         @if ($errors->has('city'))
@@ -269,14 +269,6 @@
                     </div>
                 @else
                      <div class="login-sec">
-                         @php
-                             $delivery_inf = DB::table('delivery_info')
-                             ->where('user_id',Auth::user()->id)
-                             ->join('country','country.id','=','delivery_info.delivery_country')
-                             ->join('city','city.id','=','delivery_info.delivery_city')
-                             ->select('delivery_info.*','country.name as country','city.name as city')
-                             ->first();
-                         @endphp
                          <form method="POST" action="{{ route('checkout.create_oder') }}">
                              @csrf
 
@@ -333,7 +325,7 @@
                                  </li>
                                  <li class="col-sm-12">
                                      <label class="relative country">{{__('Страна')}}
-                                         <input id="country" oninput="getCountry($(this))" type="text" class="form-control{{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" value="{{ isset($delivery_inf) ? $delivery_inf->country : '' }}" required autocomplete="off">
+                                         <input id="country" oninput="getCountry($(this))" type="text" class="form-control{{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" value="{{ isset($delivery_inf) ? $delivery_inf->delivery_country : '' }}" required autocomplete="off">
                                          <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
                                      </label>
                                      @if ($errors->has('country'))
@@ -344,7 +336,7 @@
                                  </li>
                                  <li class="col-sm-12">
                                      <label class="relative city">{{__('Город')}}
-                                         <input id="city" oninput="getCity($(this))" type="text" class="form-control{{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" value="{{ isset($delivery_inf) ? $delivery_inf->city : '' }}" required autocomplete="off">
+                                         <input id="city" oninput="getCity($(this),'#country')" type="text" class="form-control{{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" value="{{ isset($delivery_inf) ? $delivery_inf->delivery_city : '' }}" required autocomplete="off">
                                          <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
                                      </label>
                                      @if ($errors->has('city'))
@@ -430,7 +422,7 @@
             });
 
             $('#new_user form').submit(function (e) {
-                e.preventDefault();
+               e.preventDefault();
                $.post($(this).attr('action'),$(this).serialize(),function (data) {
                    if (data.errors !== undefined){
                        let errors_html =  ``;
@@ -439,6 +431,7 @@
                        }
                        alert(errors_html);
                    }
+                   location.href = '/'
                });
             });
 
