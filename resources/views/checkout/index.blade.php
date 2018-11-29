@@ -410,7 +410,7 @@
                 const flag = ($('#delivery-service').val() === 'novaposhta');
                 if (flag && $(this).val().length > 0){
                     const city = $('#city').val();
-                    $('#delivery_department').autocomplete({
+                    $(this).autocomplete({
                         source: (request, response) => {
                             $('.delivery-department .loader').css({display: 'inline-block'});
                             $.ajax({
