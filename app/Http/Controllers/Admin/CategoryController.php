@@ -3,11 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Category;
+use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class CategoryController extends Controller
 {
+    protected $tecdoc;
+
+    public function __construct()
+    {
+        $this->tecdoc = new Tecdoc('mysql_tecdoc');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +23,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::paginate(40);
+        return view('admin.category.index',compact('categories'));
     }
 
     /**
@@ -25,7 +34,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+        return view('admin.category.create',compact('categories'));
     }
 
     /**

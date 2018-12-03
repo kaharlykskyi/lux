@@ -9,10 +9,10 @@
             <ul class="list-unstyled navbar__list">
                 <li class="has-sub">
                     <a class="js-arrow" href="#">
-                        <i class="fas fa-tachometer-alt"></i>{{__('Каталог')}}</a>
+                        <i class="fa fa-list-alt" aria-hidden="true"></i>{{__('Каталог')}}</a>
                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                         <li>
-                            <a href="index.html">Dashboard 1</a>
+                            <a href="{{route('admin.category.index')}}">Категории</a>
                         </li>
                     </ul>
                 </li>

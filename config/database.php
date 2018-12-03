@@ -54,6 +54,22 @@ return [
             'engine' => null,
         ],
 
+        /*----TECDOC DB-----*/
+        'mysql_tecdoc' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DOC_DATABASE', 'forge'),
+            'username' => env('DB_DOC_USERNAME', 'forge'),
+            'password' => env('DB_DOC_PASSWORD', ''),
+            'unix_socket' => env('DB_DOC_SOCKET', ''),
+            'charset' => 'utf8',
+            'collation' => 'utf8_general_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),
