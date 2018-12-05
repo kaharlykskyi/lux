@@ -57,8 +57,8 @@ return [
         /*----TECDOC DB-----*/
         'mysql_tecdoc' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
+            'host' => env('DB_DOC_HOST', '127.0.0.1'),
+            'port' => env('DB_DOC_PORT', '3306'),
             'database' => env('DB_DOC_DATABASE', 'forge'),
             'username' => env('DB_DOC_USERNAME', 'forge'),
             'password' => env('DB_DOC_PASSWORD', ''),

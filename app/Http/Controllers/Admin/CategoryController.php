@@ -6,6 +6,7 @@ use App\Category;
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
@@ -23,6 +24,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        $this->tecdoc->setType('passenger');
+        dump($this->tecdoc->getBrands());
         $categories = Category::paginate(40);
         return view('admin.category.index',compact('categories'));
     }
