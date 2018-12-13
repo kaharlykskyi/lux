@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Category;
+use App\TecDoc\ImportPriceList;
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -24,7 +25,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        dump(config('price_list_settings'));
+        $price_list_configs = config('price_list_settings');
+        $a = new ImportPriceList();
+        dump($a->getMail());
         $categories = Category::paginate(40);
         return view('admin.category.index',compact('categories'));
     }

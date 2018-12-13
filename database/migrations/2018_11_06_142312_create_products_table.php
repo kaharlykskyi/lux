@@ -17,6 +17,7 @@ class CreateProductsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->char('articles',32);
+            $table->char('brand', 60);
             $table->string('alias')->unique();
             $table->string('short_description')->nullable();
             $table->text('full_description')->nullable();
