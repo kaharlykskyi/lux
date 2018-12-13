@@ -478,6 +478,21 @@ class Tecdoc
         ");
     }
 
+    public function getArt($number){
+        return DB::connection($this->connection)
+            ->select("SELECT * FROM `articles` WHERE `DataSupplierArticleNumber`='{$number}'");
+    }
+
+    public function getSupplier($id){
+        return DB::connection($this->connection)
+            ->select("SELECT * FROM `suppliers` WHERE `id`='{$id}'");
+    }
+
+    public function getSupplierName($name){
+        return DB::connection($this->connection)
+            ->select("SELECT * FROM `suppliers` WHERE `matchcode`='{$name}'");
+    }
+
     /**
      * (3.4) Файлы изделия
      *

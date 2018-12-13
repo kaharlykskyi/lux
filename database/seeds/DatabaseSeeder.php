@@ -17,9 +17,9 @@ class DatabaseSeeder extends Seeder
             CountryTableSeeder::class,
             CityTableSeeder::class,
             UsersTableSeeder::class,
-            ProductsTableSeeder::class,
-            CartsTableSeeder::class,
-            CartProductsTableSeeder::class,
+            //ProductsTableSeeder::class,
+            //CartsTableSeeder::class,
+            //CartProductsTableSeeder::class,
             PagesTableSeeder::class,
         ]);
     }

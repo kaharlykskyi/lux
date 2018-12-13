@@ -24,8 +24,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $this->tecdoc->setType('passenger');
-        dump($this->tecdoc->getBrands());
+        dump(config('price_list_settings'));
         $categories = Category::paginate(40);
         return view('admin.category.index',compact('categories'));
     }

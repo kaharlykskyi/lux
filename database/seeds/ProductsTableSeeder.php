@@ -20,7 +20,6 @@ class ProductsTableSeeder extends Seeder
             'full_description' => 'Полное описание',
             'price' => 200.00,
             'old_price' => 300.00,
-            'stock' => 1,
             'created_at'=> Carbon::now(),
             'updated_at'=> Carbon::now(),
         ]);
@@ -31,7 +30,6 @@ class ProductsTableSeeder extends Seeder
             'full_description' => 'Полное описание',
             'price' => 500.00,
             'old_price' => 800.00,
-            'stock' => 1,
             'created_at'=> Carbon::now(),
             'updated_at'=> Carbon::now(),
         ]);
