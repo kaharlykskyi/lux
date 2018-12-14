@@ -25,9 +25,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $price_list_configs = config('price_list_settings');
-        $a = new ImportPriceList();
-        dump($a->getMail());
+        new ImportPriceList();
         $categories = Category::paginate(40);
         return view('admin.category.index',compact('categories'));
     }
