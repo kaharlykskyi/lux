@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Category;
+use App\Product;
+use App\TecDoc\ImportPriceList;
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use function Psy\debug;
 
-class CategoryController extends Controller
+class ProductController extends Controller
 {
+
     protected $tecdoc;
 
     public function __construct()
@@ -23,8 +26,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::paginate(40);
-        return view('admin.category.index',compact('categories'));
+        $products = Product::paginate(80);
+        return view('admin.product.index',compact('products'));
     }
 
     /**
@@ -34,8 +37,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
-        return view('admin.category.create',compact('categories'));
+        //
     }
 
     /**
@@ -52,10 +54,10 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Category  $category
+     * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Category $category)
+    public function show(Product $product)
     {
         //
     }
@@ -63,10 +65,10 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Category  $category
+     * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit(Product $product)
     {
         //
     }
@@ -75,10 +77,10 @@ class CategoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Category  $category
+     * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Product $product)
     {
         //
     }
@@ -86,11 +88,27 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Category  $category
+     * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Product $product)
     {
-        //
+        try {
+            $product->delete();
+
+            return back()->with('status','Товар удален');
+        } catch (\Exception $e) {
+            if (config('app.debug')){
+                dump($e);
+            } else {
+                return back()->with('status','Товар не был удален');
+            }
+        }
+
+
+    }
+
+    public function startImport(){
+        new ImportPriceList();
     }
 }

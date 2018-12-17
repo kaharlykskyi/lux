@@ -12,7 +12,9 @@
                         <i class="fa fa-list-alt" aria-hidden="true"></i>{{__('Каталог')}}</a>
                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                         <li>
-                            <a href="{{route('admin.category.index')}}">Категории</a>
+                            <a href="{{route('admin.category.index')}}">{{__('Категории')}}</a>
+                            <a href="{{route('admin.product.index')}}">{{__('Товары')}}</a>
+                            <a href="{{route('admin.import_history')}}">{{__('История импорта')}}</a>
                         </li>
                     </ul>
                 </li>

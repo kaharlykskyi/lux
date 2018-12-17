@@ -10,12 +10,13 @@ class Product extends Model
 
     protected $fillable = [
         'name',
+        'articles',
         'alias',
         'short_description',
         'full_description',
         'price',
         'old_price',
-        'stock',
-        'count'
+        'company',
+        'brand'
     ];
 }

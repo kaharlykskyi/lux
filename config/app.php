@@ -5,6 +5,8 @@ return [
     'geo_key' => env('GEOHELPER_KEY'),
     'novaposhta_key' => env('NOVAPOSHTA_KEY'),
     'google_key' => env('GOOGLE_KEY'),
+    'work_mail' => env('WORK_MAIL'),
+    'work_pass' => env('WORK_PASS'),
 
     /*
     |--------------------------------------------------------------------------

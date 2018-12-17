@@ -55,10 +55,13 @@ Route::post('/feedback','FeedBackController@index')->name('feedback');
 /*!!--------ADMIN--------!!*/
 Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth','permission']],function (){
     Route::get('/dashboard','DashboardController@index')->name('admin.dashboard');
+    Route::get('/import-history','DashboardController@importHistory')->name('admin.import_history');
     Route::match(['get', 'post'], '/users','UserController@index')->name('admin.users');
     Route::post('/permission','UserController@permission')->name('permission');
     Route::resources([
         'category' => 'CategoryController',
-        'page' => 'PageController'
+        'page' => 'PageController',
+        'product' => 'ProductController'
     ],['as' => 'admin']);
+    Route::get('/start-import','ProductController@startImport')->name('admin.start_import');
 });
