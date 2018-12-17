@@ -38,7 +38,11 @@ class ImportPriceList
             ]);
             $this->currency = json_decode($client->get('https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11')->getBody());
         } catch (\Exception $e){
-            Log::error("Can't connect to privatbank: $e");
+            if (config('app.debug')){
+                dump("Can't connect to privatbank: $e");
+            } else {
+                Log::error("Can't connect to privatbank: $e");
+            }
         }
         $this->getMail();
     }
@@ -80,8 +84,11 @@ class ImportPriceList
                 }
 
             } catch (\Exception $exception){
-                dump($exception);
-                Log::error("Can't connect to '$connect_to': $exception");
+                if (config('app.debug')){
+                    dump("Can't connect to '$connect_to': $exception");
+                } else {
+                    Log::error("Can't connect to '$connect_to': $exception");
+                }
             }
 
         }
@@ -195,8 +202,11 @@ class ImportPriceList
                     }
 
                 }catch (\Exception $e){
-                    Log::error("Error import : $e");
-                    dump($e);
+                    if (config('app.debug')){
+                        dump("Error import : $e");
+                    } else {
+                        Log::error("Error import : $e");
+                    }
                     $this->count_fail++;
                 }
             }
