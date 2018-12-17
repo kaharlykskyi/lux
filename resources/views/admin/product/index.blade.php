@@ -28,8 +28,9 @@
                         </button>
                         <script>
                             function importPrice() {
-                                $.post("{{route('admin.start_import')}}",{ _token: "{{csrf_token()}}"},function (data) {
-                                    $('#load-win').html(`<p>${data.text}</p>`);
+                                $('#load-win').html(`<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>`);
+                                $.post("{{route('admin.start_import')}}",{ _token: "{{csrf_token()}}"},function () {
+                                    $('#load-win').html('<p>Загрузка прошла успешно. Детальную информацию можно просмотреть в истории импортов</p>');
                                 });
                             }
                         </script>
@@ -103,10 +104,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body text-center" id="load-win">
-                            <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
-                            <span class="sr-only">Loading...</span>
-                        </div>
+                        <div class="modal-body text-center" id="load-win"></div>
                     </div>
                 </div>
             </div>
