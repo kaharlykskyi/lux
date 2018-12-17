@@ -52,7 +52,7 @@ class ImportPriceList
             $password = config('app.work_pass');
             try{
 
-                $mailbox = new Mailbox($connect_to,$user,$password, storage_path('app') . '\price_list');
+                $mailbox = new Mailbox($connect_to,$user,$password, storage_path('app') . '/price_list');
 
                 $mailsIds = $mailbox->searchMailbox('ALL');
 
