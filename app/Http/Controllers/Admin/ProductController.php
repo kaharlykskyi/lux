@@ -110,5 +110,9 @@ class ProductController extends Controller
 
     public function startImport(){
         new ImportPriceList();
+
+        return response()->json([
+            'text' => 'Загрузка прошла успешно. Детальную информацию можно просмотреть в истории импортов'
+        ]);
     }
 }

@@ -23,7 +23,16 @@
                         <button onclick="location.href = '{{route('admin.product.create')}}'" class="au-btn au-btn-icon au-btn--green au-btn--small">
                             <i class="zmdi zmdi-plus"></i>{{__('Создать')}}</button>
 
-                        <a href="{{route('admin.start_import')}}" class="btn btn-primary">{{__('Запустить импорт')}}</a>
+                        <button onclick="importPrice()" type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticModal">
+                            {{__('Запустить импорт')}}
+                        </button>
+                        <script>
+                            function importPrice() {
+                                $.post("{{route('admin.start_import')}}",{ _token: "{{csrf_token()}}"},function (data) {
+                                    $('#load-win').html(`<p>${data.text}</p>`);
+                                });
+                            }
+                        </script>
                     </div>
                 </div>
                 <div class="table-responsive table--no-card m-b-30">
@@ -82,6 +91,26 @@
             </div>
         </div>
         @component('admin.component.footer')@endcomponent
+
+        <!-- modal static -->
+            <div class="modal fade" id="staticModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true"
+                 data-backdrop="static">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticModalLabel">Импорт прайс-листов</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body text-center" id="load-win">
+                            <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end modal static -->
     </div>
 
 @endsection
