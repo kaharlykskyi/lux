@@ -116,7 +116,7 @@
                 <div class="tab-pane  fade" id="tabBody2" role="tabpanel" aria-labelledby="tab2" aria-hidden="true" tabindex="0">
                     <div class="row">
                         <div class="col-md-12">
-                            <form>
+                            <form action="{{route('vin_decode')}}" method="post">
                                 @csrf
                                 <div class="row padding-30">
                                     <div class="col-xs-12 text-right padding-top-10 padding-bottom-10">
@@ -126,7 +126,7 @@
                                 </span>
                                     </div>
                                     <div class="col-xs-12 col-sm-10">
-                                        <input class="form-control" type="text" name="search" placeholder="Например: JTEHT05JX02054465">
+                                        <input class="form-control" type="text" name="vin" placeholder="Например: JTEHT05JX02054465">
                                     </div>
                                     <div class="col-xs-12 col-sm-2">
                                         <button type="submit" class="btn-round btn-sm">{{__('Подобрать')}}</button>
