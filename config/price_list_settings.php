@@ -28,5 +28,25 @@ return [
             ['column' => 'H','row' => 6],
             ['column' => 'I','row' => 6]
         ]
+    ],
+    [
+        'email' => 'selivonenkovasyl@outlook.com',
+        'company' => 'ELIT',
+        'ignore_row_index' => 1,
+        'data_row' => 3,
+        'cells' => [
+            'B' => 'articles',
+            'D' => 'name',
+            'C' => 'brand',
+            'F' => 'price',
+            'E' => 'short_description'
+        ],
+        'stocks' => [
+            ['column' => 'G','row' => 2],
+            ['column' => 'G','row' => 2],
+            ['column' => 'I','row' => 2],
+            ['column' => 'J','row' => 2],
+            ['column' => 'K','row' => 2]
+        ]
     ]
 ];

@@ -7,7 +7,8 @@ use App\TecDoc\ImportPriceList;
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use function Psy\debug;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -37,7 +38,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.product.create');
     }
 
     /**
@@ -48,7 +49,36 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->except('_token');
+
+        $validate = Validator::make($data,[
+            'name' => 'required|max:255',
+            'company' => 'required|max:255',
+            'articles' => 'required|max:255',
+            'brand' => 'required|max:255',
+            'price' => 'required|numeric',
+        ]);
+
+        if ($validate->fails()) {
+            return redirect()->back()
+                ->withErrors($validate)
+                ->withInput();
+        }
+
+        $data['alias'] = str_replace(' ','_',$this->transliterateRU($data['name'] .'_'. $data['articles'] .'_'. $data['company']));
+        $data['price'] = floatval($data['price']);
+        if (isset($data['old_price'])){
+            $data['old_price'] = floatval($data['old_price']);
+        }
+
+        $product = new Product();
+
+        $product->fill($data);
+        if($product->save()){
+            return redirect()->route('admin.product.index')->with('status','Товар добавлен');
+        } else {
+            return redirect()->back()->with('status','Ошибка, попробуйте снова');
+        }
     }
 
     /**
