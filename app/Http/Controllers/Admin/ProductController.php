@@ -100,7 +100,11 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        $stock_count = DB::table('stock_products')
+            ->where('stock_products.product_id',$product->id)
+            ->join('stocks','stocks.id','=','stock_products.stock_id')
+            ->select('stocks.*','stock_products.count')->get();
+        return view('admin.product.edit',compact('product','stock_count'));
     }
 
     /**
@@ -143,6 +147,28 @@ class ProductController extends Controller
 
         return response()->json([
             'text' => 'Загрузка прошла успешно. Детальную информацию можно просмотреть в истории импортов'
+        ]);
+    }
+
+    public function productCount(Request $request){
+        $data = $request->except('_token');
+
+        $validate = Validator::make($data,[
+            'count' => 'required|numeric',
+            'product_id' => 'required|numeric',
+            'stock_id' => 'required|numeric',
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json([
+                'error' => $validate->errors()
+            ]);
+        }
+
+        DB::table('stock_products')->where('id',$data['stock_id'])->update(['count' => (int)$data['count']]);
+
+        return response()->json([
+            "response" => 'Данные сохранены'
         ]);
     }
 }
