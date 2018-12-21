@@ -42,11 +42,11 @@ Route::prefix('checkout')->group(function () {
     Route::post('/create-oder', 'CheckoutController@createOder')->middleware(['auth'])->name('checkout.create_oder');
 });
 /*------PAGES------*/
-Route::get('/{alias}','PageController@index')->name('page');
+Route::get('/page/{alias}','PageController@index')->name('page');
 /*------FEEDBACK------*/
 Route::post('/feedback','FeedBackController@index')->name('feedback');
 /*-----VIN DECODE-----*/
-Route::post('/vin-decode','VinDecodeController@index')->name('vin_decode');
+Route::match(['get', 'post'],'/vin-decode','VinDecodeController@index')->name('vin_decode');
 
 /*!!--------ADMIN--------!!*/
 Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth','permission']],function (){
@@ -57,7 +57,8 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     Route::resources([
         'category' => 'CategoryController',
         'page' => 'PageController',
-        'product' => 'ProductController'
+        'product' => 'ProductController',
+        'stock' => 'StockController'
     ],['as' => 'admin']);
     Route::post('/start-import','ProductController@startImport')->name('admin.start_import');
 });

@@ -15,7 +15,12 @@
             @forelse($products as $product)
                 <tr id="tr_product{{$product->id}}">
                     <td><div class="media">
-                            <div class="media-left"> <a href="{{route('product',$product->alias)}}"> <img class="img-responsive" src="{{asset('images/item-img-1-1.jpg')}}" alt="{{$product->name}}" > </a> </div>
+                            <div class="media-left">
+                                <a href="{{route('product',$product->alias)}}">
+                                    <img class="img-responsive" src="{{asset('images/item-img-1-1.jpg')}}" alt="{{$product->name}}" >
+                                    <span>{{$product->name}}</span>
+                                </a>
+                            </div>
                             <div class="media-body hidden-sm hidden-xs">
                                 <p>{{$product->short_description}}</p>
                             </div>

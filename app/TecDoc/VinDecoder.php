@@ -20,8 +20,6 @@ class VinDecoder extends Vin
     {
         parent::__construct($value);
 
-
-
     }
 
 }

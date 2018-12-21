@@ -63,7 +63,7 @@ class PageController extends Controller
         $page = new Page();
         $page->fill($data);
         if ($page->save()){
-            return redirect()->route('page.index')->with('status','Данные сохранены');
+            return redirect()->route('admin.page.index')->with('status','Данные сохранены');
         } else {
             return redirect()->back()->with('status','Данные не сохранены')->withInput();
         }

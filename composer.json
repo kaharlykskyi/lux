@@ -13,7 +13,8 @@
         "laravel/tinker": "^1.0",
         "php-imap/php-imap": "^3.0",
         "phpoffice/phpexcel": "^1.8",
-        "sunrise/vin": "^1.0"
+        "sunrise/vin": "^1.0",
+        "symfony/dom-crawler": "^4.2"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
