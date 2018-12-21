@@ -29,22 +29,24 @@ class VinDecodeController extends Controller
                 //data
                 $data_array = null;
                 $data_html = $crawler->filterXPath('//table/tr');
-                foreach ($data_html as $node){
+                foreach ($data_html as $k => $node){
                     $tds = array();
                     $node_html = new Crawler($node);
-                    foreach ($node_html->filter('td') as $item){
-                        $tds[] = $item->nodeValue;
+                    if(count($data_html) - 1 !== $k ){
+                        foreach ($node_html->filter('td') as $item){
+                            $tds[] = $item->nodeValue;
+                        }
+                    } else {
+                        foreach ($node_html->filter('td > a') as $item){
+                            $tds[] = $item->getAttribute('href');
+                        }
                     }
-
                     $data_array[] = $tds;
                 }
-
-                dump($data_array);
-
-
                 return view('vin_decode.index')->with([
                     'vin' => $vin,
-                    'search_data' => $this->search_data
+                    'search_data' => $this->search_data,
+                    'data_array' => $data_array
                 ]);
 
             } catch (\Exception $exception){

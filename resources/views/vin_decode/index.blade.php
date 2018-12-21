@@ -53,17 +53,37 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                </tr>
+                                @isset($data_array)
+                                    @php $count = count($data_array) @endphp
+                                    @foreach($data_array as $k => $data)
+                                        @php $cell_count = count($data) @endphp
+                                        @if($count - 1 !== $k)
+                                            <tr>
+                                                <th scope="row">{{$data[0]}}</th>
+                                                @for($i=1;$i < $cell_count; $i++)
+                                                    <td>{{$data[$i]}}</td>
+                                                @endfor
+                                            </tr>
+                                        @else
+                                            <tr>
+                                                <td></td>
+                                                @for($i=0;$i < $cell_count; $i++)
+                                                    <td class="filter-section">
+                                                        <button style="max-width: 175px;" class="btn-round btn-sm" onclick="$.post('{{route('vin_decode.catalog')}}',{
+                                                                    'data': {{$data[$i]}}
+                                                                })">
+                                                            {{__('Просмотреть каталог')}}
+                                                        </button>
+                                                    </td>
+                                                @endfor
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                @endisset
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    @php dump($search_data) @endphp
                 @endisset
             </div>
         </div>
