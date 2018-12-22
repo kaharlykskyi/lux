@@ -60,4 +60,48 @@ class VinDecodeController extends Controller
 
         return view('vin_decode.index');
     }
+
+    public function catalog(Request $request){
+        $data = $request->except('_token');
+        $vin = $data['vin_code'];
+        $vin_title = $data['vin_title'];
+        $catalog_data = null;
+        $data['data'] = str_replace('quickGroup','listUnits',$data['data']);
+
+        $html = file_get_contents('https://exist.ua/cat/oe/' . $data['data']);
+        $crawler = new Crawler($html);
+
+        $catalog_html = $crawler->filter('div.guayaquil_floatunitlist_box');
+        $img_html = $catalog_html->filterXPath(".//div[@class='g-highlight']//img");
+        foreach ($img_html as $k => $node){
+            $catalog_data['img_small'][] = $node->getAttribute('src');
+        }
+        $img_full_html = $catalog_html->filterXPath(".//div[@class='guayaquil-unit-icons']/div");
+        foreach ($img_full_html as $k => $node){
+            $catalog_data['img_full'][] = $node->getAttribute('full');
+        }
+        $catalog_title = $catalog_html->filterXPath(".//div[@class='g-highlight']//td[@class='guayaquil_floatunitlist_title']//a");
+        foreach ($catalog_title as $node){
+            $catalog_data['catalog_title'][] = $node->textContent;
+        }
+        foreach ($catalog_title as $node){
+            $catalog_data['catalog_link'][] = $node->getAttribute('href');
+        }
+
+        $category = null;
+        $category_html = $crawler->filter('div.guayaquil_categoryfloatbox');
+        $category_block = $category_html->filter("div.guayaquil_categoryitem_parent > a:last-child");
+        foreach ($category_block as $node){
+            $category['category_link'][] = $node->getAttribute('href');
+        }
+        foreach ($category_block as $node){
+            $category['category_title'][] = $node->textContent;
+        }
+
+        return view('vin_decode.catalog', compact('catalog_data','vin','vin_title','category'));
+    }
+
+    public function page(){
+
+    }
 }

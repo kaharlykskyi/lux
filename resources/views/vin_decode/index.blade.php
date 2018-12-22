@@ -12,7 +12,7 @@
 
     <div class="container margin-top-20">
         <div class="row">
-            <div class="col-12 filter-section padding-10">
+            <div class="col-sm-12 filter-section padding-10">
                 <form action="{{route('vin_decode')}}" method="post">
                     @csrf
                     <div class="row">
@@ -25,10 +25,10 @@
                     </div>
                 </form>
             </div>
-            <div class="col-12">
+            <div class="col-xs-12">
                 @if (session('status'))
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-xs-12">
                             <div class="alert alert-danger" role="alert">
                                 {{ session('status') }}
                             </div>
@@ -38,13 +38,13 @@
                 @isset($search_data)
                     <p class="h3">{{__('Найденые автомобили')}}</p>
                     <div class="row margin-top-10">
-                        <div class="col-sm-12">
+                        <div class="col-xs-12">
                             <table class="table">
                                 <thead>
                                 <tr>
                                     <th colspan="10" scope="col">
                                         <div class="row">
-                                            <div class="col-sm-12" style="display: flex; flex-wrap: wrap;">
+                                            <div class="col-xs-12" style="display: flex; flex-wrap: wrap;">
                                                 <img src="{{$search_data['img']}}" class="margin-right-10">
                                                 <h6>{{$search_data['title']}}</h6>
                                             </div>
@@ -69,11 +69,15 @@
                                                 <td></td>
                                                 @for($i=0;$i < $cell_count; $i++)
                                                     <td class="filter-section">
-                                                        <button style="max-width: 175px;" class="btn-round btn-sm" onclick="$.post('{{route('vin_decode.catalog')}}',{
-                                                                    'data': {{$data[$i]}}
-                                                                })">
-                                                            {{__('Просмотреть каталог')}}
-                                                        </button>
+                                                        <form action="{{route('vin_decode.catalog')}}" method="post">
+                                                            @csrf
+                                                            <input type="hidden" name="data" value="{{$data[$i]}}">
+                                                            <input type="hidden" name="vin_code" value="@isset($vin){{$vin}}@endisset">
+                                                            <input type="hidden" name="vin_title" value="@isset($search_data['title']){{$search_data['title']}}@endisset">
+                                                            <button style="max-width: 175px;" class="btn-round btn-sm">
+                                                                {{__('Просмотреть каталог')}}
+                                                            </button>
+                                                        </form>
                                                     </td>
                                                 @endfor
                                             </tr>
