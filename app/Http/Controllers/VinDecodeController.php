@@ -92,7 +92,14 @@ class VinDecodeController extends Controller
 
         $category = null;
         $category_html = $crawler->filter('div.guayaquil_categoryfloatbox');
+
         $category_block = $category_html->filter("div.guayaquil_categoryitem_parent > a:last-child");
+        try{
+            $category_block->first()->attr('href');
+        }catch (\Exception $e){
+            $category_block = $category_html->filter("div.guayaquil_categoryitem > a:last-child");
+        }
+
         foreach ($category_block as $node){
             $category['category_link'][] = $node->getAttribute('href');
         }
