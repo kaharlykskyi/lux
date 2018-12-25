@@ -12,10 +12,12 @@ class VinDecodeController extends Controller
 
     protected $base_url = 'https://exist.ua';
 
+    protected $vin_cat_url = 'https://exist.ua/cat/oe/';
+
     public function index(Request $request){
         $vin = $request->post('vin');
         if (isset($vin)){
-            $html = file_get_contents('https://exist.ua/cat/oe/?action=vehicleVIN&infoVIN=' . $vin);
+            $html = file_get_contents($this->vin_cat_url . '?action=vehicleVIN&infoVIN=' . $vin);
             $crawler = new Crawler($html);
             try{
                 //img
@@ -68,7 +70,7 @@ class VinDecodeController extends Controller
         $catalog_data = null;
         $data['data'] = str_replace('quickGroup','listUnits',$data['data']);
 
-        $html = file_get_contents('https://exist.ua/cat/oe/' . $data['data']);
+        $html = file_get_contents($this->vin_cat_url . $data['data']);
         $crawler = new Crawler($html);
 
         $catalog_html = $crawler->filter('div.guayaquil_floatunitlist_box');
@@ -101,7 +103,44 @@ class VinDecodeController extends Controller
         return view('vin_decode.catalog', compact('catalog_data','vin','vin_title','category'));
     }
 
-    public function page(){
+    public function page(Request $request){
+        $data = $request->except('_token');
+        $vin = $data['vin_code'];
+        $vin_title = $data['vin_title'];
 
+        $html = file_get_contents($this->vin_cat_url . $data['data']);
+        $crawler = new Crawler($html);
+
+        $head = $crawler->filterXPath('.//head');
+
+        $crawler->filter('div.page-blocks.page-blocks--padding.page-content-wrapper > div.w100')->each(function (Crawler $crawler) {
+            foreach ($crawler as $node) {
+                $node->parentNode->removeChild($node);
+            }
+        });
+        $crawler->filter('div.page-blocks.page-blocks--padding.page-content-wrapper div.page-blocks.page-blocks--padding.page-content-wrapper div > table.w50')->each(function (Crawler $crawler) {
+            foreach ($crawler as $node) {
+                $node->parentNode->removeChild($node);
+            }
+        });
+
+        $body = $crawler->filter('div.page-blocks.page-blocks--padding.page-content-wrapper div.page-blocks.page-blocks--padding.page-content-wrapper');
+        foreach ($body->filter('div#viewtable table a') as $item){
+            $buff = $item->getAttribute('href');
+            $buff = explode('?',$buff,2);
+            $item->setAttribute('href', route('catalog'). '?' .$buff[1]);
+        }
+        $data = [
+            'head' => $head->html(),
+            'body' => $body->html()
+        ];
+
+        session(['page-data' => $data]);
+        return view('vin_decode.page', compact('vin','vin_title'));
+    }
+
+    public function pageData(){
+        $data = session('page-data');
+        return view('vin_decode.frame_detal',compact('data'));
     }
 }

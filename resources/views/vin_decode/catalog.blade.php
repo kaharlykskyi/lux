@@ -6,7 +6,7 @@
     @component('component.breadcrumb',[
         'links' => [
             (object)['title' => 'Поиск по VIN','link' => route('vin_decode')],
-            (object)['title' => ('Поиск по каталогу ' . isset($vin_title)?$vin_title:'')]
+            (object)['title' => 'Поиск по каталогу - ' . (isset($vin_title)?$vin_title:'')]
         ]
     ])
     @endcomponent
@@ -47,7 +47,7 @@
                                     @csrf
                                     <input type="hidden" name="data" value="{{$category['category_link'][$k]}}">
                                     <input type="hidden" name="vin_code" value="@isset($vin){{$vin}}@endisset">
-                                    <input type="hidden" name="vin_title" value="@isset($search_data['title']){{$search_data['title']}}@endisset">
+                                    <input type="hidden" name="vin_title" value="@isset($vin_title){{$vin_title}}@endisset">
                                     <button type="submit" style="border: none;background: transparent;">{{$item}}</button>
                                 </form>
                             </li>
@@ -61,15 +61,15 @@
                         @foreach($catalog_data['img_small'] as $k => $item)
                             <div class="col-xs-12 col-sm-6 col-md-4">
                                 <div class="thumbnail" style="width: 100%">
-                                    <a href="{{route('vin_decode.catalog.page')}}{{$catalog_data['catalog_link'][$k]}}">
+                                    {{--<a href="{{route('vin_decode.catalog.page')}}{{$catalog_data['catalog_link'][$k]}}">--}}
                                         <img style="display: block !important;" src="{{$item}}" alt="{{$catalog_data['catalog_title'][$k]}}">
-                                    </a>
+                                    {{--</a>--}}
                                     <div class="caption">
                                         <form action="{{route('vin_decode.catalog.page')}}" method="post">
                                             @csrf
                                             <input type="hidden" name="data" value="{{$catalog_data['catalog_link'][$k]}}">
                                             <input type="hidden" name="vin_code" value="@isset($vin){{$vin}}@endisset">
-                                            <input type="hidden" name="vin_title" value="@isset($search_data['title']){{$search_data['title']}}@endisset">
+                                            <input type="hidden" name="vin_title" value="@isset($vin_title){{$vin_title}}@endisset">
                                             <button type="submit" style="border: none;border-radius: 5px; width: 100%;">{{$catalog_data['catalog_title'][$k]}}</button>
                                         </form>
                                     </div>

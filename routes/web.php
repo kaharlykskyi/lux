@@ -49,6 +49,10 @@ Route::post('/feedback','FeedBackController@index')->name('feedback');
 Route::match(['get', 'post'],'/vin-decode','VinDecodeController@index')->name('vin_decode');
 Route::post('/vin-decode/catalog','VinDecodeController@catalog')->name('vin_decode.catalog');
 Route::post('/vin-decode/catalog/page','VinDecodeController@page')->name('vin_decode.catalog.page');
+Route::get('/vin-decode/catalog/page-data','VinDecodeController@pageData')->name('vin_decode.catalog.page_data');
+
+/*--------CATALOG--------*/
+Route::match(['get', 'post'],'/catalog/{category?}','CatalogController@index')->name('catalog');
 
 /*!!--------ADMIN--------!!*/
 Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth','permission']],function (){
