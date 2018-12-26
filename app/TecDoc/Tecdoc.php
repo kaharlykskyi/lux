@@ -478,21 +478,6 @@ class Tecdoc
         ");
     }
 
-    public function getArt($number){
-        return DB::connection($this->connection)
-            ->select("SELECT * FROM `articles` WHERE `DataSupplierArticleNumber`='{$number}'");
-    }
-
-    public function getSupplier($id){
-        return DB::connection($this->connection)
-            ->select("SELECT * FROM `suppliers` WHERE `id`='{$id}'");
-    }
-
-    public function getSupplierName($name){
-        return DB::connection($this->connection)
-            ->select("SELECT * FROM `suppliers` WHERE `matchcode`='{$name}'");
-    }
-
     /**
      * (3.4) Файлы изделия
      *
@@ -505,6 +490,25 @@ class Tecdoc
         return DB::connection($this->connection)->select("
             SELECT Description, PictureName FROM article_images WHERE DataSupplierArticleNumber='" . $number . "'  AND supplierId='" . $brand_id . "'
         ");
+    }
+
+    /**
+     * Файлы изделий по артиклю
+     * @param array $articles
+     * @return array
+     */
+    public function getArtFilesForArticles($articles = ['*'])
+    {
+        $article_str = '';
+        foreach ($articles as $k => $article){
+            if (count($articles) !== $k + 1){
+                $article_str .= $article . '|';
+            } else {
+                $article_str .= $article;
+            }
+        }
+        return DB::connection($this->connection)->select("
+            SELECT DataSupplierArticleNumber, Description, PictureName FROM article_images WHERE DataSupplierArticleNumber REGEXP '^" . $article_str . "$'");
     }
 
     /**
@@ -603,5 +607,32 @@ class Tecdoc
             JOIN suppliers ON id=PartsSupplierId
             WHERE DataSupplierArticleNumber='" . $number . "' AND supplierId='" . $brand_id . "'
         ");
+    }
+
+    public function getArt($number){
+        return DB::connection($this->connection)
+            ->select("SELECT * FROM `articles` WHERE `DataSupplierArticleNumber`='{$number}'");
+    }
+
+    public function getPrd($level = 1, $parent = '' ){
+        switch ($level){
+            case 1:
+                return DB::connection($this->connection)
+                    ->select("SELECT DISTINCT `assemblygroupdescription` FROM `prd` WHERE `assemblygroupdescription` REGEXP '^[А-Яа-я]+'");
+                break;
+            case 2:
+                return DB::connection($this->connection)
+                    ->select("SELECT DISTINCT `description` FROM `prd` WHERE `assemblygroupdescription` LIKE '%" . $parent ."%'");
+                break;
+            case 3:
+                return DB::connection($this->connection)
+                    ->select("SELECT DISTINCT `normalizeddescription` FROM `prd` WHERE `description` LIKE '%" . $parent ."%'");
+                break;
+            case 4:
+                return DB::connection($this->connection)
+                    ->select("SELECT DISTINCT `usagedescription` FROM `prd` WHERE `normalizeddescription` LIKE '%" . $parent ."%'");
+                break;
+        }
+
     }
 }

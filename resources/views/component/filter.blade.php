@@ -119,12 +119,6 @@
                             <form action="{{route('vin_decode')}}" method="post">
                                 @csrf
                                 <div class="row padding-30">
-                                    <div class="col-xs-12 text-right padding-top-10 padding-bottom-10">
-                                        <a class="link border-bottom bold" href="">{{__('Помощь в подборе специалистом')}}</a>
-                                        <span class="hover-tooltip">
-                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
-                                </span>
-                                    </div>
                                     <div class="col-xs-12 col-sm-10">
                                         <input class="form-control" type="text" name="vin" placeholder="Например: JTEHT05JX02054465">
                                     </div>

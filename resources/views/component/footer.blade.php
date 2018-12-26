@@ -72,3 +72,7 @@
         </div>
     </div>
 </div>
+
+<!-- GO TO TOP  -->
+<a href="#" class="cd-top"><i class="fa fa-angle-up"></i></a>
+<!-- GO TO TOP End -->

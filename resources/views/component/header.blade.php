@@ -58,7 +58,7 @@
                 <div class="cate-bar-in">
                     <div id="cater" class="collapse">
                         <ul>
-                            <li><a href="#."> Home Audio & Theater</a></li>
+                            <li><a href="{{route('catalog')}}">{{__('Все Категории')}}</a></li>
                             <li><a href="#."> TV & Video</a></li>
                             <li><a href="#."> Camera, Photo & Video</a></li>
                             <li class="sub-menu"><a href="#."> Cell Phones & Accessories</a>
@@ -68,26 +68,6 @@
                                     <li><a href="#."> Cell Phones & Accessories</a>
                                 </ul>
                             </li>
-                            <li><a href="#."> Headphones</a></li>
-                            <li><a href="#."> Video Games</a></li>
-                            <li class="sub-menu"><a href="#."> Bluetooth & Wireless Speakers</a>
-                                <ul>
-                                    <li><a href="#."> TV & Video</a></li>
-                                    <li><a href="#."> Camera, Photo & Video</a></li>
-                                    <li><a href="#."> Cell Phones & Accessories</a>
-                                </ul>
-                            </li>
-                            <li class="sub-menu"><a href="#."> Gaming Console</a>
-                                <ul>
-                                    <li><a href="#."> TV & Video</a></li>
-                                    <li><a href="#."> Camera, Photo & Video</a></li>
-                                    <li><a href="#."> Cell Phones & Accessories</a>
-                                </ul>
-                            </li>
-                            <li><a href="#."> Computers & Tablets</a></li>
-                            <li><a href="#."> Monitors</a></li>
-                            <li><a href="#."> Home Appliances</a></li>
-                            <li><a href="#."> Office Supplies</a></li>
                         </ul>
                     </div>
                 </div>
@@ -100,23 +80,13 @@
             <!-- NAV -->
             <div class="collapse navbar-collapse" id="nav-open-btn">
                 <ul class="nav">
-                    <li class="dropdown megamenu active"> <a href="index.html" class="dropdown-toggle" data-toggle="dropdown">Home </a>
-                        <div class="dropdown-menu animated-2s fadeInUpHalf">
-                            <div class="mega-inside scrn">
-                                <ul class="home-links">
-                                    <li><a href="index.html"><img class="img-responsive" src="images/home-1.jpg" alt="" > <span>Home Version 1</span></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="dropdown"> <a href="index.html" class="dropdown-toggle" data-toggle="dropdown">Pages </a>
+                    <li class="dropdown"> <a href="index.html" class="dropdown-toggle" data-toggle="dropdown">{{__('Информация')}}</a>
                         <ul class="dropdown-menu multi-level animated-2s fadeInUpHalf">
-                            <li><a href="About.html"> About </a></li>
-                            <li class="dropdown-submenu"><a href="#."> Dropdown Level </a>
-                                <ul class="dropdown-menu animated-2s fadeInRight">
-                                    <li><a href="#.">Level 1</a></li>
-                                </ul>
-                            </li>
+                            @isset($pages)
+                                @foreach($pages as $page)
+                                    <li><a href="{{route('page',$page->alias)}}">{{$page->title}}</a></li>
+                                @endforeach
+                            @endisset
                         </ul>
                     </li>
                     <!-- Mega Menu Nav -->
@@ -163,7 +133,6 @@
                             <li><a href="Blog_details.html">Blog Single </a></li>
                         </ul>
                     </li>
-                    <li> <a href="shop.html">Buy theme! </a></li>
                 </ul>
             </div>
 
