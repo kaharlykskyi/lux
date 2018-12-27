@@ -61,7 +61,7 @@
                                 @forelse($products as $product)
                                     <!-- Product -->
                                         <div class="product" id="product-{{$product->id}}">
-                                            <article> <img class="img-responsive" src="images/item-img-1-2.jpg" alt="" >
+                                            <article> <img class="img-responsive" src="{{asset('/images/item-img-1-2.jpg')}}" alt="" >
                                                 <!-- Content -->
                                                 <span class="tag">{{$product->brand}}</span> <a href="{{route('product',$product->alias)}}" class="tittle">{{$product->name}}</a>
                                                 <!-- Reviews -->

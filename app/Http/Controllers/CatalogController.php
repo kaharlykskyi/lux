@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CatalogController extends Controller
 {
@@ -23,12 +24,30 @@ class CatalogController extends Controller
     }
 
     public function index(Request $request){
+        $brands = null;
+
         if(isset($request->pre_products)){
             $this->pre_products = $request->pre_products;
         }
 
-        if (isset($request->trademark)){
-            $this->filter[] = ['brand',$request->trademark];
+        if (isset($request->category)){
+            $products = Product::where('alias','LIKE',"%{$request->category}%")->paginate($this->pre_products);
+            $products->withPath($request->fullUrl());
+            return view('catalog.index',compact('products','brands'));
+        }
+
+        if (isset($request->trademark) && isset($request->pcode)){
+            $manufactorer = $this->tecdoc->getManufacturer(trim($request->trademark));
+            $article_oe = $this->tecdoc->getManufacturerForOed(trim($request->pcode),$manufactorer[0]->id);
+            $article = [];
+            if (count($article_oe) > 0){
+                foreach ($article_oe as $k => $item){
+                    $article[] = $item->datasupplierarticlenumber;
+                }
+            }
+            $products = Product::whereIn('articles',$article)->paginate($this->pre_products);
+            $products->withPath($request->fullUrl());
+            return view('catalog.index',compact('products','brands'));
         }
 
         if (isset($this->filter)){
@@ -42,8 +61,7 @@ class CatalogController extends Controller
             $this->product_id[] = $product->articles;
         }
         //$products_img = $this->tecdoc->getArtFilesForArticles($this->product_id);
-        dump($this->tecdoc->getPrd());
-        $brands = null/*$this->tecdoc->getBrands()*/;
+        //dump());
 
 
         return view('catalog.index',compact('products','brands'));

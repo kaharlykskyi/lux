@@ -52,22 +52,53 @@
     <!-- Nav -->
     <nav class="navbar ownmenu">
         <div class="container">
-
             <!-- Categories -->
             <div class="cate-lst"> <a  data-toggle="collapse" class="cate-style" href="#cater"><i class="fa fa-list-ul"></i> Our Categories </a>
                 <div class="cate-bar-in">
                     <div id="cater" class="collapse">
-                        <ul>
+                        <ul class="category-list">
                             <li><a href="{{route('catalog')}}">{{__('Все Категории')}}</a></li>
-                            <li><a href="#."> TV & Video</a></li>
-                            <li><a href="#."> Camera, Photo & Video</a></li>
-                            <li class="sub-menu"><a href="#."> Cell Phones & Accessories</a>
-                                <ul>
-                                    <li><a href="#."> TV & Video</a></li>
-                                    <li><a href="#."> Camera, Photo & Video</a></li>
-                                    <li><a href="#."> Cell Phones & Accessories</a>
-                                </ul>
-                            </li>
+                            @isset($category)
+                                @foreach($category as $k => $item)
+                                    @if($k < 15)
+                                        <li class="sub-menu"><a id="sub-category-link{{$k}}" onmouseenter="getSub('{{$item->assemblygroupdescription}}','{{$k}}')" href="#.">{{$item->assemblygroupdescription}}</a>
+                                            <ul id="sub-category{{$k}}">
+                                                <li style="text-align: center;">
+                                                    <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                                                    <span class="sr-only">Loading...</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    @endif
+                                    @if($k === 15)
+                                        <li id="more-category"><span class="h6 padding-5" onclick="$('#more-category').hide();$('li.sub-menu.hidden').removeClass('hidden');">{{__('больше категорий...')}}</span></li>
+                                    @endif
+                                    @if($k >= 15)
+                                        <li class="sub-menu hidden"><a id="sub-category-link{{$k}}" onmouseenter="getSub('{{$item->assemblygroupdescription}}','{{$k}}')" href="#.">{{$item->assemblygroupdescription}}</a>
+                                            <ul id="sub-category{{$k}}">
+                                                <li style="text-align: center;">
+                                                    <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                                                    <span class="sr-only">Loading...</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    @endif
+                                @endforeach
+                                <script>
+                                    function getSub(data,id) {
+                                        $.get('{{route('get_subcategory')}}?category=' + data,function (data) {
+                                            let tada_str = '';
+                                            for (let i = 0;i < data.subCategory.length; i++){
+                                                if(data.subCategory[i].usagedescription !== ''){
+                                                    tada_str += `<li><a href="{{route('catalog')}}/${urlRusLat(data.subCategory[i].usagedescription)}">${data.subCategory[i].usagedescription}</a></li>`;
+                                                }
+                                            }
+                                            $('#sub-category'+id).html(tada_str);
+                                            $('#sub-category-link'+id).attr('onmouseenter','');
+                                        });
+                                    }
+                                </script>
+                            @endisset
                         </ul>
                     </div>
                 </div>

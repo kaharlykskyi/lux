@@ -450,6 +450,11 @@ class Tecdoc
         ");
     }
 
+    public function getManufacturerForOed($oem_id,$manufacturer_id){
+        return DB::connection($this->connection)
+            ->select("SELECT * FROM `article_oe` WHERE `manufacturerId`={$manufacturer_id} AND REPLACE(`OENbr`, ' ', '') LIKE '%{$oem_id}%'");
+    }
+
     /**
      * (3.2) Статус изделия
      *
@@ -614,6 +619,12 @@ class Tecdoc
             ->select("SELECT * FROM `articles` WHERE `DataSupplierArticleNumber`='{$number}'");
     }
 
+    /**
+     *  Сводная таблица отображения изделий в категориях
+     * @param int $level
+     * @param string $parent
+     * @return array
+     */
     public function getPrd($level = 1, $parent = '' ){
         switch ($level){
             case 1:
@@ -626,13 +637,18 @@ class Tecdoc
                 break;
             case 3:
                 return DB::connection($this->connection)
-                    ->select("SELECT DISTINCT `normalizeddescription` FROM `prd` WHERE `description` LIKE '%" . $parent ."%'");
+                    ->select("SELECT DISTINCT `normalizeddescription` FROM `prd` WHERE `assemblygroupdescription` LIKE '%" . $parent ."%'");
                 break;
             case 4:
                 return DB::connection($this->connection)
-                    ->select("SELECT DISTINCT `usagedescription` FROM `prd` WHERE `normalizeddescription` LIKE '%" . $parent ."%'");
+                    ->select("SELECT DISTINCT `usagedescription` FROM `prd` WHERE `assemblygroupdescription` LIKE '%" . $parent ."%' AND `assemblygroupdescription` NOT LIKE '^ $'");
                 break;
         }
 
+    }
+
+    public function getManufacturer($matchcode){
+        return DB::connection($this->connection)
+            ->select("SELECT DISTINCT `id`,`matchcode` FROM `manufacturers` WHERE `matchcode`='{$matchcode}'");
     }
 }

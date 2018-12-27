@@ -53,6 +53,7 @@ Route::get('/vin-decode/catalog/page-data','VinDecodeController@pageData')->name
 
 /*--------CATALOG--------*/
 Route::match(['get', 'post'],'/catalog/{category?}','CatalogController@index')->name('catalog');
+Route::get('/get-subcategory', 'HomeController@subcategory')->name('get_subcategory');
 
 /*!!--------ADMIN--------!!*/
 Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth','permission']],function (){
