@@ -60,6 +60,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     Route::get('/dashboard','DashboardController@index')->name('admin.dashboard');
     Route::get('/import-history','DashboardController@importHistory')->name('admin.import_history');
     Route::match(['get', 'post'], '/users','UserController@index')->name('admin.users');
+    Route::match(['get', 'post'], '/orders','OrderController@index')->name('admin.orders');
     Route::post('/permission','UserController@permission')->name('permission');
     Route::resources([
         'category' => 'CategoryController',

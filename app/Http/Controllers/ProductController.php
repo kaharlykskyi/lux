@@ -39,7 +39,7 @@ class ProductController extends Controller
         $product = Product::find((integer)$request->id);
         $cart_session_id = $request->cookie('cart_session_id');
 
-        Cart::where('user_id','<>',null)->update([
+        DB::table('carts')->where('user_id','<>',null)->update([
             'session_id' => null
         ]);
 

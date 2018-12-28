@@ -36,22 +36,24 @@
                         </a>
                     </div>
                     <div class="col-sm-6 col-lg-3">
-                        <div class="overview-item overview-item--c2">
-                            <div class="overview__inner">
-                                <div class="overview-box clearfix">
-                                    <div class="icon">
-                                        <i class="zmdi zmdi-shopping-cart"></i>
+                        <a href="{{route('admin.orders')}}">
+                            <div class="overview-item overview-item--c2">
+                                <div class="overview__inner">
+                                    <div class="overview-box clearfix">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-shopping-cart"></i>
+                                        </div>
+                                        <div class="text">
+                                            <h2>{{$orders_count}}</h2>
+                                            <span>заказы</span>
+                                        </div>
                                     </div>
-                                    <div class="text">
-                                        <h2>{{$orders_count}}</h2>
-                                        <span>количество заказов</span>
+                                    <div class="overview-chart">
+                                        <canvas id="widgetChart2"></canvas>
                                     </div>
-                                </div>
-                                <div class="overview-chart">
-                                    <canvas id="widgetChart2"></canvas>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-sm-6 col-lg-3">
                         <div class="overview-item overview-item--c3">
