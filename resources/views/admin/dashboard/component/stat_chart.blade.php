@@ -1,3 +1,4 @@
+@if(isset($statistic_new_uses) && isset($statistic_orders))
 <script>
     @php
         foreach ($statistic_new_uses as $item){
@@ -161,3 +162,4 @@
         })(jQuery)
     });
 </script>
+@endif
