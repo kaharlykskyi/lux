@@ -24,7 +24,7 @@
                                             <i class="zmdi zmdi-account-o"></i>
                                         </div>
                                         <div class="text">
-                                            <h2>10368</h2>
+                                            <h2>{{$users_count}}</h2>
                                             <span>{{__('Пользователей')}}</span>
                                         </div>
                                     </div>
@@ -43,8 +43,8 @@
                                         <i class="zmdi zmdi-shopping-cart"></i>
                                     </div>
                                     <div class="text">
-                                        <h2>388,688</h2>
-                                        <span>items solid</span>
+                                        <h2>{{$orders_count}}</h2>
+                                        <span>количество заказов</span>
                                     </div>
                                 </div>
                                 <div class="overview-chart">

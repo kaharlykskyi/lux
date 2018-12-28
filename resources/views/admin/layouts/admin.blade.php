@@ -84,6 +84,7 @@
 
 <!-- Main JS-->
 <script src="{{asset('admin_area/js/main.js')}}"></script>
+@include('admin.dashboard.component.stat_chart')
 
 </body>
 

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class CatalogController extends Controller
 {

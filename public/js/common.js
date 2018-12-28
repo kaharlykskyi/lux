@@ -73,7 +73,7 @@ $(window).load(function() {
 });
 
 function urlRusLat(str) {
-    str = str.toLowerCase(); // все в нижний регистр
+    str = str.toLowerCase();
     var cyr2latChars = new Array(
         ['а', 'a'], ['б', 'b'], ['в', 'v'], ['г', 'g'],
         ['д', 'd'],  ['е', 'e'], ['ё', 'yo'], ['ж', 'zh'], ['з', 'z'],
@@ -127,11 +127,8 @@ function urlRusLat(str) {
 
             }
         }
-        // Если найдено совпадение, то добавляется соответствие, если нет - пустая строка
         newStr += newCh;
 
     }
-    // Удаляем повторяющие знаки - Именно на них заменяются пробелы.
-    // Так же удаляем символы перевода строки, но это наверное уже лишнее
     return newStr.replace(/[_]{2,}/gim, '_').replace(/\n/gim, '');
 }
