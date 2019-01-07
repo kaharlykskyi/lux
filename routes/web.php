@@ -61,6 +61,8 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     Route::get('/import-history','DashboardController@importHistory')->name('admin.import_history');
     Route::match(['get', 'post'], '/users','UserController@index')->name('admin.users');
     Route::match(['get', 'post'], '/orders','OrderController@index')->name('admin.orders');
+    Route::get('/full-order-info','OrderController@getOrderData')->name('admin.product.full_order_info');
+    Route::get('/info-product-stock','OrderController@getInfoProductStock')->name('admin.product.info_product_stock');
     Route::post('/permission','UserController@permission')->name('permission');
     Route::resources([
         'category' => 'CategoryController',

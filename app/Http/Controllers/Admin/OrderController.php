@@ -18,7 +18,7 @@ class OrderController extends Controller
                                       JOIN users as u ON u.id=c.user_id ORDER BY c.updated_at DESC");
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $itemCollection = collect($orders);
-        $perPage = 2;
+        $perPage = 30;
         $currentPageItems = $itemCollection->slice(($currentPage * $perPage) - $perPage, $perPage)->all();
         $paginatedItems= new LengthAwarePaginator($currentPageItems , count($itemCollection), $perPage);
         $paginatedItems->setPath($request->fullUrl());
@@ -26,5 +26,24 @@ class OrderController extends Controller
         $order_code = DB::table('oder_status_codes')->get();
 
         return view('admin.orders.index',compact('paginatedItems','order_code'));
+    }
+
+    public function getOrderData(Request $request){
+        $product_data = DB::select("SELECT p.id,p.price,p.name,p.articles,cp.count AS count_in_cart FROM `products` AS p 
+                                          JOIN `cart_products` AS cp ON cp.product_id=p.id 
+                                          WHERE cp.product_id=p.id AND cp.cart_id={$request->idOrder}");
+        return response()->json([
+            'response' => $product_data
+        ]);
+    }
+
+    public function getInfoProductStock(Request $request){
+        $product_stock = DB::select("SELECT s.name,s.company,sp.count FROM `stocks` AS s 
+                                            JOIN `stock_products` AS sp ON sp.stock_id=s.id
+                                            WHERE sp.product_id={$request->productID}");
+
+        return response()->json([
+            'response' => $product_stock
+        ]);
     }
 }

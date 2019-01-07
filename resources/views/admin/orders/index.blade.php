@@ -33,7 +33,12 @@
                                 @isset($paginatedItems)
                                     @forelse($paginatedItems as $item)
                                         <tr>
-                                            <td>{{$item->updated_at}}</td>
+                                            <td>
+                                                <span class="m-r-10">
+                                                    <i data-toggle="modal" data-target="#orderInfo" onclick="getOrderInfo({{$item->id}})" class="fa fa-info" style="cursor: pointer"></i>
+                                                </span>
+                                                {{$item->updated_at}}
+                                            </td>
                                             <td>{{$item->id}}</td>
                                             <td>{{$item->name}}</td>
                                             <td class="text-right">&#8372; {{$item->total_price}}</td>
@@ -73,5 +78,131 @@
         </div>
         @component('admin.component.footer')@endcomponent
     </div>
+
+    <!-- modal order info -->
+    <div class="modal fade" id="orderInfo" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderInfoTitle"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive m-b-40">
+                        <table class="table table-borderless table-data3 hidden" id="stock_product">
+                            <thead>
+                            <tr>
+                                <th>Склад</th>
+                                <th>Компания</th>
+                                <th>Остатки</th>
+                            </tr>
+                            </thead>
+                            <tbody id="">
+                            </tbody>
+                        </table>
+                        <table class="table table-borderless table-data3">
+                            <thead>
+                                <tr>
+                                    <th>id Товара</th>
+                                    <th>Артикль</th>
+                                    <th>Название</th>
+                                    <th>Цена</th>
+                                    <th>Количество</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dataOrder">
+                                <tr>
+                                    <td colspan="5">
+                                        <p class="text-center">
+                                            <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                                            <span class="sr-only">Loading...</span>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Закрыть')}}</button>
+                    <button type="button" class="btn btn-primary">{{__('Отметить ка выполненый')}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end modal order info -->
+
+    <script>
+        $(function($){
+            $(document).mouseup(function (e){
+                const div = $("#stock_product");
+                if (!div.is(e.target)
+                    && div.has(e.target).length === 0) {
+                    div.hide();
+                }
+            });
+        });
+
+        function getOrderInfo(id) {
+            $('#orderInfoTitle').text(`Информация про заказ №${id}`);
+            $.get(`{{route('admin.product.full_order_info')}}?idOrder=${id}`,function (data) {
+                let data_str = '';
+                data.response.forEach(function (item) {
+                    data_str += `
+                                 <tr>
+                                    <td class="identification-wrapper">
+                                        <span class="m-r-10">
+                                            <i onclick="getStockProductInfo(${item.id},this)" class="fa fa-info" style="cursor: pointer" title="Остатки на складе"></i>
+                                        </span>
+                                        ${item.id}
+                                    </td>
+                                    <td>${item.articles}</td>
+                                    <td>${item.name}</td>
+                                    <td>${item.price}</td>
+                                    <td>${item.count_in_cart}</td>
+                                </tr>
+                    `;
+                });
+                $('#dataOrder').html(data_str);
+            });
+        }
+
+        function getStockProductInfo(id,obj) {
+            $('#stock_product tbody').html(`<tr>
+                                                <td colspan="3">
+                                                    <p class="text-center">
+                                                        <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                                                        <span class="sr-only">Loading...</span>
+                                                    </p>
+                                                </td>
+                                            </tr>`);
+            console.log($(obj).position());
+            const y = $(obj).position().left;
+            const x = $(obj).position().top;
+            $('#stock_product').removeClass('hidden').css({
+                position: 'absolute',
+                top: x,
+                left: y,
+                display: 'block',
+                zIndex: 10000
+            });
+
+            $.get(`{{route('admin.product.info_product_stock')}}?productID=${id}`,function (data) {
+                let data_str = '';
+                data.response.forEach(function (item) {
+                    data_str += `
+                                <tr>
+                                    <td>${item.name}</td>
+                                    <td>${item.company}</td>
+                                    <td>${item.count}</td>
+                                </tr>
+                    `;
+                });
+                $('#stock_product tbody').html(data_str);
+            });
+        }
+    </script>
 
 @endsection
