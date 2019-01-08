@@ -44,7 +44,7 @@
                                             <td class="text-right">&#8372; {{$item->total_price}}</td>
                                             <td style="padding: 12px 0;">
                                                 <div style="width: 90%;" class="rs-select2--dark rs-select2--md m-r-10 rs-select2--border">
-                                                    <select class="js-select2" name="order_status_code">
+                                                    <select class="js-select2" name="order_status_code" onchange="orderStatus({{$item->id}},this)">
                                                         @isset($order_code)
                                                             @foreach($order_code as $v)
                                                                 <option @if($v->id === $item->oder_status) selected @endif value="{{$v->id}}">{{$v->name}}</option>
@@ -127,7 +127,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">{{__('Закрыть')}}</button>
-                    <button type="button" class="btn btn-primary">{{__('Отметить ка выполненый')}}</button>
                 </div>
             </div>
         </div>
@@ -201,6 +200,12 @@
                     `;
                 });
                 $('#stock_product tbody').html(data_str);
+            });
+        }
+
+        function orderStatus(id,obj) {
+            $.get(`{{route('admin.product.change_status_order')}}?orderID=${id}&statusID=${$(obj).val()}`,function (data) {
+                alert(data.response);
             });
         }
     </script>

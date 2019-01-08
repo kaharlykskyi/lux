@@ -95,7 +95,7 @@ class Tecdoc
                 break;
         }
 
-        if ($pattern != null) $where .= " AND description LIKE '" . $pattern . "%'";
+        if ($pattern != null) $where .= " AND constructioninterval LIKE '%" . $pattern . "%'";
 
         return DB::connection($this->connection)->select("
             SELECT id, description name, constructioninterval

@@ -25,6 +25,12 @@ class CatalogController extends Controller
     public function index(Request $request){
         $brands = null;
 
+        if (isset($request->search_product_article)){
+            $products = Product::where('articles','LIKE',"%{$request->search_product_article}%")->paginate($this->pre_products);
+            $products->withPath($request->fullUrl());
+            return view('catalog.index',compact('products','brands'));
+        }
+
         if(isset($request->pre_products)){
             $this->pre_products = $request->pre_products;
         }
@@ -59,9 +65,6 @@ class CatalogController extends Controller
         foreach ($products as $product){
             $this->product_id[] = $product->articles;
         }
-        //$products_img = $this->tecdoc->getArtFilesForArticles($this->product_id);
-        //dump());
-
 
         return view('catalog.index',compact('products','brands'));
     }

@@ -46,4 +46,15 @@ class OrderController extends Controller
             'response' => $product_stock
         ]);
     }
+
+    public function changeStatusOrder(Request $request){
+        DB::table('carts')->where('id',$request->orderID)
+            ->update([
+                'oder_status' => (int)$request->statusID
+            ]);
+
+        return response()->json([
+            'response' => 'Статус заказа изменен'
+        ]);
+    }
 }

@@ -154,9 +154,8 @@ body header .logo{
     justify-content: space-around;
 }
 
-.filter-section .search-car__list li{
+.filter-section .search-car__list > li{
     border: 2px solid #ccc;
-    padding: 10px 15px;
     border-radius: 15px;
     width: 150px;
 }

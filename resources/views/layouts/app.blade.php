@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
     <link rel="stylesheet" href="{{asset('css/responsive.css')}}">
     <link rel="stylesheet" href="{{asset('css/custom-style.css')}}">
+    <link rel="stylesheet" href="{{asset('css/selectric.css')}}">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
 
@@ -43,6 +44,7 @@
 
     <script src="{{asset('js/vendors/jquery/jquery.min.js')}}"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="{{asset('js/jquery.selectric.min.js')}}"></script>
 </head>
 <body>
     <!-- Page Wrapper -->

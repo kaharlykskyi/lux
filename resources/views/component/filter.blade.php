@@ -34,11 +34,10 @@
                         <div class="row">
 
                             <div class="col-md-12">
-                                <form>
-                                    @csrf
+                                <form action="{{route('catalog')}}" method="GET">
                                     <div class="row padding-30">
                                         <div class="col-xs-12 col-sm-10">
-                                            <input class="form-control" type="text" name="search" placeholder="поиск по коду товара, модели авто">
+                                            <input class="form-control" type="text" name="search_product_article" placeholder="поиск по коду товара">
                                         </div>
                                         <div class="col-xs-12 col-sm-2">
                                             <button type="submit" class="btn-round btn-sm">{{__('Поиск')}}</button>
@@ -60,33 +59,31 @@
                             <form>
                                 @csrf
                                 <div class="row padding-30">
-                                    <div class="col-xs-12 text-left relative padding-top-10 padding-bottom-10">
-                                        <a class="link border-bottom bold" href="">{{__('Уточните данные по автомобилю  для отображения подходящих запчастей:')}}</a>
-                                        <span class="hover-tooltip right">
-                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
-                                </span>
-                                    </div>
                                     <div class="col-xs-12">
                                         <ul class="search-car__list">
                                             <li>
-                                                <a href="">
-                                                    <span>Легковой</span>
-                                                </a>
+                                                <select class="filter_select" name="type_auto" id="type_auto">
+                                                    <option selected value="passenger">{{__('Легковой')}}</option>
+                                                    <option value="commercial">{{__('Грузовой')}}</option>
+                                                </select>
                                             </li>
                                             <li>
-                                                <a href="">
-                                                    <span>Выберите год</span>
-                                                </a>
+                                                <select class="filter_select" name="year_auto" id="year_auto">
+                                                    <option selected value="">{{__('Выберите год')}}</option>
+                                                    @for($i=(int)date('Y');$i >= 1980;$i--)
+                                                        <option value="{{$i}}">{{$i}}</option>
+                                                    @endfor
+                                                </select>
                                             </li>
                                             <li>
-                                                <a href="">
-                                                    <span>Выберите марку</span>
-                                                </a>
+                                                <select class="filter_select" name="brand_auto" id="brand_auto">
+                                                    <option selected value="">{{__('Выберите марку')}}</option>
+                                                </select>
                                             </li>
                                             <li>
-                                                <a href="">
-                                                    <span>Выберите модель</span>
-                                                </a>
+                                                <select class="filter_select" name="model_auto" id="model_auto">
+                                                    <option selected value="">{{__('Выберите модель')}}</option>
+                                                </select>
                                             </li>
                                             <li>
                                                 <a href="">
@@ -110,6 +107,43 @@
                                     </div>
                                 </div>
                             </form>
+                            <script>
+                                $(function() {
+                                    $('select.filter_select').selectric();
+                                    $(dataFilter);
+                                });
+                                $('#year_auto').change(dataFilter);
+                                $('#brand_auto').change(dataFilter);
+
+                                function dataFilter() {
+                                    if ($('#year_auto').val() !== ''){
+                                        $.get(`{{route('gat_brands')}}?type_auto=${$('#type_auto').val()}`, function(data) {
+                                            let str_data = '';
+                                            data.response.forEach(function (item) {
+                                                str_data += `<option value="${item.id}">${item.description}</option>`
+                                            });
+                                            $('#brand_auto').removeAttr('disabled').html(str_data).selectric('refresh');
+                                        });
+
+                                    } else{
+                                        $('#brand_auto').prop('disabled', 'disabled').selectric('refresh');
+                                    }
+
+                                    if ($('#brand_auto').val() !== '' && $('#year_auto').val() !== ''){
+                                        $.get(`{{route('gat_model')}}?type_auto=${$('#type_auto').val()}&brand_id=${$('#brand_auto').val()}&year_auto=${$('#year_auto').val()}`, function(data) {
+
+                                            console.log(data.response);
+                                            let str_data = '';
+                                            data.response.forEach(function (item) {
+                                                str_data += `<option value="${item.id}">${item.name}</option>`
+                                            });
+                                            $('#model_auto').removeAttr('disabled').html(str_data).selectric('refresh');
+                                        });
+                                    } else {
+                                        $('#model_auto').prop('disabled', 'disabled').selectric('refresh');
+                                    }
+                                }
+                            </script>
                         </div>
                     </div>
                 </div>
