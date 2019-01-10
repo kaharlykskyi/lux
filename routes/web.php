@@ -16,6 +16,7 @@ Auth::routes(['verify' => true]);
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/get-brands', 'HomeController@getBrands')->name('gat_brands');
 Route::get('/get-model', 'HomeController@getModel')->name('gat_model');
+Route::get('/get-modifications', 'HomeController@getModifications')->name('get_modifications');
 
 /*--------PROFILE---------*/
 Route::prefix('profile')->middleware(['auth'])->group(function () {

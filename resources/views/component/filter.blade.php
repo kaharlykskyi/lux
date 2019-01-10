@@ -86,19 +86,19 @@
                                                 </select>
                                             </li>
                                             <li>
-                                                <a href="">
-                                                    <span>Выберите двигатель</span>
-                                                </a>
+                                                <select class="filter_select" name="modification_auto" id="modification_auto">
+                                                    <option selected value="">{{__('Выберите модификацию')}}</option>
+                                                </select>
                                             </li>
                                             <li>
-                                                <a href="">
-                                                    <span>Выберите кузов</span>
-                                                </a>
+                                                <select class="filter_select" name="engine_auto" id="engine_auto">
+                                                    <option selected value="">{{__('Выберите двигатель')}}</option>
+                                                </select>
                                             </li>
                                             <li>
-                                                <a href="">
-                                                    <span>Выберите модификацию</span>
-                                                </a>
+                                                <select class="filter_select" name="body_auto" id="body_auto">
+                                                    <option selected value="">{{__('Выберите кузов')}}</option>
+                                                </select>
                                             </li>
                                         </ul>
                                     </div>
@@ -112,35 +112,78 @@
                                     $('select.filter_select').selectric();
                                     $(dataFilter);
                                 });
-                                $('#year_auto').change(dataFilter);
-                                $('#brand_auto').change(dataFilter);
+                                $('#year_auto').change(function () {
+                                    dataFilter();
+                                });
+                                $('#brand_auto').change(function () {
+                                    dataFilter(1);
+                                });
+                                $('#model_auto').change(function () {
+                                    dataFilter(2);
+                                });
 
-                                function dataFilter() {
-                                    if ($('#year_auto').val() !== ''){
+                                function dataFilter(level = 0) {
+                                    if ($('#year_auto').val() !== '' && level === 0){
                                         $.get(`{{route('gat_brands')}}?type_auto=${$('#type_auto').val()}`, function(data) {
-                                            let str_data = '';
+                                            let str_data = `<option selected value="">{{__('Выберите марку')}}</option>`;
                                             data.response.forEach(function (item) {
                                                 str_data += `<option value="${item.id}">${item.description}</option>`
                                             });
                                             $('#brand_auto').removeAttr('disabled').html(str_data).selectric('refresh');
                                         });
 
-                                    } else{
+                                    } else if($('#year_auto').val() === ''){
                                         $('#brand_auto').prop('disabled', 'disabled').selectric('refresh');
                                     }
 
-                                    if ($('#brand_auto').val() !== '' && $('#year_auto').val() !== ''){
+                                    if ($('#brand_auto').val() !== '' && level === 1){
                                         $.get(`{{route('gat_model')}}?type_auto=${$('#type_auto').val()}&brand_id=${$('#brand_auto').val()}&year_auto=${$('#year_auto').val()}`, function(data) {
-
-                                            console.log(data.response);
-                                            let str_data = '';
+                                            let str_data = `<option selected value="">{{__('Выберите модель')}}</option>`;
                                             data.response.forEach(function (item) {
                                                 str_data += `<option value="${item.id}">${item.name}</option>`
                                             });
                                             $('#model_auto').removeAttr('disabled').html(str_data).selectric('refresh');
                                         });
-                                    } else {
+                                    } else if($('#brand_auto').val() === '') {
                                         $('#model_auto').prop('disabled', 'disabled').selectric('refresh');
+                                    }
+
+                                    if ($('#model_auto').val() !== '' && level === 2){
+                                        $.get(`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}&type_mod=General`, function(data) {
+                                            let str_data = `<option selected value="">{{__('Выберите модификацию')}}</option>`;
+                                            data.response.forEach(function (item) {
+                                                str_data += `<option value="${item.id}">${item.name}</option>`
+                                            });
+                                            $('#modification_auto').removeAttr('disabled').html(str_data).selectric('refresh');
+                                        });
+                                    } else if($('#model_auto').val() === '') {
+                                        $('#modification_auto').prop('disabled', 'disabled').selectric('refresh');
+                                    }
+
+                                    if ($('#model_auto').val() !== '' && level === 2){
+                                        $.get(`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}&type_mod=Engine`, function(data) {
+                                            let str_data = `<option selected value="">{{__('Выберите двигатель')}}</option>`;
+                                            data.response.forEach(function (item) {
+                                                str_data += `<option value="${item.displayvalue}">${item.displayvalue}</option>`
+                                            });
+                                            $('#engine_auto').removeAttr('disabled').html(str_data).selectric('refresh');
+                                        });
+                                    } else if($('#model_auto').val() === '') {
+                                        $('#engine_auto').prop('disabled', 'disabled').selectric('refresh');
+                                    }
+
+                                    if ($('#model_auto').val() !== '' && level === 2){
+                                        $.get(`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}&type_mod=Body`, function(data) {
+
+                                            console.log(data.response);
+                                            let str_data = `<option selected value="">{{__('Выберите кузов')}}</option>`;
+                                            data.response.forEach(function (item) {
+                                                str_data += `<option value="${item.displayvalue}">${item.displayvalue}</option>`
+                                            });
+                                            $('#body_auto').removeAttr('disabled').html(str_data).selectric('refresh');
+                                        });
+                                    } else if($('#model_auto').val() === '') {
+                                        $('#body_auto').prop('disabled', 'disabled').selectric('refresh');
                                     }
                                 }
                             </script>

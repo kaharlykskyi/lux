@@ -110,10 +110,16 @@ class Tecdoc
      * (1.3) Модификации авто
      *
      * @param $model_id
+     * @param null $attributegroup
+     * @param null $attributetype
      * @return mixed
      */
-    public function getModifications($model_id)
+    public function getModifications($model_id, $attributegroup = null,$attributetype = null)
     {
+        $where = '';
+        if (isset($attributegroup)) $where .= " AND attributegroup='{$attributegroup}'";
+        if (isset($attributetype)) $where .= " AND attributetype='{$attributetype}'";
+
         switch ($this->type) {
             case 'passenger':
                 return DB::connection($this->connection)->select("
@@ -121,7 +127,7 @@ class Tecdoc
 					FROM passanger_cars pc 
 					LEFT JOIN passanger_car_attributes a on pc.id = a.passangercarid
 					WHERE canbedisplayed = 'True'
-					AND modelid = " . (int)$model_id . " AND ispassengercar = 'True'");
+					AND modelid = " . (int)$model_id . " AND ispassengercar = 'True' {$where}");
                 break;
             case 'commercial':
                 return DB::connection($this->connection)->select("
@@ -129,7 +135,7 @@ class Tecdoc
 					FROM commercial_vehicles cv 
 					LEFT JOIN commercial_vehicle_attributes a on cv.id = a.commercialvehicleid
 					WHERE canbedisplayed = 'True'
-					AND modelid = " . (int)$model_id . " AND iscommercialvehicle = 'True'");
+					AND modelid = " . (int)$model_id . " AND iscommercialvehicle = 'True' {$where}");
                 break;
             case 'motorbike':
                 return DB::connection($this->connection)->select("
@@ -145,7 +151,7 @@ class Tecdoc
 					FROM engines e 
 					LEFT JOIN engine_attributes a on e.id= a.engineid
 					WHERE canbedisplayed = 'True'
-					AND manufacturerId = " . (int)$model_id . " AND isengine = 'True'");
+					AND manufacturerId = " . (int)$model_id . " AND isengine = 'True' {$where}");
                 break;
             case 'axle':
                 return DB::connection($this->connection)->select("
@@ -650,5 +656,9 @@ class Tecdoc
     public function getManufacturer($matchcode){
         return DB::connection($this->connection)
             ->select("SELECT DISTINCT `id`,`matchcode` FROM `manufacturers` WHERE `matchcode`='{$matchcode}'");
+    }
+
+    public function getEngine(){
+
     }
 }

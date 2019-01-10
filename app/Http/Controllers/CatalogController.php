@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CatalogController extends Controller
 {
@@ -24,7 +25,8 @@ class CatalogController extends Controller
 
     public function index(Request $request){
         $brands = null;
-
+        $this->tecdoc->setType('engine');
+        dump($this->tecdoc->getSections('18275')); //18275
         if (isset($request->search_product_article)){
             $products = Product::where('articles','LIKE',"%{$request->search_product_article}%")->paginate($this->pre_products);
             $products->withPath($request->fullUrl());
