@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -17,13 +19,20 @@ class HomeController extends Controller
         $this->tecdoc = new Tecdoc('mysql_tecdoc');
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->hasCookie('search_cars')){
+            $cookies = json_decode($request->cookie('search_cars'),true);
+            foreach ($cookies as $k => $cookie){
+                $this->tecdoc->setType($cookie['type_auto']);
+                $search_cars[$k]['data'] = $this->tecdoc->getModificationById($cookie['modification_auto']);
+                $search_cars[$k]['cookie'] = $cookie;
+            }
+        } else {
+            $search_cars = null;
+        }
 
-        $this->tecdoc->setType('passenger');
-        //dump($this->tecdoc->getModels(771,'2007'));
-        //dump($this->tecdoc->getModifications(4955));
-        return view('home.index');
+        return view('home.index',compact('search_cars'));
     }
 
     public function subcategory(Request $request){
@@ -126,5 +135,36 @@ class HomeController extends Controller
                 ]
             ]);
         }
+    }
+
+    public function getSectionParts(Request $request){
+        $data = $request->except('_token');
+
+        $coocie_cars = $request->cookie('search_cars');
+        if(isset($coocie_cars)){
+            $cars = json_decode($coocie_cars,true);
+            $new_car = true;
+            foreach ($cars as $item){
+                if ($item['modification_auto'] === $data['modification_auto']){
+                    $new_car = false;
+                }
+            }
+            if ($new_car){
+                array_push($cars,$data);
+            }
+            $cookies =  Cookie::forever('search_cars',json_encode($cars));
+        } else {
+            $cars[] = $data;
+            $cookies =  Cookie::forever('search_cars',json_encode($cars));
+        }
+
+        $this->tecdoc->setType($data['type_auto']);
+        $category = $this->tecdoc->getSections($data['modification_auto']);
+
+
+        return response()->json([
+            'response' => $category,
+            'modification_auto' => $data['modification_auto']
+        ])->withCookie($cookies);
     }
 }

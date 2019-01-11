@@ -57,6 +57,13 @@ function deleteProduct(product,cart,link) {
 $(document).ready(function() {
     const numItems = $('li.fancyTab').length;
     $("li.fancyTab").width(100/numItems+'%');
+
+    $('#search-detail-car button').click(function (e) {
+        e.preventDefault();
+        $.post($('#search-detail-car-form').attr('action'),$('#search-detail-car-form').serialize(),function (data) {
+            console.log(data);
+        });
+    });
 });
 
 $(window).load(function() {
@@ -131,4 +138,22 @@ function urlRusLat(str) {
 
     }
     return newStr.replace(/[_]{2,}/gim, '_').replace(/\n/gim, '');
+}
+
+
+
+function getCarsDetail(type_auto,year_auto,brand_auto,model_auto,modification_auto,engine_auto,body_auto,token) {
+    $('#search_cars_modal').modal('hide');
+    $.post($('#search-detail-car-form').attr('action'),{
+        'type_auto': type_auto,
+        'year_auto': year_auto,
+        'brand_auto': brand_auto,
+        'model_auto': model_auto,
+        'modification_auto': modification_auto,
+        'engine_auto': engine_auto,
+        'body_auto': body_auto,
+        '_token': token
+    },function (data) {
+        console.log(data);
+    });
 }

@@ -56,7 +56,7 @@
                     <div class="row">
 
                         <div class="col-md-12">
-                            <form>
+                            <form method="post" action="{{route('get_section_part')}}" id="search-detail-car-form">
                                 @csrf
                                 <div class="row padding-30">
                                     <div class="col-xs-12">
@@ -103,7 +103,15 @@
                                         </ul>
                                     </div>
                                     <div class="col-xs-12 text-right padding-top-10">
-                                        <a class="link" href="">{{__('Просмотреные авто')}}</a>
+                                        @auth
+                                            <a class="link margin-right-10" href="">{{__('Мои автомобили')}}</a>
+                                        @endauth
+                                        <a class="link" href="" onclick="return false;" data-toggle="modal" data-target="#search_cars_modal">{{__('Просмотреные авто')}}</a>
+                                    </div>
+                                </div>
+                                <div class="row margin-top-10 hidden" id="search-detail-car">
+                                    <div class="col-12 text-center">
+                                        <button type="submit" style="width: 200px;" class="btn-round btn-sm">{{__('Подобрать')}}</button>
                                     </div>
                                 </div>
                             </form>
@@ -120,6 +128,9 @@
                                 });
                                 $('#model_auto').change(function () {
                                     dataFilter(2);
+                                });
+                                $('#modification_auto').change(function () {
+                                    dataFilter(3);
                                 });
 
                                 function dataFilter(level = 0) {
@@ -174,8 +185,6 @@
 
                                     if ($('#model_auto').val() !== '' && level === 2){
                                         $.get(`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}&type_mod=Body`, function(data) {
-
-                                            console.log(data.response);
                                             let str_data = `<option selected value="">{{__('Выберите кузов')}}</option>`;
                                             data.response.forEach(function (item) {
                                                 str_data += `<option value="${item.displayvalue}">${item.displayvalue}</option>`
@@ -184,6 +193,10 @@
                                         });
                                     } else if($('#model_auto').val() === '') {
                                         $('#body_auto').prop('disabled', 'disabled').selectric('refresh');
+                                    }
+
+                                    if($('#modification_auto').val() !== ''){
+                                        $('#search-detail-car').removeClass('hidden');
                                     }
                                 }
                             </script>

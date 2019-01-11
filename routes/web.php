@@ -17,6 +17,7 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('/get-brands', 'HomeController@getBrands')->name('gat_brands');
 Route::get('/get-model', 'HomeController@getModel')->name('gat_model');
 Route::get('/get-modifications', 'HomeController@getModifications')->name('get_modifications');
+Route::post('/get-section-part', 'HomeController@getSectionParts')->name('get_section_part');
 
 /*--------PROFILE---------*/
 Route::prefix('profile')->middleware(['auth'])->group(function () {

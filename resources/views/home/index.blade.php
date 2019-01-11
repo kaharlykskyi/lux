@@ -2,6 +2,8 @@
 
 @section('content')
 
+    @component('home.component.search_cars',['search_cars' => $search_cars])@endcomponent
+
     <!-- Content -->
     <div id="content">
         <!-- Filter -->
