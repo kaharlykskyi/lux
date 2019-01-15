@@ -87,8 +87,9 @@ class LiqPayController extends Controller
 
                     $balanseHistiry =  UserBalanceHistory::where('id',$params['order_id'])->first();
                     if (DB::table('user_balance')->where('user_id',$balanseHistiry->user_id)->exists()){
+                        $oldBalance = UserBalance::where('user_id',$balanseHistiry->user_id)->first();
                         UserBalance::where('user_id',$balanseHistiry->user_id)->update([
-                            'balance' => +($amount)
+                            'balance' => (float)$oldBalance->balance + $amount
                         ]);
                     } else {
                         $userBalance = new UserBalance();
@@ -96,6 +97,7 @@ class LiqPayController extends Controller
                             'user_id' => $balanseHistiry->user_id,
                             'balance' => $amount
                         ]);
+                        $userBalance->save();
                     }
                 }
             }
@@ -103,6 +105,6 @@ class LiqPayController extends Controller
     }
 
     public function resultPay(){
-
+        return view('liqpay.success_pay');
     }
 }
