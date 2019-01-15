@@ -66,10 +66,11 @@ class LiqPayController extends Controller
     }
 
     public function getLiqPayResponse(Request $request){
-        Storage::disk('local')->put('pay.txt', $request->post());
+        Storage::disk('local')->put('data.txt', $request->post('data'));
+        Storage::disk('local')->put('signature.txt', $request->post('signature'));
     }
 
     public function resultPay(Request $request){
-        dump($request);
+
     }
 }
