@@ -59,7 +59,8 @@
                             <form method="post" action="{{route('get_section_part')}}" id="search-detail-car-form">
                                 @csrf
                                 <div class="row padding-30">
-                                    <div class="col-xs-12">
+                                    <div class="col-xs-12" id="filter-cars-block">
+                                        <div id="history-car" style="display: none"></div>
                                         <ul class="search-car__list">
                                             <li>
                                                 <select class="filter_select" name="type_auto" id="type_auto">
@@ -110,11 +111,15 @@
                                     </div>
                                 </div>
                                 <div class="row margin-top-10 hidden" id="search-detail-car">
-                                    <div class="col-12 text-center">
+                                    <div class="col-xs-12 text-center">
                                         <button type="submit" style="width: 200px;" class="btn-round btn-sm">{{__('Подобрать')}}</button>
                                     </div>
                                 </div>
                             </form>
+                            <div class="col-xs-12 margin-top-10" style="display: none;" id="root-category-modification-wrapper">
+                                <p class="h4 text-center">{{__('Категории в которых искать детали')}}</p>
+                                <div id="root-category-modification"></div>
+                            </div>
                             <script>
                                 $(function() {
                                     $('select.filter_select').selectric();

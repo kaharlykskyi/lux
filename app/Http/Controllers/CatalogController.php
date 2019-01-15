@@ -14,6 +14,8 @@ class CatalogController extends Controller
 
     protected $product_id = null;
 
+    protected $tecdoc_article = [];
+
     protected $filter = null;
 
     public function __construct()
@@ -36,6 +38,33 @@ class CatalogController extends Controller
         }
 
         if (isset($request->category)){
+            if (isset($request->modification_auto) && isset($request->type_auto)){
+                $this->tecdoc->setType($request->type_auto);
+
+                $subCategory = $this->tecdoc->getSections($request->modification_auto,$request->category);
+                foreach ($subCategory as $item){
+                    $buff = $this->tecdoc->getSections($request->modification_auto,$item->id);
+                    if (isset($buff[0])){
+                        foreach ($buff as $item){
+                            array_push($subCategory,$item);
+                        }
+                    }
+                }
+
+                foreach ($subCategory as $item){
+                    $buff = $this->tecdoc->getSectionParts($request->modification_auto,$item->id);
+                    if(isset($buff[0])){
+                        foreach ($buff as $value){
+                            array_push($this->tecdoc_article,$value->part_number);
+                        }
+                    }
+                }
+
+                $products = Product::whereIn('articles',$this->tecdoc_article)->paginate($this->pre_products);
+                $products->withPath($request->fullUrl());
+                return view('catalog.index',compact('products','brands'));
+            }
+
             $products = Product::where('alias','LIKE',"%{$request->category}%")->paginate($this->pre_products);
             $products->withPath($request->fullUrl());
             return view('catalog.index',compact('products','brands'));

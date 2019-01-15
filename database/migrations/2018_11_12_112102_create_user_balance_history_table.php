@@ -17,6 +17,7 @@ class CreateUserBalanceHistoryTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->decimal('balance_refill',8,2);
+            $table->boolean('status')->default(0);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');

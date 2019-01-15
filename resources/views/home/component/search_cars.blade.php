@@ -9,7 +9,7 @@
                 @if(isset($search_cars))
                     @foreach($search_cars as $item)
                         <div class="list-group">
-                            <button type="button" class="list-group-item" onclick="getCarsDetail('{{$item['cookie']['type_auto']}}','{{$item['cookie']['year_auto']}}','{{$item['cookie']['brand_auto']}}','{{$item['cookie']['model_auto']}}','{{$item['cookie']['modification_auto']}}','{{$item['cookie']['engine_auto']}}','{{$item['cookie']['body_auto']}}','{{csrf_token()}}')">
+                            <button type="button" class="list-group-item" onclick="getCarsDetail('{{$item['cookie']['type_auto']}}','{{$item['cookie']['year_auto']}}','{{$item['cookie']['brand_auto']}}','{{$item['cookie']['model_auto']}}','{{$item['cookie']['modification_auto']}}','{{$item['cookie']['engine_auto']}}','{{$item['cookie']['body_auto']}}','{{csrf_token()}}','{{$item['data'][0]->name}}','{{$item['data'][0]->displayvalue}}')">
                                 {{$item['data'][0]->name}}
                                 <br><span class="small">{{$item['data'][0]->displayvalue}}</span>
                             </button>

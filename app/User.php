@@ -39,4 +39,12 @@ class User extends Authenticatable implements MustVerifyEmail
     public function orders(){
         return $this->hasMany('App\Order');
     }
+
+    public function balance(){
+        return $this->hasOne('App\UserBalance');
+    }
+
+    public function historyBalance(){
+        return $this->hasMany('App\UserBalanceHistory');
+    }
 }

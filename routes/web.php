@@ -19,6 +19,14 @@ Route::get('/get-model', 'HomeController@getModel')->name('gat_model');
 Route::get('/get-modifications', 'HomeController@getModifications')->name('get_modifications');
 Route::post('/get-section-part', 'HomeController@getSectionParts')->name('get_section_part');
 
+/*-----LiqPay-------*/
+Route::prefix('liqpay')->middleware(['auth'])->group(function () {
+    Route::get('/', 'LiqPayController@index')->name('liqpay');
+    Route::post('/pay', 'LiqPayController@sendPayRequest')->name('liqpay.pay');
+    Route::get('/result-pay', 'LiqPayController@resultPay')->name('liqpay.result_pay');
+});
+Route::post('/liqpay/response', 'LiqPayController@getLiqPayResponse')->name('liqpay.response');
+
 /*--------PROFILE---------*/
 Route::prefix('profile')->middleware(['auth'])->group(function () {
     Route::get('/', 'ProfileController@index')->name('profile');

@@ -60,8 +60,21 @@ $(document).ready(function() {
 
     $('#search-detail-car button').click(function (e) {
         e.preventDefault();
+        $('#root-category-modification').html(`
+                                            <p class="text-center">
+                                                <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                                                <span class="sr-only">Loading...</span>
+                                            </p>
+        `);
+        $('#root-category-modification-wrapper').show();
         $.post($('#search-detail-car-form').attr('action'),$('#search-detail-car-form').serialize(),function (data) {
-            console.log(data);
+            $('#root-category-modification-wrapper').show();
+
+            let str_data = '';
+            data.response.forEach(function (item) {
+                str_data += `<div class="col-xs-12 col-sm-6 col-lg-4"><a class="h5" target="_blank" href="/catalog/${item.id}?modification_auto=${data.modification_auto}&type_auto=${data.type_auto}">${item.description}</a></div>`;
+            });
+            $('#root-category-modification').html(str_data);
         });
     });
 });
@@ -142,8 +155,23 @@ function urlRusLat(str) {
 
 
 
-function getCarsDetail(type_auto,year_auto,brand_auto,model_auto,modification_auto,engine_auto,body_auto,token) {
+function getCarsDetail(type_auto,year_auto,brand_auto,model_auto,modification_auto,engine_auto,body_auto,token,name,interval) {
     $('#search_cars_modal').modal('hide');
+    $('#search-detail-car-form .search-car__list').hide();
+    $('#root-category-modification').html(`
+                                            <p class="text-center">
+                                                <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                                                <span class="sr-only">Loading...</span>
+                                            </p>
+    `);
+    $('#root-category-modification-wrapper').show();
+    $('#history-car').html(`
+        <div>
+            <button type="button" class="close" onclick="$('#history-car').hide();$('#search-detail-car-form .search-car__list').show();$('#root-category-modification-wrapper').hide();"><span aria-hidden="true">&times;</span></button>
+            <p class="h5 text-uppercase">${name}</p>
+            <span class="small text-info">${interval}</span>
+        </div>
+    `).show();
     $.post($('#search-detail-car-form').attr('action'),{
         'type_auto': type_auto,
         'year_auto': year_auto,
@@ -154,6 +182,10 @@ function getCarsDetail(type_auto,year_auto,brand_auto,model_auto,modification_au
         'body_auto': body_auto,
         '_token': token
     },function (data) {
-        console.log(data);
+        let str_data = '';
+        data.response.forEach(function (item) {
+            str_data += `<div class="col-xs-12 col-sm-6 col-lg-4"><a class="h5" target="_blank" href="/catalog/${item.id}?modification_auto=${modification_auto}&type_auto=${type_auto}">${item.description}</a></div>`;
+        });
+        $('#root-category-modification').html(str_data);
     });
 }

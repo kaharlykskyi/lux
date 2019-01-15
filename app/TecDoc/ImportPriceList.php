@@ -172,7 +172,7 @@ class ImportPriceList
                 try{
                     $array_import = [
                         'name' => $productInfo['name'],
-                        'articles' => $productInfo['articles'],
+                        'articles' => str_replace(' ','',$productInfo['articles']),
                         'brand' => $productInfo['brand'],
                         'alias' => str_replace(' ','_',$this->transliterateRU($productInfo['name'] .'_'. $productInfo['articles'] .'_'. $this->config['company'])),
                         'short_description' => isset($productInfo['short_description'])? $productInfo['short_description']: null,

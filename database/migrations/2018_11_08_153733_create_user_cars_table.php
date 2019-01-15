@@ -17,11 +17,13 @@ class CreateUserCarsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->string('vin_code');
-            $table->unsignedInteger('mark');
-            $table->unsignedInteger('year');
-            $table->string('model')->nullable();
-            $table->string('v_motor')->nullable();
-            $table->string('type_motor');
+            $table->string('type_auto');
+            $table->unsignedInteger('year_auto');
+            $table->unsignedInteger('brand_auto');
+            $table->unsignedInteger('model_auto');
+            $table->unsignedInteger('modification_auto');
+            $table->string('body_auto')->nullable();
+            $table->string('type_motor')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');

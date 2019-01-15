@@ -164,7 +164,8 @@ class HomeController extends Controller
 
         return response()->json([
             'response' => $category,
-            'modification_auto' => $data['modification_auto']
+            'modification_auto' => $data['modification_auto'],
+            'type_auto' => $data['type_auto']
         ])->withCookie($cookies);
     }
 }

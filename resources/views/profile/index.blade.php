@@ -346,10 +346,10 @@
                             <div class="col-sm-12">
                                 <ul class="row login-sec">
                                     <li class="col-sm-6">
-                                        <p class="h4">Баланс: <strong>0.00</strong> грн</p>
+                                        <p class="h4">Баланс: <strong>@if(isset($balance)){{floatval($balance)}}@else{{__('0.00')}}@endif</strong> грн</p>
                                     </li>
                                     <li class="col-sm-6 text-right">
-                                        <button type="button" class="btn-round">{{__('Пополнить баланс')}}</button>
+                                        <button type="button" onclick="location.href = '{{route('liqpay')}}'" class="btn-round">{{__('Пополнить баланс')}}</button>
                                     </li>
                                 </ul>
                             </div>
@@ -358,15 +358,29 @@
                                     <caption>{{__('История пополнений')}}</caption>
                                     <thead>
                                         <tr>
-                                            <th>Дата</th>
-                                            <th>Сумма</th>
+                                            <th>{{__('ID')}}</th>
+                                            <th>{{__('Дата')}}</th>
+                                            <th>{{__('Сумма')}}</th>
+                                            <th>{{__('Статус')}}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>4324</td>
-                                            <td>23.06.18</td>
-                                        </tr>
+                                        @forelse($balance_history as $item)
+                                            <tr>
+                                                <td>{{$item->id}}</td>
+                                                <td>{{$item->created_at}}</td>
+                                                <td>{{$item->balance_refill}}</td>
+                                                <td>{{($item->status === true)?__('успешно'):__('отказ')}}</td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="4">
+                                                    <div class="alert alert-info margin-15" role="alert">
+                                                        {{__('Платежи ещё не производились')}}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>

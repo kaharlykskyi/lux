@@ -16,8 +16,10 @@ class ProfileController extends Controller
         $user_cars = $user->cars;
         $delivery_info = $user->deliveryInfo;
         $orders = $user->orders;
+        $balance = $user->balance;
+        $balance_history = $user->historyBalance;
 
-        return view('profile.index',compact('roles','user_cars','delivery_info','orders'));
+        return view('profile.index',compact('roles','user_cars','delivery_info','orders','balance','balance_history'));
     }
 
     public function addCar(Request $request){
@@ -25,9 +27,11 @@ class ProfileController extends Controller
 
         $validate = Validator::make($data,[
             'vin_code' => 'required',
-            'mark' => 'required',
-            'year' => 'required|min:4',
-            'type_motor' => 'required',
+            'type_auto' => 'required',
+            'year_auto' => 'required|min:4',
+            'brand_auto' => 'required',
+            'model_auto' => 'required',
+            'modification_auto' => 'required'
         ]);
 
         if ($validate->fails()) {
