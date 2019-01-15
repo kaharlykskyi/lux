@@ -346,7 +346,7 @@
                             <div class="col-sm-12">
                                 <ul class="row login-sec">
                                     <li class="col-sm-6">
-                                        <p class="h4">Баланс: <strong>@if(isset($balance)){{floatval($balance)}}@else{{__('0.00')}}@endif</strong> грн</p>
+                                        <p class="h4">Баланс: <strong>@if(isset($balance)){{floatval($balance->balance)}}@else{{__('0.00')}}@endif</strong> грн</p>
                                     </li>
                                     <li class="col-sm-6 text-right">
                                         <button type="button" onclick="location.href = '{{route('liqpay')}}'" class="btn-round">{{__('Пополнить баланс')}}</button>
