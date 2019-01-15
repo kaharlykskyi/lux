@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\UserBalance;
 use App\UserBalanceHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use LiqPay;
@@ -66,11 +68,41 @@ class LiqPayController extends Controller
     }
 
     public function getLiqPayResponse(Request $request){
-        Storage::disk('local')->put('data.txt', $request->post('data'));
-        Storage::disk('local')->put('signature.txt', $request->post('signature'));
+        $signature = $request->post('signature');
+        $data = $request->post('data');
+
+        if (isset($signature) && isset($data)){
+            $liqpay = new LiqPay($this->public_key, $this->private_key);
+
+            $signature_decode = $liqpay->str_to_sign($this->private_key . $data . $this->private_key);
+            if ($signature === $signature_decode){
+                $params = $liqpay->decode_params($data);
+
+                if ($params['status'] === 'sandbox'){ //TODO:change 'success' on production
+                    $amount = $params['amount'] - $params['sender_commission'] - $params['receiver_commission'] - $params['commission_credit'] - $params['commission_debit'];
+                    UserBalanceHistory::where('id',$params['order_id'])->update([
+                        'balance_refill' => $amount,
+                        'status' => true
+                    ]);
+
+                    $balanseHistiry =  UserBalanceHistory::where('id',$params['order_id'])->first();
+                    if (DB::table('user_balance')->where('user_id',$balanseHistiry->user_id)->exists()){
+                        UserBalance::where('user_id',$balanseHistiry->user_id)->update([
+                            'balance' => +($amount)
+                        ]);
+                    } else {
+                        $userBalance = new UserBalance();
+                        $userBalance->fill([
+                            'user_id' => $balanseHistiry->user_id,
+                            'balance' => $amount
+                        ]);
+                    }
+                }
+            }
+        }
     }
 
-    public function resultPay(Request $request){
+    public function resultPay(){
 
     }
 }
