@@ -370,7 +370,7 @@
                                                 <td>{{$item->id}}</td>
                                                 <td>{{$item->created_at}}</td>
                                                 <td>{{$item->balance_refill}}</td>
-                                                <td>{{($item->status === true)?__('успешно'):__('отказ')}}</td>
+                                                <td>{{($item->status === 1)?__('успешно'):__('отказ')}}</td>
                                             </tr>
                                         @empty
                                             <tr>
