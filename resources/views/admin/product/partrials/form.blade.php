@@ -72,7 +72,7 @@
 
 <div class="row form-group">
     <div class="col col-md-3">
-        <label for="price" class=" form-control-label">{{__('Полное описание')}}</label>
+        <label for="price" class=" form-control-label">{{__('Цена')}}</label>
     </div>
     <div class="col-12 col-md-9">
         <input type="number" onblur="toFloat($(this))" id="price" name="price" value="@if(isset($product->id)){{$product->price}}@else{{old('price')}}@endif" required placeholder="0.00" class="form-control">
@@ -84,7 +84,7 @@
 
 <div class="row form-group">
     <div class="col col-md-3">
-        <label for="old_price" class=" form-control-label">{{__('Полное описание')}}</label>
+        <label for="old_price" class=" form-control-label">{{__('Старая цена')}}</label>
     </div>
     <div class="col-12 col-md-9">
         <input type="number" onblur="toFloat($(this))" id="old_price" name="old_price" value="@if(isset($product->id)){{$product->old_price}}@else{{old('old_price')}}@endif" placeholder="0.00" class="form-control">

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\{AppTrait\GEO, DeliveryInfo, User, UserCar, UserDelivery};
+use App\{AppTrait\GEO, DeliveryInfo, User, UserCar};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Auth,DB,Hash,Validator};
 
@@ -15,9 +15,15 @@ class ProfileController extends Controller
         $user = User::find(Auth::user()->id);
         $user_cars = $user->cars;
         $delivery_info = $user->deliveryInfo;
-        $orders = $user->orders;
         $balance = $user->balance;
         $balance_history = $user->historyBalance;
+
+        $orders = DB::select("SELECT c.id, c.updated_at,osc.name as status,
+                                      (SELECT SUM(p.price * cp.count) FROM `products` AS p 
+                                              JOIN `cart_products` AS cp WHERE p.id=cp.product_id AND cp.cart_id=c.id) AS total_price
+                                      FROM `carts` AS c
+                                      JOIN `oder_status_codes` as osc ON osc.id=c.oder_status
+                                      WHERE c.user_id=".Auth::id()." ORDER BY c.updated_at DESC");
 
         return view('profile.index',compact('roles','user_cars','delivery_info','orders','balance','balance_history'));
     }

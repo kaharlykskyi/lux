@@ -18,6 +18,5 @@ class OderStatusTableSeeder extends Seeder
         DB::table('oder_status_codes')->insert(['name'=>'отправлен']);
         DB::table('oder_status_codes')->insert(['name'=>'отменен']);
         DB::table('oder_status_codes')->insert(['name'=>'выполнен']);
-        DB::table('oder_status_codes')->insert(['name'=>'оплачен']);
     }
 }

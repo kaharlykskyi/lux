@@ -49,22 +49,24 @@ class ImportPriceList
 
     protected function getMail(){
         $price_list_configs = config('price_list_settings');
-        foreach ($price_list_configs as $config){
-            $this->config = $config;
+
+        try{
             $connect_to = '{imap.gmail.com:993/imap/ssl}INBOX';
             $user = config('app.work_mail');
             $password = config('app.work_pass');
-            try{
 
-                $mailbox = new Mailbox($connect_to,$user,$password, storage_path('app') . '/price_list');
+            $mailbox = new Mailbox($connect_to,$user,$password, storage_path('app') . '/price_list');
 
-                $mailsIds = $mailbox->searchMailbox('ALL');
+            $mailsIds = $mailbox->searchMailbox('UNSEEN');
 
-                if(!$mailsIds) continue;
+            if(!$mailsIds) return;
 
-                foreach ($mailsIds as $mailsId){
-                    $mail = $mailbox->getMail($mailsId);
+            foreach ($mailsIds as $mailsId){
+                $mail = $mailbox->getMail($mailsId);
+                foreach ($price_list_configs as $config){
+                    $this->config = $config;
                     if($mail->fromAddress === $config['email']){
+
                         foreach ($mail->getAttachments() as $mailAttachment){
                             $this->export($mailAttachment->filePath);
 
@@ -79,18 +81,19 @@ class ImportPriceList
                             $this->count_success = 0;
                             $this->count_fail = 0;
                         }
+
                         $mailbox->deleteMail($mailsId);
                     }
                 }
-
-            } catch (\Exception $exception){
-                if (config('app.debug')){
-                    dump("Can't connect to '$connect_to': $exception");
-                } else {
-                    Log::error("Can't connect to '$connect_to': $exception");
-                }
+                $mailbox->deleteMail($mailsId);
             }
 
+        } catch (\Exception $exception){
+            if (config('app.debug')){
+                dump("Can't connect to '$connect_to': $exception");
+            } else {
+                Log::error("Can't connect to '$connect_to': $exception");
+            }
         }
     }
 
