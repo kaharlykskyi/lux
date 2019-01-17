@@ -14,91 +14,18 @@
                                 <input type="text" class="form-control" name="vin_code" value="" required autofocus>
                             </label>
                         </li>
-                        <li class="col-sm-12">
-                            <label>{{ __('Марка') }}
-                                <select class="form-control selectpicker" data-live-search="true" name="mark" required>
+                        <li class="col-sm-12" id="type_auto">
+                            <label>{{ __('Тип автомобиля') }}
+                                <select class="form-control selectpicker" data-live-search="true" name="type_auto" required>
                                     <option label="" value="0"></option>
-                                    <option label="ACURA" value="1213">ACURA</option>
-                                    <option label="ALFA ROMEO" value="502">ALFA ROMEO</option>
-                                    <option label="APRILIA MOTO" value="11546">APRILIA MOTO</option>
-                                    <option label="AUDI" value="504">AUDI</option>
-                                    <option label="BENELLI MOTO" value="11547">BENELLI MOTO</option>
-                                    <option label="BMW" value="511">BMW</option>
-                                    <option label="BMW MOTO" value="11578">BMW MOTO</option>
-                                    <option label="BMW Mini" value="1231">BMW Mini</option>
-                                    <option label="BUELL MOTO" value="11545">BUELL MOTO</option>
-                                    <option label="BYD" value="10624">BYD</option>
-                                    <option label="CADILLAC" value="852">CADILLAC</option>
-                                    <option label="CAGIVA MOTO" value="11548">CAGIVA MOTO</option>
-                                    <option label="CHERY" value="10389">CHERY</option>
-                                    <option label="CHEVROLET" value="602">CHEVROLET</option>
-                                    <option label="CHRYSLER" value="513">CHRYSLER</option>
-                                    <option label="CITROEN" value="514">CITROEN</option>
-                                    <option label="DACIA" value="603">DACIA</option>
-                                    <option label="DAEWOO" value="649">DAEWOO</option>
-                                    <option label="DAF" value="516">DAF</option>
-                                    <option label="DAIHATSU" value="517">DAIHATSU</option>
-                                    <option label="DODGE" value="521">DODGE</option>
-                                    <option label="DUCATI MOTO" value="11550">DUCATI MOTO</option>
-                                    <option label="FIAT" value="524">FIAT</option>
-                                    <option label="FORD" value="525">FORD</option>
-                                    <option label="FORD USA" value="814">FORD USA</option>
-                                    <option label="GEELY" value="10091">GEELY</option>
-                                    <option label="GENERAL MOTORS" value="792">GENERAL MOTORS</option>
-                                    <option label="GREAT WALL" value="10405">GREAT WALL</option>
-                                    <option label="HONDA" value="533">HONDA</option>
-                                    <option label="HONDA MOTO" value="11579">HONDA MOTO</option>
-                                    <option label="HUMMER" value="1214">HUMMER</option>
-                                    <option label="HUSQVARNA MOTO" value="11738">HUSQVARNA MOTO</option>
-                                    <option label="HYOSUNG MOTO" value="11553">HYOSUNG MOTO</option>
-                                    <option label="HYUNDAI" value="647">HYUNDAI</option>
-                                    <option label="INFINITI" value="1234">INFINITI</option>
-                                    <option label="ISUZU" value="538">ISUZU</option>
-                                    <option label="IVECO" value="539">IVECO</option>
-                                    <option label="JAGUAR" value="540">JAGUAR</option>
-                                    <option label="JAWA MOTO" value="11571">JAWA MOTO</option>
-                                    <option label="JEEP" value="910">JEEP</option>
-                                    <option label="KAWASAKI MOTO" value="11554">KAWASAKI MOTO</option>
-                                    <option label="KIA" value="648">KIA</option>
-                                    <option label="KTM MOTO" value="11555">KTM MOTO</option>
-                                    <option label="LADA" value="545">LADA</option>
-                                    <option label="LANCIA (FIAT)" value="546">LANCIA (FIAT)</option>
-                                    <option label="LAND ROVER" value="1292">LAND ROVER</option>
-                                    <option label="LEXUS" value="874">LEXUS</option>
-                                    <option label="MAN" value="551">MAN</option>
-                                    <option label="MAZ" value="298">MAZ</option>
-                                    <option label="MAZDA" value="552">MAZDA</option>
-                                    <option label="MERCEDES" value="553">MERCEDES</option>
-                                    <option label="MG ROVER" value="554">MG ROVER</option>
-                                    <option label="MITSUBISHI" value="555">MITSUBISHI</option>
-                                    <option label="NEOPLAN" value="626">NEOPLAN</option>
-                                    <option label="NISSAN" value="558">NISSAN</option>
-                                    <option label="OPEL" value="561">OPEL</option>
-                                    <option label="PEUGEOT" value="563">PEUGEOT</option>
-                                    <option label="PORSCHE" value="565">PORSCHE</option>
-                                    <option label="RENAULT" value="566">RENAULT</option>
-                                    <option label="RENAULT TRUCKS" value="739">RENAULT TRUCKS</option>
-                                    <option label="ROVER" value="568">ROVER</option>
-                                    <option label="SATURN" value="1205">SATURN</option>
-                                    <option label="SCANIA" value="572">SCANIA</option>
-                                    <option label="SEAT" value="573">SEAT</option>
-                                    <option label="SKODA" value="575">SKODA</option>
-                                    <option label="SMART" value="1149">SMART</option>
-                                    <option label="SSANG YONG" value="639">SSANG YONG</option>
-                                    <option label="SUBARU" value="576">SUBARU</option>
-                                    <option label="SUZUKI" value="577">SUZUKI</option>
-                                    <option label="SUZUKI MOTO" value="11582">SUZUKI MOTO</option>
-                                    <option label="TOYOTA" value="579">TOYOTA</option>
-                                    <option label="TRIUMPH MOTO" value="11583">TRIUMPH MOTO</option>
-                                    <option label="VOLVO" value="586">VOLVO</option>
-                                    <option label="VOLKSWAGEN" value="587">VOLKSWAGEN</option>
-                                    <option label="YAMAHA MOTO" value="11565">YAMAHA MOTO</option>
+                                    <option label="{{__('Легковой')}}" value="passenger">{{__('Легковой')}}</option>
+                                    <option label="{{__('Грузовой')}}" value="commercial">{{__('Грузовой')}}</option>
                                 </select>
                             </label>
                         </li>
-                        <li class="col-sm-12">
+                        <li class="col-sm-12 hidden" id="year_auto">
                             <label>{{ __('Год выпуска') }}
-                                <select class="form-control selectpicker" data-live-search="true" name="year" required>
+                                <select class="form-control selectpicker"  data-live-search="true" name="year_auto" required>
                                     <option label="" value="0"></option>
                                     @for($i = (integer)date('Y'); $i > 1970; $i--)
                                         <option label="{{$i}}" value="{{$i}}">{{$i}}</option>
@@ -106,23 +33,38 @@
                                 </select>
                             </label>
                         </li>
-                        <li class="col-sm-12">
+                        <li class="col-sm-12 hidden" id="brand_auto">
+                            <label>{{ __('Марка') }}
+                                <select class="form-control selectpicker" data-live-search="true" name="brand_auto" required>
+                                    <option label="" value="0">{{__('загрузка...')}}</option>
+                                </select>
+                            </label>
+                        </li>
+                        <li class="col-sm-12 hidden" id="model_auto">
                             <label>{{ __('Модель') }}
-                                <input type="text" class="form-control" name="model" value="">
+                                <select class="form-control selectpicker" data-live-search="true" name="model_auto" required>
+                                    <option label="" value="0">{{__('загрузка...')}}</option>
+                                </select>
                             </label>
                         </li>
-                        <li class="col-sm-12">
-                            <label>{{ __('Обьем двигателя') }}
-                                <input type="text" class="form-control" name="v_motor" value="">
+                        <li class="col-sm-12 hidden" id="modification_auto">
+                            <label>{{ __('Модификация') }}
+                                <select class="form-control selectpicker" data-live-search="true" name="modification_auto" required>
+                                    <option label="" value="0">{{__('загрузка...')}}</option>
+                                </select>
                             </label>
                         </li>
-                        <li class="col-sm-12">
+                        <li class="col-sm-12 hidden" id="body_auto">
+                            <label>{{ __('Тип кузова') }}
+                                <select class="form-control selectpicker" data-live-search="true" name="body_auto" required>
+                                    <option label="" value="0">{{__('загрузка...')}}</option>
+                                </select>
+                            </label>
+                        </li>
+                        <li class="col-sm-12 hidden" id="type_motor">
                             <label>{{ __('Тип двигателя') }}
-                                <select class="form-control" name="type_motor" required>
-                                    <option label="" value="0"></option>
-                                    <option label="Бензин" value="1">Бензин</option>
-                                    <option label="Дизел" value="2">Дизел</option>
-                                    <option label="Газ" value="3">Газ</option>
+                                <select class="form-control selectpicker" data-live-search="true" name="type_motor" required>
+                                    <option label="" value="0">{{__('загрузка...')}}</option>
                                 </select>
                             </label>
                         </li>
@@ -136,3 +78,55 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $('#type_auto select').change(function () {
+            $('#year_auto').removeClass('hidden');
+
+            $.get(`{{route('gat_brands')}}?type_auto=${$('#type_auto select').val()}`, function(data) {
+                let str_data = `<option label="" value="0"></option>`;
+                data.response.forEach(function (item) {
+                    str_data += `<option label="${item.description}" value="${item.id}">${item.description}</option>`
+                });
+                $('#brand_auto select').html(str_data).selectpicker('refresh');
+                $('#brand_auto').removeClass('hidden');
+            });
+        });
+        $('#brand_auto select').change(function () {
+            $('#model_auto').removeClass('hidden');
+            $.get(`{{route('gat_model')}}?type_auto=${$('#type_auto select').val()}&brand_id=${$('#brand_auto select').val()}&year_auto=${$('#year_auto select').val()}`, function(data) {
+                let str_data = `<option label="" value="0"></option>`;
+                data.response.forEach(function (item) {
+                    str_data += `<option label="${item.name}" value="${item.id}">${item.name}</option>`
+                });
+                $('#model_auto select').html(str_data).selectpicker('refresh');
+            });
+        });
+        $('#model_auto select').change(function () {
+            $('#modification_auto').removeClass('hidden');
+            $('#body_auto').removeClass('hidden');
+            $('#type_motor').removeClass('hidden');
+            $.get(`{{route('get_modifications')}}?type_auto=${$('#type_auto select').val()}&model_id=${$('#model_auto select').val()}&type_mod=General`, function(data) {
+                let str_data = `<option label="" value="0"></option>`;
+                data.response.forEach(function (item) {
+                    str_data += `<option label="${item.name}" value="${item.id}">${item.name}</option>`
+                });
+                $('#modification_auto select').html(str_data).selectpicker('refresh');
+            });
+            $.get(`{{route('get_modifications')}}?type_auto=${$('#type_auto select').val()}&model_id=${$('#model_auto select').val()}&type_mod=Body`, function(data) {
+                let str_data = `<option label="" value="0"></option>`;
+                data.response.forEach(function (item) {
+                    str_data += `<option label="${item.displayvalue}" value="${item.displayvalue}">${item.displayvalue}</option>`
+                });
+                $('#body_auto select').removeAttr('disabled').html(str_data).selectpicker('refresh');
+            });
+            $.get(`{{route('get_modifications')}}?type_auto=${$('#type_auto select').val()}&model_id=${$('#model_auto select').val()}&type_mod=Engine`, function(data) {
+                let str_data = `<option label="" value="0"></option>`;
+                data.response.forEach(function (item) {
+                    str_data += `<option label="${item.displayvalue}" value="${item.displayvalue}">${item.displayvalue}</option>`
+                });
+                $('#type_motor select').removeAttr('disabled').html(str_data).selectpicker('refresh');
+            });
+        });
+    });
+</script>

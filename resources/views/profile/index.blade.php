@@ -320,10 +320,12 @@
                                             @foreach($user_cars as $user_car)
                                                 <a href="#" class="list-group-item">
                                                     <p class="list-group-item-text">VIN код: {{$user_car->vin_code}}</p>
-                                                    <p class="list-group-item-text">Марка: {{$user_car->mark}}</p>
-                                                    <p class="list-group-item-text">Год выпуска: {{$user_car->year}}</p>
-                                                    <p class="list-group-item-text">Модель: {{$user_car->model}}</p>
-                                                    <p class="list-group-item-text">Обьем двигателя: {{$user_car->v_motor}}</p>
+                                                    <p class="list-group-item-text">Тип: {{$user_car->type_auto}}</p>
+                                                    <p class="list-group-item-text">Год выпуска: {{$user_car->year_auto}}</p>
+                                                    <p class="list-group-item-text">Марка: {{$user_car->brand_auto}}</p>
+                                                    <p class="list-group-item-text">Модель: {{$user_car->model_auto}}</p>
+                                                    <p class="list-group-item-text">Модификация: {{$user_car->modification_auto}}</p>
+                                                    <p class="list-group-item-text">Тип кузова: {{$user_car->body_auto}}</p>
                                                     <p class="list-group-item-text">Тип двигателя: {{$user_car->type_motor}}</p>
                                                 </a>
                                             @endforeach
@@ -555,10 +557,12 @@
                             $('#addedCars').append(`
                                 <a href="#" class="list-group-item">
                                      <p class="list-group-item-text">VIN код: ${data.response.vin_code}</p>
-                                     <p class="list-group-item-text">Марка: ${data.response.mark}</p>
-                                     <p class="list-group-item-text">Год выпуска: ${data.response.year}</p>
-                                     <p class="list-group-item-text">Модель: ${data.response.model}</p>
-                                     <p class="list-group-item-text">Обьем двигателя: ${data.response.v_motor}</p>
+                                     <p class="list-group-item-text">Тип: ${data.response.type_auto}</p>
+                                     <p class="list-group-item-text">Год выпуска: ${data.response.year_auto}</p>
+                                     <p class="list-group-item-text">Марка: ${data.response.brand_auto}</p>
+                                     <p class="list-group-item-text">Модель: ${data.response.model_auto}</p>
+                                     <p class="list-group-item-text">Модификация: ${data.response.modification_auto}</p>
+                                     <p class="list-group-item-text">Тип кузова: ${data.response.body_auto}}</p>
                                      <p class="list-group-item-text">Тип двигателя: ${data.response.type_motor}</p>
                                 </a>`);
                         }
