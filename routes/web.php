@@ -19,6 +19,8 @@ Route::get('/get-model', 'HomeController@getModel')->name('gat_model');
 Route::get('/get-modifications', 'HomeController@getModifications')->name('get_modifications');
 Route::post('/get-section-part', 'HomeController@getSectionParts')->name('get_section_part');
 
+Route::get('/track-order/{id}', 'TrackOrderController@index')->name('track_order');
+
 /*-----LiqPay-------*/
 Route::prefix('liqpay')->middleware(['auth'])->group(function () {
     Route::get('/', 'LiqPayController@index')->name('liqpay');

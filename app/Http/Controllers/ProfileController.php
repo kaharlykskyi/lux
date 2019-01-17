@@ -18,7 +18,7 @@ class ProfileController extends Controller
         $balance = $user->balance;
         $balance_history = $user->historyBalance;
 
-        $orders = DB::select("SELECT c.id, c.updated_at,osc.name as status,
+        $orders = DB::select("SELECT c.id, c.updated_at,osc.name as status,c.invoice_np,
                                       (SELECT SUM(p.price * cp.count) FROM `products` AS p 
                                               JOIN `cart_products` AS cp WHERE p.id=cp.product_id AND cp.cart_id=c.id) AS total_price
                                       FROM `carts` AS c

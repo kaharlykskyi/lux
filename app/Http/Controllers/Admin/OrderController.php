@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 class OrderController extends Controller
 {
     public function index(Request $request){
-        $orders = DB::select("SELECT c.id, c.updated_at,c.oder_status,u.name,
+        $orders = DB::select("SELECT c.id, c.updated_at,c.oder_status,u.name,c.invoice_np,
                                       (SELECT SUM(p.price * cp.count) FROM `products` AS p 
                                               JOIN `cart_products` AS cp WHERE p.id=cp.product_id AND cp.cart_id=c.id) AS total_price
                                       FROM `carts` AS c
@@ -48,6 +48,17 @@ class OrderController extends Controller
     }
 
     public function changeStatusOrder(Request $request){
+        if (isset($request->invoice)){
+            DB::table('carts')->where('id',$request->orderID)
+                ->update([
+                    'invoice_np' => $request->invoice
+                ]);
+
+            return response()->json([
+                'response' => 'Номер накладной сохранён'
+            ]);
+        }
+
         DB::table('carts')->where('id',$request->orderID)
             ->update([
                 'oder_status' => (int)$request->statusID

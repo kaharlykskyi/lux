@@ -220,7 +220,14 @@
                                                 <td>{{$order->id}}</td>
                                                 <td>{{$order->updated_at}}</td>
                                                 <td>{{$order->total_price . __(' грн.')}}</td>
-                                                <td>{{$order->status}}</td>
+                                                <td>
+                                                    {{$order->status}}
+                                                    <span class="margin-left-5">
+                                                        <a href="{{route('track_order',$order->id)}}" title="Отследить посылку">
+                                                            <i class="fa fa-truck" aria-hidden="true"></i>
+                                                        </a>
+                                                    </span>
+                                                </td>
                                             </tr>
                                         @empty
                                             <tr>
