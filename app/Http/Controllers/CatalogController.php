@@ -72,15 +72,17 @@ class CatalogController extends Controller
 
         if (isset($request->trademark) && isset($request->pcode)){
             $manufactorer = $this->tecdoc->getManufacturer(trim($request->trademark));
-            $article_oe = $this->tecdoc->getManufacturerForOed(trim($request->pcode),$manufactorer[0]->id);
-            $article = [];
-            if (count($article_oe) > 0){
-                foreach ($article_oe as $k => $item){
-                    $article[] = $item->datasupplierarticlenumber;
+            if (isset($manufactorer[0])){
+                $article_oe = $this->tecdoc->getManufacturerForOed(trim($request->pcode),$manufactorer[0]->id);
+                $article = [];
+                if (count($article_oe) > 0){
+                    foreach ($article_oe as $k => $item){
+                        $article[] = $item->datasupplierarticlenumber;
+                    }
                 }
+                $products = Product::whereIn('articles',$article)->paginate($this->pre_products);
+                $products->withPath($request->fullUrl());
             }
-            $products = Product::whereIn('articles',$article)->paginate($this->pre_products);
-            $products->withPath($request->fullUrl());
             return view('catalog.index',compact('products','brands'));
         }
 

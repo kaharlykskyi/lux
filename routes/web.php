@@ -80,6 +80,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     Route::get('/full-order-info','OrderController@getOrderData')->name('admin.product.full_order_info');
     Route::get('/info-product-stock','OrderController@getInfoProductStock')->name('admin.product.info_product_stock');
     Route::post('/permission','UserController@permission')->name('permission');
+    Route::match(['get', 'post'], '/fast-buy/{status}','FastBuyController@index')->name('admin.fast_buy');
 
     Route::resources([
         'category' => 'CategoryController',

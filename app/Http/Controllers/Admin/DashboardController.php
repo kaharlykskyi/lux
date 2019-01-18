@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\{Cart,User};
+use App\{Cart, FastBuy, User};
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -16,12 +16,16 @@ class DashboardController extends Controller
         $statistic_new_uses = $this->getShopStat('users');
         $orders_count = Cart::whereNotIn('oder_status',[1,5])->count();
         $statistic_orders = $this->getShopStat('carts',[['oder_status','NOT IN',[1,5]]]);
+        $statistic_fast_buy = $this->getShopStat('fast_buy');
+        $fast_buy_count = FastBuy::count();
 
         return view('admin.dashboard.index',compact(
             'users_count',
             'statistic_new_uses',
             'orders_count',
-            'statistic_orders'
+            'statistic_orders',
+            'statistic_fast_buy',
+            'fast_buy_count'
         ));
     }
 

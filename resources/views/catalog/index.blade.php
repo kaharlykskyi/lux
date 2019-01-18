@@ -30,7 +30,7 @@
                             <ul>
                                 <!-- Short List -->
                                 <li>
-                                    <p>{{$products->total() . __(' найдено товаров')}}</p>
+                                    <p>{{isset($products)?$products->total():'0' . __(' найдено товаров')}}</p>
                                 </li>
                                 <!-- Short  -->
                                 <li >
@@ -70,14 +70,14 @@
                                                 <a href="#." class="cart-btn"><i class="icon-basket-loaded"></i></a> </article>
                                         </div>
                                 @empty
-                                    <div class="alert alert-warning" role="alert">{{__('Ничегошеньки не отыскали! =(')}}</div>
+                                    <div class="alert alert-warning" role="alert">{{__('Поиск не дал результатов')}}</div>
                                 @endforelse
                             @endisset
 
                             <div class="row">
                                 <div class="col-xs-12">
                                     <!-- pagination -->
-                                    {{$products->links()}}
+                                    @isset($products){{$products->links()}}@endisset
                                 </div>
                             </div>
                         </div>

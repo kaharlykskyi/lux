@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-md-12">
                 <!-- DATA TABLE -->
-                <h3 class="title-5 m-b-35 m-t-15">{{__('Страници сайта')}}</h3>
+                <h3 class="title-5 m-b-35 m-t-15">{{__('Склады поставщиков')}}</h3>
                 <div class="table-data__tool">
                     <div class="table-data__tool-left">
                     </div>

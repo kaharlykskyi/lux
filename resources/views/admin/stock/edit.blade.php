@@ -16,7 +16,7 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{{__('Создание ')}}</strong> {{__('склада')}}
+                        <strong>{{__('Редактирование ')}}</strong> {{__('склада')}}
                     </div>
                     <div class="card-body card-block">
                         <form action="{{route('admin.stock.update',$stock->id)}}" method="post" class="form-horizontal">

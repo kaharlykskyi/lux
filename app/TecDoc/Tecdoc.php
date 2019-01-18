@@ -655,10 +655,6 @@ class Tecdoc
 
     public function getManufacturer($matchcode){
         return DB::connection($this->connection)
-            ->select("SELECT DISTINCT `id`,`matchcode` FROM `manufacturers` WHERE `matchcode`='{$matchcode}'");
-    }
-
-    public function getEngine(){
-
+            ->select("SELECT DISTINCT `id`,`matchcode` FROM `manufacturers` WHERE `matchcode`='{$matchcode}' OR `description`='{$matchcode}'");
     }
 }

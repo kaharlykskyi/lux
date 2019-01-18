@@ -1,6 +1,7 @@
-@if(isset($statistic_new_uses) && isset($statistic_orders))
+@if(isset($statistic_new_uses) && isset($statistic_orders) && isset($statistic_fast_buy))
 <script>
     @php
+        //users statistic
         foreach ($statistic_new_uses as $item){
             $data[] = $item['data'];
         }
@@ -9,7 +10,7 @@
         }
         $data = json_encode(array_reverse($data));
         $count = json_encode(array_reverse($count));
-
+        //orders statistic
         foreach ($statistic_orders as $item){
             $data_orders[] = $item['data'];
         }
@@ -18,6 +19,15 @@
         }
         $data_orders = json_encode(array_reverse($data_orders));
         $count_orders = json_encode(array_reverse($count_orders));
+        //fast buy statistic
+        foreach ($statistic_fast_buy as $item){
+            $data_fast_buy[] = $item['data'];
+        }
+        foreach ($statistic_fast_buy as $item){
+            $count_fast_buy[] = $item['count'];
+        }
+        $data_fast_buy = json_encode(array_reverse($data_fast_buy));
+        $count_fast_buy = json_encode(array_reverse($count_fast_buy));
     @endphp
     $(document).ready(function () {
         (function ($) {
@@ -145,6 +155,75 @@
                             elements: {
                                 line: {
                                     tension: 0.00001,
+                                    borderWidth: 1
+                                },
+                                point: {
+                                    radius: 4,
+                                    hitRadius: 10,
+                                    hoverRadius: 4
+                                }
+                            }
+                        }
+                    });
+                }
+
+                //WidgetChart 3
+                var ctx = document.getElementById("widgetChart3");
+                if (ctx) {
+                    ctx.height = 130;
+                    var myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: {!! $data_fast_buy !!},
+                            type: 'line',
+                            datasets: [{
+                                data: {!! $count_fast_buy !!},
+                                label: 'Dataset',
+                                backgroundColor: 'transparent',
+                                borderColor: 'rgba(255,255,255,.55)',
+                            },]
+                        },
+                        options: {
+
+                            maintainAspectRatio: false,
+                            legend: {
+                                display: false
+                            },
+                            responsive: true,
+                            tooltips: {
+                                mode: 'index',
+                                titleFontSize: 12,
+                                titleFontColor: '#000',
+                                bodyFontColor: '#000',
+                                backgroundColor: '#fff',
+                                titleFontFamily: 'Montserrat',
+                                bodyFontFamily: 'Montserrat',
+                                cornerRadius: 3,
+                                intersect: false,
+                            },
+                            scales: {
+                                xAxes: [{
+                                    gridLines: {
+                                        color: 'transparent',
+                                        zeroLineColor: 'transparent'
+                                    },
+                                    ticks: {
+                                        fontSize: 2,
+                                        fontColor: 'transparent'
+                                    }
+                                }],
+                                yAxes: [{
+                                    display: false,
+                                    ticks: {
+                                        display: false,
+                                    }
+                                }]
+                            },
+                            title: {
+                                display: false,
+                            },
+                            elements: {
+                                line: {
                                     borderWidth: 1
                                 },
                                 point: {
