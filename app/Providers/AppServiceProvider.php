@@ -26,15 +26,6 @@ class AppServiceProvider extends ServiceProvider
             if (!isset($cart_session_id)){
                 Cookie::forever('cart_session_id',session()->getId());
             }
-
-            if (Cache::has('category_tecdoc_1-level')){
-                \view()->share('category',Cache::get('category_tecdoc_1-level'));
-            } else {
-                $tecdoc = new Tecdoc('mysql_tecdoc');
-                Cache::put('category_tecdoc_1-level',$tecdoc->getPrd(),60*24);
-                \view()->share('category',Cache::get('category_tecdoc_1-level'));
-            }
-
         }
     }
 

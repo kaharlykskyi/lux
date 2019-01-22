@@ -37,8 +37,24 @@ class HomeController extends Controller
 
     public function subcategory(Request $request){
         $this->tecdoc = new Tecdoc('mysql_tecdoc');
+        $subCategory = null;
+        if (isset($request->type) && isset($request->category)){
+            $this->tecdoc->setType($request->type);
+            if (isset($request->level)){
+                $subCategory = $this->tecdoc->getCategory([
+                    ['id','usagedescription','normalizeddescription'],
+                    [
+                        [$request->level,'=',"'$request->category'"]
+                    ]
+                ]);
+            }
+        } else{
+            $this->tecdoc->setType($request->type);
+            $subCategory = $this->tecdoc->getCategory();
+        }
+
         return response()->json([
-            'subCategory' => $this->tecdoc->getPrd(4,$request->category)
+            'subCategory' => $subCategory
         ]);
     }
 

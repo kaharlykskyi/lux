@@ -19,7 +19,7 @@
         <span id="price-min" class="price-min">20</span> <span id="price-max" class="price-max">80</span> <a href="#." class="btn-round" >Filter</a> </div>
 
     <!-- Featured Brands -->
-    <h6>Featured Brands</h6>
+    <h6>{{__('Производители')}}</h6>
     <div class="checkbox checkbox-primary">
         <ul>
             @isset($brands)
@@ -33,17 +33,6 @@
                     </li>
                 @endforeach
             @endisset
-        </ul>
-    </div>
-
-    <!-- Colors -->
-    <h6>Size</h6>
-    <div class="rating">
-        <ul>
-            <li><a href="#."><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i> <span>(218)</span></a></li>
-            <li><a href="#."><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i> <span>(178)</span></a></li>
-            <li><a href="#."><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i> <span>(79)</span></a></li>
-            <li><a href="#."><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i> <span>(188)</span></a></li>
         </ul>
     </div>
 </div>

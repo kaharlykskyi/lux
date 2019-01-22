@@ -26,31 +26,19 @@
 
                         <!-- Short List -->
                         <div class="short-lst">
-                            <h2>Cell Phones & Accessories</h2>
                             <ul>
                                 <!-- Short List -->
                                 <li>
-                                    <p>{{isset($products)?$products->total():'0' . __(' найдено товаров')}}</p>
+                                    <p>{{(isset($products)?$products->total():'0') . __(' найдено товаров')}}</p>
                                 </li>
                                 <!-- Short  -->
                                 <li >
-                                    <select class="selectpicker">
-                                        <option>Show 12 </option>
-                                        <option>Show 24 </option>
-                                        <option>Show 32 </option>
+                                    <select class="selectpicker" onchange="$.get(`{{route('filter')}}?pre_show=${$(this).val()}`,()=>{location.reload()});">
+                                        <option @if(session('pre_products') === 12) selected @endif value="12">Показывать 12 </option>
+                                        <option @if(session('pre_products') === 24) selected @endif  value="24">Показывать 24 </option>
+                                        <option @if(session('pre_products') === 32) selected @endif  value="32">Показывать 32 </option>
                                     </select>
                                 </li>
-                                <!-- by Default -->
-                                <li>
-                                    <select class="selectpicker" id="sort-product">
-                                        <option>{{__('Сортировать по умолчанию')}}</option>
-                                        <option value="DESC">{{__('Убыванию цены')}}</option>
-                                        <option value="ASC">{{__('Возростанию цены')}}</option>
-                                    </select>
-                                </li>
-                                <script>
-                                    
-                                </script>
                             </ul>
                         </div>
 
@@ -59,15 +47,21 @@
 
                             @isset($products)
                                 @forelse($products as $product)
-                                    <!-- Product -->
-                                        <div class="product" id="product-{{$product->id}}">
+                                    @php
+                                        //dump($product);
+                                        $catalog_product = \App\Product::where('articles',$product->DataSupplierArticleNumber)->first();
+                                    @endphp
+                                        <!-- Product -->
+                                        <div class="product" @isset($catalog_product)id="product-{{$catalog_product->id}}"@endisset>
                                             <article> <img class="img-responsive" src="{{asset('/images/item-img-1-2.jpg')}}" alt="" >
                                                 <!-- Content -->
-                                                <span class="tag">{{$product->brand}}</span> <a href="{{route('product',$product->alias)}}" class="tittle">{{$product->name}}</a>
-                                                <!-- Reviews -->
-                                                <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
-                                                <div class="price">{{$product->price . __(' грн')}} </div>
-                                                <a href="#." class="cart-btn"><i class="icon-basket-loaded"></i></a> </article>
+                                                <span class="tag">{{$product->matchcode}}</span> <a href="{{route('product',str_replace(' ','',$product->DataSupplierArticleNumber))}}" class="tittle">{{$product->NormalizedDescription}}</a>
+                                                @isset($catalog_product)<div class="price">{{$catalog_product->price . __(' грн')}} </div>@endisset
+                                                @if(isset($catalog_product))
+                                                    <a href="#." onclick="addCart('{{route('add_cart',$product->id)}}')" class="cart-btn"><i class="icon-basket-loaded"></i></a>
+                                                @else
+                                                    <span class="tag">{{__('Нет на складе')}}</span>
+                                                @endif</article>
                                         </div>
                                 @empty
                                     <div class="alert alert-warning" role="alert">{{__('Поиск не дал результатов')}}</div>
@@ -86,5 +80,16 @@
             </div>
         </section>
     </div>
+
+    <script>
+        function addCart(hurl) {
+            $.post(hurl,{'product_count':1,'_token':'{{csrf_token()}}'}, function (data) {
+                console.log(data.response);
+                $('#total-price').text(`${data.response.sum} грн`);
+
+                alert(data.response.save);
+            });
+        }
+    </script>
 
 @endsection

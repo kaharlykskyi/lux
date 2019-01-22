@@ -544,6 +544,28 @@ body .modal-content{
     margin-top: 10px;
 }
 
+.cate-bar-in ul.list-group{
+    border: none;
+}
+
+.cate-bar-in .list-group-item{
+    padding: 5px;
+}
+
+.list-group-item.child-list-group-item{
+    padding: 0;
+}
+
+.root-list{
+    max-height: 360px;
+    overflow: auto;
+    height: auto;
+}
+
+.list-group-item.child-list-group-item .list-group{
+    padding: 0 5px;
+}
+
 @media (max-width: 1200px) {
 
     .fancyTab .fa {

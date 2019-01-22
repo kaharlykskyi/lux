@@ -56,50 +56,71 @@
             <div class="cate-lst"> <a  data-toggle="collapse" class="cate-style" href="#cater"><i class="fa fa-list-ul"></i> Our Categories </a>
                 <div class="cate-bar-in">
                     <div id="cater" class="collapse">
-                        <ul class="category-list">
-                            <li><a href="{{route('catalog')}}">{{__('Все Категории')}}</a></li>
-                            @isset($category)
-                                @foreach($category as $k => $item)
-                                    @if($k < 15)
-                                        <li class="sub-menu"><a id="sub-category-link{{$k}}" onmouseenter="getSub('{{$item->assemblygroupdescription}}','{{$k}}')" href="#.">{{$item->assemblygroupdescription}}</a>
-                                            <ul id="sub-category{{$k}}">
-                                                <li style="text-align: center;">
-                                                    <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-                                                    <span class="sr-only">Loading...</span>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    @endif
-                                    @if($k === 15)
-                                        <li id="more-category"><span class="h6 padding-5" onclick="$('#more-category').hide();$('li.sub-menu.hidden').removeClass('hidden');">{{__('больше категорий...')}}</span></li>
-                                    @endif
-                                    @if($k >= 15)
-                                        <li class="sub-menu hidden"><a id="sub-category-link{{$k}}" onmouseenter="getSub('{{$item->assemblygroupdescription}}','{{$k}}')" href="#.">{{$item->assemblygroupdescription}}</a>
-                                            <ul id="sub-category{{$k}}">
-                                                <li style="text-align: center;">
-                                                    <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-                                                    <span class="sr-only">Loading...</span>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    @endif
-                                @endforeach
-                                <script>
-                                    function getSub(data,id) {
-                                        $.get('{{route('get_subcategory')}}?category=' + data,function (data) {
-                                            let tada_str = '';
-                                            for (let i = 0;i < data.subCategory.length; i++){
-                                                if(data.subCategory[i].usagedescription !== ''){
-                                                    tada_str += `<li><a href="{{route('catalog')}}/${urlRusLat(data.subCategory[i].usagedescription)}">${data.subCategory[i].usagedescription}</a></li>`;
-                                                }
-                                            }
-                                            $('#sub-category'+id).html(tada_str);
-                                            $('#sub-category-link'+id).attr('onmouseenter','');
-                                        });
-                                    }
-                                </script>
-                            @endisset
+                        <ul class="list-group root-list">
+                            <li class="list-group-item">
+                                <a class="root-link" onclick="getSub('passenger',null,this)" href="#.">{{__('Легковой')}}</a>
+                                <ul class="list-group" style="display: none">
+                                    <li style="text-align: center;">
+                                        <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                                        <span class="sr-only">Loading...</span>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li  class="list-group-item">
+                                <a class="root-link" onclick="getSub('commercial',null,this)" href="#.">{{__('Грузовой')}}</a>
+                                <ul class="list-group" style="display: none">
+                                    <li style="text-align: center;">
+                                        <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                                        <span class="sr-only">Loading...</span>
+                                    </li>
+                                </ul>
+                            </li>
                         </ul>
+
+                        <script>
+                            $(document).ready(function () {
+                                $('#cater').click(function (e) {
+                                    if (e.target.nodeName === 'A' && e.target.className === 'root-link'){
+                                        $($(e.target).siblings("ul")).toggle();
+                                    }
+                                });
+                            });
+
+
+                            function getSub(type,id = null,obj) {
+                                if (id === null) {
+                                    $.get(`{{route('get_subcategory')}}?type=${type}`,function (data) {
+                                        let data_str = '';
+                                        data.subCategory.forEach(function (item) {
+                                            data_str += `<li class="list-group-item child-list-group-item">
+                                                            <a class="root-link" onclick="getSub('${type}','${item.assemblygroupdescription}',this)" href="#.">${item.assemblygroupdescription}</a>
+                                                                <ul class="list-group" style="display: none">
+                                                                    <li style="text-align: center;">
+                                                                        <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                                                                        <span class="sr-only">Loading...</span>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>`;
+                                        });
+                                        $($(obj).siblings("ul")).html(data_str);
+                                    });
+                                } else {
+                                    if (typeof id === 'string'){
+                                        $.get(`{{route('get_subcategory')}}?type=${type}&category=${id}&level=assemblygroupdescription`,function (data) {
+                                            let data_str = '';
+                                            data.subCategory.forEach(function (item,i,array) {
+                                                data_str += `<li class="list-group-item child-list-group-item">
+                                                                <a href="{{route('catalog')}}/${item.id}?type=${type}">${(array[i].normalizeddescription === array[(array.length !== i + 1 ?i + 1:i)].normalizeddescription)?item.usagedescription:item.normalizeddescription}</a>
+                                                            </li>`;
+                                            });
+                                            $($(obj).siblings("ul")).html(data_str);
+                                        });
+                                    } else {
+
+                                    }
+                                }
+                            }
+                        </script>
                     </div>
                 </div>
             </div>

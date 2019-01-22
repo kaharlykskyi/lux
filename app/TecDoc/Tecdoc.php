@@ -504,25 +504,6 @@ class Tecdoc
     }
 
     /**
-     * Файлы изделий по артиклю
-     * @param array $articles
-     * @return array
-     */
-    public function getArtFilesForArticles($articles = ['*'])
-    {
-        $article_str = '';
-        foreach ($articles as $k => $article){
-            if (count($articles) !== $k + 1){
-                $article_str .= $article . '|';
-            } else {
-                $article_str .= $article;
-            }
-        }
-        return DB::connection($this->connection)->select("
-            SELECT DataSupplierArticleNumber, Description, PictureName FROM article_images WHERE DataSupplierArticleNumber REGEXP '^" . $article_str . "$'");
-    }
-
-    /**
      * (3.5) Применимость изделия
      *
      * @param $number
@@ -625,36 +606,94 @@ class Tecdoc
             ->select("SELECT * FROM `articles` WHERE `DataSupplierArticleNumber`='{$number}'");
     }
 
-    /**
-     *  Сводная таблица отображения изделий в категориях
-     * @param int $level
-     * @param string $parent
-     * @return array
-     */
-    public function getPrd($level = 1, $parent = '' ){
-        switch ($level){
-            case 1:
-                return DB::connection($this->connection)
-                    ->select("SELECT DISTINCT `assemblygroupdescription` FROM `prd` WHERE `assemblygroupdescription` REGEXP '^[А-Яа-я]+'");
-                break;
-            case 2:
-                return DB::connection($this->connection)
-                    ->select("SELECT DISTINCT `description` FROM `prd` WHERE `assemblygroupdescription` LIKE '%" . $parent ."%'");
-                break;
-            case 3:
-                return DB::connection($this->connection)
-                    ->select("SELECT DISTINCT `normalizeddescription` FROM `prd` WHERE `assemblygroupdescription` LIKE '%" . $parent ."%'");
-                break;
-            case 4:
-                return DB::connection($this->connection)
-                    ->select("SELECT DISTINCT `usagedescription` FROM `prd` WHERE `assemblygroupdescription` LIKE '%" . $parent ."%' AND `assemblygroupdescription` NOT LIKE '^ $'");
-                break;
-        }
-
-    }
-
     public function getManufacturer($matchcode){
         return DB::connection($this->connection)
             ->select("SELECT DISTINCT `id`,`matchcode` FROM `manufacturers` WHERE `matchcode`='{$matchcode}' OR `description`='{$matchcode}'");
+    }
+
+    /**
+     * @param array $params
+     * @return array
+     */
+    public function getProduct(array $params){
+        $where = '';
+        if (isset($params)){
+            foreach ($params as $param){
+                $where .= " ,{$param['col']}{$param['operator']}{$param['str']}";
+            }
+        }
+        return DB::connection($this->connection)->select("SELECT a.*,s.description supplier_description FROM `articles` AS a JOIN `suppliers` AS s ON a.supplierId=s.id WHERE a.HasMotorbike='False'{$where} LIMIT 50");
+    }
+
+    /**
+     * Get category
+     * @param array|null $param
+     * @return array
+     */
+    public function getCategory(array $param = null){
+        $where = '';
+        if (isset($param)){
+            $select = "";
+            foreach ($param[0] as $k => $item){
+                if (count($param[0]) !== ($k + 1)){
+                    $select .= " {$item},";
+                } else {
+                    $select .= " {$item}";
+                }
+            }
+            $where = ' WHERE ';
+            foreach ($param[1] as $k => $item){
+                if (count($param[0]) !== ($k + 1)){
+                    if ( $k === 0){
+                        $where .= " {$item[0]}{$item[1]}{$item[2]}";
+                    }else{
+                        $where .= " {$item[0]}{$item[1]}{$item[2]} AND";
+                    }
+                } else {
+                    $where .= " {$item[0]}{$item[1]}{$item[2]}";
+                }
+            }
+        } else {
+            $select = '`assemblygroupdescription`';
+        }
+
+        switch ($this->type){
+            case 'passenger':
+                return DB::connection($this->connection)
+                    ->select("SELECT DISTINCT {$select} FROM `passanger_car_prd` {$where}");
+                break;
+            case 'commercial':
+                return DB::connection($this->connection)
+                    ->select("SELECT DISTINCT {$select} FROM `commercial_vehicle_prd` {$where}");
+                break;
+        }
+    }
+
+    public function getCategoryProduct($id){
+        switch ($this->type){
+            case 'passenger':
+                $type_article = " AND a.HasPassengerCar='True'";
+                break;
+            case 'commercial':
+                $type_article = " AND a.HasCommercialVehicle='True'";
+                break;
+            default:
+                $type_article = '';
+                break;
+        }
+
+        $category = " WHERE al.linkageid={$id}";
+        return DB::connection($this->connection)->select("SELECT DISTINCT al.linkageid,al.productid,al.supplierid,a.DataSupplierArticleNumber,a.Description,a.NormalizedDescription,ai.Description, ai.PictureName,sp.matchcode FROM `article_links` as al 
+                                                                JOIN `articles` AS a ON al.datasupplierarticlenumber=a.DataSupplierArticleNumber
+                                                                JOIN `article_images` AS ai ON ai.SupplierId=a.supplierId AND ai.DataSupplierArticleNumber=a.DataSupplierArticleNumber
+                                                                JOIN `suppliers` as sp ON al.supplierid=sp.id
+                                                                {$category} {$type_article}");
+    }
+
+    public function getProductForArticleOE($article,$supplierId){
+        return DB::connection($this->connection)->select("SELECT DISTINCT a.supplierId,a.DataSupplierArticleNumber,a.Description,a.NormalizedDescription,ai.Description, ai.PictureName,sp.matchcode FROM `articles` AS a
+                                                                JOIN `article_images` AS ai ON ai.SupplierId=a.supplierId AND ai.DataSupplierArticleNumber=a.DataSupplierArticleNumber
+                                                                JOIN `suppliers` as sp ON a.supplierid=sp.id 
+                                                                WHERE a.DataSupplierArticleNumber='{$article}' AND  a.supplierId={$supplierId}");
     }
 }

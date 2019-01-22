@@ -1,3 +1,13 @@
+$(function($){
+  $(document).mouseup(function (e){
+    const div = $("#stock_product");
+    if (!div.is(e.target)
+        && div.has(e.target).length === 0) {
+      div.hide();
+    }
+  });
+});
+
 
 (function ($) {
   // USE STRICT

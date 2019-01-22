@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\{Auth,DB};
+use Illuminate\Support\Facades\{Auth, DB, Input};
 
 class Controller extends BaseController
 {
@@ -41,5 +42,15 @@ class Controller extends BaseController
             $transliterate_str = str_replace($rus, $lat, $sts);
         }
         return $transliterate_str;
+    }
+
+    public function arrayPaginator($array, $request,$pre_page)
+    {
+        $page = Input::get('page', 1);
+        $perPage = $pre_page;
+        $offset = ($page * $perPage) - $perPage;
+
+        return new LengthAwarePaginator(array_slice($array, $offset, $perPage, true), count($array), $perPage, $page,
+            ['path' => $request->url(), 'query' => $request->query()]);
     }
 }
