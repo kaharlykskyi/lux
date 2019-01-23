@@ -66,7 +66,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-6">
-                <p>Copyright © {{date('Y')}} <a href="#." class="ri-li"> {{__('MakeCars')}} </a>. All rights reserved</p>
+                <p>Copyright © {{date('Y')}} <a href="#." class="ri-li"> {{__('MakeCars')}} </a>. Все права защищены</p>
             </div>
             <div class="col-sm-6 text-right"> <img src="{{asset('images/card-icon.png')}}" alt=""> </div>
         </div>

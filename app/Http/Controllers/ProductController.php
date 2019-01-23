@@ -6,16 +6,30 @@ use App\Cart;
 use App\CartProduct;
 use App\FastBuy;
 use App\Product;
+use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    public function index(Request $request){
-        $product = Product::where('alias', $request->alias)->first();
 
-        return view('product.product_detail',compact('product'));
+    protected $tecdoc;
+
+    public function __construct()
+    {
+        $this->tecdoc = new Tecdoc('mysql_tecdoc');
+        $this->tecdoc->setType('passenger');
+    }
+
+    public function index(Request $request){
+        $request->alias = str_replace('@','/',$request->alias);
+        $product_attr = $this->tecdoc->getArtAttributes($request->alias,$request->supplierid);
+        $product_data= $this->tecdoc->getProductForArticleOE($request->alias,$request->supplierid);
+        $product_vehicles = $this->tecdoc->getArtVehicles($request->alias,$request->supplierid);
+        $product = Product::where('articles', $request->alias)->first();
+
+        return view('product.product_detail',compact('product','product_attr','product_vehicles','product_data'));
     }
 
     public function fastBuy(Request $request){

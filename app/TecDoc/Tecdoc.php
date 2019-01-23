@@ -371,7 +371,7 @@ class Tecdoc
     {
         switch ($this->type) {
             case 'passenger':
-                return DB::connection($this->connection)->select(" SELECT al.datasupplierarticlenumber part_number, s.description supplier_name, prd.description product_name
+                return DB::connection($this->connection)->select(" SELECT al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid , prd.description NormalizedDescription
                     FROM article_links al 
                     JOIN passanger_car_pds pds on al.supplierid = pds.supplierid
                     JOIN suppliers s on s.id = al.supplierid
@@ -384,7 +384,7 @@ class Tecdoc
                     ORDER BY s.description, al.datasupplierarticlenumber");
                 break;
             case 'commercial':
-                return DB::connection($this->connection)->select(" SELECT al.datasupplierarticlenumber part_number, s.description supplier_name, prd.description product_name
+                return DB::connection($this->connection)->select(" SELECT al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid , prd.description NormalizedDescription
                     FROM article_links al 
                     JOIN commercial_vehicle_pds pds on al.supplierid = pds.supplierid
                     JOIN suppliers s on s.id = al.supplierid
@@ -485,7 +485,7 @@ class Tecdoc
     public function getArtAttributes($number, $brand_id)
     {
         return DB::connection($this->connection)->select("
-            SELECT attributeinformationtype, displaytitle, displayvalue FROM article_attributes WHERE datasupplierarticlenumber='" . $number . "'  AND supplierId='" . $brand_id . "'
+            SELECT  * FROM article_attributes WHERE datasupplierarticlenumber='" . $number . "'  AND supplierId='" . $brand_id . "'
         ");
     }
 
@@ -601,28 +601,9 @@ class Tecdoc
         ");
     }
 
-    public function getArt($number){
-        return DB::connection($this->connection)
-            ->select("SELECT * FROM `articles` WHERE `DataSupplierArticleNumber`='{$number}'");
-    }
-
     public function getManufacturer($matchcode){
         return DB::connection($this->connection)
             ->select("SELECT DISTINCT `id`,`matchcode` FROM `manufacturers` WHERE `matchcode`='{$matchcode}' OR `description`='{$matchcode}'");
-    }
-
-    /**
-     * @param array $params
-     * @return array
-     */
-    public function getProduct(array $params){
-        $where = '';
-        if (isset($params)){
-            foreach ($params as $param){
-                $where .= " ,{$param['col']}{$param['operator']}{$param['str']}";
-            }
-        }
-        return DB::connection($this->connection)->select("SELECT a.*,s.description supplier_description FROM `articles` AS a JOIN `suppliers` AS s ON a.supplierId=s.id WHERE a.HasMotorbike='False'{$where} LIMIT 50");
     }
 
     /**
@@ -683,7 +664,7 @@ class Tecdoc
         }
 
         $category = " WHERE al.linkageid={$id}";
-        return DB::connection($this->connection)->select("SELECT DISTINCT al.linkageid,al.productid,al.supplierid,a.DataSupplierArticleNumber,a.Description,a.NormalizedDescription,ai.Description, ai.PictureName,sp.matchcode FROM `article_links` as al 
+        return DB::connection($this->connection)->select("SELECT DISTINCT al.linkageid,al.productid,al.supplierid supplierId,a.DataSupplierArticleNumber,a.NormalizedDescription,ai.Description, ai.PictureName,sp.matchcode FROM `article_links` as al 
                                                                 JOIN `articles` AS a ON al.datasupplierarticlenumber=a.DataSupplierArticleNumber
                                                                 JOIN `article_images` AS ai ON ai.SupplierId=a.supplierId AND ai.DataSupplierArticleNumber=a.DataSupplierArticleNumber
                                                                 JOIN `suppliers` as sp ON al.supplierid=sp.id
@@ -691,9 +672,15 @@ class Tecdoc
     }
 
     public function getProductForArticleOE($article,$supplierId){
-        return DB::connection($this->connection)->select("SELECT DISTINCT a.supplierId,a.DataSupplierArticleNumber,a.Description,a.NormalizedDescription,ai.Description, ai.PictureName,sp.matchcode FROM `articles` AS a
+        return DB::connection($this->connection)->select("SELECT DISTINCT a.supplierId,a.DataSupplierArticleNumber,a.NormalizedDescription,ai.Description, ai.PictureName,sp.matchcode FROM `articles` AS a
                                                                 JOIN `article_images` AS ai ON ai.SupplierId=a.supplierId AND ai.DataSupplierArticleNumber=a.DataSupplierArticleNumber
                                                                 JOIN `suppliers` as sp ON a.supplierid=sp.id 
-                                                                WHERE a.DataSupplierArticleNumber='{$article}' AND  a.supplierId={$supplierId}");
+                                                                WHERE (a.DataSupplierArticleNumber='{$article}' OR a.FoundString='{$article}') AND  a.supplierId={$supplierId}");
+    }
+
+    public function getProductForArticle($str){
+        return DB::connection($this->connection)->select("SELECT a.supplierId ,a.DataSupplierArticleNumber,a.NormalizedDescription,sp.matchcode FROM `articles` AS a
+                                                                JOIN `suppliers` as sp ON a.supplierId=sp.id  
+                                                                WHERE a.FoundString LIKE '%{$str}%' ORDER BY a.DataSupplierArticleNumber");
     }
 }

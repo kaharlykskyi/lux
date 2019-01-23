@@ -48,17 +48,19 @@
                             @isset($products)
                                 @forelse($products as $product)
                                     @php
-                                        //dump($product);
-                                        $catalog_product = \App\Product::where('articles',$product->DataSupplierArticleNumber)->first();
+                                        $catalog_product = \App\Product::where('articles',str_replace(' ','',$product->DataSupplierArticleNumber))->first();
                                     @endphp
                                         <!-- Product -->
                                         <div class="product" @isset($catalog_product)id="product-{{$catalog_product->id}}"@endisset>
                                             <article> <img class="img-responsive" src="{{asset('/images/item-img-1-2.jpg')}}" alt="" >
                                                 <!-- Content -->
-                                                <span class="tag">{{$product->matchcode}}</span> <a href="{{route('product',str_replace(' ','',$product->DataSupplierArticleNumber))}}" class="tittle">{{$product->NormalizedDescription}}</a>
+                                                <span class="tag">{{$product->matchcode}}</span> <a href="{{route('product',str_replace(' ','',str_replace('/','@',$product->DataSupplierArticleNumber)))}}?supplierid={{$product->supplierId}}" class="tittle">
+                                                    {{isset($catalog_product)?$catalog_product->name:$product->NormalizedDescription}}
+                                                </a>
+                                                <p class="rev"></p>
                                                 @isset($catalog_product)<div class="price">{{$catalog_product->price . __(' грн')}} </div>@endisset
                                                 @if(isset($catalog_product))
-                                                    <a href="#." onclick="addCart('{{route('add_cart',$product->id)}}')" class="cart-btn"><i class="icon-basket-loaded"></i></a>
+                                                    <a href="#." onclick="addCart('{{route('add_cart',$catalog_product->id)}}')" class="cart-btn"><i class="icon-basket-loaded"></i></a>
                                                 @else
                                                     <span class="tag">{{__('Нет на складе')}}</span>
                                                 @endif</article>

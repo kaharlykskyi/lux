@@ -5,15 +5,12 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class CatalogController extends Controller
 {
     protected $tecdoc;
 
     protected $pre_products = 12;
-
-    protected $tecdoc_article = [];
 
     protected $filter = null;
 
@@ -28,17 +25,19 @@ class CatalogController extends Controller
     }
 
     public function index(Request $request){
-        $products = null;
+        $products = [];
 
         if(session('pre_products')){
             $this->pre_products = session('pre_products');
         }
 
         if (isset($request->search_product_article)){
-            $this->filter = [
-                ['articles','LIKE',"%{$request->search_product_article}%"]
-            ];
-            $products = $this->getProduct();
+            $products = $this->tecdoc->getProductForArticle(str_replace([' ','.','/'],'',trim(strip_tags($request->search_product_article))));
+            foreach ($products as $product){
+                $file = $this->tecdoc->getArtFiles($product->DataSupplierArticleNumber,$product->supplierId);
+                $product->PictureName = isset($file[0])?$file[0]->PictureName:null;
+                $product->PictureDescription = isset($file[0])?$file[0]->Description:null;
+            }
 
         }elseif (isset($request->category)){
             if (isset($request->modification_auto) && isset($request->type_auto)){
@@ -53,20 +52,18 @@ class CatalogController extends Controller
                         }
                     }
                 }
-                dump($subCategory);
                 foreach ($subCategory as $item){
                     $buff = $this->tecdoc->getSectionParts($request->modification_auto,$item->id);
                     if(isset($buff[0])){
                         foreach ($buff as $value){
-                            array_push($this->tecdoc_article,$value);
+                            $file = $this->tecdoc->getArtFiles($value->DataSupplierArticleNumber,$value->supplierid);
+                            $value->PictureName = isset($file[0])?$file[0]->PictureName:null;
+                            $value->PictureDescription = isset($file[0])?$file[0]->Description:null;
+                            array_push($products,$value);
                         }
                     }
-
                 }
-                dump($this->tecdoc_article);
-                die();
-                $this->filter_whereIN = ['articles',$this->tecdoc_article];
-                $products = $this->getProduct();
+
             } else{
                 $this->tecdoc->setType($request->type);
                 $products = $this->tecdoc->getCategoryProduct($request->category);
@@ -76,7 +73,6 @@ class CatalogController extends Controller
             $manufactorer = $this->tecdoc->getManufacturer(trim($request->trademark));
             if (isset($manufactorer[0])){
                 $article_oe = $this->tecdoc->getManufacturerForOed($request->pcode,$manufactorer[0]->id);
-                $products = [];
                 if (isset($article_oe[0])){
                     foreach ($article_oe as $item){
                         foreach ($this->tecdoc->getProductForArticleOE($item->datasupplierarticlenumber,$item->supplierid) as $value){
@@ -100,11 +96,5 @@ class CatalogController extends Controller
             session()->forget('pre_products');
             session(['pre_products' => (int)$request->pre_show]);
         }
-    }
-
-    protected function getProduct(){
-        $products = $this->tecdoc->getProduct();
-
-        return $products;
     }
 }
