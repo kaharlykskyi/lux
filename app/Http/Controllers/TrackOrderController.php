@@ -22,6 +22,12 @@ class TrackOrderController extends Controller
                 $data_track = $np->documentsTracking($order->invoice_np);
                 $data_track = $data_track['data'][0];
 
+                if ((int)$data_track['StatusCode'] === 9){
+                    Cart::where('id',$order->id)->update([
+                        'oder_status' => 6
+                    ]);
+                }
+
             }catch (\Exception $e){
                 if (config('app.debug')){
                     dump($e);
@@ -30,7 +36,6 @@ class TrackOrderController extends Controller
                 }
             }
         }
-
         return view('track_order.index',compact('order','data_track'));
     }
 }

@@ -12,7 +12,7 @@
                         <i class="fa fa-list-alt" aria-hidden="true"></i>{{__('Каталог')}}</a>
                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                         <li>
-                            <a href="{{route('admin.category.index')}}">{{__('Категории')}}</a>
+                            {{--<a href="{{route('admin.category.index')}}">{{__('Категории')}}</a>--}}
                             <a href="{{route('admin.product.index')}}">{{__('Товары')}}</a>
                             <a href="{{route('admin.stock.index')}}">{{__('Склады')}}</a>
                             <a href="{{route('admin.import_history')}}">{{__('История импорта')}}</a>
@@ -20,8 +20,14 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="chart.html">
-                        <i class="fas fa-chart-bar"></i>Charts</a>
+                    <a href="#">
+                        <i class="fa fa-comments" aria-hidden="true"></i>{{__('Обратная связь')}}
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa fa-cogs" aria-hidden="true"></i>{{__('Настройки магазина')}}
+                    </a>
                 </li>
                 <li class="has-sub">
                     <a class="js-arrow" href="#">

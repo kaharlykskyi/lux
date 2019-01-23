@@ -48,6 +48,6 @@ class VerificationController extends Controller
             event(new Verified($request->user()));
         }
 
-        return redirect($this->redirectPath())->with('verified', true)->with('status','Електронный адрес подтверждён!!');
+        return redirect($this->redirectPath())->with('verified', true)->with('status','Електронный адрес подтверждён!');
     }
 }

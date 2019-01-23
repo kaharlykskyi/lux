@@ -19,7 +19,7 @@
                         <div class="alert alert-danger" role="alert">
                             <strong>{{ __('Електронный адрес не подтверждён! ') }}</strong>
                             {{ __('Если вы не получили письмо') }},
-                            <a class="text-danger" href="{{ route('verification.resend') }}">
+                            <a class="text-danger" style="text-decoration: underline !important;" href="{{ route('verification.resend') }}">
                                 <em>{{ __('нажмите здесь, чтобы запросить снова') }}</em>
                             </a>
                         </div>
@@ -36,7 +36,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-collapse">
                             <ul class="list-group list-unstyled">
-                                <li id="nav-tabs-1" data-id-href="tabs-1" class="list-group-item">{{__('Личные даннные')}}</li>
+                                <li id="nav-tabs-1" data-id-href="tabs-1" class="list-group-item">{{__('Личные данные')}}</li>
                                 <li id="nav-tabs-3" data-id-href="tabs-3" class="list-group-item">{{__('Информация о доставке')}}</li>
                                 <li id="nav-tabs-2" data-id-href="tabs-2" class="list-group-item">{{__('Заказы')}}</li>
                                 <li id="nav-tabs-4" data-id-href="tabs-4" class="list-group-item">{{__('Мои автомобили')}}</li>

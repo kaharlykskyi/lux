@@ -142,7 +142,7 @@
                         </ul>
                     </li>
                     <!-- Mega Menu Nav -->
-                    <li class="dropdown megamenu"> <a href="index.html" class="dropdown-toggle" data-toggle="dropdown">Mega menu </a>
+                    {{--<li class="dropdown megamenu"> <a href="index.html" class="dropdown-toggle" data-toggle="dropdown">Mega menu </a>
                         <div class="dropdown-menu animated-2s fadeInUpHalf">
                             <div class="mega-inside">
                                 <div class="top-lins">
@@ -178,18 +178,12 @@
                                 </div>
                             </div>
                         </div>
-                    </li>
-                    <li class="dropdown"> <a href="blog.html" class="dropdown-toggle" data-toggle="dropdown">Blog</a>
-                        <ul class="dropdown-menu multi-level animated-2s fadeInUpHalf">
-                            <li><a href="Blog.html">Blog </a></li>
-                            <li><a href="Blog_details.html">Blog Single </a></li>
-                        </ul>
-                    </li>
+                    </li>--}}
                 </ul>
             </div>
 
             <!-- NAV RIGHT -->
-            <div class="nav-right"> <span class="call-mun"><i class="fa fa-phone"></i> <strong>Hotline:</strong> (+100) 123 456 7890</span> </div>
+            <div class="nav-right"> <span class="call-mun"><i class="fa fa-phone"></i> <strong>{{__('Гарячая линия:')}}</strong> (+100) 123 456 7890</span> </div>
         </div>
     </nav>
 </header>
