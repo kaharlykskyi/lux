@@ -371,7 +371,7 @@ class Tecdoc
     {
         switch ($this->type) {
             case 'passenger':
-                return DB::connection($this->connection)->select(" SELECT al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid , prd.description NormalizedDescription
+                return DB::connection($this->connection)->select(" SELECT al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid supplierId, prd.description NormalizedDescription
                     FROM article_links al 
                     JOIN passanger_car_pds pds on al.supplierid = pds.supplierid
                     JOIN suppliers s on s.id = al.supplierid
@@ -384,7 +384,7 @@ class Tecdoc
                     ORDER BY s.description, al.datasupplierarticlenumber");
                 break;
             case 'commercial':
-                return DB::connection($this->connection)->select(" SELECT al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid , prd.description NormalizedDescription
+                return DB::connection($this->connection)->select(" SELECT al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid supplierId, prd.description NormalizedDescription
                     FROM article_links al 
                     JOIN commercial_vehicle_pds pds on al.supplierid = pds.supplierid
                     JOIN suppliers s on s.id = al.supplierid

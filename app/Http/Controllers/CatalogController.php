@@ -59,7 +59,7 @@ class CatalogController extends Controller
                     $buff = $this->tecdoc->getSectionParts($request->modification_auto,$item->id);
                     if(isset($buff[0])){
                         foreach ($buff as $value){
-                            $file = $this->tecdoc->getArtFiles($value->DataSupplierArticleNumber,$value->supplierid);
+                            $file = $this->tecdoc->getArtFiles($value->DataSupplierArticleNumber,$value->supplierId);
                             $value->PictureName = isset($file[0])?$file[0]->PictureName:null;
                             $value->PictureDescription = isset($file[0])?$file[0]->Description:null;
                             array_push($products,$value);
@@ -111,7 +111,7 @@ class CatalogController extends Controller
             $catalog_product = Product::where('articles',str_replace(' ','',$product->DataSupplierArticleNumber))->first();
             if (isset($catalog_product)){
                 $product->price = $catalog_product->price;
-                if ($product->price > $min_price || $min_price === 0){
+                if ($product->price < $min_price || $min_price === 0){
                     $min_price = $product->price;
                 }
                 if ($product->price > $max_price || $max_price === 0){
