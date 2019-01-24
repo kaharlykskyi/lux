@@ -1,4 +1,4 @@
-<div class="shop-side-bar">
+<div class="shop-side-bar" style="max-height: 1010px;overflow: auto;">
 
     @if((int)$min_price > 0)
     <h6>Price</h6>
