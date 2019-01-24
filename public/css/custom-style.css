@@ -503,6 +503,7 @@ body .modal-content{
 /*-----CART-----*/
 .shopping-cart .modal-lg{
     width: 98%;
+    margin: 5px auto;
 }
 
 .shopping-cart .modal-header{
@@ -521,6 +522,11 @@ body .modal-content{
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+.cart-img{
+    display: block !important;
+    margin: 0 auto;
+    max-width: 40%;
 }
 
 /*-----PRODUCT PAGE-----*/

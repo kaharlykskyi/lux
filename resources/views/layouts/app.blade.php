@@ -89,20 +89,6 @@
                         </div>
                     </section>
                 </div>
-                <div class="modal-footer">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="text-center block h4">{{__('Рекомендуем также обратить внимание')}}</div>
-                            <div id="recommend">
-                                <div class="row">
-                                    <div class="col-sm-12 padding-top-30 text-center">
-                                        <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

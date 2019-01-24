@@ -16,7 +16,7 @@ class CatalogController extends Controller
 
     protected $filter_whereIN = null;
 
-    protected $brands = null;
+    protected $brands = [];
 
     public function __construct()
     {
@@ -26,6 +26,9 @@ class CatalogController extends Controller
 
     public function index(Request $request){
         $products = [];
+        $min_price = 0;
+        $max_price = 0;
+        $attribute = [];
 
         if(session('pre_products')){
             $this->pre_products = session('pre_products');
@@ -67,6 +70,17 @@ class CatalogController extends Controller
             } else{
                 $this->tecdoc->setType($request->type);
                 $products = $this->tecdoc->getCategoryProduct($request->category);
+                foreach ($products as $k => $product){
+                    $data = $this->tecdoc->getArtStatus($product->DataSupplierArticleNumber,$product->supplierId);
+                    if(isset($data[0])){
+                        $products[$k]->NormalizedDescription = $data[0]->NormalizedDescription;
+                        $file = $this->tecdoc->getArtFiles($product->DataSupplierArticleNumber,$product->supplierId);
+                        $products[$k]->Description = isset($file[0])?$file[0]->Description:null;
+                        $products[$k]->PictureName = isset($file[0])?$file[0]->PictureName:null;
+                    }else{
+                        unset($products[$k]);
+                    }
+                }
             }
 
         }elseif (isset($request->trademark) && isset($request->pcode)){
@@ -85,10 +99,46 @@ class CatalogController extends Controller
             return redirect()->route('home');
         }
 
+
+        $in_stock = [];
+        $not_stock = [];
+        foreach ($products as $product){
+            $attr = $this->tecdoc->getArtAttributes($product->DataSupplierArticleNumber,$product->supplierId);
+            foreach ($attr as $item){
+                $attribute[$item->id][] = $item;
+            }
+            $flag_add_brand = true;
+            $catalog_product = Product::where('articles',str_replace(' ','',$product->DataSupplierArticleNumber))->first();
+            if (isset($catalog_product)){
+                $product->price = $catalog_product->price;
+                if ($product->price > $min_price || $min_price === 0){
+                    $min_price = $product->price;
+                }
+                if ($product->price > $max_price || $max_price === 0){
+                    $max_price = $product->price;
+                }
+                $product->id = $catalog_product->id;
+                $product->name = $catalog_product->name;
+                $in_stock[] = $product;
+            }else{
+                $not_stock[] = $product;
+            }
+            foreach ($this->brands as $brand){
+                if ($brand->supplierId === $product->supplierId){
+                    $flag_add_brand = false;
+                }
+            }
+            if ($flag_add_brand){
+                $this->brands[] = (object)[
+                    'supplierId' => $product->supplierId,
+                    'description' => $product->matchcode
+                ];
+            }
+        }
         $brands = $this->brands;
-        $products = $this->arrayPaginator($products, $request,$this->pre_products );
+        $products = $this->arrayPaginator(array_merge($in_stock,$not_stock), $request,$this->pre_products );
         $products->withPath($request->fullUrl());
-        return view('catalog.index',compact('products','brands'));
+        return view('catalog.index',compact('products','brands','min_price','max_price','attribute'));
     }
 
     public function filter(Request $request){

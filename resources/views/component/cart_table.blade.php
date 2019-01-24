@@ -14,17 +14,12 @@
         @isset($products)
             @forelse($products as $product)
                 <tr id="tr_product{{$product->id}}">
-                    <td><div class="media">
-                            <div class="media-left">
-                                <a href="{{route('product',$product->alias)}}">
-                                    <img class="img-responsive" src="{{asset('images/item-img-1-1.jpg')}}" alt="{{$product->name}}" >
-                                    <span>{{$product->name}}</span>
-                                </a>
-                            </div>
-                            <div class="media-body hidden-sm hidden-xs">
-                                <p>{{$product->short_description}}</p>
-                            </div>
-                        </div></td>
+                    <td>
+                        <a href="{{route('product',$product->articles)}}">
+                            <img class="cart-img" src="{{asset('images/item-img-1-1.jpg')}}" alt="{{$product->name}}" >
+                            <p class="text-center">{{$product->name}}</p>
+                        </a>
+                    </td>
                     <td class="text-center padding-top-60">{{$product->price}} грн</td>
                     <td class="text-center"><!-- Quinty -->
 

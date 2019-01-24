@@ -651,30 +651,15 @@ class Tecdoc
     }
 
     public function getCategoryProduct($id){
-        switch ($this->type){
-            case 'passenger':
-                $type_article = " AND a.HasPassengerCar='True'";
-                break;
-            case 'commercial':
-                $type_article = " AND a.HasCommercialVehicle='True'";
-                break;
-            default:
-                $type_article = '';
-                break;
-        }
-
         $category = " WHERE al.linkageid={$id}";
-        return DB::connection($this->connection)->select("SELECT DISTINCT al.linkageid,al.productid,al.supplierid supplierId,a.DataSupplierArticleNumber,a.NormalizedDescription,ai.Description, ai.PictureName,sp.matchcode FROM `article_links` as al 
-                                                                JOIN `articles` AS a ON al.datasupplierarticlenumber=a.DataSupplierArticleNumber
-                                                                JOIN `article_images` AS ai ON ai.SupplierId=a.supplierId AND ai.DataSupplierArticleNumber=a.DataSupplierArticleNumber
+        return DB::connection($this->connection)->select("SELECT DISTINCT al.linkageid,al.productid,al.supplierid supplierId,al.datasupplierarticlenumber DataSupplierArticleNumber,sp.matchcode FROM `article_links` as al 
                                                                 JOIN `suppliers` as sp ON al.supplierid=sp.id
-                                                                {$category} {$type_article}");
+                                                                {$category}");
     }
 
     public function getProductForArticleOE($article,$supplierId){
-        return DB::connection($this->connection)->select("SELECT DISTINCT a.supplierId,a.DataSupplierArticleNumber,a.NormalizedDescription,ai.Description, ai.PictureName,sp.matchcode FROM `articles` AS a
-                                                                JOIN `article_images` AS ai ON ai.SupplierId=a.supplierId AND ai.DataSupplierArticleNumber=a.DataSupplierArticleNumber
-                                                                JOIN `suppliers` as sp ON a.supplierid=sp.id 
+        return DB::connection($this->connection)->select("SELECT DISTINCT a.supplierId,a.DataSupplierArticleNumber,a.NormalizedDescription,sp.matchcode FROM `articles` AS a
+                                                                JOIN `suppliers` as sp ON a.supplierId=sp.id 
                                                                 WHERE (a.DataSupplierArticleNumber='{$article}' OR a.FoundString='{$article}') AND  a.supplierId={$supplierId}");
     }
 

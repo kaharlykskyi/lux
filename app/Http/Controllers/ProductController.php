@@ -27,9 +27,10 @@ class ProductController extends Controller
         $product_attr = $this->tecdoc->getArtAttributes($request->alias,$request->supplierid);
         $product_data= $this->tecdoc->getProductForArticleOE($request->alias,$request->supplierid);
         $product_vehicles = $this->tecdoc->getArtVehicles($request->alias,$request->supplierid);
+        $files = $this->tecdoc->getArtFiles($request->alias,$request->supplierid);
         $product = Product::where('articles', $request->alias)->first();
 
-        return view('product.product_detail',compact('product','product_attr','product_vehicles','product_data'));
+        return view('product.product_detail',compact('product','product_attr','product_vehicles','product_data','files'));
     }
 
     public function fastBuy(Request $request){
