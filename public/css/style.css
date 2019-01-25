@@ -3346,13 +3346,11 @@ footer .social p a {
 .pagination li a {
 	border: 1px solid #eaeaea;
 	background: #fff;
-	height: 32px;
-	width: 32px;
-	padding: 0px;
 	border-radius: 4px;
 	text-align: center;
-	line-height: 30px;
 	margin-right: 3px;
+	padding: 10px 15px 8px;
+	line-height: 1.42857143;
 }
 .pagination li a:hover {
 	background: #333;
