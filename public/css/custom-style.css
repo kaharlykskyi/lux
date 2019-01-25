@@ -529,6 +529,19 @@ body .modal-content{
     max-width: 40%;
 }
 
+.close-filter{
+    background: #ccc;
+    position: absolute;
+    top: -25px;
+    right: 25px;
+    display: flex;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    justify-content: center;
+    align-items: center;
+}
+
 /*-----PRODUCT PAGE-----*/
 .fast-buy-block{
     position: absolute;
