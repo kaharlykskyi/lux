@@ -20,6 +20,29 @@ class ProductController extends Controller
         $this->tecdoc = new Tecdoc('mysql_tecdoc');
     }
 
+    public function setFilterAdminProduct(Request $request){
+        if (isset($request->str_search) && isset($request->field)){
+            if (session()->has("admin_filter.fields")){
+                $buff = session("admin_filter.fields");
+                array_push($buff,[
+                    $request->field,
+                    $request->str_search
+                ]);
+                session()->put("admin_filter.fields",$buff);
+            }else{
+                session()->put("admin_filter.fields",[
+                    [
+                        $request->field,
+                        $request->str_search
+                    ]
+                ]);
+            }
+        }
+        if (isset($request->clear_admin_filter)){
+            session()->forget('admin_filter.fields');
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -27,7 +50,18 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::paginate(80);
+        if (session()->has("admin_filter.fields") && !empty(session("admin_filter.fields")))
+        {
+            $where = [];
+            foreach (session("admin_filter.fields") as $filter){
+                $where[] = [
+                    $filter[0],'LIKE',"%{$filter[1]}%"
+                ];
+            }
+            $products = Product::where($where)->paginate(80);
+        }else{
+            $products = Product::paginate(80);
+        }
         return view('admin.product.index',compact('products'));
     }
 

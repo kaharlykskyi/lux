@@ -1,6 +1,6 @@
 <div class="shop-side-bar" style="max-height: 1010px;overflow: auto;">
     @if(session()->has('filter'))
-        <a onclick="clearFilter(this)" class="btn btn-default close-filter" href="#" role="button" title="{{__('очистить фильтр')}}">
+        <a onclick="clearFilter(this);return false;" class="btn btn-default close-filter" href="" role="button" title="{{__('очистить фильтр')}}">
             <i class="fa fa-times" aria-hidden="true"></i>
         </a>
     @endif

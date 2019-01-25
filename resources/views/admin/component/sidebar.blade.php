@@ -24,11 +24,11 @@
                         <i class="fa fa-comments" aria-hidden="true"></i>{{__('Обратная связь')}}
                     </a>
                 </li>
-                <li>
+                {{--<li>
                     <a href="#">
                         <i class="fa fa-cogs" aria-hidden="true"></i>{{__('Настройки магазина')}}
                     </a>
-                </li>
+                </li>--}}
                 <li class="has-sub">
                     <a class="js-arrow" href="#">
                         <i class="fas fa-copy"></i>{{__('Управление контентом')}}</a>
