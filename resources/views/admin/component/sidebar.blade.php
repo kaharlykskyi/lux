@@ -20,7 +20,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{route('admin.feedback')}}">
                         <i class="fa fa-comments" aria-hidden="true"></i>{{__('Обратная связь')}}
                     </a>
                 </li>

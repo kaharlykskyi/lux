@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="header-wrap">
                 <div class="form-header"></div>
-                <div class="header-button">
+                <div class="header-button" style="justify-content: flex-end;">
                     <div class="account-wrap">
                         <div class="account-item clearfix js-item-menu">
                             <div class="content">

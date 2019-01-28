@@ -1,3 +1,7 @@
+@extends('emails.layout')
+
+@section('content_email')
+
 <table>
     <thead>
         <tr>
@@ -16,3 +20,5 @@
         </tr>
     </tbody>
 </table>
+
+@endsection
