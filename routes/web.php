@@ -90,7 +90,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
         'product' => 'ProductController',
         'stock' => 'StockController'
     ],['as' => 'admin']);
-    Route::post('/start-import','ProductController@startImport')->name('admin.start_import');
+    Route::get('/start-import','ProductController@startImport')->name('admin.start_import');
     Route::post('/product-count','ProductController@productCount')->name('admin.product.stock_count');
     Route::get('/product-filter','ProductController@setFilterAdminProduct')->name('admin.product.filter');
     Route::group(['prefix' => 'feedback'],function (){

@@ -30,7 +30,7 @@ class DashboardController extends Controller
     }
 
     public function importHistory(){
-        $history_imports = DB::table('history_imports')->orderBy('created_at')->paginate(40);
+        $history_imports = DB::table('history_imports')->orderBy('created_at','DESC')->paginate(40);
 
         return view('admin.dashboard.import_history',compact('history_imports'));
     }

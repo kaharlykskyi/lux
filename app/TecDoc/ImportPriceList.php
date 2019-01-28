@@ -30,6 +30,7 @@ class ImportPriceList
 
     public function __construct()
     {
+        ini_set('memory_limit', '4090M');
         try{
             $client = new Client([
                 'headers' => [
@@ -109,25 +110,42 @@ class ImportPriceList
                         $cellIterator = $row->getCellIterator();
                         foreach ($cellIterator as $cell){
                             $cellPath = $cell->getColumn();
-                            if (isset($this->config['stocks'])){
-                                foreach ($this->config['stocks'] as $stock){
-                                    if($stock['row'] === $row->getRowIndex() && $cellPath === $stock['column']){
-                                        $this->stocks[$cellPath] = $this->stockQuery($cell->getCalculatedValue());
-                                    }
-                                }
-                            }
                             if (isset($this->config['cells'][$cellPath]) && $row->getRowIndex() >= $this->config['data_row'] ){
                                 $this->product_data[$row->getRowIndex()][$this->config['cells'][$cellPath]] = $cell->getCalculatedValue();
                             }
-                            foreach ($this->stocks as $k => $stock){
-                                if ($k === $cellPath && $row->getRowIndex() >= $this->config['data_row']){
-                                    $this->product_data[$row->getRowIndex()]['count'][$cellPath] = $cell->getCalculatedValue();
+                            if ($this->config['stock_data_one_row']){
+                                if (!isset($this->config['stocks']['name'])){
+                                    if (!isset($this->stocks[0])){
+                                        $this->stocks[] = $this->stockQuery("Склад  компании {$this->config['company']}");
+                                    }
+                                    if($cellPath === $this->config['stocks']['count']){
+                                        $this->product_data[$row->getRowIndex()]['count'][] = $cell->getCalculatedValue();
+                                    }
+                                }else{
+                                    if ($cellPath === $this->config['stocks']['name']){
+                                        $this->stocks[$row->getRowIndex()] = $this->stockQuery($cell->getCalculatedValue());
+                                    }
+                                    if($cellPath === $this->config['stocks']['count']){
+                                        $this->product_data[$row->getRowIndex()]['count'][$row->getRowIndex()] = $cell->getCalculatedValue();
+                                    }
+                                }
+                            }else{
+                                if (isset($this->config['stocks'])){
+                                    foreach ($this->config['stocks'] as $stock){
+                                        if($stock['row'] === $row->getRowIndex() && $cellPath === $stock['column']){
+                                            $this->stocks[$cellPath] = $this->stockQuery($cell->getCalculatedValue());
+                                        }
+                                    }
+                                }
+                                foreach ($this->stocks as $k => $stock){
+                                    if ($k === $cellPath && $row->getRowIndex() >= $this->config['data_row']){
+                                        $this->product_data[$row->getRowIndex()]['count'][$cellPath] = $cell->getCalculatedValue();
+                                    }
                                 }
                             }
                         }
                     }
                 }
-
                 $this->productQuery();
 
             } catch (\PHPExcel_Reader_Exception $e) {
@@ -177,7 +195,6 @@ class ImportPriceList
                         'name' => $productInfo['name'],
                         'articles' => str_replace(' ','',$productInfo['articles']),
                         'brand' => $productInfo['brand'],
-                        'alias' => str_replace(' ','_',$this->transliterateRU($productInfo['name'] .'_'. $productInfo['articles'] .'_'. $this->config['company'])),
                         'short_description' => isset($productInfo['short_description'])? $productInfo['short_description']: null,
                         'full_description' => isset($productInfo['full_description'])? $productInfo['full_description']: null,
                         'price' => round($productInfo['price'],2),
@@ -233,12 +250,5 @@ class ImportPriceList
                 }
             }
         }
-    }
-
-    public function transliterateRU($sts){
-        $rus = array('А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ъ','Ы','Ь','Э','Ю','Я','а','б','в','г','д','е','ё','ж','з','и','й','к','л','м','н','о','п','р','с','т','у','ф','х','ц','ч','ш','щ','ъ','ы','ь','э','ю','я',' ');
-        $lat = array('a','b','v','g','d','e','e','gh','z','i','y','k','l','m','n','o','p','r','s','t','u','f','h','c','ch','sh','sch','y','y','y','e','yu','ya','a','b','v','g','d','e','e','gh','z','i','y','k','l','m','n','o','p','r','s','t','u','f','h','c','ch','sh','sch','y','y','y','e','yu','ya',' ');
-        $transliterate_str = str_replace($rus, $lat, $sts);
-        return $transliterate_str;
     }
 }

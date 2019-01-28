@@ -58,7 +58,7 @@
                                 <tr class="spacer"></tr>
                             @empty
                                 <tr class="tr-shadow">
-                                    <td colspan="4">
+                                    <td colspan="6">
                                         <div class="alert alert-warning" role="alert">
                                             {{__('Вопросов ещё не пресылалось')}}
                                         </div>
