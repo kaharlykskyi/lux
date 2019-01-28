@@ -81,6 +81,7 @@ class ImportPriceList
                             unlink($mailAttachment->filePath);
                             $this->count_success = 0;
                             $this->count_fail = 0;
+                            $this->product_data = [];
                         }
 
                         $mailbox->deleteMail($mailsId);
