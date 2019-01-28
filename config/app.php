@@ -7,6 +7,8 @@ return [
     'google_key' => env('GOOGLE_KEY'),
     'work_mail' => env('WORK_MAIL'),
     'work_pass' => env('WORK_PASS'),
+    'company_phone' => env('APP_PHONE'),
+    'company_location' => env('APP_LOCATION'),
 
     /*
     |--------------------------------------------------------------------------

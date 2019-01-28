@@ -23,7 +23,7 @@ class ProfileController extends Controller
                                               JOIN `cart_products` AS cp WHERE p.id=cp.product_id AND cp.cart_id=c.id) AS total_price
                                       FROM `carts` AS c
                                       JOIN `oder_status_codes` as osc ON osc.id=c.oder_status
-                                      WHERE c.user_id=".Auth::id()." ORDER BY c.updated_at DESC");
+                                      WHERE c.user_id=".Auth::id()." AND c.oder_status<>1 ORDER BY c.updated_at DESC");
 
         return view('profile.index',compact('roles','user_cars','delivery_info','orders','balance','balance_history'));
     }

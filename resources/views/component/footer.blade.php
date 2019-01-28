@@ -9,10 +9,10 @@
             <!-- Contact -->
             <div class="col-md-4">
                 <h4>Контакты {{__('MakeCars')}}!</h4>
-                <p>{{__('Адресс')}}: 45 Grand Central Terminal New York, NY 1017
+                <p>{{__('Адресс')}}: {{config('app.company_location')}}
                     United State USA</p>
-                <p>{{__('Телефон')}}: (+100) 123 456 7890</p>
-                <p>{{__('E-mail')}}: Support@smarttech.com</p>
+                <p>{{__('Телефон')}}: {{config('app.company_phone')}}</p>
+                <p>{{__('E-mail')}}: {{config('app.work_mail')}}</p>
                 <div class="social-links"> <a href="#."><i class="fa fa-facebook"></i></a> <a href="#."><i class="fa fa-twitter"></i></a> <a href="#."><i class="fa fa-linkedin"></i></a> <a href="#."><i class="fa fa-pinterest"></i></a> <a href="#."><i class="fa fa-instagram"></i></a> <a href="#."><i class="fa fa-google"></i></a> </div>
             </div>
 

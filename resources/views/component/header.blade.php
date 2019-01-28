@@ -5,7 +5,7 @@
         </div>
         <div class="search-cate">
             <select class="selectpicker">
-                <option> All Categories</option>
+                <option>{{__('Все категории')}}</option>
             </select>
             <input type="search" placeholder="Search entire store here...">
             <button class="submit" type="submit"><i class="icon-magnifier"></i></button>
@@ -53,7 +53,7 @@
     <nav class="navbar ownmenu">
         <div class="container">
             <!-- Categories -->
-            <div class="cate-lst"> <a  data-toggle="collapse" class="cate-style" href="#cater"><i class="fa fa-list-ul"></i> Our Categories </a>
+            <div class="cate-lst"> <a  data-toggle="collapse" class="cate-style" href="#cater"><i class="fa fa-list-ul"></i> {{__('Каталог')}} </a>
                 <div class="cate-bar-in">
                     <div id="cater" class="collapse">
                         <ul class="list-group root-list">
@@ -141,49 +141,11 @@
                             @endisset
                         </ul>
                     </li>
-                    <!-- Mega Menu Nav -->
-                    {{--<li class="dropdown megamenu"> <a href="index.html" class="dropdown-toggle" data-toggle="dropdown">Mega menu </a>
-                        <div class="dropdown-menu animated-2s fadeInUpHalf">
-                            <div class="mega-inside">
-                                <div class="top-lins">
-                                    <ul>
-                                        <li><a href="#."> Cell Phones & Accessories </a></li>
-                                        <li><a href="#."> Carrier Phones </a></li>
-                                    </ul>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <h6>Electronics</h6>
-                                        <ul>
-                                            <li><a href="#."> Cell Phones & Accessories </a></li>
-                                            <li><a href="#."> Carrier Phones </a></li>
-                                            <li><a href="#."> All Electronics </a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <h6>Computers</h6>
-                                        <ul>
-                                            <li><a href="#."> Computers & Tablets</a></li>
-                                            <li><a href="#."> Monitors</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <h6>Home Appliances</h6>
-                                        <ul>
-                                            <li><a href="#."> Refrigerators</a></li>
-                                            <li><a href="#."> Wall Ovens</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-sm-4"> <img class=" nav-img" src="images/navi-img.png" alt="" > </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>--}}
                 </ul>
             </div>
 
             <!-- NAV RIGHT -->
-            <div class="nav-right"> <span class="call-mun"><i class="fa fa-phone"></i> <strong>{{__('Гарячая линия:')}}</strong> (+100) 123 456 7890</span> </div>
+            <div class="nav-right"> <span class="call-mun"><i class="fa fa-phone"></i> <strong>{{__('Гарячая линия:')}}</strong> {{config('app.company_phone')}}</span> </div>
         </div>
     </nav>
 </header>

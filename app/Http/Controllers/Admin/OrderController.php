@@ -15,7 +15,7 @@ class OrderController extends Controller
                                       (SELECT SUM(p.price * cp.count) FROM `products` AS p 
                                               JOIN `cart_products` AS cp WHERE p.id=cp.product_id AND cp.cart_id=c.id) AS total_price
                                       FROM `carts` AS c
-                                      JOIN users as u ON u.id=c.user_id ORDER BY c.updated_at DESC");
+                                      JOIN users as u ON u.id=c.user_id WHERE c.oder_status<>1 ORDER BY c.updated_at DESC");
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $itemCollection = collect($orders);
         $perPage = 30;
