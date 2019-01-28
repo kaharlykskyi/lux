@@ -82,6 +82,7 @@ class ImportPriceList
                             $this->count_success = 0;
                             $this->count_fail = 0;
                             $this->product_data = [];
+                            $this->stocks = [];
                         }
 
                         $mailbox->deleteMail($mailsId);
