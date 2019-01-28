@@ -103,8 +103,14 @@ class LiqPayController extends Controller
         }
     }
 
-    public function resultPay(Request $request){
-        dump($request->post());
+    public function resultPay(){
+        $liqpay = new LiqPay($this->public_key, $this->private_key);
+        $res = $liqpay->api("request", array(
+            'action'        => 'status',
+            'version'       => '3',
+            'order_id'      => '8'
+        ));
+        dump($res);
         return view('liqpay.success_pay');
     }
 }
