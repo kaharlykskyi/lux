@@ -103,7 +103,8 @@ class LiqPayController extends Controller
         }
     }
 
-    public function resultPay(){
+    public function resultPay(Request $request){
+        dump($request->post());
         return view('liqpay.success_pay');
     }
 }

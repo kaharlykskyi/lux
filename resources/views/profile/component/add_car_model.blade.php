@@ -70,7 +70,7 @@
                         </li>
                         <li class="col-sm-12 error-response"></li>
                         <li class="col-sm-12 text-left">
-                            <button type="submit" class="btn-round">{{__('Добавить')}}</button>
+                            <button disabled="disabled" id="add-car-btn" type="submit" style="cursor: not-allowed;" class="btn-round">{{__('Добавить')}}</button>
                         </li>
                     </ul>
                 </form>
@@ -127,6 +127,10 @@
                 });
                 $('#type_motor select').removeAttr('disabled').html(str_data).selectpicker('refresh');
             });
+        });
+
+        $('#modification_auto select').change(function () {
+            $('#add-car-btn').removeAttr('disabled').css('cursor','pointer')
         });
     });
 </script>

@@ -36,6 +36,7 @@ Route::prefix('profile')->middleware(['auth'])->group(function () {
     Route::post('/change-password', 'ProfileController@changePassword')->name('change_password');
     Route::post('/change-user-info', 'ProfileController@changeUserInfo')->name('change_user_info');
     Route::post('/change-delivery-info', 'ProfileController@deliveryInfo')->name('change_delivery_info');
+    Route::post('/delete-car', 'ProfileController@deleteCar')->name('delete_car');
 });
 /*-------CART--------*/
 Route::prefix('cart')->group(function () {

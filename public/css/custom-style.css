@@ -511,6 +511,11 @@ body .modal-content{
     top: 30px;
     display: none;
 }
+.delete-car-btn{
+    border: none;
+    padding: 0 5px;
+    background: transparent;
+}
 
 /*-----CART-----*/
 .shopping-cart .modal-lg{

@@ -62,6 +62,15 @@ class ProfileController extends Controller
         }
     }
 
+    public function deleteCar(Request $request){
+        if (!empty($request->post('id'))){
+            UserCar::where([
+                ['id',$request->post('id')],
+                ['user_id',Auth::id()]
+            ])->delete();
+        }
+    }
+
     public function changePassword(Request $request){
         $data = $request->post();
 

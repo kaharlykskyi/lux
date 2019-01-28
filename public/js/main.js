@@ -203,7 +203,6 @@ $(".deal-slide").owlCarousel({
 	navText: ["<span>Previous Deal</span>","<span>Next Deal</span>"],
 	pagination : true,
 	lazyLoad:true,
-	nav: true,
 	singleItem	: true
 });
 /*-----------------------------------------------------------------------------------*/
