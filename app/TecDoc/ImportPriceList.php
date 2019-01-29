@@ -88,7 +88,6 @@ class ImportPriceList
                         $mailbox->deleteMail($mailsId);
                     }
                 }
-                $mailbox->deleteMail($mailsId);
             }
 
         } catch (\Exception $exception){

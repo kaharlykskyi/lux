@@ -4,11 +4,25 @@
             <a href="{{ route('home') }}"><img src="{{asset('images/logo.png')}}" alt="{{ config('app.name') }}" ></a>
         </div>
         <div class="search-cate">
-            <select class="selectpicker">
-                <option>{{__('Все категории')}}</option>
-            </select>
-            <input type="search" placeholder="Search entire store here...">
-            <button class="submit" type="submit"><i class="icon-magnifier"></i></button>
+            <form action="{{route('vin_decode')}}" method="post" id="search_global_form">
+                @csrf
+                <select class="selectpicker" name="type_search_global">
+                    <option selected value="article">{{__('По артиклю')}}</option>
+                    <option value="vin">{{__('По vin')}}</option>
+                </select>
+                <input type="search" name="vin" placeholder="Строка поиска">
+                <button class="submit" type="submit"><i class="icon-magnifier"></i></button>
+            </form>
+            <script>
+                $(document).ready(function () {
+                    $('#search_global_form').submit(function (e) {
+                        if ($(this).find('select').val() === 'article'){
+                            e.preventDefault();
+                            location.href = `{{route('catalog',['category' => null])}}?search_product_article=${$(this).find('input[type="search"]').val()}`;
+                        }
+                    });
+                });
+            </script>
         </div>
 
         <!-- Cart Part -->
