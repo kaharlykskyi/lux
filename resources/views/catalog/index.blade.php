@@ -52,6 +52,13 @@
 
                             @isset($products)
                                 @forelse($products as $product)
+                                    @php
+                                        $tecdoc = new App\TecDoc\Tecdoc('mysql_tecdoc');
+                                        $tecdoc->setType('passenger');
+                                        $file = $tecdoc->getArtFiles($product->DataSupplierArticleNumber,$product->supplierId);
+                                        $product->Description = isset($file[0])?$file[0]->Description:null;
+                                        $product->PictureName = isset($file[0])?$file[0]->PictureName:null;
+                                    @endphp
                                         <!-- Product -->
                                         <div class="product" @isset($product->id)id="product-{{$product->id}}"@endisset>
                                             <article>

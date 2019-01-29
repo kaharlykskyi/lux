@@ -32,7 +32,30 @@ class HomeController extends Controller
             $search_cars = null;
         }
 
-        return view('home.index',compact('search_cars'));
+        $this->tecdoc->setType('passenger');
+        $brands = $this->tecdoc->getBrands();
+        $keys = array_rand($brands,10);
+        $models = [];
+
+        foreach ($keys as $key){
+            $buff = $this->tecdoc->getModels($brands[$key]->id,null,5);
+            foreach ($buff as $item){
+                array_push($models,$item);
+            }
+        }
+
+        $popular_products = DB::select("SELECT DISTINCT p.articles,p.name FROM `cart_products` AS cp 
+                                              JOIN `products` AS p ON p.id=cp.product_id LIMIT 32");
+
+        foreach ($popular_products as $product){
+            $buff = DB::connection('mysql_tecdoc')->select("SELECT supplierId FROM articles 
+                                                                      WHERE FoundString='".preg_replace('/[^a-zA-Zа-яА-Я0-9]/ui', '',$product->articles )."'");
+            if(isset($buff[0])){
+                $product->supplierId = $buff[0]->supplierId;
+            }
+        }
+
+        return view('home.index',compact('search_cars','brands','models','popular_products'));
     }
 
     public function subcategory(Request $request){

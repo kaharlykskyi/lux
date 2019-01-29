@@ -75,7 +75,7 @@ class Tecdoc
      * @param null $pattern
      * @return mixed
      */
-    public function getModels($brand_id, $pattern = null)
+    public function getModels($brand_id, $pattern = null,$limit = null)
     {
         switch ($this->type) {
             case 'passenger':
@@ -97,12 +97,14 @@ class Tecdoc
 
         if ($pattern != null) $where .= " AND constructioninterval LIKE '%" . $pattern . "%'";
 
+        $limit_str = isset($limit)? " LIMIT {$limit}":'';
+
         return DB::connection($this->connection)->select("
-            SELECT id, description name, constructioninterval
+            SELECT id, description name, constructioninterval,fulldescription
             FROM models
             WHERE canbedisplayed = 'True'
             AND manufacturerid = " . (int)$brand_id . " " . $where . "
-            ORDER BY description
+            ORDER BY description {$limit_str}
         ");
     }
 

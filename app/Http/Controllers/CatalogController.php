@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CatalogController extends Controller
 {
@@ -37,12 +38,20 @@ class CatalogController extends Controller
 
         if (isset($request->search_product_article)){
             $products = $this->tecdoc->getProductForArticle(str_replace([' ','.','/'],'',trim(strip_tags($request->search_product_article))));
-            foreach ($products as $product){
-                $file = $this->tecdoc->getArtFiles($product->DataSupplierArticleNumber,$product->supplierId);
-                $product->PictureName = isset($file[0])?$file[0]->PictureName:null;
-                $product->PictureDescription = isset($file[0])?$file[0]->Description:null;
-            }
 
+        }elseif (isset($request->brand)){
+            $products = DB::connection('mysql_tecdoc')->select("SELECT DISTINCT a.supplierId,a.DataSupplierArticleNumber,a.NormalizedDescription,s.matchcode FROM `article_cross` AS ac 
+                                                                             JOIN `suppliers` s ON s.id=ac.SupplierId
+                                                                             JOIN `articles` as a ON a.supplierId=ac.SupplierId AND a.DataSupplierArticleNumber=ac.PartsDataSupplierArticleNumber
+                                                                             WHERE ac.manufacturerId={$request->brand} AND a.HasPassengerCar=TRUE LIMIT 500");
+
+        }elseif (isset($request->model)){
+            $products = DB::connection('mysql_tecdoc')->select("SELECT a.supplierId,a.DataSupplierArticleNumber,a.NormalizedDescription,s.matchcode FROM `passanger_cars` AS pc
+                                                                             JOIN `passanger_car_pds` AS pcp ON pcp.passangercarid=pc.id
+                                                                             JOIN `article_links` AS al ON al.productid=pcp.productid
+                                                                             JOIN `articles` AS a ON a.DataSupplierArticleNumber=al.DataSupplierArticleNumber
+                                                                             JOIN `suppliers` s ON s.id=pcp.supplierid
+                                                                             WHERE pc.modelid={$request->model} AND a.HasPassengerCar=TRUE LIMIT 500");
         }elseif (isset($request->category)){
             if (isset($request->modification_auto) && isset($request->type_auto)){
                 $this->tecdoc->setType($request->type_auto);
@@ -60,9 +69,6 @@ class CatalogController extends Controller
                     $buff = $this->tecdoc->getSectionParts($request->modification_auto,$item->id);
                     if(isset($buff[0])){
                         foreach ($buff as $value){
-                            $file = $this->tecdoc->getArtFiles($value->DataSupplierArticleNumber,$value->supplierId);
-                            $value->PictureName = isset($file[0])?$file[0]->PictureName:null;
-                            $value->PictureDescription = isset($file[0])?$file[0]->Description:null;
                             array_push($products,$value);
                         }
                     }
@@ -75,9 +81,6 @@ class CatalogController extends Controller
                     $data = $this->tecdoc->getArtStatus($product->DataSupplierArticleNumber,$product->supplierId);
                     if(isset($data[0])){
                         $products[$k]->NormalizedDescription = $data[0]->NormalizedDescription;
-                        $file = $this->tecdoc->getArtFiles($product->DataSupplierArticleNumber,$product->supplierId);
-                        $products[$k]->Description = isset($file[0])?$file[0]->Description:null;
-                        $products[$k]->PictureName = isset($file[0])?$file[0]->PictureName:null;
                     }else{
                         unset($products[$k]);
                     }
