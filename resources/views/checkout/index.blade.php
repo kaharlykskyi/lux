@@ -34,7 +34,7 @@
                                     @forelse($products as $product)
                                         <tr id="tr_product{{$product->id}}">
                                             <td><div class="media">
-                                                    <div class="media-left"> <a href="{{route('product',$product->alias)}}"> <img class="img-responsive" src="{{asset('images/item-img-1-1.jpg')}}" alt="{{$product->name}}" > </a> </div>
+                                                    <div class="media-left"> <a href="{{route('product',$product->articles)}}"> <img class="img-responsive" src="{{asset('images/item-img-1-1.jpg')}}" alt="{{$product->name}}" > </a> </div>
                                                 </div></td>
                                             <td class="text-center padding-top-60">{{$product->price}} грн</td>
                                             <td class="text-center"><!-- Quinty -->

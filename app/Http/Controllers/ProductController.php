@@ -24,6 +24,10 @@ class ProductController extends Controller
 
     public function index(Request $request){
         $request->alias = str_replace('@','/',$request->alias);
+        if(!isset($request->supplierid)){
+            $duff = DB::connection('mysql_tecdoc')->select("SELECT supplierId FROM articles WHERE DataSupplierArticleNumber='{$request->alias}' OR FoundString='{$request->alias}'");
+            $request->supplierid = $duff[0]->supplierId;
+        }
         $product_attr = $this->tecdoc->getArtAttributes($request->alias,$request->supplierid);
         $product_data= $this->tecdoc->getProductForArticleOE($request->alias,$request->supplierid);
         $product_vehicles = $this->tecdoc->getArtVehicles($request->alias,$request->supplierid);
