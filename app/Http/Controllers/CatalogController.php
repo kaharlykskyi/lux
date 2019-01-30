@@ -43,9 +43,7 @@ class CatalogController extends Controller
             $products = DB::connection('mysql_tecdoc')->select("SELECT DISTINCT a.supplierId,a.DataSupplierArticleNumber,a.NormalizedDescription,s.matchcode FROM `article_cross` AS ac 
                                                                              JOIN `suppliers` s ON s.id=ac.SupplierId
                                                                              JOIN `articles` as a ON a.supplierId=ac.SupplierId AND a.DataSupplierArticleNumber=ac.PartsDataSupplierArticleNumber
-                                                                             WHERE ac.manufacturerId={$request->brand} AND a.HasPassengerCar=TRUE LIMIT 1000");
-            /*dump($products);
-            die();*/
+                                                                             WHERE ac.manufacturerId={$request->brand} AND a.HasPassengerCar=TRUE LIMIT 5000");
 
         }elseif (isset($request->model)){
             $products = DB::connection('mysql_tecdoc')->select("SELECT a.supplierId,a.DataSupplierArticleNumber,a.NormalizedDescription,s.matchcode FROM `passanger_cars` AS pc
@@ -53,7 +51,7 @@ class CatalogController extends Controller
                                                                              JOIN `article_links` AS al ON al.productid=pcp.productid
                                                                              JOIN `articles` AS a ON a.DataSupplierArticleNumber=al.DataSupplierArticleNumber
                                                                              JOIN `suppliers` s ON s.id=pcp.supplierid
-                                                                             WHERE pc.modelid={$request->model} AND a.HasPassengerCar=TRUE LIMIT 1000");
+                                                                             WHERE pc.modelid={$request->model} AND a.HasPassengerCar=TRUE LIMIT 5000");
         }elseif (isset($request->category)){
             if (isset($request->modification_auto) && isset($request->type_auto)){
                 $this->tecdoc->setType($request->type_auto);
