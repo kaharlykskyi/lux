@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AppTrait\GEO;
-use App\{Cart, DeliveryInfo, Http\Controllers\Auth\LoginController, User};
+use App\{Cart, DeliveryInfo, Http\Controllers\Auth\LoginController, OrderPay, User, UserBalance};
 use Illuminate\Foundation\Auth\{RegistersUsers};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Auth, DB, Hash, Validator};
@@ -17,25 +17,26 @@ class CheckoutController extends Controller
 
     protected $delivery_info = null;
 
+    protected $user_balance = null;
+
     public function index(Request $request){
         $cart = $this->getCart($request);
 
         if (isset($cart)){
-            $this->products = DB::table('cart_products')
-                ->where('cart_products.cart_id',$cart->id)
-                ->join('products','products.id','=','cart_products.product_id')
-                ->select('products.*','cart_products.count','cart_products.cart_id')
-                ->get();
+            $this->products = $cart->cartProduct()->get();
         }
 
-        if (Auth::user()){
-            $user = User::find(Auth::user()->id);
+        if (Auth::id()){
+            $user = User::find(Auth::id());
             $this->delivery_info = $user->deliveryInfo;
+            $this->user_balance = $user->balance;
         }
 
         return view('checkout.index')->with([
+            'cart' => $cart,
             'products' => $this->products,
-            'delivery_inf' => $this->delivery_info
+            'delivery_inf' => $this->delivery_info,
+            'user_balance' => $this->user_balance
         ]);
     }
 
@@ -79,8 +80,8 @@ class CheckoutController extends Controller
             $deliveryInf = new DeliveryInfo();
             $deliveryInf->fill([
                 'user_id' => $user->id,
-                'delivery_country' => $country->id,
-                'delivery_city' =>  $city->id,
+                'delivery_country' => $data['country'],
+                'delivery_city' =>  $data['city'],
                 'phone' => $data['phone'],
                 'delivery_service' => $data['delivery_service'],
                 'delivery_department' => $data['delivery_department']
@@ -144,13 +145,47 @@ class CheckoutController extends Controller
 
         DeliveryInfo::where('user_id',Auth::user()->id)->update([
             'phone' => $data['phone'],
-            'delivery_country' => $country->id,
-            'delivery_city' => $city->id,
+            'delivery_country' => $country->name,
+            'delivery_city' => $city->name,
             'delivery_service' => $data['delivery_service'],
             'delivery_department' => $data['delivery_department'],
         ]);
 
-        Cart::where('user_id',Auth::user()->id)->update(['oder_status' => 2]);
+        $cart = Cart::find($data['order_id']);
+
+        if (isset($cart)){
+            $products = $cart->cartProduct()->get();
+            $user = User::find(Auth::id());
+            $user_balance = $user->balance->balance;
+            $sum = 0;
+
+            foreach ($products as $product){
+                $sum += (double)$product->price * (integer)$product['pivot']['count'];
+            }
+            if ($user_balance >= $sum && $sum > 0){
+                $pay_order = new OrderPay();
+                $pay_order->fill([
+                    'cart_id' => $data['order_id'],
+                    'user_id' => Auth::id(),
+                    'success_pay' => 'false',
+                    'price_pay' => $sum
+                ]);
+
+                if ($pay_order->save()){
+                    DB::transaction(function () use ($pay_order, $sum, $user_balance) {
+                        UserBalance::where('user_id',Auth::id())->update([
+                            'balance' => $user_balance - $sum,
+                        ]);
+                        $pay_order->update(['success_pay' => 'true']);
+                    },5);
+                }
+            }
+
+            Cart::where([
+                ['user_id',Auth::id()],
+                ['oder_status',1]
+            ])->update(['oder_status' => 2]);
+        }
 
         return redirect()->route('profile');
     }

@@ -40,9 +40,9 @@
                                             <td class="text-center"><!-- Quinty -->
 
                                                 <div class="quinty padding-top-20">
-                                                    <input id="count{{$product->id}}" type="number" value="{{$product->count}}" oninput="changeCount({{$product->id}},{{$product->cart_id}},'{{route('product_count')}}')">
+                                                    <input id="count{{$product->id}}" type="number" value="{{$product['pivot']['count']}}" oninput="changeCount({{$product->id}},{{$product['pivot']['cart_id']}},'{{route('product_count')}}')">
                                                 </div></td>
-                                            <td class="text-center padding-top-60" id="price{{$product->id}}">{{((double)$product->price * (integer)$product->count)}} грн</td>
+                                            <td class="text-center padding-top-60" id="price{{$product->id}}">{{((double)$product->price * (integer)$product['pivot']['count'])}} грн</td>
                                             <td class="text-center padding-top-60"><a href="#." class="remove" onclick="deleteProduct({{$product->id}},{{$product->cart_id}},'{{route('product_delete')}}'); return false;"><i class="fa fa-close"></i></a></td>
                                         </tr>
                                     @empty
@@ -75,12 +75,12 @@
                                             $sum = 0.00;
                                             if (isset($products)){
                                                 foreach ($products as $product){
-                                                    $sum += (double)$product->price * (integer)$product->count;
+                                                    $sum += (double)$product->price * (integer)$product['pivot']['count'];
                                                 }
                                             }
                                         @endphp
-                                            {{$sum}} грн
-                                </span>
+                                            {{$sum}}
+                                </span>грн
                                     </h5>
                                 </div>
                             </div>
@@ -107,6 +107,7 @@
                     <div class="login-sec padding-top-30 tab-content">
                         <div role="tabpanel" class="tab-pane active" id="new_user">
                             <form type="POST" action="{{route('checkout.new_user')}}">
+                                <input type="hidden" name="order_id" value="{{$cart->id}}">
                                 @csrf
                                 <ul class="row">
                                     <li class="col-sm-12">
@@ -180,6 +181,14 @@
                                             <strong>{{ $errors->first('city') }}</strong>
                                         </span>
                                         @endif
+                                    </li>
+                                    <li class="col-sm-12">
+                                        <label>{{__('Способы оплаты')}}
+                                            <select name="pay_method" id="pay_method" class="form-control">
+                                                <option value="receipt" selected >{{__('При получении')}}</option>
+                                                <option value="online" disabled>{{__('Онлайн')}}</option>
+                                            </select>
+                                        </label>
                                     </li>
                                     <li class="col-sm-12">
                                         <label>{{__('Доставка *')}}
@@ -270,6 +279,7 @@
                 @else
                      <div class="login-sec">
                          <form method="POST" action="{{ route('checkout.create_oder') }}">
+                             <input type="hidden" name="order_id" value="{{$cart->id}}">
                              @csrf
 
                              <ul class="row">
@@ -344,6 +354,14 @@
                                             <strong>{{ $errors->first('city') }}</strong>
                                         </span>
                                      @endif
+                                 </li>
+                                 <li class="col-sm-12">
+                                     <label>{{__('Способы оплаты')}}
+                                         <select name="pay_method" id="pay_method" class="form-control">
+                                             <option value="receipt" selected >{{__('При получении')}}</option>
+                                             <option value="online" >{{__('Онлайн')}}</option>
+                                         </select>
+                                     </label>
                                  </li>
                                  <li class="col-sm-12">
                                      <label>{{__('Доставка *')}}
@@ -469,6 +487,16 @@
             $('#delivery_department').blur(function () {
                 if ($(this).val().length > 0){
                     getPostOfice('city');
+                }
+            });
+
+            $('#pay_method').change(function () {
+                const balance = {{isset($user_balance)?$user_balance->balance:0}};
+                const total = $('#total-price-checkout').text();
+                if ($(this).val() === 'online'){
+                    if (parseFloat(total) > balance){
+                        alert('Сума на вашем балансе меньше чем общяя стоимость корзины. Пополните баланс или смените способ оплаты');
+                    }
                 }
             });
         });

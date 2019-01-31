@@ -11,21 +11,13 @@ use Illuminate\Support\Facades\DB;
 class OrderController extends Controller
 {
     public function index(Request $request){
-        $orders = DB::select("SELECT c.id, c.updated_at,c.oder_status,u.name,c.invoice_np,
-                                      (SELECT SUM(p.price * cp.count) FROM `products` AS p 
-                                              JOIN `cart_products` AS cp WHERE p.id=cp.product_id AND cp.cart_id=c.id) AS total_price
-                                      FROM `carts` AS c
-                                      JOIN users as u ON u.id=c.user_id WHERE c.oder_status<>1 ORDER BY c.updated_at DESC");
-        $currentPage = LengthAwarePaginator::resolveCurrentPage();
-        $itemCollection = collect($orders);
-        $perPage = 30;
-        $currentPageItems = $itemCollection->slice(($currentPage * $perPage) - $perPage, $perPage)->all();
-        $paginatedItems= new LengthAwarePaginator($currentPageItems , count($itemCollection), $perPage);
-        $paginatedItems->setPath($request->fullUrl());
+        $orders = $this->getOrder();
+        $orders = $this->arrayPaginator($orders,$request,30);
+        $orders->setPath($request->fullUrl());
 
         $order_code = DB::table('oder_status_codes')->get();
 
-        return view('admin.orders.index',compact('paginatedItems','order_code'));
+        return view('admin.orders.index',compact('orders','order_code'));
     }
 
     public function getOrderData(Request $request){
@@ -67,5 +59,14 @@ class OrderController extends Controller
         return response()->json([
             'response' => 'Статус заказа изменен'
         ]);
+    }
+
+    public function getOrder(){
+        return DB::select("SELECT c.id, c.updated_at,c.oder_status,u.name,c.invoice_np,
+                                      (SELECT SUM(p.price * cp.count) FROM `products` AS p 
+                                              JOIN `cart_products` AS cp WHERE p.id=cp.product_id AND cp.cart_id=c.id) AS total_price
+                                      FROM `carts` AS c
+                                      JOIN `users` AS u ON u.id=c.user_id
+                                      WHERE c.oder_status<>1 ORDER BY c.updated_at DESC");
     }
 }

@@ -18,4 +18,8 @@ class Product extends Model
         'company',
         'brand'
     ];
+
+    public function cart(){
+        return $this->belongsToMany(Cart::class,'cart_products');
+    }
 }

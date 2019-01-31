@@ -31,8 +31,8 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @isset($paginatedItems)
-                                    @forelse($paginatedItems as $item)
+                                @isset($orders)
+                                    @forelse($orders as $item)
                                         <tr>
                                             <td>
                                                 <span class="m-r-10">
@@ -40,7 +40,22 @@
                                                 </span>
                                                 {{$item->updated_at}}
                                             </td>
-                                            <td>{{$item->id}}</td>
+                                            <td>
+                                                @php
+                                                    $orderPay = \App\OrderPay::where([
+                                                        ['cart_id',$item->id],
+                                                        ['user_id',Auth::id()]
+                                                    ])->first();
+                                                @endphp
+                                                @isset($orderPay)
+                                                    @if($orderPay->success_pay === 'true')
+                                                        <span class="m-r-10">
+                                                            <i class="fa fa-usd" aria-hidden="true" title="{{__('Оплачен')}}"></i>
+                                                        </span>
+                                                    @endif
+                                                @endisset
+                                                {{$item->id}}
+                                            </td>
                                             <td>{{$item->name}}</td>
                                             <td class="text-right">&#8372; {{$item->total_price}}</td>
                                             <td style="padding: 12px 0;">
@@ -77,7 +92,7 @@
                         </div>
                     </div>
                     <div class="col-sm-12">
-                        {{$paginatedItems->links()}}
+                        {{$orders->links()}}
                     </div>
                 </div>
             </div>

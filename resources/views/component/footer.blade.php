@@ -8,7 +8,7 @@
 
             <!-- Contact -->
             <div class="col-md-4">
-                <h4>Контакты {{__('MakeCars')}}!</h4>
+                <h4>Контакты {{config('app.name')}}!</h4>
                 <p>{{__('Адресс')}}: {{config('app.company_location')}}
                     United State USA</p>
                 <p>{{__('Телефон')}}: {{config('app.company_phone')}}</p>
@@ -66,7 +66,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-6">
-                <p>Copyright © {{date('Y')}} <a href="#." class="ri-li"> {{__('MakeCars')}} </a>. Все права защищены</p>
+                <p>Copyright © {{date('Y')}} <a href="#." class="ri-li"> {{config('app.name')}} </a>. Все права защищены</p>
             </div>
             <div class="col-sm-6 text-right"> <img src="{{asset('images/card-icon.png')}}" alt=""> </div>
         </div>

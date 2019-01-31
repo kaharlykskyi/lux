@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -23,7 +24,7 @@ class Controller extends BaseController
     }
 
     public function getCart(Request $request){
-        $cart = DB::table('carts')->where([
+        $cart = Cart::where([
             isset(Auth::user()->id)
                 ?['user_id',Auth::user()->id]
                 :['session_id',$request->cookie('cart_session_id')],

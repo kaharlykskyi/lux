@@ -106,7 +106,7 @@ class ProfileController extends Controller
 
         if (Auth::user()->country !== $data['country']){
             $country = $this->parseCountry($data['country']);
-            $data['country'] = $country->id;
+            $data['country'] = $country->name;
 
             if (Auth::user()->city !== $data['city']){
                 $city = $this->parseCity($data['city'],$country->id);
