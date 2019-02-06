@@ -77,8 +77,12 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     Route::get('/dashboard','DashboardController@index')->name('admin.dashboard');
     Route::get('/import-history','DashboardController@importHistory')->name('admin.import_history');
     Route::match(['get', 'post'], '/users','UserController@index')->name('admin.users');
-    Route::match(['get', 'post'], '/orders','OrderController@index')->name('admin.orders');
-    Route::get('/change-status-order','OrderController@changeStatusOrder')->name('admin.product.change_status_order');
+    Route::group(['prefix' => 'orders'],function (){
+        Route::match(['get', 'post'], '/{status?}','OrderController@index')->name('admin.orders');
+        Route::get('/change-status','OrderController@changeStatusOrder')->name('admin.product.change_status_order');
+        Route::get('/stock-product','OrderController@stockProductDelivery')->name('admin.product.stock');
+        Route::match(['get', 'post'], '/edit/{order}','OrderController@editOder')->name('admin.order_edit');
+    });
     Route::get('/full-order-info','OrderController@getOrderData')->name('admin.product.full_order_info');
     Route::get('/info-product-stock','OrderController@getInfoProductStock')->name('admin.product.info_product_stock');
     Route::post('/permission','UserController@permission')->name('permission');

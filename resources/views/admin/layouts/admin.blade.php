@@ -85,7 +85,20 @@
 <!-- Main JS-->
 <script src="{{asset('admin_area/js/main.js')}}"></script>
 @include('admin.dashboard.component.stat_chart')
-
+<script>
+    function orderStatus(id,obj) {
+        $.get(`{{route('admin.product.change_status_order')}}?orderID=${id}&statusID=${$(obj).val()}`,function (data) {
+            alert(data.response);
+        });
+    }
+    function saveInvoice(id,obj) {
+        if ($(obj).val() !== ''){
+            $.get(`{{route('admin.product.change_status_order')}}?orderID=${id}&invoice=${$(obj).val()}`,function (data) {
+                alert(data.response);
+            });
+        }
+    }
+</script>
 </body>
 
 </html>

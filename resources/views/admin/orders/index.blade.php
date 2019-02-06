@@ -18,6 +18,16 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link @if(URL::current() === route('admin.orders','new')) active @endif" href="{{route('admin.orders','new')}}">{{__('Новые заказа')}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @if(URL::current() === route('admin.orders','old')) active @endif" href="{{route('admin.orders','old')}}">{{__('Старые заказы')}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-12">
                         <div class="table-responsive table--no-card m-b-30">
                             <table class="table table-borderless table-striped table-earning">
                                 <thead>
@@ -27,7 +37,6 @@
                                     <th>клиент</th>
                                     <th class="text-right">Общяя цена</th>
                                     <th class="text-right">Статус заказа</th>
-                                    <th class="text-right">Накладная</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -35,6 +44,11 @@
                                     @forelse($orders as $item)
                                         <tr>
                                             <td>
+                                                <span class="m-r-10">
+                                                    <a href="{{route('admin.order_edit',$item->id)}}">
+                                                         <i class="fa fa-pencil-square-o" aria-hidden="true" style="cursor: pointer" title="{{__('Редактировать заказ')}}"></i>
+                                                    </a>
+                                                </span>
                                                 <span class="m-r-10">
                                                     <i data-toggle="modal" data-target="#orderInfo" onclick="getOrderInfo({{$item->id}})" class="fa fa-info" style="cursor: pointer"></i>
                                                 </span>
@@ -68,11 +82,6 @@
                                                         @endisset
                                                     </select>
                                                     <div class="dropDownSelect2"></div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="form-group">
-                                                    <input onblur="saveInvoice('{{$item->id}}',this)" name="invoice_np" type="text" class="form-control" aria-required="true" aria-invalid="false" value="{{$item->invoice_np}}">
                                                 </div>
                                             </td>
                                         </tr>
@@ -172,20 +181,6 @@
                 });
                 $('#stock_product tbody').html(data_str);
             });
-        }
-
-        function orderStatus(id,obj) {
-            $.get(`{{route('admin.product.change_status_order')}}?orderID=${id}&statusID=${$(obj).val()}`,function (data) {
-                alert(data.response);
-            });
-        }
-
-        function saveInvoice(id,obj) {
-            if ($(obj).val() !== ''){
-                $.get(`{{route('admin.product.change_status_order')}}?orderID=${id}&invoice=${$(obj).val()}`,function (data) {
-                    alert(data.response);
-                });
-            }
         }
     </script>
 
