@@ -71,7 +71,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>{{__('Отделение почты')}}</th>
+                                            <th>{{__('Статус заказа')}}</th>
                                             <td>
                                                 <div style="width: 90%;" class="rs-select2--dark rs-select2--md m-r-10 rs-select2--border">
                                                     <select class="js-select2" name="order_status_code" onchange="orderStatus({{$order->id}},this)">
