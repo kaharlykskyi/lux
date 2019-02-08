@@ -28,21 +28,6 @@
         <!-- Cart Part -->
         <ul class="nav navbar-right cart-pop">
             <li>
-                    @php
-                        $cart = DB::table('carts')->where([
-                                isset(Auth::user()->id)
-                                    ?['user_id',Auth::user()->id]
-                                    :['session_id',Cookie::get('cart_session_id')],
-                                ['oder_status', 1]
-                            ])->first();
-                        if (isset($cart)){
-                            $products = DB::table('cart_products')
-                                ->where('cart_products.cart_id',$cart->id)
-                                ->join('products','products.id','=','cart_products.product_id')
-                                ->select('products.*','cart_products.count')
-                                ->get();
-                        }
-                @endphp
                 <a href="#" onclick="getCartItem('{{route('cart')}}'); return false;" data-toggle="modal" data-target="#cart">
                     <span class="itm-cont">@if(isset($products)){{count($products )}}@else{{__('0')}}@endif</span>
                     <i class="flaticon-shopping-bag"></i>
@@ -143,21 +128,6 @@
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-open-btn" aria-expanded="false"> <span><i class="fa fa-navicon"></i></span> </button>
             </div>
-            <!-- NAV -->
-            <div class="collapse navbar-collapse" id="nav-open-btn">
-                <ul class="nav">
-                    <li class="dropdown"> <a href="index.html" class="dropdown-toggle" data-toggle="dropdown">{{__('Информация')}}</a>
-                        <ul class="dropdown-menu multi-level animated-2s fadeInUpHalf">
-                            @isset($pages)
-                                @foreach($pages as $page)
-                                    <li><a href="{{route('page',$page->alias)}}">{{$page->title}}</a></li>
-                                @endforeach
-                            @endisset
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-
             <!-- NAV RIGHT -->
             <div class="nav-right"> <span class="call-mun"><i class="fa fa-phone"></i> <strong>{{__('Гарячая линия:')}}</strong> {{config('app.company_phone')}}</span> </div>
         </div>

@@ -60,7 +60,7 @@ class Tecdoc
         $order = $this->type == 'motorbike' ? 'description' : 'matchcode';
 
         return DB::connection($this->connection)->select("
-            SELECT id, description
+            SELECT id, description,matchcode
             FROM manufacturers
             WHERE canbedisplayed = 'True' " . $where . "
             ORDER BY " . $order

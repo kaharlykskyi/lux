@@ -82,10 +82,10 @@
                                             <td>
                                                 <div class="rs-select2--trans rs-select2--sm">
                                                     <select data-user="{{$user->id}}" class="js-select2" name="permission" id="permission">
-                                                        <option value="admin" @if($user->permission === 'admin') selected @endif>{{__('Мега чел')}}</option>
-                                                        <option value="manager" @if($user->permission === 'manager') selected @endif>{{__('Норм юзвер')}}</option>
-                                                        <option value="user" @if($user->permission === 'user') selected @endif>{{__('Смертный')}}</option>
-                                                        <option value="block" @if($user->permission === 'block') selected @endif>{{__('Заблоченый')}}</option>
+                                                        <option value="admin" @if($user->permission === 'admin') selected @endif>{{__('админ')}}</option>
+                                                        <option value="manager" @if($user->permission === 'manager') selected @endif>{{__('модератор')}}</option>
+                                                        <option value="user" @if($user->permission === 'user') selected @endif>{{__('пользователь')}}</option>
+                                                        <option value="block" @if($user->permission === 'block') selected @endif>{{__('заблокирован')}}</option>
                                                     </select>
                                                     <div class="dropDownSelect2"></div>
                                                 </div>

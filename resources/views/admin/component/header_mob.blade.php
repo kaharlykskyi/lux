@@ -27,6 +27,9 @@
                             <a href="{{route('admin.stock.index')}}">{{__('Склады')}}</a>
                         </li>
                         <li>
+                            <a href="{{route('admin.show_brand')}}">{{__('Бренды')}}</a>
+                        </li>
+                        <li>
                             <a href="{{route('admin.import_history')}}">{{__('История импорта')}}</a>
                         </li>
                     </ul>

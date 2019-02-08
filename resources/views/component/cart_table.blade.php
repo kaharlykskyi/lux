@@ -78,19 +78,8 @@
     </div>
 </div>
 
-<!-- Promotion -->
-<div class="promo">
-    <div class="coupen hidden-xs">
-        <label> Promotion Code
-            <input type="text" placeholder="Your code here">
-            <button type="submit"><i class="fa fa-arrow-circle-right"></i></button>
-        </label>
-    </div>
-
-    <!-- Grand total -->
-    <div class="g-totel">
-        <h5>{{__('Общая сумма: ')}}
-            <span>
+<h6 class="text-right text-black text-uppercase">{{__('Общая сумма: ')}}
+    <span>
                 @php
                     $sum = 0.00;
                         if (isset($products)){
@@ -99,11 +88,9 @@
                             }
                         }
                 @endphp
-                {{$sum}} грн
+        {{$sum}} грн
             </span>
-        </h5>
-    </div>
-</div>
+</h6>
 
 <!-- Button -->
 <div class="pro-btn">

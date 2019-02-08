@@ -91,6 +91,9 @@ body header .logo{
     top: -30px;
 }
 
+.top-bar .dropdown-menu li {
+    flex-basis: 100%;
+}
 
 .custom-select.is-invalid,
 .form-control.is-invalid,
@@ -164,6 +167,33 @@ body header .logo{
     margin: 0;
     display: flex;
     justify-content: space-around;
+    position: relative;
+}
+
+.filter-section .search-car__list .selectric-wrapper{
+    position: unset;
+}
+
+.filter-section .search-car__list .selectric-items{
+    width: 100% !important;
+    max-height: 302px;
+    z-index: 100;
+    height: auto;
+    right: 0;
+    overflow: auto;
+}
+
+.filter-section .year_auto .selectric-scroll ul{
+    column-count: 6;
+}
+
+.filter-section .brand_auto .selectric-scroll ul{
+    column-count: 4;
+}
+
+.filter-section .selectric-scroll ul{
+    column-count: 2;
+    padding: 10px;
 }
 
 .filter-section .search-car__list > li{
@@ -279,7 +309,7 @@ li.fancyTab.active a {
 
 .nav-tabs > li.fancyTab.active:hover {
     background-color:#fff;
-    box-shadow: 1px 1px 0 1px #fff, 0 0px 0 1px #ddd, -1px 1px 0 0px #ddd inset;
+    box-shadow: 1px 1px 0 1px #fff, 0 0 0 1px #ddd, -1px 1px 0 0 #ddd inset;
 }
 
 .nav-tabs > li.fancyTab:hover a {
@@ -312,8 +342,8 @@ li.fancyTab.active a {
 }
 
 .nav-tabs > li.fancyTab.active:last-child {
-    border-right: 0px solid #ddd;
-    box-shadow: 0px 2px 0 0px #fff, 0px 0px 0 1px #ddd;
+    border-right: 0 solid #ddd;
+    box-shadow: 0 2px 0 0 #fff, 0 0 0 1px #ddd;
 }
 
 .fancyTab:last-child {
@@ -328,7 +358,7 @@ li.fancyTab.active a {
 
 .fancyTab.active {
     background: #fff;
-    box-shadow: 1px 1px 0 1px #fff, 0 0px 0 1px #ddd, -1px 1px 0 0px #ddd inset;
+    box-shadow: 1px 1px 0 1px #fff, 0 0 0 1px #ddd, -1px 1px 0 0 #ddd inset;
     padding-bottom:30px;
 }
 
@@ -399,7 +429,7 @@ li.fancyTab.active a {
     display: inline-block;
     font-size: 55px;
     line-height: 18px;
-    padding: 20px 0 0 0px;
+    padding: 20px 0 0 0;
     width: 70px;
     height: 70px;
     position: absolute;
@@ -707,6 +737,17 @@ body .modal-content{
     body .top-bar .right-sec ul {
         width: auto;
     }
+
+    .year_auto .selectric-scroll ul{
+        column-count: 3;
+    }
+
+    .filter-section .year_auto .selectric-scroll ul{
+        column-count: 1;
+    }
+    .filter-section .brand_auto .selectric-scroll ul{
+        column-count: 2;
+    }
 }
 
 @media (max-width: 540px){
@@ -773,5 +814,12 @@ body .modal-content{
     }
     .fast-buy-block {
         right: 0;
+    }
+
+    .year_auto .selectric-scroll ul{
+        column-count: 2;
+    }
+    .filter-section .brand_auto .selectric-scroll ul{
+        column-count: 1;
     }
 }

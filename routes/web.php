@@ -102,4 +102,5 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
         Route::delete('/{id}','FeedBackController@delete')->name('admin.feedback.delete');
         Route::post('/ask-feedback','FeedBackController@sendFeedBack')->name('admin.feedback.ask');
     });
+    Route::match(['get', 'post'], '/brands','ShowBrandController@index')->name('admin.show_brand');
 });

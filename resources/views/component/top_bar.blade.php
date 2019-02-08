@@ -1,8 +1,17 @@
 <div class="top-bar">
     <div class="container">
-        <p class="text-uppercase">Добро пожаловать!</p>
-        <div class="right-sec">
-            <ul>
+        <div class="col-sm-10">
+            <ul class="nav nav-pills">
+                <li role="presentation"><a href="{{route('home')}}">{{__('Главная')}}</a></li>
+                @isset($pages)
+                    @foreach($pages as $page)
+                        <li><a href="{{route('page',$page->alias)}}">{{$page->title}}</a></li>
+                    @endforeach
+                @endisset
+            </ul>
+        </div>
+        <div class="col-sm-2 text-right">
+            <ul style="margin-bottom: 0;height: 35px;display: flex;justify-content: flex-end;align-items: center;">
                 <!-- Authentication Links -->
                 @guest
                     <li>
@@ -42,7 +51,6 @@
                     </li>
                 @endguest
             </ul>
-            <div class="social-top"> <a href="#."><i class="fa fa-facebook"></i></a> <a href="#."><i class="fa fa-twitter"></i></a> <a href="#."><i class="fa fa-linkedin"></i></a> <a href="#."><i class="fa fa-dribbble"></i></a> <a href="#."><i class="fa fa-pinterest"></i></a> </div>
         </div>
     </div>
 </div>

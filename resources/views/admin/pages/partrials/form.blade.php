@@ -48,6 +48,7 @@
     </div>
     <div class="col-12 col-md-9">
         <select name="footer_column" id="footer_column" class="form-control" required>
+            <option @isset($page->id) @if((int)$page->footer_column === 4) selected @endif @endisset value="4">{{__('Не показывать в футере')}}</option>
             <option @isset($page->id) @if((int)$page->footer_column === 1) selected @endif @endisset value="1">{{__('Колонка #1')}}</option>
             <option @isset($page->id) @if((int)$page->footer_column === 2) selected @endif @endisset value="2">{{__('Колонка #2')}}</option>
             <option @isset($page->id) @if((int)$page->footer_column === 3) selected @endif @endisset value="3">{{__('Колонка #3')}}</option>

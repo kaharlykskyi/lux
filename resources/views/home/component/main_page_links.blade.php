@@ -6,11 +6,10 @@
                 @isset($brands)
                     <h3>Мы продаем запчасти для следующих марок автомобилей:</h3>
                     <ul class="list-group column-list">
-                        @php $keys = array_rand($brands,40); @endphp
-                        @foreach($keys as $key)
+                        @foreach($brands as $brand)
                             <li class="list-group-item">
-                                <a class="link" href="{{route('catalog')}}?brand={{$brands[$key]->id}}">
-                                    <span>Запчасти на {{$brands[$key]->description}}</span>
+                                <a class="link" href="{{route('catalog')}}?brand={{$brand->id}}">
+                                    <span>Запчасти на {{$brand->description}}</span>
                                 </a>
                             </li>
                         @endforeach

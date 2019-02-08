@@ -33,14 +33,16 @@ class HomeController extends Controller
         }
 
         $this->tecdoc->setType('passenger');
-        $brands = $this->tecdoc->getBrands();
-        $keys = array_rand($brands,10);
+        $brands = DB::table('show_brand')
+            ->where('ispassengercar','=','true')
+            ->select('brand_id AS id','description')->get();
         $models = [];
-
-        foreach ($keys as $key){
-            $buff = $this->tecdoc->getModels($brands[$key]->id,null,5);
-            foreach ($buff as $item){
-                array_push($models,$item);
+        if (isset($brands)) {
+            foreach ($brands as $key){
+                $buff = $this->tecdoc->getModels($key->id,null,2);
+                foreach ($buff as $item){
+                    array_push($models,$item);
+                }
             }
         }
 
@@ -83,9 +85,14 @@ class HomeController extends Controller
 
     public function getBrands(Request $request){
         if (isset($request->type_auto)){
-            $this->tecdoc->setType($request->type_auto);
+            $brands = DB::table('show_brand')
+                ->where(($request->type_auto === 'passenger')?'ispassengercar':'iscommercialvehicle','=','true')
+                ->select('brand_id AS id','description')->get();
             return response()->json([
-                'response' => $this->tecdoc->getBrands()
+                'response' => isset($brands[0])?$brands:[
+                    'id' => 0,
+                    'description' => 'не найдено'
+                ]
             ]);
         } else {
             return response()->json([
