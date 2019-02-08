@@ -7,7 +7,7 @@
             <form action="{{route('vin_decode')}}" method="post" id="search_global_form">
                 @csrf
                 <select class="selectpicker" name="type_search_global">
-                    <option selected value="article">{{__('По артиклю')}}</option>
+                    <option selected value="article">{{__('По артиклю,названию')}}</option>
                     <option value="vin">{{__('По vin')}}</option>
                 </select>
                 <input type="search" name="vin" placeholder="Строка поиска">

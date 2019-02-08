@@ -28,7 +28,7 @@ class HomeController extends Controller
         $this->tecdoc->setType('passenger');
         $brands = DB::table('show_brand')
             ->where('ispassengercar','=','true')
-            ->select('brand_id AS id','description')->get();
+            ->select('brand_id AS id','description')->limit(20)->get();
         $models = [];
         if (isset($brands)) {
             foreach ($brands as $key){
@@ -51,6 +51,18 @@ class HomeController extends Controller
         }
 
         return view('home.index',compact('search_cars','brands','models','popular_products'));
+    }
+
+    public function allBrands(){
+        $brands = DB::table('show_brand')
+            ->where('ispassengercar','=','true')
+            ->select('brand_id AS id','description')->get();
+        $this->tecdoc->setType('passenger');
+        foreach ($brands as $k => $brand){
+            $brands[$k]->models = $this->tecdoc->getModels($brand->id);
+        }
+
+        return view('home.all_brands',compact('brands'));
     }
 
     public function subcategory(Request $request){
@@ -206,6 +218,22 @@ class HomeController extends Controller
             'modification_auto' => $data['modification_auto'],
             'type_auto' => $data['type_auto']
         ])->withCookie($cookies);
+    }
+
+    public function delGarageCar(Request $request){
+        if (Auth::check()){
+            UserCar::where([['modification_auto',$request->mod],['user_id',Auth::id()]])->delete();
+        } else{
+            if ($request->hasCookie('search_cars')){
+                $cookies = json_decode($request->cookie('search_cars'),true);
+                foreach ($cookies as $k => $cookie){
+                    if ($cookie['modification_auto'] === $request->mod){
+                        unset($cookies[$k]);
+                    }
+                }
+                Cookie::queue(Cookie::forever('search_cars',json_encode($cookies)));
+            }
+        }
     }
 
     public function getSearchCars($request){

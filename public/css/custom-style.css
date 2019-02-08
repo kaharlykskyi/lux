@@ -7,6 +7,20 @@
     background-color: #0088cc;
 }
 
+.link{
+    padding: 5px 0;
+    display: block;
+    -webkit-transition: all ease .5s;
+    -moz-transition: all ease .5s;
+    -ms-transition: all ease .5s;
+    -o-transition: all ease .5s;
+    transition: all ease .5s;
+}
+
+.link:hover{
+    text-decoration: underline !important;
+}
+
 .blue .link{
     color: #0088cc;
 }
@@ -216,6 +230,14 @@ body header .logo{
     background: transparent;
     cursor: pointer;
     border-bottom: 1px solid;
+}
+
+#search_cars_modal .delete-car-btn{
+    position: absolute;
+    z-index: 1000;
+    right: 0;
+    top: 0;
+    padding: 10px;
 }
 
 .filter-section .container{

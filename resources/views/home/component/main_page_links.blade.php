@@ -1,45 +1,44 @@
 <div class="container">
-    <div class="row">
+    <div class="row padding-bottom-15">
         <div class="col-sm-12">
 
             <div class="main-page-links blue">
                 @isset($brands)
                     <h3>Мы продаем запчасти для следующих марок автомобилей:</h3>
-                    <ul class="list-group column-list">
+                    <div class="row">
                         @foreach($brands as $brand)
-                            <li class="list-group-item">
+                            <div class="col-xs-12 col-sm-2 col-md-3">
                                 <a class="link" href="{{route('catalog')}}?brand={{$brand->id}}">
                                     <span>Запчасти на {{$brand->description}}</span>
                                 </a>
-                            </li>
+                            </div>
                         @endforeach
-                    </ul>
+                    </div>
+                    <a class="link small_text" href="{{route('all_brands')}}"><em>{{__('Просмотреть для других марок')}}</em></a>
                 @endisset
                 @isset($models)
                     <h4>В том числе для следующих популярных моделей:</h4>
-                    <div class="table-responsive">
-                        <ul class="list-group column-list">
-                            @foreach($models as $model)
-                                <li class="list-group-item">
-                                    <a class="link" href="{{route('catalog')}}?model={{$model->id}}">
-                                        <span>{{$model->fulldescription}}</span>
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
+                    <div class="row">
+                        @foreach($models as $model)
+                            <div class="col-xs-12 col-sm-2 col-md-4">
+                                <a class="link" href="{{route('catalog')}}?model={{$model->id}}">
+                                    <span>{{$model->fulldescription}}</span>
+                                </a>
+                            </div>
+                        @endforeach
                     </div>
                 @endisset
                  @isset($popular_products)
                     <h4>Самые популярные запчасти для иномарок:</h4>
-                    <ul class="list-group column-list">
-                        @foreach($popular_products as $product)
-                            <li class="list-group-item">
-                                <a class="link" href="{{route('product',['alias' => $product->articles,'supplierid' => $product->supplierId])}}">
-                                    <span>{{$product->name}}</span>
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
+                        <div class="row">
+                            @foreach($popular_products as $product)
+                                <div class="col-xs-12 col-sm-2 col-md-4">
+                                    <a class="link" href="{{route('product',['alias' => $product->articles,'supplierid' => $product->supplierId])}}">
+                                        <span>{{$product->name}}</span>
+                                    </a>
+                                </div>
+                            @endforeach
+                        </div>
                 @endisset
             </div>
         </div>

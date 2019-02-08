@@ -3,16 +3,7 @@
     <div class="container padding-top-20 padding-bottom-20">
         <section id="fancyTabWidget" class="tabs t-tabs">
             <ul class="nav nav-tabs fancyTabs" role="tablist">
-
                 <li class="tab fancyTab active">
-                    <div class="arrow-down"><div class="arrow-down-inner"></div></div>
-                    <a id="tab0" href="#tabBody0" role="tab" aria-controls="tabBody0" aria-selected="true" data-toggle="tab" tabindex="0">
-                        <span>{{__('Поиск')}}</span>
-                    </a>
-                    <div class="whiteBlock"></div>
-                </li>
-
-                <li class="tab fancyTab">
                     <div class="arrow-down"><div class="arrow-down-inner"></div></div>
                     <a id="tab1" href="#tabBody1" role="tab" aria-controls="tabBody1" aria-selected="true" data-toggle="tab" tabindex="0">
                         <span>{{__('Подбор по авто')}}</span>
@@ -29,30 +20,7 @@
                 </li>
             </ul>
             <div id="myTabContent" class="tab-content fancyTabContent" aria-live="polite">
-                <div class="tab-pane  fade active in" id="tabBody0" role="tabpanel" aria-labelledby="tab0" aria-hidden="false" tabindex="0">
-                    <div>
-                        <div class="row">
-
-                            <div class="col-md-12">
-                                <form action="{{route('catalog')}}" method="GET">
-                                    <div class="row padding-30">
-                                        <div class="col-xs-12 col-sm-10">
-                                            <input class="form-control" type="text" name="search_product_article" placeholder="поиск по коду товара">
-                                        </div>
-                                        <div class="col-xs-12 col-sm-2">
-                                            <button type="submit" class="btn-round btn-sm">{{__('Поиск')}}</button>
-                                        </div>
-                                        <div class="col-xs-12 text-right padding-top-10">
-                                            <a class="link" href="">{{__('Вы искали')}}</a>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane  fade" id="tabBody1" role="tabpanel" aria-labelledby="tab1" aria-hidden="true" tabindex="0">
+                <div class="tab-pane active in fade" id="tabBody1" role="tabpanel" aria-labelledby="tab1" aria-hidden="true" tabindex="0">
                     <div class="row">
 
                         <div class="col-md-12">
@@ -104,7 +72,7 @@
                                         </ul>
                                     </div>
                                     <div class="col-xs-12 text-right padding-top-10">
-                                        <a class="link" href="" onclick="return false;" data-toggle="modal" data-target="#search_cars_modal">{{__('Мои автомобили')}}</a>
+                                        <a class="link" href="" onclick="return false;" data-toggle="modal" data-target="#search_cars_modal">{{__('Мой гараж')}}</a>
                                     </div>
                                 </div>
                                 <div class="row margin-top-10 hidden" id="search-detail-car">
