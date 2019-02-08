@@ -104,13 +104,14 @@
                                         </ul>
                                     </div>
                                     <div class="col-xs-12 text-right padding-top-10">
-                                        @auth
-                                            <a class="link margin-right-10" href="">{{__('Мои автомобили')}}</a>
-                                        @endauth
-                                        <a class="link" href="" onclick="return false;" data-toggle="modal" data-target="#search_cars_modal">{{__('Просмотреные авто')}}</a>
+                                        <a class="link" href="" onclick="return false;" data-toggle="modal" data-target="#search_cars_modal">{{__('Мои автомобили')}}</a>
                                     </div>
                                 </div>
                                 <div class="row margin-top-10 hidden" id="search-detail-car">
+                                    <div class="col-xs-12 text-center">
+                                        <img id="car_f" src="" alt="">
+                                        <img id="car_s" src="" alt="">
+                                    </div>
                                     <div class="col-xs-12 text-center">
                                         <button type="submit" style="width: 200px;" class="btn-round btn-sm">{{__('Подобрать')}}</button>
                                     </div>
@@ -128,75 +129,23 @@
                                     });
                                 });
                                 $('#year_auto').change(function () {
-                                    dataFilter(1);
+                                    dataFilter(1,`{{route('gat_brands')}}?type_auto=${$('#type_auto').val()}`);
                                 });
                                 $('#brand_auto').change(function () {
-                                    dataFilter(2);
+                                    dataFilter(2,`{{route('gat_model')}}?type_auto=${$('#type_auto').val()}&brand_id=${$('#brand_auto').val()}&year_auto=${$('#year_auto').val()}`);
                                 });
                                 $('#model_auto').change(function () {
-                                    dataFilter(3);
+                                    dataFilter(3,`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}&type_mod=Body`);
                                 });
                                 $('#body_auto').change(function () {
-                                    dataFilter(4);
+                                    dataFilter(4,`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}&type_mod=Engine`);
                                 });
                                 $('#engine_auto').change(function () {
-                                    dataFilter(5);
+                                    dataFilter(5,`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}&type_mod=General&body=${$('#body_auto').val()}&engine=${$('#engine_auto').val()}`);
                                 });
                                 $('#modification_auto').change(function () {
                                     dataFilter(6);
                                 });
-
-                                function dataFilter(level) {
-                                    switch (level) {
-                                        case 1:
-                                            getDateFilter(`{{route('gat_brands')}}?type_auto=${$('#type_auto').val()}`,'Выберите марку','#brand_auto',['id','description']);
-                                            if ($('#year_auto').val() === ''){
-                                                $('#brand_auto').next().prop('disabled', 'disabled').selectric('refresh');
-                                            }
-                                            break;
-                                        case 2:
-                                            getDateFilter(`{{route('gat_model')}}?type_auto=${$('#type_auto').val()}&brand_id=${$('#brand_auto').val()}&year_auto=${$('#year_auto').val()}`,'Выберите модель','#model_auto',['id','name']);
-                                            if ($('#brand_auto').val() === ''){
-                                                $('#model_auto').prop('disabled', 'disabled').selectric('refresh');
-                                            }
-                                            break;
-                                        case 3:
-                                            getDateFilter(`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}&type_mod=Body`,'Выберите кузов','#body_auto',['displayvalue','displayvalue']);
-                                            if ($('#model_auto').val()){
-                                                $('#body_auto').prop('disabled', 'disabled').selectric('refresh');
-                                            }
-                                            break;
-                                        case 4:
-                                            getDateFilter(`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}&type_mod=Engine`,'Выберите двигатель','#engine_auto',['displayvalue','displayvalue']);
-                                            if ( $('#body_auto').val() !== ''){
-                                                $('#engine_auto').prop('disabled', 'disabled').selectric('refresh');
-                                            }
-                                            break;
-                                        case 5:
-                                            getDateFilter(`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}&type_mod=General`,'Выберите модификацию','#modification_auto',['id','name']);
-                                            if ($('#engine_auto').val() !== ''){
-                                                $('#modification_auto').prop('disabled', 'disabled').selectric('refresh');
-                                            }
-                                            break;
-                                        case 6:
-                                            if($('#modification_auto').val() !== '' && !$('#modification_auto').hasAttribute('disabled')){
-                                                $('#search-detail-car').removeClass('hidden');
-                                            }
-                                            break;
-                                        default:
-                                            $('.search-car__list').children('li:not(:first-child):not(:nth-child(2))').find('select').prop('disabled', 'disabled').selectric('refresh');
-                                    }
-                                }
-
-                                function getDateFilter(link,mass,obj,dataKey) {
-                                    $.get(link, function(data) {
-                                        let str_data = `<option selected value="">${mass}</option>`;
-                                        data.response.forEach(function (item) {
-                                            str_data += `<option value="${item[dataKey[0]]}">${item[dataKey[1]]}</option>`
-                                        });
-                                        $(obj).removeAttr('disabled').html(str_data).selectric('refresh');
-                                    });
-                                }
                             </script>
                         </div>
                     </div>

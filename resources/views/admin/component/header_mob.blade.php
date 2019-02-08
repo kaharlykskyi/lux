@@ -39,6 +39,27 @@
                         <i class="fa fa-comments" aria-hidden="true"></i>{{__('Обратная связь')}}
                     </a>
                 </li>
+                <li>
+                    <a href="{{route('admin.users')}}">
+                        <i class="zmdi zmdi-account-o"></i>{{__('Пользователи')}}
+                    </a>
+                </li>
+                <li class="has-sub">
+                    <a class="js-arrow" href="#">
+                        <i class="zmdi zmdi-shopping-cart"></i>{{__('Заказы')}}</a>
+                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                        <li>
+                            <a href="{{route('admin.orders','new')}}">
+                                {{__('Заказы')}}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.fast_buy','new')}}">
+                                {{__('Быстрая покупка')}}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="has-sub">
                     <a class="js-arrow" href="#">
                         <i class="fas fa-copy"></i>{{__('Управление контентом')}}</a>

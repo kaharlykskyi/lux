@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\TecDoc\Tecdoc;
+use App\UserCar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 
@@ -21,16 +23,7 @@ class HomeController extends Controller
 
     public function index(Request $request)
     {
-        if ($request->hasCookie('search_cars')){
-            $cookies = json_decode($request->cookie('search_cars'),true);
-            foreach ($cookies as $k => $cookie){
-                $this->tecdoc->setType($cookie['type_auto']);
-                $search_cars[$k]['data'] = $this->tecdoc->getModificationById($cookie['modification_auto']);
-                $search_cars[$k]['cookie'] = $cookie;
-            }
-        } else {
-            $search_cars = null;
-        }
+        $search_cars = $this->getSearchCars($request);
 
         $this->tecdoc->setType('passenger');
         $brands = DB::table('show_brand')
@@ -213,5 +206,50 @@ class HomeController extends Controller
             'modification_auto' => $data['modification_auto'],
             'type_auto' => $data['type_auto']
         ])->withCookie($cookies);
+    }
+
+    public function getSearchCars($request){
+        if (Auth::check()){
+            if ($request->hasCookie('search_cars')){
+                $cookies = json_decode($request->cookie('search_cars'),true);
+                foreach ($cookies as $k => $cookie){
+                    if (!DB::table('user_cars')->where([['modification_auto',(int)$cookie['modification_auto']],['user_id',Auth::id()]])->exists()){
+                        $userCar = new UserCar();
+                        $userCar->fill([
+                            'user_id' => Auth::id(),
+                            'vin_code' => ' ',
+                            'type_auto' => $cookie['type_auto'],
+                            'year_auto' => (int)$cookie['year_auto'],
+                            'brand_auto' => (int)$cookie['brand_auto'],
+                            'model_auto' => (int)$cookie['model_auto'],
+                            'modification_auto' => (int)$cookie['modification_auto'],
+                            'body_auto' => (int)$cookie['body_auto'],
+                            'type_motor' => (int)$cookie['engine_auto']
+                        ]);
+                        $userCar->save();
+                    }
+                }
+                Cookie::queue(Cookie::forget('search_cars'));
+            }
+            $userCars = UserCar::where('user_id',Auth::id())->get();
+            foreach ($userCars as $k => $car){
+                $this->tecdoc->setType($car->type_auto);
+                $search_cars[$k]['data'] = $this->tecdoc->getModificationById($car->modification_auto);
+                $search_cars[$k]['cookie'] = $car;
+            }
+        } else{
+            if ($request->hasCookie('search_cars')){
+                $cookies = json_decode($request->cookie('search_cars'),true);
+                foreach ($cookies as $k => $cookie){
+                    $this->tecdoc->setType($cookie['type_auto']);
+                    $search_cars[$k]['data'] = $this->tecdoc->getModificationById($cookie['modification_auto']);
+                    $search_cars[$k]['cookie'] = $cookie;
+                }
+            } else {
+                $search_cars = null;
+            }
+        }
+
+        return $search_cars;
     }
 }

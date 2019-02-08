@@ -210,6 +210,14 @@ body header .logo{
     text-align: center;
 }
 
+.add-car{
+    border: none;
+    font-size: 10px;
+    background: transparent;
+    cursor: pointer;
+    border-bottom: 1px solid;
+}
+
 .filter-section .container{
     box-sizing: content-box;
 }
