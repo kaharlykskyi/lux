@@ -670,7 +670,7 @@ class Tecdoc
             ->paginate((int)$pre);
     }
 
-    public function getProductForArticleOE($article,$supplierId,$pre,$sort = 'ASC'){
+    public function getProductForArticleOE($article,$supplierId,$pre = 15,$sort = 'ASC'){
         return DB::connection($this->connection)
             ->table(config('database.connections.mysql_tecdoc.database').'.articles AS a')
             ->join(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp','a.supplierId','=','sp.id')
