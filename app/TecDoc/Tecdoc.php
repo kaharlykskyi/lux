@@ -299,7 +299,7 @@ class Tecdoc
         switch ($this->type) {
             case 'passenger':
                 return DB::connection($this->connection)->select("
-						SELECT id, description
+						SELECT id, description,parentid
 						FROM passanger_car_trees WHERE passangercarid=" . (int)$modification_id . " AND parentId=" . (int)$parent . "
 						ORDER BY description
 					");
@@ -637,7 +637,7 @@ class Tecdoc
                 }
             }
         } else {
-            $select = '`assemblygroupdescription`';
+            $select = '*';
         }
 
         switch ($this->type){
@@ -652,22 +652,112 @@ class Tecdoc
         }
     }
 
-    public function getCategoryProduct($id){
-        $category = " WHERE al.linkageid={$id}";
-        return DB::connection($this->connection)->select("SELECT DISTINCT al.linkageid,al.productid,al.supplierid supplierId,al.datasupplierarticlenumber DataSupplierArticleNumber,sp.matchcode FROM `article_links` as al 
-                                                                JOIN `suppliers` as sp ON al.supplierid=sp.id
-                                                                {$category}");
+    public function getCategoryProduct($id,$pre,$sort = 'ASC'){
+        return DB::connection($this->connection)
+            ->table(config('database.connections.mysql_tecdoc.database').'.article_links as al')
+            ->join(config('database.connections.mysql_tecdoc.database').'.suppliers as s','s.id','al.supplierid')
+            ->join(config('database.connections.mysql_tecdoc.database').'.articles as a',function ($join){
+                $join->on('a.supplierId','=','s.id');
+                $join->on('a.DataSupplierArticleNumber','=','al.DataSupplierArticleNumber');
+            })
+            ->join(config('database.connections.mysql.database').'.products AS p','p.articles','=','al.DataSupplierArticleNumber')
+            ->where([
+                ['al.linkageid',$id],
+                [($this->type) === 'passenger'?'HasPassengerCar':'HasCommercialVehicle','=','True']
+            ])
+            ->select('a.supplierId','a.DataSupplierArticleNumber','a.NormalizedDescription','s.matchcode','p.id','p.name','p.price')
+            ->orderBy('p.price',$sort)
+            ->paginate((int)$pre);
     }
 
-    public function getProductForArticleOE($article,$supplierId){
-        return DB::connection($this->connection)->select("SELECT DISTINCT a.supplierId,a.DataSupplierArticleNumber,a.NormalizedDescription,sp.matchcode FROM `articles` AS a
-                                                                JOIN `suppliers` as sp ON a.supplierId=sp.id 
-                                                                WHERE (a.DataSupplierArticleNumber='{$article}' OR a.FoundString='{$article}') AND  a.supplierId={$supplierId}");
+    public function getProductForArticleOE($article,$supplierId,$pre,$sort = 'ASC'){
+        return DB::connection($this->connection)
+            ->table(config('database.connections.mysql_tecdoc.database').'.articles AS a')
+            ->join(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp','a.supplierId','=','sp.id')
+            ->join(config('database.connections.mysql.database').'.products AS p','p.articles','=','a.DataSupplierArticleNumber')
+            ->where(function ($q) use ($article) {
+                $q->whereIn('a.DataSupplierArticleNumber',$article)->orWhereIn('a.FoundString',$article);
+            })->where('a.supplierId',(int)$supplierId)
+            ->select('a.supplierId','a.DataSupplierArticleNumber','a.NormalizedDescription','sp.matchcode','p.id','p.name','p.price')
+            ->orderBy('p.price',$sort)
+            ->paginate((int)$pre);
     }
 
-    public function getProductForArticle($str){
-        return DB::connection($this->connection)->select("SELECT a.supplierId ,a.DataSupplierArticleNumber,a.NormalizedDescription,sp.matchcode FROM `articles` AS a
-                                                                JOIN `suppliers` as sp ON a.supplierId=sp.id  
-                                                                WHERE a.FoundString LIKE '%{$str}%' ORDER BY a.DataSupplierArticleNumber");
+    public function getProductForArticle($str,$pre,$sort = 'ASC'){
+        return DB::connection($this->connection)
+            ->table(config('database.connections.mysql_tecdoc.database').'.articles AS a')
+            ->where('a.FoundString','LIKE',"%{$str}%")
+            ->orWhere('a.NormalizedDescription','LIKE',"%{$str}%")
+            ->join(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp','sp.id','=','a.supplierId')
+            ->join(config('database.connections.mysql.database').'.products AS p','p.articles','=','a.DataSupplierArticleNumber')
+            ->select('a.supplierId','a.DataSupplierArticleNumber','a.NormalizedDescription','sp.matchcode','p.id','p.name','p.price')
+            ->orderBy('p.price',$sort)
+            ->paginate((int)$pre);
+    }
+
+    public function getProductByModelCategory($id,$pre,$id_categories,$sort = 'ASC'){
+        switch ($this->type){
+            case 'passenger':
+                return DB::connection($this->connection)
+                    ->table(config('database.connections.mysql_tecdoc.database').'.passanger_car_trees AS pct')
+                    ->join(config('database.connections.mysql_tecdoc.database').'.passanger_cars AS pc','pc.id','=','pct.passangercarid')
+                    ->join(config('database.connections.mysql_tecdoc.database').'.passanger_car_pds AS pcp','pcp.nodeid','=','pct.id')
+                    ->join(config('database.connections.mysql_tecdoc.database').'.article_links AS al','al.productid','=','pcp.productid')
+                    ->join(config('database.connections.mysql_tecdoc.database').'.articles AS a','a.DataSupplierArticleNumber','=','al.DataSupplierArticleNumber')
+                    ->join(config('database.connections.mysql.database').'.products AS p','p.articles','=','a.DataSupplierArticleNumber')
+                    ->where([['pc.modelid',(int)$id]])
+                    ->whereIn('pct.id',$id_categories,'OR')
+                    ->orderBy('p.price',$sort)
+                    ->paginate((int)$pre);
+        }
+    }
+
+    public function getModelCategory($id,$model_id){
+        switch ($this->type){
+            case 'passenger':
+                return DB::connection($this->connection)
+                    ->table('passanger_car_trees AS pct')
+                    ->join('passanger_cars AS pc','pc.id','=','pct.passangercarid')
+                    ->where([['pct.parentid',(int)$id],['pc.modelid',(int)$model_id],['pc.ispassengercar','=','True']])->get();
+        }
+    }
+
+    public function getProductByModif($modification_id,$section_id,$pre,$sort = 'ASC'){
+        switch ($this->type) {
+            case 'passenger':
+                return DB::connection($this->connection)
+                    ->table(config('database.connections.mysql_tecdoc.database').'.article_links AS al')
+                    ->join(config('database.connections.mysql_tecdoc.database').'.passanger_car_pds AS pds','al.supplierid','=','pds.supplierid')
+                    ->join(config('database.connections.mysql_tecdoc.database').'.suppliers AS s','s.id','=','al.supplierid')
+                    ->join(config('database.connections.mysql_tecdoc.database').'.passanger_car_prd AS prd','prd.id','=','al.productid')
+                    ->join(config('database.connections.mysql.database').'.products AS p','p.articles','=','al.DataSupplierArticleNumber')
+                    ->where([
+                        ['al.productid','=','pds.productid'],
+                        ['al.linkageid',(int)$modification_id],
+                        ['al.linkagetypeid',2]
+                    ])
+                    ->whereIn('pds.nodeid',$section_id,'OR')
+                    ->select('al.supplierid supplierId','al.datasupplierarticlenumber DataSupplierArticleNumber','prd.description NormalizedDescription','s.description matchcode','p.id','p.name','p.price')
+                    ->orderBy('al.datasupplierarticlenumber',$sort)
+                    ->paginate($pre);
+                break;
+            case 'commercial':
+                return DB::connection($this->connection)
+                    ->table(config('database.connections.mysql_tecdoc.database').'.article_links AS al')
+                    ->join(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_pds AS pds','al.supplierid','=','pds.supplierid')
+                    ->join(config('database.connections.mysql_tecdoc.database').'.suppliers AS s','s.id','=','al.supplierid')
+                    ->join(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_prd AS prd','prd.id','=','al.productid')
+                    ->join(config('database.connections.mysql.database').'.products AS p','p.articles','=','al.DataSupplierArticleNumber')
+                    ->where([
+                        ['al.productid','=','pds.productid'],
+                        ['al.linkageid',(int)$modification_id],
+                        ['al.linkagetypeid',16]
+                    ])
+                    ->whereIn('pds.nodeid',$section_id,'OR')
+                    ->select('al.supplierid supplierId','al.datasupplierarticlenumber DataSupplierArticleNumber','prd.description NormalizedDescription','s.description matchcode','p.id','p.name','p.price')
+                    ->orderBy('al.datasupplierarticlenumber',$sort)
+                    ->paginate($pre);
+                break;
+        }
     }
 }

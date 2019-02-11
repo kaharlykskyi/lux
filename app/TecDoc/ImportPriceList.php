@@ -194,7 +194,7 @@ class ImportPriceList
                 try{
                     $array_import = [
                         'name' => $productInfo['name'],
-                        'articles' => str_replace(' ','',$productInfo['articles']),
+                        'articles' => $productInfo['articles'],
                         'brand' => $productInfo['brand'],
                         'short_description' => isset($productInfo['short_description'])? $productInfo['short_description']: null,
                         'full_description' => isset($productInfo['full_description'])? $productInfo['full_description']: null,

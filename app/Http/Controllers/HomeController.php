@@ -34,7 +34,8 @@ class HomeController extends Controller
             foreach ($brands as $key){
                 $buff = $this->tecdoc->getModels($key->id,null,2);
                 foreach ($buff as $item){
-                    array_push($models,$item);
+                    $item->manufacturerid = $key->id;
+                    $models[] = $item;
                 }
             }
         }
@@ -53,7 +54,34 @@ class HomeController extends Controller
         return view('home.index',compact('search_cars','brands','models','popular_products'));
     }
 
-    public function allBrands(){
+    public function allBrands(Request $request){
+
+        if (isset($request->brand) && isset($request->model)){
+            $this->tecdoc->setType('passenger');
+            $modifications = $this->tecdoc->getModifications($request->model,'General');
+            $categories = null;
+            $uses_cat = [];
+            foreach ($modifications as $modification){
+                $buff = $this->tecdoc->getSections($modification->id);
+                foreach ($buff as $item){
+                    if (!in_array($item->id,$uses_cat)){
+                        $categories[] = $item;
+                        $uses_cat[] = $item->id;
+                    }
+                }
+            }
+
+            return view('home.categories',['categories' => $categories,'model' => $this->tecdoc->getModelById($request->model),'brand' => $this->tecdoc->getBrandById($request->brand)]);
+        }
+
+        if (isset($request->brand)){
+            $this->tecdoc->setType('passenger');
+            $brand = $this->tecdoc->getBrandById($request->brand);
+            $brand[0]->models = $this->tecdoc->getModels($brand[0]->id);
+
+            return view('home.brand')->with(['brand' => $brand[0]]);
+        }
+
         $brands = DB::table('show_brand')
             ->where('ispassengercar','=','true')
             ->select('brand_id AS id','description')->get();

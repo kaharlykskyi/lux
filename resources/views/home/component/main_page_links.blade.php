@@ -8,7 +8,7 @@
                     <div class="row">
                         @foreach($brands as $brand)
                             <div class="col-xs-12 col-sm-2 col-md-3">
-                                <a class="link" href="{{route('catalog')}}?brand={{$brand->id}}">
+                                <a class="link" href="{{route('all_brands')}}?brand={{$brand->id}}">
                                     <span>Запчасти на {{$brand->description}}</span>
                                 </a>
                             </div>
@@ -21,7 +21,7 @@
                     <div class="row">
                         @foreach($models as $model)
                             <div class="col-xs-12 col-sm-2 col-md-4">
-                                <a class="link" href="{{route('catalog')}}?model={{$model->id}}">
+                                <a class="link" href="{{route('all_brands')}}?brand={{$model->manufacturerid}}&model={{$model->id}}">
                                     <span>{{$model->fulldescription}}</span>
                                 </a>
                             </div>

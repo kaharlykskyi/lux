@@ -34,7 +34,7 @@
                             <ul>
                                 <!-- Short List -->
                                 <li>
-                                    <p>{{(isset($products)?$products->total():'0') . __(' найдено товаров')}}</p>
+                                    <p>{{(isset($catalog_products)?$catalog_products->total():'0') . __(' найдено товаров')}}</p>
                                 </li>
                                 <!-- Short  -->
                                 <li >
@@ -50,8 +50,8 @@
                         <!-- Items -->
                         <div class="item-col-4">
 
-                            @isset($products)
-                                @forelse($products as $product)
+                            @isset($catalog_products)
+                                @forelse($catalog_products as $product)
                                     @php
                                         $tecdoc = new App\TecDoc\Tecdoc('mysql_tecdoc');
                                         $tecdoc->setType('passenger');
@@ -83,7 +83,7 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <!-- pagination -->
-                                    @isset($products){{$products->links()}}@endisset
+                                    @isset($catalog_products){{$catalog_products->links()}}@endisset
                                 </div>
                             </div>
                         </div>

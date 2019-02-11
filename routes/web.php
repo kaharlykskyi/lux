@@ -19,7 +19,7 @@ Route::get('/get-model', 'HomeController@getModel')->name('gat_model');
 Route::get('/get-modifications', 'HomeController@getModifications')->name('get_modifications');
 Route::post('/get-section-part', 'HomeController@getSectionParts')->name('get_section_part');
 Route::get('/del-garage-car', 'HomeController@delGarageCar')->name('del_garage_car');
-Route::get('/all-brands', 'HomeController@allBrands')->name('all_brands');
+Route::get('/brands', 'HomeController@allBrands')->name('all_brands');
 
 Route::get('/track-order/{id}', 'TrackOrderController@index')->name('track_order');
 

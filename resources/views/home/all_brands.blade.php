@@ -18,12 +18,12 @@
                     @isset($brands)
                         @foreach($brands as $k => $brand)
                             <div class="col-xs-12 col-sm-2 col-md-3">
-                                <a data-id="{{$k}}" data-link="false" class="link h4" href="{{route('catalog')}}?brand={{$brand->id}}">
+                                <a data-id="{{$k}}" data-link="false" class="link h4" href="{{route('all_brands')}}?brand={{$brand->id}}">
                                     <span>Запчасти на {{$brand->description}}</span>
                                 </a>
                                 <ul id="ul_{{$k}}" class="list-group" style="display: none">
                                     @foreach($brand->models as $model)
-                                        <li class="list-group-item"><a href="{{route('catalog')}}?model={{$model->id}}">{{$model->fulldescription}}</a></li>
+                                        <li class="list-group-item"><a href="{{route('all_brands')}}?brand={{$brand->id}}&model={{$model->id}}">{{$model->fulldescription}}</a></li>
                                     @endforeach
                                 </ul>
                             </div>

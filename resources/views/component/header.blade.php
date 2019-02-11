@@ -18,7 +18,7 @@
                     $('#search_global_form').submit(function (e) {
                         if ($(this).find('select').val() === 'article'){
                             e.preventDefault();
-                            location.href = `{{route('catalog',['category' => null])}}?search_product_article=${$(this).find('input[type="search"]').val()}`;
+                            location.href = `{{route('catalog',['category' => null])}}?search_str=${$(this).find('input[type="search"]').val()}`;
                         }
                     });
                 });
