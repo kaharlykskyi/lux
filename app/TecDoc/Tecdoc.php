@@ -685,12 +685,11 @@ class Tecdoc
 
     public function getProductForArticle($str,$pre,$sort = 'ASC'){
         return DB::connection($this->connection)
-            ->table(config('database.connections.mysql_tecdoc.database').'.articles AS a')
-            ->where('a.FoundString','LIKE',"%{$str}%")
-            ->orWhere('a.NormalizedDescription','LIKE',"%{$str}%")
-            ->join(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp','sp.id','=','a.supplierId')
-            ->join(config('database.connections.mysql.database').'.products AS p','p.articles','=','a.DataSupplierArticleNumber')
-            ->select('a.supplierId','a.DataSupplierArticleNumber','a.NormalizedDescription','sp.matchcode','p.id','p.name','p.price')
+            ->table(config('database.connections.mysql.database').'.products AS p')
+            ->where('p.articles','LIKE',"%{$str}%")
+            ->orWhere('p.name','LIKE',"%{$str}%")
+            ->join(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp','sp.matchcode','=','p.brand')
+            ->select('sp.id AS supplierId','sp.matchcode','p.id','p.name','p.price','p.articles')
             ->orderBy('p.price',$sort)
             ->paginate((int)$pre);
     }

@@ -55,7 +55,7 @@
                                     @php
                                         $tecdoc = new App\TecDoc\Tecdoc('mysql_tecdoc');
                                         $tecdoc->setType('passenger');
-                                        $file = $tecdoc->getArtFiles($product->DataSupplierArticleNumber,$product->supplierId);
+                                        $file = $tecdoc->getArtFiles(isset($product->DataSupplierArticleNumber)?$product->DataSupplierArticleNumber:$product->articles,$product->supplierId);
                                         $product->Description = isset($file[0])?$file[0]->Description:null;
                                         $product->PictureName = isset($file[0])?$file[0]->PictureName:null;
                                     @endphp
@@ -64,7 +64,7 @@
                                             <article>
                                                 <img class="img-responsive" src="{{asset('/images/item-img-1-2.jpg')}}" alt="" >
                                                 <!-- Content -->
-                                                <span class="tag">{{$product->matchcode}}</span> <a href="{{route('product',str_replace(' ','',str_replace('/','@',$product->DataSupplierArticleNumber)))}}?supplierid={{$product->supplierId}}" class="tittle">
+                                                <span class="tag">{{$product->matchcode}}</span> <a href="{{route('product',str_replace(' ','',str_replace('/','@',(isset($product->DataSupplierArticleNumber)?$product->DataSupplierArticleNumber:$product->articles))))}}?supplierid={{$product->supplierId}}" class="tittle">
                                                     {{isset($product->NormalizedDescription)?$product->NormalizedDescription:$product->name}}
                                                 </a>
                                                 <p class="rev"></p>
