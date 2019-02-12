@@ -258,6 +258,13 @@ header .logo img {
     flex-wrap: wrap;
 }
 
+.category-img{
+    height: 200px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 100% 0;
+}
+
 .top-bar .right-sec .dropdown-menu li{
     border: none;
     flex-basis: 100%;
