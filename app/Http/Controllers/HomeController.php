@@ -65,6 +65,7 @@ class HomeController extends Controller
                 $buff = $this->tecdoc->getSections($modification->id);
                 foreach ($buff as $item){
                     if (!in_array($item->id,$uses_cat)){
+                        $item->subCategories = $this->tecdoc->getSections($modification->id,$item->id);
                         $categories[] = $item;
                         $uses_cat[] = $item->id;
                     }

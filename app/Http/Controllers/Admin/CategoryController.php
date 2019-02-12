@@ -6,6 +6,8 @@ use App\Category;
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
@@ -19,11 +21,45 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::paginate(40);
+        $categories = null;
+        $filter = [['parentid',0]];
+
+        if (isset($request->comercial)){
+
+            if (!Cache::has('categories.comercial')){
+                $categories = DB::connection('mysql_tecdoc')
+                    ->table('commercial_vehicle_trees')
+                    ->where($filter)
+                    ->select('id','description')
+                    ->groupBy('id','description')
+                    ->distinct()
+                    ->get();
+                Cache::forever('categories.comercial',$categories);
+            } else {
+                $categories = Cache::get('categories.comercial');
+            }
+        } else {
+
+            if (!Cache::has('categories.passanger')){
+                $categories = DB::connection('mysql_tecdoc')
+                    ->table('passanger_car_trees')
+                    ->where($filter)
+                    ->select('id','description')
+                    ->groupBy('id','description')
+                    ->distinct()
+                    ->get();
+                Cache::forever('categories.passanger',$categories);
+            } else {
+                $categories = Cache::get('categories.passanger');
+            }
+        }
+        $categories = $this->arrayPaginator($categories->toArray(),$request,20);
+
         return view('admin.category.index',compact('categories'));
     }
 
@@ -63,10 +99,10 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Category  $category
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return void
      */
-    public function edit(Category $category)
+    public function edit(Request $request)
     {
         //
     }

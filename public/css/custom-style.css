@@ -17,6 +17,10 @@
     transition: all ease .5s;
 }
 
+.border-0{
+    border: 0 !important;
+}
+
 .link:hover{
     text-decoration: underline !important;
 }
@@ -102,7 +106,12 @@ header>.container{
 body header .logo{
     position: absolute;
     left: 15px;
-    top: -30px;
+    top: -13px;
+    max-width: 225px;
+}
+
+header .logo img {
+    width: 100%;
 }
 
 .top-bar .dropdown-menu li {

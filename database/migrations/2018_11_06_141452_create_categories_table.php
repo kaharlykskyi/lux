@@ -15,12 +15,10 @@ class CreateCategoriesTable extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('alias')->unique();
+            $table->unsignedInteger('tecdoc_id');
+            $table->string('name')->nullable();
+            $table->string('type')->default('passanger');
             $table->string('logo')->nullable();
-            $table->text('description')->nullable();
-            $table->unsignedInteger('parent_id');
-            $table->timestamps();
         });
     }
 

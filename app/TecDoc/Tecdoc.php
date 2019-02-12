@@ -701,11 +701,14 @@ class Tecdoc
                     ->table(config('database.connections.mysql_tecdoc.database').'.passanger_car_trees AS pct')
                     ->join(config('database.connections.mysql_tecdoc.database').'.passanger_cars AS pc','pc.id','=','pct.passangercarid')
                     ->join(config('database.connections.mysql_tecdoc.database').'.passanger_car_pds AS pcp','pcp.nodeid','=','pct.id')
-                    ->join(config('database.connections.mysql_tecdoc.database').'.article_links AS al','al.productid','=','pcp.productid')
-                    ->join(config('database.connections.mysql_tecdoc.database').'.articles AS a','a.DataSupplierArticleNumber','=','al.DataSupplierArticleNumber')
-                    ->join(config('database.connections.mysql.database').'.products AS p','p.articles','=','a.DataSupplierArticleNumber')
-                    ->where([['pc.modelid',(int)$id]])
-                    ->whereIn('pct.id',$id_categories,'OR')
+                    ->join(config('database.connections.mysql_tecdoc.database').'.article_links AS al',function ($join){
+                        $join->on('al.productid','=','pcp.productid');
+                        $join->on('al.SupplierId','=','pcp.supplierid');
+                    })
+                    ->join(config('database.connections.mysql.database').'.products AS p','p.articles','=','al.DataSupplierArticleNumber')
+                    ->where([['pc.modelid',(int)$id],['al.linkagetypeid','=',2]])
+                    ->whereIn('pct.id',$id_categories)
+                    ->select('pcp.supplierid AS supplierId','al.DataSupplierArticleNumber','p.brand matchcode','p.id','p.name','p.price')
                     ->orderBy('p.price',$sort)
                     ->paginate((int)$pre);
         }
@@ -717,7 +720,7 @@ class Tecdoc
                 return DB::connection($this->connection)
                     ->table('passanger_car_trees AS pct')
                     ->join('passanger_cars AS pc','pc.id','=','pct.passangercarid')
-                    ->where([['pct.parentid',(int)$id],['pc.modelid',(int)$model_id],['pc.ispassengercar','=','True']])->get();
+                    ->where([['pct.parentid',(int)$id],['pc.modelid',(int)$model_id],['pc.ispassengercar','=','True']])->get(['pct.id']);
         }
     }
 

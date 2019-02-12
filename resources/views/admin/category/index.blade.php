@@ -13,73 +13,61 @@
             </div>
         @endif
         <div class="row">
+            <div class="col-12">
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('admin.category.index')}}">{{__('Легковые авто')}}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('admin.category.index','comercial')}}">{{__('Грузовые авто')}}</a>
+                    </li>
+                </ul>
+            </div>
             <div class="col-md-12">
                 <!-- DATA TABLE -->
                 <h3 class="title-5 m-b-35 m-t-15">{{__('Категории сайта')}}</h3>
-                <div class="table-data__tool">
-                    <div class="table-data__tool-left">
-                    </div>
-                    <div class="table-data__tool-right">
-                        <button onclick="location.href = '{{route('admin.category.create')}}'" class="au-btn au-btn-icon au-btn--green au-btn--small">
-                            <i class="zmdi zmdi-plus"></i>{{__('Создать')}}</button>
-                    </div>
-                </div>
                 <div class="table-responsive table-responsive-data2">
                     <table class="table table-data2">
                         <thead>
                         <tr>
-                            <th>{{__('Заголовок')}}</th>
-                            <th>{{__('Ссылка')}}</th>
-                            <th>{{__('Колонка футера')}}</th>
-                            <th></th>
+                            <th>{{__('Картинка')}}</th>
+                            <th>{{__('Название')}}</th>
                         </tr>
                         </thead>
                         <tbody>
                         @isset($categories)
                             @forelse($categories as $category)
-                                <div class="table-responsive table--no-card m-b-30">
-                                    <table class="table table-borderless table-striped table-earning">
-                                        <thead>
-                                        <tr>
-                                            <th>date</th>
-                                            <th>order ID</th>
-                                            <th>name</th>
-                                            <th class="text-right">price</th>
-                                            <th class="text-right">quantity</th>
-                                            <th class="text-right">total</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>2018-09-29 05:57</td>
-                                            <td>100398</td>
-                                            <td>iPhone X 64Gb Grey</td>
-                                            <td class="text-right">$999.00</td>
-                                            <td class="text-right">1</td>
-                                            <td class="text-right">$999.00</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                <tr>
+                                    <th>date</th>
+                                    <th>{{$category->description}}</th>
+                                    <th>
+                                        <div class="table-data-feature">
+                                            <button onclick="location.href = '{{route('admin.category.edit',$category->id)}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Редактирвать')}}">
+                                                <i class="zmdi zmdi-edit"></i>
+                                            </button>
+                                        </div>
+                                    </th>
+                                </tr>
                             @empty
                                 <tr class="tr-shadow">
                                     <td colspan="4">
                                         <div class="alert alert-warning" role="alert">
-                                            {{__('Категорий ещё нету')}}
+                                            {{__('Введите ключевые слова для поиска')}}
                                         </div>
                                     </td>
                                 </tr>
                             @endforelse
                         @endisset
-
                         </tbody>
                     </table>
                 </div>
                 <!-- END DATA TABLE -->
             </div>
-            <div class="col-sm-12">
-                {{$categories->links()}}
-            </div>
+            @isset($categories)
+                <div class="col-sm-12">
+                    {{$categories->links()}}
+                </div>
+            @endisset
         </div>
         @component('admin.component.footer')@endcomponent
     </div>

@@ -23,8 +23,13 @@
                             </p>
                             <ul class="list-group">
                                 @foreach($categories as $category)
-                                    <li class="list-group-item col-xs-12 col-sm-6 col-lg-4">
-                                        <a href="{{route('catalog',$category->id)}}?model={{$model[0]->id}}">{{$category->description}}</a>
+                                    <li class="list-group-item margin-bottom-15 row">
+                                        <h6 class="text-uppercase">{{$category->description}}</h6>
+                                        <div class="list-group col-xs-12 col-sm-8 row">
+                                            @foreach($category->subCategories as $sub)
+                                                <a class="border-0 col-xs-12 col-sm-6 list-group-item" href="{{route('catalog',$sub->id)}}?model={{$model[0]->id}}">{{$sub->description}}</a>
+                                            @endforeach
+                                        </div>
                                     </li>
                                 @endforeach
                             </ul>
