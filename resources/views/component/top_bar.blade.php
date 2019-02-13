@@ -3,8 +3,8 @@
         <div class="col-sm-10">
             <ul class="nav nav-pills">
                 <li role="presentation"><a href="{{route('home')}}">{{__('Главная')}}</a></li>
-                @isset($pages)
-                    @foreach($pages as $page)
+                @isset($pages_global)
+                    @foreach($pages_global as $page)
                         <li><a href="{{route('page',$page->alias)}}">{{$page->title}}</a></li>
                     @endforeach
                 @endisset

@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
                 }else{
                     $products = null;
                 }
-                $view->with(['products' => $products, 'pages' => $pages]);
+                $view->with(['products_cart_global' => $products, 'pages_global' => $pages]);
             });
         }
     }
