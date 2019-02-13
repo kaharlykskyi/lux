@@ -76,6 +76,15 @@ class HomeController extends Controller
             return view('home.categories',['categories' => $categories,'model' => $this->tecdoc->getModelById($request->model),'brand' => $this->tecdoc->getBrandById($request->brand)]);
         }
 
+        if (isset($request->modification_auto)){
+            $this->tecdoc->setType(isset($request->type_auto)?$request->type_auto:'passenger');
+            $categories = $this->tecdoc->getSections($request->modification_auto);
+            foreach ($categories as $category){
+                $category->subCategories = $this->tecdoc->getSections($request->modification_auto,$category->id);
+            }
+            return view('home.modif_category',['categories' => $categories,'modification' => $this->tecdoc->getModificationById($request->modification_auto)]);
+        }
+
         if (isset($request->brand)){
             $this->tecdoc->setType('passenger');
             $brand = $this->tecdoc->getBrandById($request->brand);

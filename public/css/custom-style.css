@@ -650,7 +650,7 @@ body .modal-content{
 }
 
 #root-category-modification .list-group {
-    height: 205px;
+    height: 250px;
     background-position: 100% 30%;
     padding-right: 110px;
     background-repeat: no-repeat;
@@ -660,6 +660,7 @@ body .modal-content{
 #root-category-modification .list-group-item{
     background: transparent;
     padding: 5px 15px;
+    text-decoration: underline;
 }
 
 /*-----SITE PAGE-----*/
