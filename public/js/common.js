@@ -69,7 +69,7 @@ $(document).ready(function() {
         $('#root-category-modification-wrapper').show();
         $.post($('#search-detail-car-form').attr('action'),$('#search-detail-car-form').serialize(),function (data) {
             $('#root-category-modification-wrapper').show();
-            $('#root-category-modification').html(makeTemplateCategoryCar(data));
+            $('#root-category-modification').html(makeTemplateCategoryCar(data,modification_auto,type_auto));
         });
     });
 });
@@ -185,11 +185,11 @@ function getCarsDetail(type_auto,year_auto,brand_auto,model_auto,modification_au
         '_token': token
     },function (data) {
         console.log(data);
-        $('#root-category-modification').html(makeTemplateCategoryCar(data));
+        $('#root-category-modification').html(makeTemplateCategoryCar(data,modification_auto,type_auto));
     });
 }
 
-function makeTemplateCategoryCar(data) {
+function makeTemplateCategoryCar(data,modification_auto,type_auto) {
     let str_data = '';
     data.response.forEach(function (item) {
         str_data += `<div class="col-xs-12 col-sm-6 col-lg-4 padding-0 margin-bottom-0">
@@ -198,7 +198,7 @@ function makeTemplateCategoryCar(data) {
                                 <a target="_blank" href="/brands?modification_auto=${modification_auto}&type_auto=${type_auto}">${item.description}</a>
                               </div>
                               <div class="panel-body row">
-                                <div class="list-group" style="background-image: url('${(item.image_data !== null)?'/images/catalog/'+item.image_data.logo:''}');height: 350px;">`;
+                                <div class="list-group" style="background-image: url('${(item.image_data !== null)?'/images/catalog/'+item.image_data.logo:''}');">`;
         item.sub_category.forEach(function (sub) {
             str_data += `<a href="/catalog/${sub.id}?modification_auto=${modification_auto}&type_auto=${type_auto}" class="list-group-item border-0">${sub.description}</a>`
         });
