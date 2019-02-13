@@ -69,12 +69,7 @@ $(document).ready(function() {
         $('#root-category-modification-wrapper').show();
         $.post($('#search-detail-car-form').attr('action'),$('#search-detail-car-form').serialize(),function (data) {
             $('#root-category-modification-wrapper').show();
-
-            let str_data = '';
-            data.response.forEach(function (item) {
-                str_data += `<div class="col-xs-12 col-sm-6 col-lg-4"><a class="h5" target="_blank" href="/catalog/${item.id}?modification_auto=${data.modification_auto}&type_auto=${data.type_auto}">${item.description}</a></div>`;
-            });
-            $('#root-category-modification').html(str_data);
+            $('#root-category-modification').html(makeTemplateCategoryCar(data));
         });
     });
 });
@@ -189,12 +184,28 @@ function getCarsDetail(type_auto,year_auto,brand_auto,model_auto,modification_au
         'body_auto': body_auto,
         '_token': token
     },function (data) {
-        let str_data = '';
-        data.response.forEach(function (item) {
-            str_data += `<div class="col-xs-12 col-sm-6 col-lg-4"><a class="h5" target="_blank" href="/catalog/${item.id}?modification_auto=${modification_auto}&type_auto=${type_auto}">${item.description}</a></div>`;
-        });
-        $('#root-category-modification').html(str_data);
+        console.log(data);
+        $('#root-category-modification').html(makeTemplateCategoryCar(data));
     });
+}
+
+function makeTemplateCategoryCar(data) {
+    let str_data = '';
+    data.response.forEach(function (item) {
+        str_data += `<div class="col-xs-12 col-sm-6 col-lg-4 padding-0 margin-bottom-0">
+                            <div class="panel panel-default">
+                              <div class="panel-heading">
+                                <a target="_blank" href="/brands?modification_auto=${modification_auto}&type_auto=${type_auto}">${item.description}</a>
+                              </div>
+                              <div class="panel-body row">
+                                <div class="list-group" style="background-image: url('${(item.image_data !== null)?'/images/catalog/'+item.image_data.logo:''}');height: 350px;">`;
+        item.sub_category.forEach(function (sub) {
+            str_data += `<a href="/catalog/${sub.id}?modification_auto=${modification_auto}&type_auto=${type_auto}" class="list-group-item border-0">${sub.description}</a>`
+        });
+        str_data += `<a class="list-group-item border-0" target="_blank" href="/brands?modification_auto=${modification_auto}&type_auto=${type_auto}"><small>показать все</small></a></div></div></div></div>`
+    });
+
+    return str_data;
 }
 
 function dataFilter(level,link) {
@@ -236,7 +247,7 @@ function dataFilter(level,link) {
             break;
         case 6:
             if($('#modification_auto').val() !== ''){
-                $('#search-detail-car').removeClass('hidden');
+                $('#search-detail-car').removeClass('hidden').show();
                 $('#car_f').attr('src',`https://yii.dbroker.com.ua/img/all_cars/${$('#model_auto').val()}f.png`);
                 $('#car_s').attr('src',`https://yii.dbroker.com.ua/img/all_cars/${$('#model_auto').val()}s.png`);
             }

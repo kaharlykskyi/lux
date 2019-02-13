@@ -649,6 +649,18 @@ body .modal-content{
     margin-bottom: 15px;
 }
 
+#root-category-modification .list-group {
+    height: 350px;
+    background-position: 100% 30%;
+    padding-right: 110px;
+    background-repeat: no-repeat;
+    background-size: 40%;
+}
+
+#root-category-modification .list-group-item{
+    background: transparent;
+}
+
 /*-----SITE PAGE-----*/
 .page-content p{
     font-size: 14px;

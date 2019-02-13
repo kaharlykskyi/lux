@@ -292,23 +292,25 @@ class Tecdoc
      *
      * @param $modification_id
      * @param int $parent
+     * @param null $limit
      * @return mixed
      */
-    public function getSections($modification_id, $parent = 0)
+    public function getSections($modification_id, $parent = 0,$limit = null)
     {
+        $limit_select = isset($limit)?" LIMIT {$limit}":'';
         switch ($this->type) {
             case 'passenger':
                 return DB::connection($this->connection)->select("
 						SELECT id, description,parentid
 						FROM passanger_car_trees WHERE passangercarid=" . (int)$modification_id . " AND parentId=" . (int)$parent . "
-						ORDER BY description
+						ORDER BY description {$limit_select}
 					");
                 break;
             case 'commercial':
                 return DB::connection($this->connection)->select("
 						SELECT id, description
 						FROM commercial_vehicle_trees WHERE commercialvehicleid=" . (int)$modification_id . " AND parentId=" . (int)$parent . "
-						ORDER BY description
+						ORDER BY description {{$limit_select}}
 					");
                 break;
             case 'motorbike':

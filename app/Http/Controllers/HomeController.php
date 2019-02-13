@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\TecDoc\Tecdoc;
 use App\UserCar;
 use Illuminate\Http\Request;
@@ -240,6 +241,14 @@ class HomeController extends Controller
 
         $this->tecdoc->setType($data['type_auto']);
         $category = $this->tecdoc->getSections($data['modification_auto']);
+
+        foreach ($category as $k => $item){
+            $category[$k]->sub_category = $this->tecdoc->getSections($data['modification_auto'],$item->id,7);
+            $category[$k]->image_data = Category::where([
+                ['tecdoc_id',(int)$item->id],
+                ['type',($data['type_auto'] === 'passenger')?'passanger':'commercial']
+            ])->first();
+        }
 
 
         return response()->json([
