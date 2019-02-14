@@ -44,30 +44,11 @@ class CatalogController extends Controller
                 switch ($request){
                     case isset($request->modification_auto):
                         $this->tecdoc->setType((isset($request->type_auto)?$request->type_auto:'passenger'));
-
-                        $subCategory = $this->tecdoc->getSections($request->modification_auto,$request->category);
-                        foreach ($subCategory as $item){
-                            $buff = $this->tecdoc->getSections($request->modification_auto,$item->id);
-                            if (isset($buff[0])){
-                                foreach ($buff as $val){
-                                    array_push($subCategory,$val);
-                                }
-                            }
-                        }
-                        $categories_id = [];
-                        foreach ($subCategory as $item){
-                            $categories_id[] = $item->id;
-                        }
-                        $catalog_products = $this->tecdoc->getProductByModif($request->modification_auto,$categories_id,$this->pre_products);
+                        $catalog_products = $this->tecdoc->getSectionParts($request->modification_auto,$request->category,$this->pre_products);
                         break;
                     case isset($request->model):
                         $this->tecdoc->setType((isset($request->type_auto)?$request->type_auto:'passenger'));
-                        $categories = $this->tecdoc->getModelCategory($request->category,$request->model);
-                        $categories_id = [];
-                        foreach ($categories as $category){
-                            $categories_id[] = $category->id;
-                        }
-                        $catalog_products = $this->tecdoc->getProductByModelCategory($request->model,$this->pre_products,$categories_id);
+                        $catalog_products = $this->tecdoc->getProductByModelCategory($request->model,$this->pre_products,$request->category);
                         break;
                     default:
                         $this->tecdoc->setType($request->type);
