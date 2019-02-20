@@ -72,6 +72,18 @@
 
 <div class="row form-group">
     <div class="col col-md-3">
+        <label for="count" class=" form-control-label">{{__('Остаток на складе')}}</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <input type="text" id="count" name="count" value="@if(isset($product->id)){{$product->count}}@else{{old('count')}}@endif" class="form-control">
+        @if ($errors->has('count'))
+            <small class="form-text text-danger">{{ $errors->first('count') }}</small>
+        @endif
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col col-md-3">
         <label for="price" class=" form-control-label">{{__('Цена')}}</label>
     </div>
     <div class="col-12 col-md-9">

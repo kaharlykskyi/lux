@@ -99,7 +99,6 @@ class ProductController extends Controller
                 ->withInput();
         }
 
-        $data['alias'] = str_replace(' ','_',$this->transliterateRU($data['name'] .'_'. $data['articles'] .'_'. $data['company']));
         $data['price'] = floatval($data['price']);
         if (isset($data['old_price'])){
             $data['old_price'] = floatval($data['old_price']);
@@ -134,11 +133,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $stock_count = DB::table('stock_products')
-            ->where('stock_products.product_id',$product->id)
-            ->join('stocks','stocks.id','=','stock_products.stock_id')
-            ->select('stocks.*','stock_products.count')->get();
-        return view('admin.product.edit',compact('product','stock_count'));
+        return view('admin.product.edit',compact('product'));
     }
 
     /**
@@ -150,7 +145,28 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $data = $request->except(['_token','_method']);
+
+        $validate = Validator::make($data,[
+            'name' => 'required|max:255',
+            'company' => 'required|max:255',
+            'articles' => 'required|max:255',
+            'brand' => 'required|max:255',
+            'price' => 'required|numeric',
+        ]);
+
+        if ($validate->fails()) {
+            return redirect()->back()
+                ->withErrors($validate)
+                ->withInput();
+        }
+
+        $product->update($data);
+        if ($product->save()){
+            return back()->with('status','Данные Сохранены');
+        }else{
+            return back();
+        }
     }
 
     /**
@@ -181,28 +197,6 @@ class ProductController extends Controller
 
         return response()->json([
             'text' => 'Загрузка прошла успешно. Детальную информацию можно просмотреть в истории импортов'
-        ]);
-    }
-
-    public function productCount(Request $request){
-        $data = $request->except('_token');
-
-        $validate = Validator::make($data,[
-            'count' => 'required|numeric',
-            'product_id' => 'required|numeric',
-            'stock_id' => 'required|numeric',
-        ]);
-
-        if ($validate->fails()) {
-            return response()->json([
-                'error' => $validate->errors()
-            ]);
-        }
-
-        DB::table('stock_products')->where('id',$data['stock_id'])->update(['count' => (int)$data['count']]);
-
-        return response()->json([
-            "response" => 'Данные сохранены'
         ]);
     }
 }
