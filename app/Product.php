@@ -16,14 +16,11 @@ class Product extends Model
         'price',
         'old_price',
         'company',
-        'brand'
+        'brand',
+        'count'
     ];
 
     public function cart(){
         return $this->belongsToMany(Cart::class,'cart_products');
-    }
-
-    public function stock(){
-        return $this->belongsToMany(Stock::class,'stock_products')->withPivot('count');
     }
 }

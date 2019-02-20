@@ -38,7 +38,7 @@ class CatalogController extends Controller
 
         switch ($request){
             case isset($request->search_str):
-                $catalog_products = $this->tecdoc->getProductForArticle(trim(str_replace([' ','/','.','-'],'',strip_tags($request->search_str))),$this->pre_products);
+                $catalog_products = $this->tecdoc->getProductForArticle(trim(strip_tags($request->search_str)),$this->pre_products);
                 break;
             case isset($request->category):
                 switch ($request){

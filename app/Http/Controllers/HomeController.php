@@ -284,6 +284,7 @@ class HomeController extends Controller
     }
 
     public function getSearchCars($request){
+        $search_cars = null;
         if (Auth::check()){
             if ($request->hasCookie('search_cars')){
                 $cookies = json_decode($request->cookie('search_cars'),true);
@@ -320,8 +321,6 @@ class HomeController extends Controller
                     $search_cars[$k]['data'] = $this->tecdoc->getModificationById($cookie['modification_auto']);
                     $search_cars[$k]['cookie'] = $cookie;
                 }
-            } else {
-                $search_cars = null;
             }
         }
 

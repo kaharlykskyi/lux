@@ -18,8 +18,6 @@ class ImportPriceList
 
     protected $config = null;
 
-    protected $stocks = [];
-
     protected $product_data = [];
 
     protected $count_success = 0;
@@ -82,7 +80,6 @@ class ImportPriceList
                             $this->count_success = 0;
                             $this->count_fail = 0;
                             $this->product_data = [];
-                            $this->stocks = [];
                         }
 
                         $mailbox->deleteMail($mailsId);
@@ -111,36 +108,21 @@ class ImportPriceList
                         $cellIterator = $row->getCellIterator();
                         foreach ($cellIterator as $cell){
                             $cellPath = $cell->getColumn();
-                            if (isset($this->config['cells'][$cellPath]) && $row->getRowIndex() >= $this->config['data_row'] ){
-                                $this->product_data[$row->getRowIndex()][$this->config['cells'][$cellPath]] = $cell->getCalculatedValue();
-                            }
-                            if ($this->config['stock_data_one_row']){
-                                if (!isset($this->config['stocks']['name'])){
-                                    if (!isset($this->stocks[0])){
-                                        $this->stocks[] = $this->stockQuery("Склад  компании {$this->config['company']}");
-                                    }
-                                    if($cellPath === $this->config['stocks']['count']){
-                                        $this->product_data[$row->getRowIndex()]['count'][] = $cell->getCalculatedValue();
+                            if ($row->getRowIndex() >= $this->config['data_row'] ){
+                                if (isset($this->config['cells'][$cellPath])){
+                                    $this->product_data[$row->getRowIndex()][$this->config['cells'][$cellPath]] = $cell->getCalculatedValue();
+                                }
+                                if ($this->config['stock_data_one_row']){
+                                    if (isset($this->config['stocks'][$cellPath])){
+                                        $this->product_data[$row->getRowIndex()][$this->config['stocks'][$cellPath]] = (int)preg_replace("/[^0-9,.]/", "", $cell->getCalculatedValue());
                                     }
                                 }else{
-                                    if ($cellPath === $this->config['stocks']['name']){
-                                        $this->stocks[$row->getRowIndex()] = $this->stockQuery($cell->getCalculatedValue());
-                                    }
-                                    if($cellPath === $this->config['stocks']['count']){
-                                        $this->product_data[$row->getRowIndex()]['count'][$row->getRowIndex()] = $cell->getCalculatedValue();
-                                    }
-                                }
-                            }else{
-                                if (isset($this->config['stocks'])){
-                                    foreach ($this->config['stocks'] as $stock){
-                                        if($stock['row'] === $row->getRowIndex() && $cellPath === $stock['column']){
-                                            $this->stocks[$cellPath] = $this->stockQuery($cell->getCalculatedValue());
+                                    if ( in_array($cellPath,$this->config['stocks'])){
+                                        if (isset($this->product_data[$row->getRowIndex()]['count'])){
+                                            $this->product_data[$row->getRowIndex()]['count'] += (int)preg_replace("/[^0-9,.]/", "", $cell->getCalculatedValue());
+                                        } else {
+                                            $this->product_data[$row->getRowIndex()]['count'] = (int)preg_replace("/[^0-9,.]/", "", $cell->getCalculatedValue());
                                         }
-                                    }
-                                }
-                                foreach ($this->stocks as $k => $stock){
-                                    if ($k === $cellPath && $row->getRowIndex() >= $this->config['data_row']){
-                                        $this->product_data[$row->getRowIndex()]['count'][$cellPath] = $cell->getCalculatedValue();
                                     }
                                 }
                             }
@@ -164,15 +146,6 @@ class ImportPriceList
                     Log::error("Error : $e");
                 }
             }
-        }
-    }
-
-    protected function stockQuery($stockName){
-        if(DB::table('stocks')->where([['name',$stockName],['company',$this->config['company']]])->exists()){
-            return DB::table('stocks')->where([['name',$stockName],['company',$this->config['company']]])->first();
-        }else {
-            DB::table('stocks')->insert(['name' => $stockName,'company' => $this->config['company']]);
-            return DB::table('stocks')->where([['name',$stockName],['company',$this->config['company']]])->first();
         }
     }
 
@@ -200,22 +173,18 @@ class ImportPriceList
                         'full_description' => isset($productInfo['full_description'])? $productInfo['full_description']: null,
                         'price' => round($productInfo['price'],2),
                         'company' => $this->config['company'],
-                        'old_price' => isset($productInfo['old_price'])? round($productInfo['old_price'],2): null
+                        'old_price' => isset($productInfo['old_price'])? round($productInfo['old_price'],2): null,
+                        'count' => isset($productInfo['count'])? $productInfo['count']: 0,
                     ];
 
                     if(DB::table('products')->where([['articles',$productInfo['articles']],['company',$this->config['company']]])->exists()){
                         Product::where([['articles',$productInfo['articles']],['company',$this->config['company']]])
                             ->update($array_import);
-                        $product = Product::where([['articles',$productInfo['articles']],['company',$this->config['company']]])->first();
-                        if(isset($product)){
-                            $this->stockCountProduct($product,$productInfo);
-                        }
                         $this->count_success++;
                     } else {
                         $product = new Product();
                         $product->fill($array_import);
                         if ($product->save()){
-                            $this->stockCountProduct($product,$productInfo);
                             $this->count_success++;
                         } else{
                             $this->count_fail++;
@@ -229,25 +198,6 @@ class ImportPriceList
                         Log::error("Error import : $e");
                     }
                     $this->count_fail++;
-                }
-            }
-        }
-    }
-
-    protected function stockCountProduct($product,$data){
-        foreach ($this->stocks as $k => $stock){
-            foreach($data['count'] as $key => $item){
-                if($k === $key){
-                    if(DB::table('stock_products')->where([['stock_id',$stock->id],['product_id',$product->id]])->exists()){
-                        DB::table('stock_products')->where([['stock_id',$stock->id],['product_id',$product->id]])
-                            ->update(['count' => (int)str_replace('>','',$data['count'][$key])]);
-                    } else {
-                        DB::table('stock_products')->insert([
-                            'stock_id' => $stock->id,
-                            'product_id' => $product->id,
-                            'count' => (int)str_replace('>','',$data['count'][$key])
-                        ]);
-                    }
                 }
             }
         }

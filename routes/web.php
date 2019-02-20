@@ -93,8 +93,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     Route::resources([
         'category' => 'CategoryController',
         'page' => 'PageController',
-        'product' => 'ProductController',
-        'stock' => 'StockController'
+        'product' => 'ProductController'
     ],['as' => 'admin']);
     Route::get('/start-import','ProductController@startImport')->name('admin.start_import');
     Route::post('/product-count','ProductController@productCount')->name('admin.product.stock_count');

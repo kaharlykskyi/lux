@@ -18,16 +18,9 @@ return [
             'J' => 'price',//Цена продукта
             'K' => 'currency'//Валюта
         ],
-        'stocks' => [ //Склады и остатки на складах
-            [
-                'column' => 'D',//Колонка в которой находиться информация просклад
-                'row' => 6//Строка в которой находиться название склада
-            ],
-            ['column' => 'E','row' => 6],
-            ['column' => 'F','row' => 6],
-            ['column' => 'G','row' => 6],
-            ['column' => 'H','row' => 6],
-            ['column' => 'I','row' => 6]
+        'stocks' => [
+            'D',//Колонка в которой находиться информация просклад,
+            'E', 'F', 'G', 'H', 'I',
         ]
     ],
     /*[
@@ -43,13 +36,7 @@ return [
             'F' => 'price',
             'E' => 'short_description'
         ],
-        'stocks' => [
-            ['column' => 'G','row' => 2],
-            ['column' => 'G','row' => 2],
-            ['column' => 'I','row' => 2],
-            ['column' => 'J','row' => 2],
-            ['column' => 'K','row' => 2]
-        ]
+        'stocks' => ['G','G','I','J','K']
     ],*/
     [
         'email' => 'selivonenkovasyl@outlook.com',
@@ -64,8 +51,7 @@ return [
             'F' => 'price',
         ],
         'stocks' => [
-            'count' => 'E', //остатки на складе
-            'name' => null//имя склада
+            'E' => 'count', //остатки на складе
         ]
     ],
 /*    [
@@ -80,6 +66,6 @@ return [
             'A' => 'brand',
             'F' => 'price',
         ],
-        'stocks' => ['count' => 'E','name' => 'G']
+        'stocks' => ['count' => 'E']
     ]*/
 ];
