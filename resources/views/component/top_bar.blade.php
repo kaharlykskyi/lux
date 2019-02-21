@@ -14,7 +14,7 @@
             <ul style="margin-bottom: 0;height: 35px;display: flex;justify-content: flex-end;align-items: center;">
                 <!-- Authentication Links -->
                 @guest
-                    <li>
+                    <li class="margin-right-15">
                         <a href="{{ route('login') }}">{{ __('Войти') }}</a>
                     </li>
                     <li>

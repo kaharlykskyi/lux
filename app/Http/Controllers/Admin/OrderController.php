@@ -33,6 +33,18 @@ class OrderController extends Controller
         $product_data = DB::select("SELECT p.id,p.price,p.name,p.articles,cp.count AS count_in_cart FROM `products` AS p 
                                           JOIN `cart_products` AS cp ON cp.product_id=p.id 
                                           WHERE cp.product_id=p.id AND cp.cart_id={$request->idOrder}");
+
+        foreach ($product_data as $k => $item){
+            if ($item->price < 2000){
+                $product_data[$k]->price = $item->price - $item->price * 0.2;
+            } elseif ($item->price >= 2000 && $item->price <= 5000){
+                $product_data[$k]->price = $item->price - $item->price * 0.15;
+            } elseif ($item->price > 5000){
+                $product_data[$k]->price = $item->price - $item->price * 0.1;
+            }
+            $product_data[$k]->price = round($product_data[$k]->price,2);
+        }
+
         return response()->json([
             'response' => $product_data
         ]);
@@ -90,10 +102,9 @@ class OrderController extends Controller
 
         }*/
         $user = User::with('deliveryInfo')->find($order->user_id);
-        $product = Product::with('stock')
-            ->join('cart_products','cart_products.product_id','=','products.id')
+        $product = Product::join('cart_products','cart_products.product_id','=','products.id')
             ->where('cart_products.cart_id','=',$order->id)
-            ->select('products.*','cart_products.count','cart_products.stock_id')->get();
+            ->select('products.*','cart_products.count')->get();
         $order_pay = Order::where('cart_id',$order->id)->first();
         $order_code = DB::table('oder_status_codes')->get();
 

@@ -165,6 +165,15 @@ class ImportPriceList
                     }
                 }
                 try{
+
+                    if ((float)$productInfo['price'] < 2000){
+                        $productInfo['price'] = (float)$productInfo['price'] + (float)($productInfo['price'] * 0.2);
+                    } elseif ((float)$productInfo['price'] >= 2000 && (float)$productInfo['price'] <= 5000){
+                        $productInfo['price'] = (float)$productInfo['price'] + (float)($productInfo['price'] * 0.15);
+                    } elseif((float)$productInfo['price'] > 5000){
+                        $productInfo['price'] = (float)$productInfo['price'] + (float)($productInfo['price'] * 0.1);
+                    }
+
                     $array_import = [
                         'name' => $productInfo['name'],
                         'articles' => $productInfo['articles'],

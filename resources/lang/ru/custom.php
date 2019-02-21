@@ -1,4 +1,5 @@
 <?php
-return [
-  'novaposhta' => 'Новая Почта'
-];
+return array(
+    'novaposhta' => 'Новая Почта',
+    'samovivoz' => 'Самовывоз'
+);

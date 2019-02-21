@@ -695,9 +695,10 @@ class Tecdoc
             ->where(DB::raw('p.articles'),'LIKE',"%{$str}%")
             ->orWhere(DB::raw('p.name'),'LIKE',"%{$str}%")
             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('sp.matchcode'),DB::raw('p.brand'))
-            ->select(DB::raw('sp.id AS supplierId, sp.matchcode, p.id, p.name, p.price, p.articles'))
+            ->select(DB::raw('sp.id AS supplierId, sp.matchcode, p.id, p.name, p.price, p.articles,p.count'))
             ->orderBy(DB::raw('p.price'),$sort)
-            ->distinct()
+            ->groupBy(DB::raw('p.articles,p.count,p.name,p.id,sp.matchcode,sp.id'))
+            ->havingRaw('MIN(p.price)')
             ->paginate((int)$pre);
     }
 

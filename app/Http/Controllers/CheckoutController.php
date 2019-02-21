@@ -133,7 +133,7 @@ class CheckoutController extends Controller
             return redirect()->back()->withErrors($validate);
         }
 
-        User::where('id',Auth::user()->id)->update([
+        User::where('id',Auth::id())->update([
             'sername' => $data['sername'],
             'name' => $data['name'],
             'last_name' => $data['last_name'],
@@ -143,20 +143,28 @@ class CheckoutController extends Controller
         $country = $this->parseCountry($data['country']);
         $city= $this->parseCity($data['city'],$country->id);
 
-        DeliveryInfo::where('user_id',Auth::user()->id)->update([
+        $delivery_inf_data = [
             'phone' => $data['phone'],
             'delivery_country' => $country->name,
             'delivery_city' => $city->name,
             'delivery_service' => $data['delivery_service'],
             'delivery_department' => $data['delivery_department'],
-        ]);
+            'user_id' => Auth::id()
+        ];
+
+        if (DeliveryInfo::where('user_id',Auth::id())->exists()){
+            DeliveryInfo::where('user_id',Auth::id())->update($delivery_inf_data);
+        }else{
+            $delivery_inf = new DeliveryInfo();
+            $delivery_inf->fill($delivery_inf_data)->save();
+        }
 
         $cart = Cart::find($data['order_id']);
 
         if (isset($cart)){
             $products = $cart->cartProduct()->get();
             $user = User::find(Auth::id());
-            $user_balance = $user->balance->balance;
+            $user_balance = isset($user->balance)?$user->balance->balance:null;
             $sum = 0;
 
             foreach ($products as $product){

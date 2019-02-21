@@ -48,11 +48,11 @@
                                         </tr>
                                         <tr>
                                             <th>{{__('Страна')}}</th>
-                                            <td>{{$user->deliveryInfo->delivery_country}}</td>
+                                            <td>{{isset($user->deliveryInfo->delivery_country)?$user->deliveryInfo->delivery_country:$user->country}}</td>
                                         </tr>
                                         <tr>
                                             <th>{{__('Город')}}</th>
-                                            <td>{{$user->deliveryInfo->delivery_city}}</td>
+                                            <td>{{isset($user->deliveryInfo->delivery_city)?$user->deliveryInfo->delivery_city:$user->city}}</td>
                                         </tr>
                                         <tr>
                                             <th>{{__('Служба доставки')}}</th>
@@ -114,39 +114,13 @@
                                             <tr>
                                                 <td>
                                                     <span class="m-r-10">
-                                                        <i onclick="$('#data_product{{$item->id}}_stock').toggle();" class="fa fa-info" style="cursor: pointer" title="Показать данные про запасы на складе"></i>
+                                                        <i onclick="" class="fa fa-info" style="cursor: pointer" title="Показать аналогичные товары"></i>
                                                     </span>
                                                     {{$item->name}}
                                                 </td>
                                                 <td>{{$item->articles}}</td>
                                                 <td>{{$item->price}}</td>
                                                 <td>{{$item->count}}</td>
-                                            </tr>
-                                            <tr style="display: none;" id="data_product{{$item->id}}_stock">
-                                                <td colspan="4">
-                                                    <table class="table table-borderless table-data3">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>Название</th>
-                                                            <th>Поставщик</th>
-                                                            <th>Остатки</th>
-                                                            <th>Доставка</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach($item->stock as $val)
-                                                                <tr>
-                                                                    <td>{{$val->name}}</td>
-                                                                    <td>{{$val->company}}</td>
-                                                                    <td>{{$val->pivot->count}}</td>
-                                                                    <td>
-                                                                        <input onchange="stockProductDelivery('{{$item->id}}',this)" @if($item->stock_id === $val->id) checked @endif name="stock{{$item->id}}" type="radio" value="{{$val->id}}">
-                                                                    </td>
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
