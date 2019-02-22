@@ -96,6 +96,10 @@ body .panel-primary>.panel-heading{
     border-radius: 4px;
     margin-right: 3px;
 }
+
+.text-line-through{
+    text-decoration: line-through !important;
+}
 /*----END GLOBAL VAR-----*/
 
 /*-----HOME-----*/

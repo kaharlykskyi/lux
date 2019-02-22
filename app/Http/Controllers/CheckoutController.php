@@ -15,10 +15,6 @@ class CheckoutController extends Controller
 
     protected $products = [];
 
-    protected $delivery_info = null;
-
-    protected $user_balance = null;
-
     public function index(Request $request){
         $cart = $this->getCart($request);
 
@@ -26,17 +22,14 @@ class CheckoutController extends Controller
             $this->products = $cart->cartProduct()->get();
         }
 
-        if (Auth::id()){
-            $user = User::find(Auth::id());
-            $this->delivery_info = $user->deliveryInfo;
-            $this->user_balance = $user->balance;
+        if (Auth::check()){
+            $user = User::with(['discount','deliveryInfo','balance'])->find(Auth::id());
         }
 
         return view('checkout.index')->with([
             'cart' => $cart,
             'products' => $this->products,
-            'delivery_inf' => $this->delivery_info,
-            'user_balance' => $this->user_balance
+            'user' => isset($user)?$user:null
         ]);
     }
 

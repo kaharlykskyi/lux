@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Page;
+use App\Discount;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class PageController extends Controller
+class DiscountController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,8 +16,8 @@ class PageController extends Controller
      */
     public function index()
     {
-        $pages = Page::paginate(20);
-        return view('admin.pages.index',compact('pages'));
+        $discount = Discount::paginate(20);
+        return view('admin.discount.index',compact('discount'));
     }
 
     /**
@@ -28,7 +27,7 @@ class PageController extends Controller
      */
     public function create()
     {
-        return view('admin.pages.create');
+        return view('admin.discount.create');
     }
 
     /**
@@ -42,65 +41,7 @@ class PageController extends Controller
         $data = $request->except('_token');
 
         $validate = Validator::make($data,[
-            'title' => 'required|max:255',
-            'footer_column' => 'required',
-            'description' => 'string|nullable|max:255'
-        ]);
-
-        if ($validate->fails()) {
-            return redirect()->back()
-                ->withErrors($validate)
-                ->withInput();
-        }
-
-        $data['user_id'] = (int)Auth::user()->id;
-
-        $page = new Page();
-        $page->fill($data);
-        if ($page->save()){
-            return redirect()->route('admin.page.index')->with('status','Данные сохранены');
-        } else {
-            return redirect()->back()->with('status','Данные не сохранены')->withInput();
-        }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Page  $page
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Page $page)
-    {
-        $pageObj = Page::where('id',$page->id)->first();
-        return redirect()->route('page',$pageObj->alias);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Page  $page
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Page $page)
-    {
-        return view('admin.pages.edit',compact('page'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Page  $page
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Page $page)
-    {
-        $data = $request->except('_token');
-
-        $validate = Validator::make($data,[
-            'title' => 'required|max:255',
-            'footer_column' => 'required',
+            'percent' => 'required|numeric',
             'description' => 'string|nullable|max:255',
         ]);
 
@@ -110,10 +51,61 @@ class PageController extends Controller
                 ->withInput();
         }
 
-        $data['user_id'] = (int)Auth::user()->id;
+        $discount = new Discount();
+        $discount->fill($data);
+        if ($discount->save()){
+            return redirect()->route('admin.discount.index')->with('status','Данные сохранены');
+        } else {
+            return redirect()->back()->with('status','Данные не сохранены')->withInput();
+        }
+    }
 
-        $page->update($data);
-        if ($page->save()){
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Discount  $discount
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Discount $discount)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Discount  $discount
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Discount $discount)
+    {
+        return view('admin.discount.edit',compact('discount'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Discount  $discount
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Discount $discount)
+    {
+        $data = $request->except('_token');
+
+        $validate = Validator::make($data,[
+            'percent' => 'required|numeric',
+            'description' => 'string|nullable|max:255',
+        ]);
+
+        if ($validate->fails()) {
+            return redirect()->back()
+                ->withErrors($validate)
+                ->withInput();
+        }
+
+        $discount->update($data);
+        if ($discount->save()){
             return redirect()->back()->with('status','Данные сохранены');
         } else {
             return redirect()->back()->with('status','Данные не сохранены');
@@ -123,14 +115,14 @@ class PageController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Page  $page
+     * @param  \App\Discount  $discount
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Page $page)
+    public function destroy(Discount $discount)
     {
         try {
-            $page->delete();
-            return back()->with('status','Страница удалена');
+            $discount->delete();
+            return back()->with('status','Скидка удалена');
         } catch (\Exception $e) {
             if (config('app.debug')){
                 dump($e);

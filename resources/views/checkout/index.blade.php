@@ -58,32 +58,28 @@
                                 </tbody>
                             </table>
 
-                            <!-- Promotion -->
-                            <div class="promo">
-                                <div class="coupen">
-                                    <label> Promotion Code
-                                        <input type="text" placeholder="Your code here">
-                                        <button type="submit"><i class="fa fa-arrow-circle-right"></i></button>
-                                    </label>
-                                </div>
-
-                                <!-- Grand total -->
-                                <div class="g-totel">
-                                    <h5>{{__('Общая сумма: ')}}
-                                        <span id="total-price-checkout">
-                                        @php
-                                            $sum = 0.00;
-                                            if (isset($products)){
-                                                foreach ($products as $product){
-                                                    $sum += (double)$product->price * (integer)$product['pivot']['count'];
-                                                }
-                                            }
-                                        @endphp
-                                            {{$sum}}
-                                </span>грн
-                                    </h5>
-                                </div>
-                            </div>
+                            @php
+                                $sum = 0.00;
+                                if (isset($products)){
+                                    foreach ($products as $product){
+                                        $sum += (double)$product->price * (integer)$product['pivot']['count'];
+                                    }
+                                }
+                            @endphp
+                            <h6 class="text-right text-black text-uppercase">{{__('Общая сумма: ')}}
+                                @if(isset($user->discount))
+                                    <span id="total-price-checkout">
+                                        {{round($sum - ($sum * (int)$user->discount->percent / 100),2)}}
+                                    </span>грн
+                                    <span class="margin-left-10 small text-line-through" id="total-not-discount">
+                                        {{$sum}}грн <i class="fa fa-question" aria-hidden="true" title="{{$user->discount->description}}"></i>
+                                    </span>
+                                @else
+                                    <span id="total-price-checkout">
+                                        {{$sum}}
+                                    </span>грн
+                                @endif
+                            </h6>
                         </div>
                     </section>
                 </div>
@@ -285,7 +281,7 @@
                              <ul class="row">
                                  <li class="col-sm-12">
                                      <label>{{ __('Имя') }}
-                                         <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ Auth::user()->name }}" required autofocus>
+                                         <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ $user->name }}" required autofocus>
                                      </label>
                                      @if ($errors->has('name'))
                                          <span class="invalid-feedback">
@@ -295,7 +291,7 @@
                                  </li>
                                  <li class="col-sm-12">
                                      <label>{{__('Фамилия')}}
-                                         <input type="text" class="form-control {{ $errors->has('sername') ? ' is-invalid' : '' }}" name="sername" value="{{ Auth::user()->sername }}" required>
+                                         <input type="text" class="form-control {{ $errors->has('sername') ? ' is-invalid' : '' }}" name="sername" value="{{ $user->sername }}" required>
                                      </label>
                                      @if ($errors->has('sername'))
                                          <span class="invalid-feedback">
@@ -305,7 +301,7 @@
                                  </li>
                                  <li class="col-sm-12">
                                      <label>{{__('Отчество')}}
-                                         <input type="text" class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" value="{{ Auth::user()->last_name }}" required>
+                                         <input type="text" class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" value="{{ $user->last_name }}" required>
                                      </label>
                                      @if ($errors->has('last_name'))
                                          <span class="invalid-feedback">
@@ -315,7 +311,7 @@
                                  </li>
                                  <li class="col-sm-12">
                                      <label>{{__('Адрес електронной почты')}}
-                                         <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ Auth::user()->email  }}" required>
+                                         <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ $user->email  }}" required>
                                      </label>
                                      @if ($errors->has('email'))
                                          <span class="invalid-feedback">
@@ -325,7 +321,7 @@
                                  </li>
                                  <li class="col-sm-12">
                                      <label>{{__('Телефон')}}
-                                         <input type="tel" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" name="phone" value="{{ isset($delivery_inf) ? $delivery_inf->phone : '' }}" required>
+                                         <input type="tel" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" name="phone" value="{{ isset($user->deliveryInfo) ? $user->deliveryInfo->phone : '' }}" required>
                                      </label>
                                      @if ($errors->has('phone'))
                                          <span class="invalid-feedback">
@@ -335,7 +331,7 @@
                                  </li>
                                  <li class="col-sm-12">
                                      <label class="relative country">{{__('Страна')}}
-                                         <input id="country" oninput="getCountry($(this))" type="text" class="form-control{{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" value="{{ isset($delivery_inf) ? $delivery_inf->delivery_country : '' }}" required autocomplete="off">
+                                         <input id="country" oninput="getCountry($(this))" type="text" class="form-control{{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" value="{{ isset($user->deliveryInfo) ? $user->deliveryInfo->delivery_country : '' }}" required autocomplete="off">
                                          <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
                                      </label>
                                      @if ($errors->has('country'))
@@ -346,7 +342,7 @@
                                  </li>
                                  <li class="col-sm-12">
                                      <label class="relative city">{{__('Город')}}
-                                         <input id="city" oninput="getCity($(this),'#country')" type="text" class="form-control{{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" value="{{ isset($delivery_inf) ? $delivery_inf->delivery_city : '' }}" required autocomplete="off">
+                                         <input id="city" oninput="getCity($(this),'#country')" type="text" class="form-control{{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" value="{{ isset($user->deliveryInfo) ? $user->deliveryInfo->delivery_city : '' }}" required autocomplete="off">
                                          <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
                                      </label>
                                      @if ($errors->has('city'))
@@ -366,14 +362,14 @@
                                  <li class="col-sm-12">
                                      <label>{{__('Доставка *')}}
                                          <select id="delivery-service" name="delivery_service" class="form-control" required>
-                                             <option value="novaposhta" @if(isset($delivery_inf)) @if($delivery_inf->delivery_service === 'novaposhta') selected @endif @else selected @endif>{{__('Новая почта')}}</option>
-                                             <option value="samovivoz" @isset($delivery_inf) @if($delivery_inf->delivery_service === 'samovivoz') selected @endif @endisset>{{__('Самовывоз')}}</option>
+                                             <option value="novaposhta" @if(isset($user->deliveryInfo)) @if($user->deliveryInfo->delivery_service === 'novaposhta') selected @endif @else selected @endif>{{__('Новая почта')}}</option>
+                                             <option value="samovivoz" @isset($user->deliveryInfo) @if($user->deliveryInfo->delivery_service === 'samovivoz') selected @endif @endisset>{{__('Самовывоз')}}</option>
                                          </select>
                                      </label>
                                  </li>
                                  <li class="col-sm-12 delivery-dep" style="display: none">
                                      <label class="relative delivery-department">{{__('Отделение  *')}}
-                                         <input value="@isset($delivery_inf) {{$delivery_inf->delivery_department}} @endisset" id="delivery_department" type="text" class="form-control{{ $errors->has('delivery_department') ? ' is-invalid' : '' }}" name="delivery_department" autocomplete="off">
+                                         <input value="@isset($user->deliveryInfo) {{$user->deliveryInfo->delivery_department}} @endisset" id="delivery_department" type="text" class="form-control{{ $errors->has('delivery_department') ? ' is-invalid' : '' }}" name="delivery_department" autocomplete="off">
                                          <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
                                      </label>
                                      @if ($errors->has('delivery_department'))
@@ -491,7 +487,7 @@
             });
 
             $('#pay_method').change(function () {
-                const balance = {{isset($user_balance)?$user_balance->balance:0}};
+                const balance = {{isset($user->balance)?$user->balance->balance:0}};
                 const total = $('#total-price-checkout').text();
                 if ($(this).val() === 'online'){
                     if (parseFloat(total) > balance){

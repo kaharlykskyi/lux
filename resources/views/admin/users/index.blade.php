@@ -21,14 +21,6 @@
                         <i class="zmdi zmdi-account-calendar"></i>{{__('Информация о пользователях')}}</h3>
                     <div class="filters m-b-45">
                         <div class="rs-select2--dark rs-select2--sm rs-select2--border">
-                            <select class="js-select2 au-select-dark" name="time">
-                                <option selected="selected">All Time</option>
-                                <option value="">By Month</option>
-                                <option value="">By Day</option>
-                            </select>
-                            <div class="dropDownSelect2"></div>
-                        </div>
-                        <div class="rs-select2--dark rs-select2--sm rs-select2--border">
                             <form class="form-header" action="{{route('admin.users')}}" method="POST">
                                 @csrf
                                 <input class="au-input au-input--xl" type="text" name="search" placeholder="{{__('Поиск пользователей за ником')}}" />
@@ -54,6 +46,7 @@
                                 <td>{{__('Имя')}}</td>
                                 <td>{{__('Роль')}}</td>
                                 <td>{{__('Доступ')}}</td>
+                                <td>{{__('Скидка')}}</td>
                             </tr>
                             </thead>
                             <tbody>
@@ -81,7 +74,7 @@
                                             </td>
                                             <td>
                                                 <div class="rs-select2--trans rs-select2--sm">
-                                                    <select data-user="{{$user->id}}" class="js-select2" name="permission" id="permission">
+                                                    <select onchange="setPermission('{{$user->id}}',this)" class="js-select2">
                                                         <option value="admin" @if($user->permission === 'admin') selected @endif>{{__('админ')}}</option>
                                                         <option value="manager" @if($user->permission === 'manager') selected @endif>{{__('модератор')}}</option>
                                                         <option value="user" @if($user->permission === 'user') selected @endif>{{__('пользователь')}}</option>
@@ -89,20 +82,19 @@
                                                     </select>
                                                     <div class="dropDownSelect2"></div>
                                                 </div>
-                                                <script>
-                                                    $(document).ready(function () {
-
-                                                        $('#permission').change(function () {
-                                                            $.post('{{route('permission')}}',{
-                                                                'permission' : $(this).val(),
-                                                                'id': $(this).attr('data-user'),
-                                                                '_token': '{{ csrf_token() }}'
-                                                            },function (data) {
-                                                                alert(data.response);
-                                                            });
-                                                        });
-                                                    });
-                                                </script>
+                                            </td>
+                                            <td>
+                                                @isset($discount)
+                                                    <div class="rs-select2--trans rs-select2--sm">
+                                                         <select onchange="setDiscount('{{$user->id}}',this)" class="js-select2">
+                                                             <option value="null">{{__('скидки')}}</option>
+                                                             @foreach($discount as $item)
+                                                                 <option value="{{$item->id}}" @if($user->discount_id === $item->id) selected @endif>{{$item->percent . __('%')}}</option>
+                                                             @endforeach
+                                                         </select>
+                                                        <div class="dropDownSelect2"></div>
+                                                    </div>
+                                                @endisset
                                             </td>
                                         </tr>
                                     @empty
@@ -132,5 +124,25 @@
 
         @component('admin.component.footer')@endcomponent
     </div>
+
+    <script>
+        function setPermission(id,obj) {
+            $.post('{{route('permission')}}/' + id,{
+                'permission' : $(obj).val(),
+                '_token': '{{ csrf_token() }}'
+            },function (data) {
+                alert(data.response);
+            });
+        }
+
+        function setDiscount(id,obj) {
+            $.post('{{route('discount_user')}}/' + id,{
+                'discount_id' : $(obj).val(),
+                '_token': '{{ csrf_token() }}'
+            },function (data) {
+                alert(data.response);
+            });
+        }
+    </script>
 
 @endsection

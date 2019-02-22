@@ -17,7 +17,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'sername', 'last_name', 'phone', 'country', 'city', 'role', 'logo','permission'
+        'name', 'email', 'password', 'sername', 'last_name', 'phone', 'country', 'city', 'role', 'logo','permission','discount_id'
     ];
 
     /**
@@ -48,5 +48,13 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function historyBalance(){
         return $this->hasMany('App\UserBalanceHistory');
+    }
+
+    public function discount(){
+        return $this->belongsTo('App\Discount');
+    }
+
+    public function cart(){
+        return $this->hasMany('App\Cart');
     }
 }

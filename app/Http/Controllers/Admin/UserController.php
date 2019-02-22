@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Discount;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,15 +20,35 @@ class UserController extends Controller
         }
 
         $users = User::paginate(30);
-        return view('admin.users.index',compact('users','roles'));
+        $discount = Discount::get();
+        return view('admin.users.index',compact('users','roles','discount'));
     }
 
-    public function permission(Request $request){
+    public function permission(Request $request,User $user){
 
-        User::where('id',(int)$request->post('id'))->update(['permission' => $request->post('permission')]);
+        $user->update(['permission',$request->permission]);
+        if ($user->save()){
+            return response()->json([
+                'response' => 'Данные обновлены'
+            ]);
+        }else{
+            return response()->json([
+                'response' => 'Error'
+            ]);
+        }
+    }
 
-        return response()->json([
-            'response' => 'Данные обновлены'
-        ]);
+    public function setDiscount(Request $request,User $user){
+
+        $user->update(['discount_id' => ($request->discount_id !== 'null')?$request->discount_id:null]);
+        if ($user->save()){
+            return response()->json([
+                'response' => 'Скидка назначена'
+            ]);
+        }else{
+            return response()->json([
+                'response' => 'Error'
+            ]);
+        }
     }
 }

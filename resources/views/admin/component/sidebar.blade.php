@@ -45,11 +45,11 @@
                         </li>
                     </ul>
                 </li>
-                {{--<li>
-                    <a href="#">
-                        <i class="fa fa-cogs" aria-hidden="true"></i>{{__('Настройки магазина')}}
+                <li>
+                    <a href="{{route('admin.discount.index')}}">
+                        <i class="fa fa-sort-numeric-desc" aria-hidden="true"></i>{{__('Скидки')}}
                     </a>
-                </li>--}}
+                </li>
                 <li class="has-sub">
                     <a class="js-arrow" href="#">
                         <i class="fas fa-copy"></i>{{__('Управление контентом')}}</a>

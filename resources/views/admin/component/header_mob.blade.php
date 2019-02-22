@@ -44,6 +44,11 @@
                         <i class="zmdi zmdi-account-o"></i>{{__('Пользователи')}}
                     </a>
                 </li>
+                <li>
+                    <a href="{{route('admin.discount.index')}}">
+                        <i class="fa fa-sort-numeric-desc" aria-hidden="true"></i>{{__('Скидки')}}
+                    </a>
+                </li>
                 <li class="has-sub">
                     <a class="js-arrow" href="#">
                         <i class="zmdi zmdi-shopping-cart"></i>{{__('Заказы')}}</a>

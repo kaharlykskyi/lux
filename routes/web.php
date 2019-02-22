@@ -87,13 +87,15 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     });
     Route::get('/full-order-info','OrderController@getOrderData')->name('admin.product.full_order_info');
     Route::get('/info-product-stock','OrderController@getInfoProductStock')->name('admin.product.info_product_stock');
-    Route::post('/permission','UserController@permission')->name('permission');
+    Route::post('/permission/{user?}','UserController@permission')->name('permission');
+    Route::post('/discount-user/{user?}','UserController@setDiscount')->name('discount_user');
     Route::match(['get', 'post'], '/fast-buy/{status}','FastBuyController@index')->name('admin.fast_buy');
 
     Route::resources([
         'category' => 'CategoryController',
         'page' => 'PageController',
-        'product' => 'ProductController'
+        'product' => 'ProductController',
+        'discount' => 'DiscountController'
     ],['as' => 'admin']);
     Route::get('/start-import','ProductController@startImport')->name('admin.start_import');
     Route::get('/product-filter','ProductController@setFilterAdminProduct')->name('admin.product.filter');
