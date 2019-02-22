@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Cart;
+use Illuminate\{Http\Request, Support\Facades\DB};
+use App\Services\Cart as CartService;
 
 class CartController extends Controller
 {
+    protected $service;
+
+    public function __construct()
+    {
+        $this->service = new CartService();
+    }
+
     public function index(Request $request){
         $cart = $this->getCart($request);
         $products = [];
@@ -28,15 +36,14 @@ class CartController extends Controller
             ['product_id',$data['product_id']]
         ])->update(['count' => (int)$data['count']]);
 
-        $sum = 0.00;
-        $product_cost = 0.00;
-        $products = $this->getCartProducts($data['cart_id']);
 
-        foreach ($products as $product){
-            if ($product->id === (int)$data['product_id']){
-                $product_cost = (float)$product->price * (int)$product->count;
-            }
-            $sum += (float)$product->price * (int)$product->count;
+        $cart = Cart::with('cartProduct')->find((int)$data['cart_id']);
+
+        $sum = $this->service->getSumOrder($cart->cartProduct);
+        $product_cost = $this->service->getCostProduct($cart->cartProduct,$data['product_id']);
+
+        if (isset($cart->user_id)){
+            $sum = $this->service->getDiscountSum($cart->user_id,$sum);
         }
 
         return response()->json([
@@ -56,10 +63,11 @@ class CartController extends Controller
             $id_product = $data['product_id'];
         }
 
-        $sum = 0.00;
-        $products = $this->getCartProducts($data['cart_id']);
-        foreach ($products as $product){
-            $sum += (float)$product->price * $product->count;
+        $cart = Cart::with('cartProduct')->find((int)$data['cart_id']);
+        $sum = $this->service->getSumOrder($cart->cartProduct);
+
+        if (isset($cart->user_id)){
+            $sum = $this->service->getDiscountSum($cart->user_id,$sum);
         }
 
         return response()->json([
