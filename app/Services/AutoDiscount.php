@@ -4,8 +4,9 @@
 namespace App\Services;
 
 
-use App\{Cart, Discount, User};
+use App\{Cart, Discount, Mail\DiscountNotification, User};
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use LisDev\Delivery\NovaPoshtaApi2;
 
 class AutoDiscount
@@ -58,6 +59,7 @@ class AutoDiscount
             foreach ($discount as $value){
                 if ($value->count_buy <= $count_complete_order && $value->id !== $user->discount_id){
                     User::where('id',$user->id)->update(['discount_id' => $value->id]);
+                    Mail::to($user->email)->send(new DiscountNotification($value,$user));
                 }
             }
         }
