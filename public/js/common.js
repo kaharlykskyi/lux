@@ -265,3 +265,38 @@ function getDateFilter(link,mass,obj,dataKey) {
         $(obj).removeAttr('disabled').html(str_data).selectric('refresh');
     });
 }
+
+function getSub(type,id = null,obj,link) {
+
+    if (id === null) {
+        $.get(`${link}?type=${type}`,function (data) {
+            let data_str = '';
+            data.subCategory.forEach(function (item) {
+                data_str += `<li class="list-group-item child-list-group-item">
+                                                            <a class="root-link" onclick="getSub('${type}','${item.assemblygroupdescription}',this,'${link}')" href="#.">${item.assemblygroupdescription}</a>
+                                                                <ul class="list-group" style="display: none">
+                                                                    <li style="text-align: center;">
+                                                                        <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                                                                        <span class="sr-only">Loading...</span>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>`;
+            });
+            $($(obj).siblings("ul")).html(data_str);
+        });
+    } else {
+        if (typeof id === 'string'){
+            $.get(`${link}?type=${type}&category=${id}&level=assemblygroupdescription`,function (data) {
+                let data_str = '';
+                data.subCategory.forEach(function (item,i,array) {
+                    data_str += `<li class="list-group-item child-list-group-item">
+                                                                <a href="${document.location.origin}/catalog/${item.id}?type=${type}">${(array[i].normalizeddescription === array[(array.length !== i + 1 ?i + 1:i)].normalizeddescription)?item.usagedescription:item.normalizeddescription}</a>
+                                                            </li>`;
+                });
+                $($(obj).siblings("ul")).html(data_str);
+            });
+        } else {
+
+        }
+    }
+}

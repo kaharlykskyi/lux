@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Services\Home;
 use App\TecDoc\Tecdoc;
 use App\UserCar;
 use Illuminate\Http\Request;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\DB;
 class HomeController extends Controller
 {
 
+    protected $service;
+
     protected $tecdoc;
 
     protected $data = [];
@@ -20,11 +23,12 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->tecdoc = new Tecdoc('mysql_tecdoc');
+        $this->service = new Home();
     }
 
     public function index(Request $request)
     {
-        $search_cars = $this->getSearchCars($request);
+        $search_cars = $this->service->getSearchCars($request);
 
         $this->tecdoc->setType('passenger');
         $brands = DB::table('show_brand')
@@ -41,16 +45,7 @@ class HomeController extends Controller
             }
         }
 
-        $popular_products = DB::select("SELECT DISTINCT p.articles,p.name FROM `cart_products` AS cp 
-                                              JOIN `products` AS p ON p.id=cp.product_id LIMIT 32");
-
-        foreach ($popular_products as $product){
-            $buff = DB::connection('mysql_tecdoc')->select("SELECT supplierId FROM articles 
-                                                                      WHERE FoundString='".preg_replace('/[^a-zA-Zа-яА-Я0-9]/ui', '',$product->articles )."'");
-            if(isset($buff[0])){
-                $product->supplierId = $buff[0]->supplierId;
-            }
-        }
+        $popular_products = $this->service->getPopularProduct();
 
         return view('home.index',compact('search_cars','brands','models','popular_products'));
     }
@@ -105,25 +100,8 @@ class HomeController extends Controller
     }
 
     public function subcategory(Request $request){
-        $this->tecdoc = new Tecdoc('mysql_tecdoc');
-        $subCategory = null;
-        if (isset($request->type) && isset($request->category)){
-            $this->tecdoc->setType($request->type);
-            if (isset($request->level)){
-                $subCategory = $this->tecdoc->getCategory([
-                    ['id','usagedescription','normalizeddescription'],
-                    [
-                        [$request->level,'=',"'$request->category'"]
-                    ]
-                ]);
-            }
-        } else{
-            $this->tecdoc->setType($request->type);
-            $subCategory = $this->tecdoc->getCategory();
-        }
-
         return response()->json([
-            'subCategory' => $subCategory
+            'subCategory' => $this->service->getSubCategory($request)
         ]);
     }
 
@@ -283,47 +261,4 @@ class HomeController extends Controller
         }
     }
 
-    public function getSearchCars($request){
-        $search_cars = null;
-        if (Auth::check()){
-            if ($request->hasCookie('search_cars')){
-                $cookies = json_decode($request->cookie('search_cars'),true);
-                foreach ($cookies as $k => $cookie){
-                    if (!DB::table('user_cars')->where([['modification_auto',(int)$cookie['modification_auto']],['user_id',Auth::id()]])->exists()){
-                        $userCar = new UserCar();
-                        $userCar->fill([
-                            'user_id' => Auth::id(),
-                            'vin_code' => ' ',
-                            'type_auto' => $cookie['type_auto'],
-                            'year_auto' => (int)$cookie['year_auto'],
-                            'brand_auto' => (int)$cookie['brand_auto'],
-                            'model_auto' => (int)$cookie['model_auto'],
-                            'modification_auto' => (int)$cookie['modification_auto'],
-                            'body_auto' => (int)$cookie['body_auto'],
-                            'type_motor' => (int)$cookie['engine_auto']
-                        ]);
-                        $userCar->save();
-                    }
-                }
-                Cookie::queue(Cookie::forget('search_cars'));
-            }
-            $userCars = UserCar::where('user_id',Auth::id())->get();
-            foreach ($userCars as $k => $car){
-                $this->tecdoc->setType($car->type_auto);
-                $search_cars[$k]['data'] = $this->tecdoc->getModificationById($car->modification_auto);
-                $search_cars[$k]['cookie'] = $car;
-            }
-        } else{
-            if ($request->hasCookie('search_cars')){
-                $cookies = json_decode($request->cookie('search_cars'),true);
-                foreach ($cookies as $k => $cookie){
-                    $this->tecdoc->setType($cookie['type_auto']);
-                    $search_cars[$k]['data'] = $this->tecdoc->getModificationById($cookie['modification_auto']);
-                    $search_cars[$k]['cookie'] = $cookie;
-                }
-            }
-        }
-
-        return $search_cars;
-    }
 }

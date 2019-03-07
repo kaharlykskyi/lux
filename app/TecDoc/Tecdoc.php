@@ -1,6 +1,7 @@
 <?php
 namespace App\TecDoc;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 class Tecdoc
@@ -622,6 +623,7 @@ class Tecdoc
      * Get category
      * @param array|null $param
      * @return array
+     * @throws \Exception
      */
     public function getCategory(array $param = null){
         $where = '';
@@ -652,12 +654,17 @@ class Tecdoc
 
         switch ($this->type){
             case 'passenger':
-                return DB::connection($this->connection)
-                    ->select("SELECT DISTINCT {$select} FROM `passanger_car_prd` {$where}");
+                return cache()->remember('subcategory' . isset($param[1][0][2])?str_replace(' ','_',(new Controller())->transliterateRU($param[1][0][2],true)):'', 60*24*7, function () use ($where, $select) {
+                    return DB::connection($this->connection)
+                        ->select("SELECT DISTINCT {$select} FROM `passanger_car_prd` AS pcr {$where}");
+                });
+
                 break;
             case 'commercial':
-                return DB::connection($this->connection)
-                    ->select("SELECT DISTINCT {$select} FROM `commercial_vehicle_prd` {$where}");
+                return cache()->remember('subcategory' . isset($param[1][0][2])?str_replace(' ','_',(new Controller())->transliterateRU($param[1][0][2],true)):'', 60*24*7, function () use ($where, $select) {
+                    return DB::connection($this->connection)
+                        ->select("SELECT DISTINCT {$select} FROM `commercial_vehicle_prd` {$where}");
+                });
                 break;
         }
     }
