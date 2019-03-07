@@ -145,24 +145,24 @@ class CategoryController extends Controller
             $file = $request->file('logo');
             $file_name = $request->category . $file->getClientOriginalName();
             $file->move(public_path() . '/images/catalog/',$file_name);
+        }
 
-            $data = [
-                'tecdoc_id' => (int)$request->category,
-                'name' => $request->name,
-                'type' => $request->type,
-                'logo' => $file_name
-            ];
+        $data = [
+            'tecdoc_id' => (int)$request->category,
+            'name' => $request->name,
+            'type' => $request->type,
+            'logo' => isset($file_name)?$file_name:null
+        ];
 
-            if (isset($category)){
-                Category::where([
-                    ['tecdoc_id',$request->category],
-                    ['type',($request->type === 'passanger')?'passanger':'commercial']
-                ])->update($data);
-            } else {
-                $new_category = new Category();
-                $new_category->fill($data);
-                $new_category->save();
-            }
+        if (isset($category)){
+            Category::where([
+                ['tecdoc_id',$request->category],
+                ['type',($request->type === 'passanger')?'passanger':'commercial']
+            ])->update($data);
+        } else {
+            $new_category = new Category();
+            $new_category->fill($data);
+            $new_category->save();
         }
 
         return back();

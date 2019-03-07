@@ -41,17 +41,15 @@ class CatalogController extends Controller
                 $catalog_products = $this->tecdoc->getProductForArticle(trim(strip_tags($request->search_str)),$this->pre_products);
                 break;
             case isset($request->category):
+                $this->tecdoc->setType((isset($request->type_auto)?$request->type_auto:'passenger'));
                 switch ($request){
                     case isset($request->modification_auto):
-                        $this->tecdoc->setType((isset($request->type_auto)?$request->type_auto:'passenger'));
                         $catalog_products = $this->tecdoc->getSectionParts($request->modification_auto,$request->category,$this->pre_products);
                         break;
                     case isset($request->model):
-                        $this->tecdoc->setType((isset($request->type_auto)?$request->type_auto:'passenger'));
                         $catalog_products = $this->tecdoc->getProductByModelCategory($request->model,$this->pre_products,$request->category);
                         break;
                     default:
-                        $this->tecdoc->setType($request->type);
                         $catalog_products = $this->tecdoc->getCategoryProduct($request->category,$this->pre_products);
                 }
                 break;

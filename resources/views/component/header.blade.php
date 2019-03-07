@@ -128,6 +128,19 @@
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-open-btn" aria-expanded="false"> <span><i class="fa fa-navicon"></i></span> </button>
             </div>
+
+            <div class="collapse navbar-collapse" id="nav-open-btn">
+                <ul class="nav">
+                    @php
+                        $to_category = \App\Category::where('tecdoc_id',100019)->first();
+                    @endphp
+                    @isset($to_category)
+                        <li> <a href="{{route('rubric',$to_category->tecdoc_id)}}">{{$to_category->name}} </a></li>
+                    @endisset
+                </ul>
+            </div>
+
+
             <!-- NAV RIGHT -->
             <div class="nav-right"> <span class="call-mun"><i class="fa fa-phone"></i> <strong>{{__('Гарячая линия:')}}</strong> {{config('app.company_phone')}}</span> </div>
         </div>

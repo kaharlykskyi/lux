@@ -63,6 +63,8 @@ Route::prefix('checkout')->group(function () {
 Route::get('/page/{alias}','PageController@index')->name('page');
 /*------FEEDBACK------*/
 Route::post('/feedback','FeedBackController@index')->name('feedback');
+/*-------RUBRICS---------*/
+Route::get('/rubric/{category}','RubricaController@index')->name('rubric');
 /*-----VIN DECODE-----*/
 Route::match(['get', 'post'],'/vin-decode','VinDecodeController@index')->name('vin_decode');
 Route::post('/vin-decode/catalog','VinDecodeController@catalog')->name('vin_decode.catalog');

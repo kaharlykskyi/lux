@@ -20,7 +20,7 @@
                                         <label for="text-input" class=" form-control-label">{{__('Название')}}</label>
                                     </div>
                                     <div class="col-12 col-md-9">
-                                        <input type="text" id="text-input" name="name" value="{{$tecdoc_category->description}}" class="form-control">
+                                        <input type="text" id="text-input" name="name" value="{{isset($category->name)?$category->name:$tecdoc_category->description}}" class="form-control">
                                     </div>
                                 </div>
 
