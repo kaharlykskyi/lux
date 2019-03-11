@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Product;
+use App\Services\Catalog;
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class CatalogController extends Controller
 {
+    protected $service;
+
     protected $tecdoc;
 
     protected $pre_products = 12;
@@ -17,28 +18,46 @@ class CatalogController extends Controller
 
     protected $attribute = [];
 
-    protected $in_stock = [];
-
-    protected $not_stock = [];
-
     public function __construct()
     {
         $this->tecdoc = new Tecdoc('mysql_tecdoc');
         $this->tecdoc->setType('passenger');
+        $this->service = new Catalog();
     }
 
     public function index(Request $request){
         $catalog_products = [];
-        $min_price = 0;
-        $max_price = 0;
+        $min_price = (object)[
+            'start_price' => 0,
+            'filter_price' => 0
+        ];
+        $max_price = (object)[
+            'start_price' => 0,
+            'filter_price' => 0
+        ];
 
         if(session('pre_products')){
             $this->pre_products = session('pre_products');
         }
 
+        if (isset($request->min)){
+            $min_price->filter_price = round($request->min,2);
+        }
+
+        if (isset($request->max)){
+            $max_price->filter_price = round($request->max,2);
+        }
+
         switch ($request){
             case isset($request->search_str):
-                $catalog_products = $this->tecdoc->getProductForArticle(trim(strip_tags($request->search_str)),$this->pre_products);
+                $min_price->start_price = $this->service->getMinPrice('search_str',['str' => $request->search_str]);
+                $max_price->start_price = $this->service->getMaxPrice('search_str',['str' => $request->search_str]);
+                $catalog_products = $this->tecdoc->getProductForArticle(trim(strip_tags($request->search_str)),$this->pre_products,[
+                    'price' => [
+                        'min' => ($min_price->filter_price > 0)?$min_price->filter_price:$min_price->start_price,
+                        'max' => ($max_price->filter_price > 0)?$max_price->filter_price:$max_price->start_price
+                    ]
+                ]);
                 break;
             case isset($request->category):
                 $this->tecdoc->setType((isset($request->type_auto)?$request->type_auto:'passenger'));

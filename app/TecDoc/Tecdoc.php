@@ -696,11 +696,18 @@ class Tecdoc
             ->paginate((int)$pre);
     }
 
-    public function getProductForArticle($str,$pre,$sort = 'ASC'){
+    public function getProductForArticle($str,$pre,array $filter,$sort = 'ASC'){
+
         return DB::connection($this->connection)
             ->table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
-            ->where(DB::raw('p.articles'),'LIKE',"%{$str}%")
-            ->orWhere(DB::raw('p.name'),'LIKE',"%{$str}%")
+            ->orWhere([
+                [DB::raw('p.articles'),'LIKE',"%{$str}%",'OR'],
+                [DB::raw('p.name'),'LIKE',"%{$str}%",'OR']
+            ])
+            ->where([
+                [DB::raw('p.price'),'>=',$filter['price']['min']],
+                [DB::raw('p.price'),'<=',$filter['price']['max']]
+            ])
             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('sp.matchcode'),DB::raw('p.brand'))
             ->select(DB::raw('sp.id AS supplierId, sp.matchcode, p.id, p.name, p.price, p.articles,p.count'))
             ->orderBy(DB::raw('p.price'),$sort)

@@ -107,9 +107,7 @@ class HomeController extends Controller
 
     public function getBrands(Request $request){
         if (isset($request->type_auto)){
-            $brands = DB::table('show_brand')
-                ->where(($request->type_auto === 'passenger')?'ispassengercar':'iscommercialvehicle','=','true')
-                ->select('brand_id AS id','description')->get();
+            $brands = $this->service->getAllBrands($request);
             return response()->json([
                 'response' => isset($brands[0])?$brands:[
                     'id' => 0,
@@ -128,31 +126,8 @@ class HomeController extends Controller
 
     public function getModel(Request $request){
         if (isset($request->type_auto)){
-            $this->tecdoc->setType($request->type_auto);
-            $buff = $this->tecdoc->getModels($request->brand_id);
-            if (isset($request->year_auto)){
-                $model = [];
-                foreach ($buff as $k => $item){
-                    $constructioninterval = explode(' - ',$item->constructioninterval);
-                    $start = ($constructioninterval[0] !== '') ? explode('.',$constructioninterval[0]): null;
-                    $end = ($constructioninterval[1] !== '') ? explode('.',$constructioninterval[1]): null;
-                    if (isset($start) && isset($end)){
-                        if ((int)$request->year_auto > (int)$start[1] && (int)$request->year_auto < (int)$end[1]){
-                            $model[] = $item;
-                        }
-                    } elseif (isset($start) && !isset($end)){
-                        if ((int)$request->year_auto > (int)$start[1]){
-                            $model[] = $item;
-                        }
-                    }
-                }
-            } else {
-                $model = $buff;
-            }
-
-
             return response()->json([
-                'response' => $model
+                'response' => $this->service->getModel($request)
             ]);
         } else {
             return response()->json([

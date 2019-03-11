@@ -4,8 +4,8 @@
             <i class="fa fa-times" aria-hidden="true"></i>
         </a>
     @endif
-    @if((int)$min_price > 0)
-    <h6>Price</h6>
+    @if($min_price->start_price > 0)
+    <h6>{{__('Цена')}}</h6>
     <!-- PRICE -->
     <div class="cost-price-content">
         <div id="price-range" class="price-range"></div>
@@ -75,10 +75,13 @@
         //  Price Filter ( noUiSlider Plugin)
         $("#price-range").noUiSlider({
             range: {
-                'min': [ {{(float)$min_price}} ],
-                'max': [ {{(float)$max_price}} ]
+                'min': [ {{$min_price->start_price}} ],
+                'max': [ {{$max_price->start_price}} ]
             },
-            start: [ {{session()->has('filter.min_price')?session('filter.min_price'):(float)$min_price}} , {{session()->has('filter.max_price')?session('filter.max_price'):(float)$max_price}}],
+            start: [
+                {{($min_price->filter_price > 0)?$min_price->filter_price:$min_price->start_price}} ,
+                {{($max_price->filter_price > 0)?$max_price->filter_price:$max_price->start_price}}
+            ],
             connect:true,
             serialization:{
                 lower: [
@@ -101,7 +104,40 @@
     });
 
     function setPrice() {
-        $.get(`{{route('filter')}}?min_price=${$('#price-min').text()}&max_price=${$('#price-max').text()}`,()=>{location.reload()});
+        const url = window.location.href;
+        let parser = document.createElement('a');
+        parser.href = url;
+
+        parser.protocol; // => "http:"
+        parser.pathname; // => "/pathname/"
+        parser.search;   // => "?search=test"
+        parser.host; // => "example.com:3000"
+
+        let search_str = parser.search.substring(1, parser.search.length).split('&');
+        let max = true;
+        let min = true;
+        search_str.forEach(function (item, i, search_str) {
+            let data = item.split('=');
+            if (data[0] === 'min') {
+                search_str[i] = `min=${$('#price-min').text().substring(1, $('#price-min').text().length)}`;
+                min = false;
+            }
+            if (data[0] === 'max') {
+                search_str[i] = `max=${$('#price-max').text().substring(1, $('#price-max').text().length)}`;
+                max = false;
+            }
+
+        });
+
+        if (max) {
+            search_str.push(`max=${$('#price-max').text().substring(1, $('#price-max').text().length)}`);
+        }
+
+        if (min) {
+            search_str.push(`min=${$('#price-min').text().substring(1, $('#price-min').text().length)}`);
+        }
+
+        location.href = `${parser.protocol}//${parser.host}${parser.pathname}?${search_str.join('&')}`;
     }
 
     function clearFilter(obj) {
