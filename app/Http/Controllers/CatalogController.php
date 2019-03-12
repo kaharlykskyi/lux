@@ -27,6 +27,7 @@ class CatalogController extends Controller
 
     public function index(Request $request){
         $catalog_products = [];
+        $supplier = [];
         $filter_supplier = isset($request->supplier)?explode(',',$request->supplier):[];
         $min_price = (object)[
             'start_price' => 0,
@@ -77,7 +78,6 @@ class CatalogController extends Controller
             case isset($request->category):
                 $type = (isset($request->type_auto)?$request->type_auto:'passenger');
                 $this->tecdoc->setType($type);
-
                 switch ($request){
                     case isset($request->modification_auto):
                         $catalog_products = $this->tecdoc->getSectionParts($request->modification_auto,$request->category,$this->pre_products);
