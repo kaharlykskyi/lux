@@ -27,7 +27,6 @@ class CatalogController extends Controller
 
     public function index(Request $request){
         $catalog_products = [];
-        $supplier = [];
         $filter_supplier = isset($request->supplier)?explode(',',$request->supplier):[];
         $min_price = (object)[
             'start_price' => 0,
@@ -52,18 +51,8 @@ class CatalogController extends Controller
         switch ($request){
             case isset($request->search_str):
                 $this->brands = $this->service->getBrands('search_str',[
-                    'str' => $request->search_str,
-                    'price' => [
-                        'min' => ($min_price->filter_price > 0)?$min_price->filter_price:$min_price->start_price,
-                        'max' => ($max_price->filter_price > 0)?$max_price->filter_price:$max_price->start_price
-                    ]
+                    'str' => $request->search_str
                 ]);
-
-                if (!isset($request->supplier)){
-                    foreach ($this->brands as $brand){
-                        $supplier[] = $brand->supplierId;
-                    }
-                }
 
                 $min_price->start_price = $this->service->getMinPrice('search_str',['str' => $request->search_str]);
                 $max_price->start_price = $this->service->getMaxPrice('search_str',['str' => $request->search_str]);
@@ -72,7 +61,7 @@ class CatalogController extends Controller
                         'min' => ($min_price->filter_price > 0)?$min_price->filter_price:$min_price->start_price,
                         'max' => ($max_price->filter_price > 0)?$max_price->filter_price:$max_price->start_price
                     ],
-                    'supplier' => isset($request->supplier)?$filter_supplier:$supplier
+                    'supplier' => isset($request->supplier)?$filter_supplier:null
                 ]);
                 break;
             case isset($request->category):
@@ -88,19 +77,8 @@ class CatalogController extends Controller
                     default:
                         $this->brands = $this->service->getBrands('category',[
                             'id' => $request->category,
-                            'type' => $type,
-                            'price' => [
-                                'min' => ($min_price->filter_price > 0)?$min_price->filter_price:$min_price->start_price,
-                                'max' => ($max_price->filter_price > 0)?$max_price->filter_price:$max_price->start_price
-                            ]
+                            'type' => $type
                         ]);
-
-                        if (!isset($request->supplier)){
-                            foreach ($this->brands as $brand){
-                                $supplier[] = $brand->supplierId;
-                            }
-                        }
-
                         $min_price->start_price = $this->service->getMinPrice('category',['id' => $request->category,'type' => $type]);
                         $max_price->start_price = $this->service->getMaxPrice('category',['id' => $request->category,'type' => $type]);
                         $catalog_products = $this->tecdoc->getCategoryProduct($request->category,$this->pre_products,[
@@ -108,7 +86,7 @@ class CatalogController extends Controller
                                 'min' => ($min_price->filter_price > 0)?$min_price->filter_price:$min_price->start_price,
                                 'max' => ($max_price->filter_price > 0)?$max_price->filter_price:$max_price->start_price
                             ],
-                            'supplier' => isset($request->supplier)?$filter_supplier:$supplier
+                            'supplier' => isset($request->supplier)?$filter_supplier:null
                         ]);
                 }
                 break;

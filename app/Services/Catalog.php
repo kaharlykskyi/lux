@@ -67,10 +67,6 @@ class Catalog
                         [DB::raw('p.articles'),'LIKE',"%{$param['str']}%",'OR'],
                         [DB::raw('p.name'),'LIKE',"%{$param['str']}%",'OR']
                     ])
-                    ->where([
-                        [DB::raw('p.price'),'>=',$param['price']['min']],
-                        [DB::raw('p.price'),'<=',$param['price']['max']]
-                    ])
                     ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('sp.matchcode'),DB::raw('p.brand'))
                     ->select(DB::raw('sp.id AS supplierId, sp.description'))
                     ->distinct()
@@ -82,10 +78,6 @@ class Catalog
                     ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
                     ->where(DB::raw('al.linkageid'),(int)$param['id'])
                     ->where(DB::raw('al.linkagetypeid'),$param['type'] === 'passenger'?2:16)
-                    ->where([
-                        [DB::raw('p.price'),'>=',$param['price']['min']],
-                        [DB::raw('p.price'),'<=',$param['price']['max']]
-                    ])
                     ->select(DB::raw('s.id AS supplierId, s.description'))
                     ->distinct()
                     ->get();
