@@ -22,7 +22,8 @@
                             'brands' => $brands,
                             'min_price' => $min_price,
                             'max_price' => $max_price,
-                            'attributes' => $attribute
+                            'attributes' => $attribute,
+                            'filter_supplier' => $filter_supplier
                         ])@endcomponent
                     </div>
 

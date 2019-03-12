@@ -669,13 +669,22 @@ class Tecdoc
         }
     }
 
-    public function getCategoryProduct($id,$pre,$sort = 'ASC'){
+    public function getCategoryProduct($id,$pre,array $filter,$sort = 'ASC'){
+        foreach ($filter['supplier'] as $k => $item){
+            $filter['supplier'][$k] = (int)$item;
+        }
+
         return DB::connection($this->connection)
             ->table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links as al'))
             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers as s'),DB::raw('s.id'),DB::raw('al.supplierid'))
             ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
             ->where(DB::raw('al.linkageid'),(int)$id)
-            ->where(DB::raw(($this->type) === 'passenger'?2:16))
+            ->where(DB::raw('al.linkagetypeid'),($this->type) === 'passenger'?2:16)
+            ->where([
+                [DB::raw('p.price'),'>=',$filter['price']['min']],
+                [DB::raw('p.price'),'<=',$filter['price']['max']]
+            ])
+            ->whereIn(DB::raw('s.id'),$filter['supplier'])
             ->select(DB::raw('al.SupplierId AS supplierId, al.DataSupplierArticleNumber, s.matchcode, p.id, p.name, p.price'))
             ->orderBy(DB::raw('p.price'),$sort)
             ->distinct()
@@ -684,19 +693,22 @@ class Tecdoc
 
     public function getProductForArticleOE($article,$supplierId,$pre = 15,$sort = 'ASC'){
         return DB::connection($this->connection)
-            ->table(config('database.connections.mysql_tecdoc.database').'.articles AS a')
-            ->join(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp','a.supplierId','=','sp.id')
-            ->join(config('database.connections.mysql.database').'.products AS p','p.articles','=','a.DataSupplierArticleNumber')
-            ->where(function ($q) use ($article) {
-                $q->whereIn('a.DataSupplierArticleNumber',$article)->orWhereIn('a.FoundString',$article);
-            })->where('a.supplierId',(int)$supplierId)
-            ->select('a.supplierId','a.DataSupplierArticleNumber','a.NormalizedDescription','sp.matchcode','p.id','p.name','p.price')
-            ->orderBy('p.price',$sort)
+            ->table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'))
+            ->where(DB::raw('al.DataSupplierArticleNumber'),$article)
+            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('al.SupplierId'),DB::raw('sp.id'))
+            ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+            ->where(DB::raw('al.SupplierId'),(int)$supplierId)
+            ->select(DB::raw('sp.id AS supplierId, al.DataSupplierArticleNumber, sp.matchcode, p.id, p.name, p.price'))
+            ->orderBy(DB::raw('p.price'),$sort)
             ->distinct()
             ->paginate((int)$pre);
     }
 
     public function getProductForArticle($str,$pre,array $filter,$sort = 'ASC'){
+
+        foreach ($filter['supplier'] as $k => $item){
+            $filter['supplier'][$k] = (int)$item;
+        }
 
         return DB::connection($this->connection)
             ->table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
@@ -709,6 +721,7 @@ class Tecdoc
                 [DB::raw('p.price'),'<=',$filter['price']['max']]
             ])
             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('sp.matchcode'),DB::raw('p.brand'))
+            ->whereIn(DB::raw('sp.id'),$filter['supplier'])
             ->select(DB::raw('sp.id AS supplierId, sp.matchcode, p.id, p.name, p.price, p.articles,p.count'))
             ->orderBy(DB::raw('p.price'),$sort)
             ->groupBy(DB::raw('p.articles,p.count,p.name,p.id,sp.matchcode,sp.id'))

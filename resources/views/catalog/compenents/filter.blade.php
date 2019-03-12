@@ -4,7 +4,7 @@
             <i class="fa fa-times" aria-hidden="true"></i>
         </a>
     @endif
-    @if($min_price->start_price > 0)
+
     <h6>{{__('Цена')}}</h6>
     <!-- PRICE -->
     <div class="cost-price-content">
@@ -13,16 +13,15 @@
         <span id="price-max" class="price-max">80</span>
         <a href="#." onclick="setPrice()" class="btn-round" >{{__('Фильтровать')}}</a>
     </div>
-    @endif
+
     <!-- Featured Brands -->
     <h6>{{__('Производители')}}</h6>
     <div class="checkbox checkbox-primary" style="max-height: 155px;overflow: auto;">
         <ul>
             @isset($brands)
                 @foreach($brands as $brand)
-                    @php $filter_brand = session("filter.suppliers.{$brand->supplierId}"); @endphp
                     <li>
-                        <input @isset($filter_brand) checked @endisset onchange="setSupplier(this)" id="brand{{$brand->supplierId}}" value="{{$brand->supplierId}}" class="styled" type="checkbox" >
+                        <input @if(in_array($brand->supplierId,$filter_supplier)) checked @endif onchange="setSupplier(this)" id="brand{{$brand->supplierId}}" value="{{$brand->supplierId}}" class="styled" type="checkbox" >
                         <label for="brand{{$brand->supplierId}}">
                             {{$brand->description}}
                         </label>
@@ -108,11 +107,6 @@
         let parser = document.createElement('a');
         parser.href = url;
 
-        parser.protocol; // => "http:"
-        parser.pathname; // => "/pathname/"
-        parser.search;   // => "?search=test"
-        parser.host; // => "example.com:3000"
-
         let search_str = parser.search.substring(1, parser.search.length).split('&');
         let max = true;
         let min = true;
@@ -146,8 +140,41 @@
     }
 
     function setSupplier(obj) {
-        const data = $(obj);
-        $.get(`{{route('filter')}}?supplierid=${data[0].value}&active=${data[0].checked}`,()=>{location.reload()});
+        const url = window.location.href;
+        const data_checkbox = $(obj);
+        let parser = document.createElement('a');
+        parser.href = url;
+
+        let search_str = parser.search.substring(1, parser.search.length).split('&');
+        let use_supplier  = true;
+        search_str.forEach(function (item, i, search_str) {
+            let data = item.split('=');
+            if (data[0] === 'supplier') {
+                let supplier_id = data[1].split(',');
+                supplier_id.forEach(function (val,key,supplier_id) {
+                    if (data_checkbox[0].checked && $.inArray(data_checkbox[0].value,supplier_id) === -1){
+                        supplier_id.push(data_checkbox[0].value);
+                    }else {
+                        if(data_checkbox[0].value === val){
+                            supplier_id.splice(key,1);
+                        }
+                    }
+                });
+                search_str[i] = `supplier=${supplier_id.join(',')}`;
+                use_supplier = false;
+            }
+        });
+
+        if (use_supplier){
+            search_str.push(`supplier=${data_checkbox[0].value}`);
+        }
+
+        parser.protocol; // => "http:"
+        parser.pathname; // => "/pathname/"
+        parser.search;   // => "?search=test"
+        parser.host; // => "example.com:3000"
+
+        location.href = `${parser.protocol}//${parser.host}${parser.pathname}?${search_str.join('&')}`;
     }
 
     function setAttrFilter(obj) {
