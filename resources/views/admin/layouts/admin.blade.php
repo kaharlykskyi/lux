@@ -35,7 +35,7 @@
 
     <!-- Jquery JS-->
     <script src="{{asset('admin_area/vendor/jquery-3.2.1.min.js')}}"></script>
-    <script src="https://cdn.ckeditor.com/4.11.1/standard/ckeditor.js"></script>
+    <script src="//cdn.ckeditor.com/4.11.3/full/ckeditor.js"></script>
     @yield('style')
 </head>
 

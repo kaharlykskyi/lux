@@ -72,6 +72,9 @@
                         <li>
                             <a href="{{route('admin.page.index')}}">{{__('Страници')}}</a>
                         </li>
+                        <li>
+                            <a href="{{route('admin.banner.index')}}">{{__('Слайды баннера')}}</a>
+                        </li>
                     </ul>
                 </li>
             </ul>

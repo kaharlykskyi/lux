@@ -6,6 +6,12 @@
 
     <!-- Content -->
     <div id="content">
+        <!-- Banner -->
+        @component('home.component.banner',[
+            'slides' => $slides
+        ])
+        @endcomponent
+
         <!-- Filter -->
         @component('component.filter')
 

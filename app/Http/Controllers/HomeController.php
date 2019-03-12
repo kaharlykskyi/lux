@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Banner;
 use App\Category;
 use App\Services\Home;
 use App\TecDoc\Tecdoc;
@@ -47,7 +48,9 @@ class HomeController extends Controller
 
         $popular_products = $this->service->getPopularProduct();
 
-        return view('home.index',compact('search_cars','brands','models','popular_products'));
+        $slides = Banner::all();
+
+        return view('home.index',compact('search_cars','brands','models','popular_products','slides'));
     }
 
     public function allBrands(Request $request){

@@ -97,7 +97,8 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
         'category' => 'CategoryController',
         'page' => 'PageController',
         'product' => 'ProductController',
-        'discount' => 'DiscountController'
+        'discount' => 'DiscountController',
+        'banner' => 'BannerController'
     ],['as' => 'admin']);
     Route::get('/start-import','ProductController@startImport')->name('admin.start_import');
     Route::get('/product-filter','ProductController@setFilterAdminProduct')->name('admin.product.filter');
