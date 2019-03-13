@@ -101,7 +101,13 @@ class CatalogController extends Controller
                     $this->brands = $this->service->getBrands('pcode',['OENbr' =>$request->pcode,'manufacturer' => $manufacturer[0]->id]);
                     $min_price->start_price = $this->service->getMinPrice('pcode',['OENbr' =>$request->pcode,'manufacturer' => $manufacturer[0]->id]);
                     $max_price->start_price = $this->service->getMaxPrice('pcode',['OENbr' =>$request->pcode,'manufacturer' => $manufacturer[0]->id]);
-                    $catalog_products = $this->tecdoc->getProductForArticleOE($request->pcode,$manufacturer[0]->id,$this->pre_products);
+                    $catalog_products = $this->tecdoc->getProductForArticleOE($request->pcode,$manufacturer[0]->id,$this->pre_products,[
+                        'price' => [
+                            'min' => ($min_price->filter_price > 0)?$min_price->filter_price:$min_price->start_price,
+                            'max' => ($max_price->filter_price > 0)?$max_price->filter_price:$max_price->start_price
+                        ],
+                        'supplier' => isset($request->supplier)?$filter_supplier:null
+                    ]);
                 }
                 break;
             default:
