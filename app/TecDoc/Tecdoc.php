@@ -469,9 +469,14 @@ class Tecdoc
         ");
     }
 
-    public function getManufacturerForOed($oem_id,$manufacturer_id){
+    public function getManufacturerForOed($oem_id){
         return DB::connection($this->connection)
-            ->select("SELECT * FROM `article_oe` WHERE `manufacturerId`={$manufacturer_id} AND REPLACE(`OENbr`, ' ', '') LIKE '%{$oem_id}%'");
+            ->table(DB::raw(config('database.connections.mysql_tecdoc.database').'.manufacturers as m'))
+            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_cross  as ac'),DB::raw('ac.manufacturerId'),DB::raw('m.id'))
+            ->where(DB::raw('ac.OENbr'),$oem_id)
+            ->select(DB::raw('m.id, m.matchcode, m.description'))
+            ->distinct()
+            ->get();
     }
 
     /**
@@ -616,7 +621,7 @@ class Tecdoc
 
     public function getManufacturer($matchcode){
         return DB::connection($this->connection)
-            ->select("SELECT DISTINCT `id`,`matchcode` FROM `manufacturers` WHERE `matchcode`='{$matchcode}' OR `description`='{$matchcode}'");
+            ->select("SELECT DISTINCT `id`,`matchcode`,`description` FROM `manufacturers` WHERE `matchcode`='{$matchcode}' OR `description`='{$matchcode}'");
     }
 
     /**
@@ -692,14 +697,14 @@ class Tecdoc
             ->paginate((int)$pre);
     }
 
-    public function getProductForArticleOE($article,$supplierId,$pre = 15,$sort = 'ASC'){
+    public function getProductForArticleOE($OENbr,$manufacturer_id,$pre = 15,$sort = 'ASC'){
         return DB::connection($this->connection)
-            ->table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'))
-            ->where(DB::raw('al.DataSupplierArticleNumber'),$article)
-            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('al.SupplierId'),DB::raw('sp.id'))
-            ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
-            ->where(DB::raw('al.SupplierId'),(int)$supplierId)
-            ->select(DB::raw('sp.id AS supplierId, al.DataSupplierArticleNumber, sp.matchcode, p.id, p.name, p.price'))
+            ->table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_cross AS ac'))
+            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('ac.SupplierId'),DB::raw('sp.id'))
+            ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('ac.PartsDataSupplierArticleNumber'))
+            ->where(DB::raw('ac.OENbr'),$OENbr)
+            ->where(DB::raw('ac.manufacturerId'),(int)$manufacturer_id)
+            ->select(DB::raw('sp.id AS supplierId, ac.PartsDataSupplierArticleNumber as DataSupplierArticleNumber, sp.matchcode, p.id, p.name, p.price'))
             ->orderBy(DB::raw('p.price'),$sort)
             ->distinct()
             ->paginate((int)$pre);

@@ -91,20 +91,17 @@ class CatalogController extends Controller
                 }
                 break;
             case isset($request->pcode):
-                dd($request->pcode,$request->trademark);
-                $manufactorer = $this->tecdoc->getManufacturer(trim($request->trademark));
-                if (isset($manufactorer[0])){
-                    $article_oe = $this->tecdoc->getManufacturerForOed($request->pcode,$manufactorer[0]->id);
-                    if (isset($article_oe[0])){
-                        $datasupplierarticlenumber = [];
-                        $supplierid = [];
-                        foreach ($article_oe as $item){
-                            $datasupplierarticlenumber[] = $item->datasupplierarticlenumber;
-                            $supplierid = $item->supplierid;
-                        }
+                if (!isset($request->trademark)){
+                    $manufacturer = $this->tecdoc->getManufacturerForOed($request->pcode);
+                } else{
+                    $manufacturer = $this->tecdoc->getManufacturer(trim($request->trademark));
+                }
 
-                        $catalog_products = $this->tecdoc->getProductForArticleOE($datasupplierarticlenumber,$supplierid,$this->pre_products);
-                    }
+                if (isset($manufacturer[0])){
+                    $this->brands = $this->service->getBrands('pcode',['OENbr' =>$request->pcode,'manufacturer' => $manufacturer[0]->id]);
+                    $min_price->start_price = $this->service->getMinPrice('pcode',['OENbr' =>$request->pcode,'manufacturer' => $manufacturer[0]->id]);
+                    $max_price->start_price = $this->service->getMaxPrice('pcode',['OENbr' =>$request->pcode,'manufacturer' => $manufacturer[0]->id]);
+                    $catalog_products = $this->tecdoc->getProductForArticleOE($request->pcode,$manufacturer[0]->id,$this->pre_products);
                 }
                 break;
             default:

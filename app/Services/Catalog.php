@@ -33,6 +33,16 @@ class Catalog
                     ->get();
                 return round($min[0]->min,2);
                 break;
+            case 'pcode':
+                $min = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_cross AS ac'))
+                    ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('ac.SupplierId'),DB::raw('sp.id'))
+                    ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('ac.PartsDataSupplierArticleNumber'))
+                    ->where(DB::raw('ac.OENbr'),$param['OENbr'])
+                    ->where(DB::raw('ac.manufacturerId'),(int)$param['manufacturer'])
+                    ->select(DB::raw('MIN(p.price) AS min'))
+                    ->get();
+                return round($min[0]->min,2);
+                break;
         }
     }
 
@@ -55,6 +65,16 @@ class Catalog
                     ->select(DB::raw('MAX(p.price) AS max'))
                     ->get();
                 return round($max[0]->max,2);
+                break;
+            case 'pcode':
+                $min = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_cross AS ac'))
+                    ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('ac.SupplierId'),DB::raw('sp.id'))
+                    ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('ac.PartsDataSupplierArticleNumber'))
+                    ->where(DB::raw('ac.OENbr'),$param['OENbr'])
+                    ->where(DB::raw('ac.manufacturerId'),(int)$param['manufacturer'])
+                    ->select(DB::raw('MAX(p.price) AS min'))
+                    ->get();
+                return round($min[0]->min,2);
                 break;
         }
     }
@@ -79,6 +99,16 @@ class Catalog
                     ->where(DB::raw('al.linkageid'),(int)$param['id'])
                     ->where(DB::raw('al.linkagetypeid'),$param['type'] === 'passenger'?2:16)
                     ->select(DB::raw('s.id AS supplierId, s.description'))
+                    ->distinct()
+                    ->get();
+                break;
+            case 'pcode':
+                return DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_cross AS ac'))
+                    ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('ac.SupplierId'),DB::raw('sp.id'))
+                    ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('ac.PartsDataSupplierArticleNumber'))
+                    ->where(DB::raw('ac.OENbr'),$param['OENbr'])
+                    ->where(DB::raw('ac.manufacturerId'),(int)$param['manufacturer'])
+                    ->select(DB::raw('sp.id AS supplierId, sp.description'))
                     ->distinct()
                     ->get();
                 break;
