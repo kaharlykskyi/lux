@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\VinDecoder;
 use Illuminate\Http\Request;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -13,6 +14,13 @@ class VinDecodeController extends Controller
     protected $base_url = 'https://exist.ua';
 
     protected $vin_cat_url = 'https://exist.ua/cat/oe/';
+
+    protected $service;
+
+    public function __construct()
+    {
+        $this->service = new VinDecoder();
+    }
 
     public function index(Request $request){
         $vin = $request->post('vin');
@@ -64,50 +72,35 @@ class VinDecodeController extends Controller
     }
 
     public function catalog(Request $request){
+
+        if ($request->has('vin_catalog_type') && $request->ajax()){
+            $response = new \Illuminate\Http\Response();
+            $response->withCookie(cookie()->forever('vin_catalog',$request->vin_catalog_type));
+            return $response;
+        }
+
+        if ($request->hasCookie('vin_catalog')){
+            $type_catalog = $request->cookie('vin_catalog');
+        } else {
+            $type_catalog = 'quickGroup';
+        }
+
         $data = $request->except('_token');
         $vin = $data['vin_code'];
         $vin_title = $data['vin_title'];
-        $catalog_data = null;
-        $data['data'] = str_replace('quickGroup','listUnits',$data['data']);
 
-        $html = file_get_contents($this->vin_cat_url . $data['data']);
-        $crawler = new Crawler($html);
-
-        $catalog_html = $crawler->filter('div.guayaquil_floatunitlist_box');
-        $img_html = $catalog_html->filterXPath(".//div[@class='g-highlight']//img");
-        foreach ($img_html as $k => $node){
-            $catalog_data['img_small'][] = $node->getAttribute('src');
-        }
-        $img_full_html = $catalog_html->filterXPath(".//div[@class='guayaquil-unit-icons']/div");
-        foreach ($img_full_html as $k => $node){
-            $catalog_data['img_full'][] = $node->getAttribute('full');
-        }
-        $catalog_title = $catalog_html->filterXPath(".//div[@class='g-highlight']//td[@class='guayaquil_floatunitlist_title']//a");
-        foreach ($catalog_title as $node){
-            $catalog_data['catalog_title'][] = $node->textContent;
-        }
-        foreach ($catalog_title as $node){
-            $catalog_data['catalog_link'][] = $node->getAttribute('href');
+        if ($type_catalog === 'listUnits'){
+            $response_data = $this->service->getCatalogForImage($data);
+            $catalog_data = $response_data['catalog_data'];
+            $category = $response_data['category'];
+            return view('vin_decode.catalog_img', compact('catalog_data','vin','vin_title','category'));
+        } else {
+            $response_data = $this->service->getCatalogForGroup($data);
+            $category = $response_data['category'];
+            return view('vin_decode.catalog_group',compact('vin','vin_title','category'));
         }
 
-        $category = null;
-        $category_html = $crawler->filter('div.guayaquil_categoryfloatbox');
 
-        $category_block = $category_html->filter("div.guayaquil_categoryitem_parent > a:last-child");
-        try{
-            $category_block->first()->attr('href');
-        }catch (\Exception $e){
-            $category_block = $category_html->filter("div.guayaquil_categoryitem > a:last-child");
-        }
-
-        foreach ($category_block as $node){
-            $category['category_link'][] = $node->getAttribute('href');
-        }
-        foreach ($category_block as $node){
-            $category['category_title'][] = $node->textContent;
-        }
-
-        return view('vin_decode.catalog', compact('catalog_data','vin','vin_title','category'));
     }
 
     public function page(Request $request){
@@ -149,5 +142,11 @@ class VinDecodeController extends Controller
     public function pageData(){
         $data = session('page-data');
         return view('vin_decode.frame_detal',compact('data'));
+    }
+
+    public function ajaxData(Request $request){
+        $data = $request->except('_token');
+
+        return response($this->service->getAjaxData($data));
     }
 }

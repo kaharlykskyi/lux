@@ -300,3 +300,148 @@ function getSub(type,id = null,obj,link) {
         }
     }
 }
+
+$(document).ready(function () {
+    $(function(){
+        $('.qg-elements').click(function(){
+            var qgParent = $(this).parent();
+            if(qgParent.hasClass('qgExpandClosed')) {
+                qgParent.removeClass('qgExpandClosed').addClass('qgExpandOpen');
+            } else {
+                qgParent.removeClass('qgExpandOpen').addClass('qgExpandClosed');
+            }
+        });
+    });
+
+    $('#qgTree > .qgContainer > li:first-child').addClass('to-parts');
+
+    $('.qgContent').click(function(e){
+        e.preventDefault();
+
+        $('.oe-list').html(`<div id="load_block" class="text-center margin-top-50">
+                        <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+                        <span class="sr-only">Loading...</span>
+                    </div>`);
+
+        const link = $('#ajax_data_vin_link').val();
+        const token = $('#ajax_data_vin_token').val();
+        var dataLink = $(this).find('a');
+
+        if (dataLink.length === 0)
+            return false;
+
+        var postData = {
+            ajaxQuery: 'getOeDetails',
+            ssd: dataLink.data('ssd'),
+            vid: dataLink.data('vid'),
+            catalog: dataLink.data('catalog'),
+            gid: dataLink.data('gid'),
+            _token: token
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: link,
+            data: postData,
+            dataType: 'json',
+            success: function (data) {
+                if (data) {
+                    var list = $('.oe-list');
+                    $('body').addClass('oe-category-page');
+                    list.html('');
+                    var html = '<div><h2>Запчасти в группе</h2></div>';
+                    $.each(data.category,function(k,v){
+                        html += custom(v, dataLink,'');
+                    });
+                    list.append(html);
+                    $('.ajax').colorbox({
+                        width:"30%",
+                        title: function() {
+                            var title = $(this).attr('title');
+                            var url = $(this).data('url');
+                            console.log($(this));
+                            return '<a href="' + url + '" target="_blank">' + title + '</a>'
+                        }
+                    });
+                    $('.oem_additional_items_link a').click(function() {
+                        var oem_additional_items = $('.oem_additional_items');
+                        if (oem_additional_items.hasClass('oem_additional_items_visible')) {
+                            oem_additional_items.removeClass('oem_additional_items_visible');
+                        } else {
+                            oem_additional_items.addClass('oem_additional_items_visible');
+                        }
+                    });
+                }
+            }
+        });
+    });
+});
+
+
+//MAKE TPL FOR VINDECODER AJAX REQUEST
+function custom(obj, dataLink,trademark) {
+    var tpl = '<div class="oe-category">'
+        + '<div class="oe-category-title"><h3>' + obj.name[0] + '</h3></div>'
+        + '<div class="oe-item-union">';
+
+    $.each(obj.items, function(k,v){
+        var url = "?action=unitInfo"
+            + "&catalog=" + dataLink.data('catalog')
+            + "&unitid=" + v.attributes['@attributes']['unitid']
+            + "&vehicleid=" + dataLink.data('vid')
+            + "&vid=" + dataLink.data('vid')
+            + "&infoVIN=" + dataLink.data('infovin')
+            + "&categoryid=-1"
+            + "&ssd=" + v.attributes['@attributes']['ssd'];
+
+        tpl += '<div class="oe-item-block">'
+            + '<div class="oe-title"><h4><a onclick="getAllInfoVinDecode(\'' + url + '\');" href="#"><strong>' + v.attributes['@attributes'].code + ': </strong>' + v.attributes['@attributes'].name + '<img src="https://exist.ua/images/arrow.svg" alt="arrow" class="arrow-svg" /> <span class="attentionText">все детали узла</span></a></h4></div>'
+            + '<div class="oe-image-block">'
+            + '<img title="' + v.attributes['@attributes'].name + '" src="' + (v.attributes['@attributes'].imageurl).replace('%size%','175') + '">'
+            + '<div class="ajax cboxElement" data-url= "' + url + '" title="' + v.attributes['@attributes'].code + ': ' + v.attributes['@attributes'].name + '" href="' + (v.attributes['@attributes'].imageurl).replace('%size%','source') + '"></div>'
+            + '</div>'
+            + '<div class="oe-models">'
+            + '<table class="oe-table">'
+            + '<thead>'
+            + '<tr>'
+            + '<th>OEM</th>'
+            + '<th>Наименование детали</th>'
+            + '</tr>'
+            + '</thead>'
+            + '<tbody>';
+        $.each(v.Detail, function(k,v){
+            tpl += '<tr>'
+                + '<td><a target="_blank" href="/catalog?pcode=' + v.oem + '&trademark=' + trademark + '">' + v.oem + '</a></td>'
+                + '<td class="width-130"><a target="_blank" href="/catalog?pcode=' + v.oem + '&trademark=' + trademark + '">' + v.name + '</a></td>'
+                + '</tr>';
+        });
+        if (v.additional) {
+            tpl += '<tr class="oem_additional_items_link">'
+
+                + '<td colspan="2"><a href="javascript:void(0);">другие части узла</a></td>'
+                + '</tr>';
+            //tpl += '<tr class="oem_additional_items"><td colspan="2"><table>';
+            $.each(v.additional, function (k, v) {
+                tpl += '<tr class="oem_additional_items oem_additional_items_visible">'
+                    + '<td><a target="_blank" href="/catalog?pcode=' + v.oem + '&trademark=' + trademark + '">' + v.oem + '</a></td>'
+                    + '<td class="width-130"><a target="_blank" href="/catalog?pcode=' + v.oem + '&trademark=' + trademark + '">' + v.name + '</a></td>'
+                    + '</tr>';
+            });
+            //tpl += '</table></td></tr>';
+        }
+        tpl += '</tbody>'
+            + '</table>'
+            + '</div>'
+            + '</div>';
+    });
+    tpl += '</div>'
+        + '</div>';
+
+    return tpl;
+}
+
+function getAllInfoVinDecode(link) {
+    $('#data_link_vin_decode').val(link);
+    $('#form_vin_decode_page').submit();
+    return false;
+}

@@ -17,11 +17,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         if(!app()->runningInConsole() ){
-            $cart_session_id = Cookie::get('cart_session_id');
-            if (!isset($cart_session_id)){
+            if (!Cookie::has('cart_session_id')){
                 Cookie::forever('cart_session_id',session()->getId());
             }
-
+            if (!Cookie::has('vin_catalog')){
+                Cookie::queue('vin_catalog', 'quickGroup');
+            }
             view()->composer('*', function($view)
             {
                 $pages = Page::all();

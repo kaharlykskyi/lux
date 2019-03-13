@@ -696,6 +696,233 @@ body .modal-content{
     padding: 0 5px;
 }
 
+/********VIN DECODER**********/
+.qgContainer {
+    padding: 0;
+    margin: 0;
+}
+
+.qgContainer li {
+    list-style-type: none;
+    clear: both;
+    float: left;
+}
+
+/* indent for all tree children excepts root */
+.qgNode {
+    background-image : url(https://exist.ua/img/i.gif);
+    background-position : top left;
+    background-repeat : repeat-y;
+    margin-left: 18px;
+    zoom: 1;
+}
+
+.qgIsRoot {
+    margin-left: 0;
+}
+
+/* left vertical line (grid) for all nodes */
+.qgIsFirst {
+    background-image: url(https://exist.ua/img/i_half.gif);
+    background-repeat : no-repeat;
+    background-position: 0 10px;
+}
+.qgIsLast {
+    background-image: url(https://exist.ua/img/i_half.gif);
+    background-repeat : no-repeat;
+}
+
+.qgExpandOpen .qgExpand {
+    background-image: url(https://exist.ua/img/expand_minus.gif);
+}
+
+/* closed is higher priority than open */
+.qgExpandClosed .qgExpand {
+    background-image: url(https://exist.ua/img/expand_plus.gif);
+}
+
+/* highest priority */
+.qgExpandLeaf .qgExpand {
+    background-image: url(https://exist.ua/img/expand_leaf.gif);
+}
+
+.qgContent {
+    min-height: 18px;
+    margin-left:18px;
+    cursor: pointer;
+}
+
+.qgExpand {
+    width: 18px;
+    height: 18px;
+    float: left;
+}
+
+
+.qgExpandLoading   {
+    width: 18px;
+    height: 18px;
+    float: left;
+    background-image: url(https://exist.ua/img/expand_loading.gif);
+}
+
+.qgExpandOpen .qgContainer {
+    display: block;
+}
+
+.qgExpandClosed .qgContainer {
+    display: none;
+}
+
+.qgExpandOpen .qgExpand, .qgExpandClosed .qgExpand {
+    cursor: pointer;
+}
+.qgExpandLeaf .qgExpand {
+    cursor: auto;
+}
+
+.qgNode.to-parts > .qgContent {
+    display: block;
+    margin-left: 0;
+    border-radius: 3px;
+    border: 1px solid #c54141;
+    position: relative;
+    float: left;
+    color: #c54141;
+    text-transform: uppercase;
+    padding: 0 4px;
+    line-height: 18px;
+}
+
+.qgNode.to-parts > .qgContent:after {
+    content: '';
+    width: 13px;
+    height: 13px;
+    background: url(https://exist.ua/images/to-parts.png) no-repeat;
+    display: inline-block;
+    margin-left: 5px;
+    position: relative;
+    top: 1px;
+}
+
+.oe-list h2 {
+    font-size: 20px;
+    color: #c54141;
+    font-weight: bold;
+    padding: 15px 0 10px 15px;
+}
+
+.oe-list h3 {
+    font-size: 16px;
+    line-height: 20px;
+    margin: 0;
+}
+
+.oe-list h4 {
+    font-size: 14px;
+    margin: 5px;
+}
+
+.oe-category {
+    padding: 0 0 15px 15px;
+    width: 500px;
+}
+
+.oe-category-title {
+    display: inline-block;
+    padding: 10px;
+    background: #f5f5f5;
+    position: relative;
+    top: 1px;
+    border: 1px solid #ddd;
+    border-bottom: none rgb(221, 221, 221);
+}
+
+.oe-item-union {
+    padding: 10px;
+    border: 1px solid #dfdfdf;
+    background: #f5f5f5;
+}
+
+.oe-item-block {
+    background: #fff;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+.oe-title {
+    display: inline-block;
+    padding: 0 15px 15px 0;
+    width: 100%;
+}
+
+.oe-title h4 {
+    font-weight: normal;
+}
+
+.arrow-svg {
+    position: relative;
+    top: 1px;
+    height: 10px;
+    margin: 0 6px;
+    animation: slowRun 1s infinite alternate forwards ease-in;
+}
+
+.attentionText {
+    color: #83b880;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+.oe-image-block {
+    display: inline-block;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #fff;
+    position: relative;
+}
+
+.oe-image-block img {
+    width: 100%;
+    max-width: 105px;
+}
+
+.oe-list .ajax {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+}
+
+.oe-models {
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 20px;
+}
+
+.oe-table {
+    text-align: left;
+}
+
+.oe-table tr {
+    border-bottom: 1px solid #ddd;
+}
+
+.oe-table td {
+    padding: 10px 10px 10px 0;
+    max-width: 165px;
+}
+
+html .oe-list a {
+    text-decoration: none;
+    color: #256892;
+    transition: background-color 0.3s ease;
+}
+
+
 @media (max-width: 1200px) {
 
     .fancyTab .fa {

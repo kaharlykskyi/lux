@@ -13,30 +13,9 @@
 
     <div class="container margin-top-20">
         <div class="row">
-            <div class="col-xs-12 filter-section padding-10">
-                <form action="{{route('vin_decode')}}" method="post">
-                    @csrf
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-10">
-                            <input class="form-control" type="text" @isset($vin)value="{{$vin}}"@endisset name="vin" placeholder="Например: JTEHT05JX02054465">
-                        </div>
-                        <div class="col-xs-12 col-sm-2">
-                            <button type="submit" class="btn-round btn-sm">{{__('Подобрать')}}</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="col-xs-12">
-                @if (session('status'))
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="alert alert-danger" role="alert">
-                                {{ session('status') }}
-                            </div>
-                        </div>
-                    </div>
-                @endif
-            </div>
+            @component('vin_decode.components.header_catalog',['vin' => $vin])
+
+            @endcomponent
             <div class="col-xs-12 col-sm-4">
                 <ul class="list-group">
                     <li class="list-group-item"><p class="h4">{{__('Катагории')}}</p></li>

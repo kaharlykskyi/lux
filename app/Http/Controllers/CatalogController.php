@@ -90,7 +90,8 @@ class CatalogController extends Controller
                         ]);
                 }
                 break;
-            case (isset($request->trademark) && isset($request->pcode)):
+            case isset($request->pcode):
+                dd($request->pcode,$request->trademark);
                 $manufactorer = $this->tecdoc->getManufacturer(trim($request->trademark));
                 if (isset($manufactorer[0])){
                     $article_oe = $this->tecdoc->getManufacturerForOed($request->pcode,$manufactorer[0]->id);
