@@ -20,11 +20,6 @@ class Rubric
                     return $this->getSubCategoryQuery($parent);
                 });
                 break;
-            case 2:
-                return cache()->remember('sub_' . $parent, 60*24, function () use ($parent) {
-                    return $this->getSubCategoryQuery($parent);
-                });
-                break;
         }
     }
 

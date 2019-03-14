@@ -109,4 +109,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
         Route::post('/ask-feedback','FeedBackController@sendFeedBack')->name('admin.feedback.ask');
     });
     Route::match(['get', 'post'], '/brands','ShowBrandController@index')->name('admin.show_brand');
+
+    Route::get('/menu','TopMenuController@index')->name('admin.menu.index');
+    Route::match(['get', 'post'], '/menu/edit','TopMenuController@edit')->name('admin.menu.edit');
 });

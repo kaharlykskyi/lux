@@ -97,10 +97,30 @@
             <div class="collapse navbar-collapse" id="nav-open-btn">
                 <ul class="nav">
                     @php
-                        $to_category = \App\Category::where('tecdoc_id',100019)->first();
+                        $top_menu = \App\TopMenu::where('show_menu','1')->get();
                     @endphp
-                    @isset($to_category)
-                        <li> <a href="{{route('rubric',$to_category->tecdoc_id)}}">{{$to_category->name}} </a></li>
+                    @isset($top_menu)
+                        @foreach($top_menu as $category)
+                            @php
+                                $sub = DB::connection('mysql_tecdoc')
+                                    ->table('passanger_car_prd')
+                                    ->where('assemblygroupdescription',$category->tecdoc_title)
+                                    ->select('id','description')
+                                    ->distinct()
+                                    ->limit(10)
+                                    ->get();
+                            @endphp
+                            <li @isset($sub)class="dropdown"@endisset>
+                                <a @isset($sub)class="dropdown-toggle" data-toggle="dropdown" @endisset href="{{route('rubric',$category->tecdoc_title)}}">{{$category->title}} </a>
+                                @isset($sub)
+                                    <ul class="dropdown-menu multi-level animated-2s fadeInUpHalf">
+                                        @foreach($sub as $item)
+                                            <li><a href="{{route('catalog',$item->id)}}"> {{$item->description}} </a></li>
+                                        @endforeach
+                                    </ul>
+                                @endisset
+                            </li>
+                        @endforeach
                     @endisset
                 </ul>
             </div>

@@ -60,6 +60,9 @@
                         <li>
                             <a href="{{route('admin.banner.index')}}">{{__('Слайды баннера')}}</a>
                         </li>
+                        <li>
+                            <a href="{{route('admin.menu.index')}}">{{__('Меню')}}</a>
+                        </li>
                     </ul>
                 </li>
             </ul>

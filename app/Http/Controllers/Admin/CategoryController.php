@@ -28,7 +28,7 @@ class CategoryController extends Controller
     {
         $categories = null;
         $filter = [['parentid',0]];
-        $type = 'passanger';
+        $type = isset($request->type)?$request->type:'passanger';
 
         if (isset($request->comercial)){
             $type = 'comercial';
@@ -147,11 +147,21 @@ class CategoryController extends Controller
             $file->move(public_path() . '/images/catalog/',$file_name);
         }
 
+        if (isset($file_name)){
+            $logo = $file_name;
+        }else{
+            if (isset($category)){
+                $logo = $category->logo;
+            }else{
+                $logo = null;
+            }
+        }
+
         $data = [
             'tecdoc_id' => (int)$request->category,
             'name' => $request->name,
             'type' => $request->type,
-            'logo' => isset($file_name)?$file_name:null
+            'logo' => $logo
         ];
 
         if (isset($category)){

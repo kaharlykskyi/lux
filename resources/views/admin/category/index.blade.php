@@ -19,7 +19,7 @@
                         <a class="nav-link" href="{{route('admin.category.index')}}">{{__('Легковые авто')}}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('admin.category.index','comercial')}}">{{__('Грузовые авто')}}</a>
+                        <a class="nav-link" href="{{route('admin.category.index',['type' => 'comercial'])}}">{{__('Грузовые авто')}}</a>
                     </li>
                 </ul>
             </div>
@@ -41,7 +41,8 @@
                                     <th>
                                         <img style="width: 35px;height: auto;" src="@if(isset($category->image_data)) {{asset('images/catalog/' . $category->image_data->logo)}} @else {{asset('images/map-locator.png')}} @endif" alt="">
                                     </th>
-                                    <th>{{$category->description}}</th>
+                                    @php $status = \App\Category::where('tecdoc_id',$category->id)->first(); @endphp
+                                    <th>{{isset($status)?$status->name:$category->description}}</th>
                                     <th>
                                         <div class="table-data-feature">
                                             <button onclick="location.href = '{{route('admin.category.edit',$category->id)}}?type={{$type}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Редактирвать')}}">

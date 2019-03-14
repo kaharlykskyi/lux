@@ -18,13 +18,12 @@ class AppServiceProvider extends ServiceProvider
     {
         if(!app()->runningInConsole() ){
             if (!Cookie::has('cart_session_id')){
-                Cookie::forever('cart_session_id',session()->getId());
+                Cookie::queue(Cookie::make('cart_session_id',session()->getId(),60*24));
             }
             if (!Cookie::has('vin_catalog')){
                 Cookie::queue('vin_catalog', 'quickGroup');
             }
-            view()->composer('*', function($view)
-            {
+            view()->composer('*', function($view){
                 $pages = Page::all();
                 $cart = Cart::where([
                     Auth::check()
