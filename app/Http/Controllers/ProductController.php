@@ -29,7 +29,7 @@ class ProductController extends Controller
             $request->supplierid = $duff[0]->supplierId;
         }
         $product_attr = $this->tecdoc->getArtAttributes($request->alias,$request->supplierid);
-        $product_data= $this->tecdoc->getProductForArticleOE([$request->alias],$request->supplierid);
+        $product_data= $this->tecdoc->getProductByArticle($request->alias,$request->supplierid);
         $product_vehicles = $this->tecdoc->getArtVehicles($request->alias,$request->supplierid);
         $files = $this->tecdoc->getArtFiles($request->alias,$request->supplierid);
         $product = Product::where('articles', $request->alias)->first();

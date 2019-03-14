@@ -7,7 +7,7 @@
         <!-- Linking -->
         @component('component.breadcrumb',[
             'links' => [
-                (object)['title' => isset($product)?$product->name:$product_data[0]->NormalizedDescription]
+                (object)['title' => isset($product)?$product->name:$product_data->NormalizedDescription]
             ]
         ])
         @endcomponent
@@ -37,7 +37,7 @@
                                     </div>
                                     <!-- Item Content -->
                                     <div class="col-xs-7">
-                                        <h5>{{isset($product)?$product->name:$product_data[0]->NormalizedDescription}}</h5>
+                                        <h5>{{isset($product)?$product->name:$product_data->NormalizedDescription}}</h5>
                                         <div class="row">
                                             @isset($product->old_price)
                                                 <div class="col-sm-6">

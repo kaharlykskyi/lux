@@ -772,4 +772,12 @@ class Tecdoc
                     ->paginate($pre);
         }
     }
+
+    public function getProductByArticle($article, $supplier_id){
+        return DB::connection($this->connection)
+            ->table('articles')
+            ->where('DataSupplierArticleNumber',$article)
+            ->where('supplierId',(int)$supplier_id)
+            ->first();
+    }
 }
