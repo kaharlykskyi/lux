@@ -194,6 +194,11 @@ class Profile
         if ($validate->fails()) {
             return ['errors' => $validate->errors()];
         }
+
+        if (UserPhone::where('user_id',$user_id)->count() > 5){
+            return ['errors' => 'Превышен лимит'];
+        }
+
         $new_phone = new UserPhone();
         $new_phone->fill($data);
         if ($new_phone->save()){
