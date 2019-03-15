@@ -44,309 +44,25 @@
                                 <li id="nav-tabs-6" data-id-href="tabs-6" class="list-group-item">{{__('Мои возвраты')}}</li>
                                 <li id="nav-tabs-7" data-id-href="tabs-7" class="list-group-item">{{__('Баланс')}}</li>
                                 <li id="nav-tabs-8" data-id-href="tabs-8" class="list-group-item">{{__('Взаиморасчеты')}}</li>
+                                <li id="nav-tabs-9" data-id-href="tabs-9" class="list-group-item">{{__('Отследить заказ')}}</li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-9 tab-item active">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">{{__('Личный кабинет')}}</div>
-                        <div class="panel-body panel-profile">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="profile-item profile-item-user">
-                                        <a class="link-prof-item" data-id-href="tabs-1" href="#">
-                                            <span>{{__('Личные данные')}}</span>
-                                        </a>
-                                        <small>{{__('В этом разделе вы можете изменить свои личные данные.')}}</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 padding-md-30">
-                                    <div class="profile-item profile-item-delivery">
-                                        <a id="tab-3" class="link-prof-item" data-id-href="tabs-3" href="#">
-                                            <span>{{__('Информация о доставке')}}</span>
-                                        </a>
-                                        <small>{{__('В этом разделе вы можете изменить данные доставки.')}}</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="profile-item profile-item-orders">
-                                        <a class="link-prof-item" data-id-href="tabs-2" href="#">
-                                            <span>{{__('Заказы')}}</span>
-                                        </a>
-                                        <small>{{__('Информация о всех ваших заказах: номера, даты, состав заказов и их статусы.')}}</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 padding-md-30">
-                                    <div class="profile-item profile-item-car">
-                                        <a class="link-prof-item" data-id-href="tabs-4" href="#">
-                                            <span>{{__('Мои автомобили')}}</span>
-                                        </a>
-                                        <small>{{__('Здесь можно добавить свой автомобиль.')}}</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="profile-item profile-item-pwd">
-                                        <a class="link-prof-item" data-id-href="tabs-5" href="#">
-                                            <span>{{__('Смена пароля')}}</span>
-                                        </a>
-                                        <small>{{__('Здесь вы можете сменить свои данные для доступа в личный кабинет.')}}</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 padding-md-30">
-                                    <div class="profile-item profile-item-retweet">
-                                        <a class="link-prof-item" data-id-href="tabs-6" href="#">
-                                            <span>{{__('Мои возвраты')}}</span>
-                                        </a>
-                                        <small>{{__('Здесь вы можете просмотреть заказы которые были поданны на возврат.')}}</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="profile-item profile-item-money">
-                                        <a class="link-prof-item" data-id-href="tabs-7" href="#">
-                                            <span>{{__('Баланс')}}</span>
-                                        </a>
-                                        <small>{{__('Здесь вы можете просмотреть баланс и историю пополнений.')}}</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 padding-md-30">
-                                    <div class="profile-item profile-item-chart">
-                                        <a class="link-prof-item" data-id-href="tabs-8" href="#">
-                                            <span>{{__('Взаиморасчеты')}}</span>
-                                        </a>
-                                        <small>{{__('Здесь вы можете просмотреть все действи с вашим счётом.')}}</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @include('profile.partirals.profile_panel')
                 </div>
                 <div class="col-md-9 tab-item" id="tabs-1">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">{{__('Личные данные')}}</div>
-                        <div class="panel-body panel-profile">
-                            <form type="POST" class="ajax-form ajax2" action="{{route('change_user_info')}}">
-                                @csrf
-                                <ul class="row login-sec">
-                                    <li class="col-sm-12">
-                                        <label>{{ __('Имя') }}
-                                            <input type="text" class="form-control" name="name" value="{{ Auth::user()->name }}" required autofocus>
-                                        </label>
-                                    </li>
-                                    <li class="col-sm-12">
-                                        <label>{{__('Фамилия')}}
-                                            <input type="text" class="form-control" name="sername" value="{{ Auth::user()->sername }}" required>
-                                        </label>
-                                    </li>
-                                    <li class="col-sm-12">
-                                        <label>{{__('Отчество')}}
-                                            <input type="text" class="form-control" name="last_name" value="{{ Auth::user()->last_name }}" required>
-                                        </label>
-                                    </li>
-                                    <li class="col-sm-12">
-                                        <label>{{__('Адрес електронной почты')}}
-                                            @if(isset(Auth::user()->email_verified_at))
-                                                <i class="fa fa-check text-success" aria-hidden="true" title="Подтверждён"></i>
-                                            @else
-                                                <a class="text-danger" href="{{ route('verification.resend') }}">
-                                                    <i class="fa fa-times" aria-hidden="true" title="Не подтверждён"></i>
-                                                </a>
-                                            @endif
-                                            <input type="email" class="form-control" name="email" value="{{ Auth::user()->email }}" required>
-                                        </label>
-                                    </li>
-                                    <li class="col-sm-12">
-                                        <label>{{__('Телефон')}}
-                                            <input type="tel" class="form-control" name="phone" value="{{ Auth::user()->phone }}" required>
-                                        </label>
-                                    </li>
-                                    <li class="col-sm-12">
-                                        <label class="relative country">{{__('Страна')}}
-                                            <input id="country" oninput="getCountry($(this))" type="text" class="form-control" name="country" value="{{ Auth::user()->country }}" required autocomplete="off">
-                                            <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
-                                        </label>
-                                    </li>
-                                    <li class="col-sm-12">
-                                        <label class="relative city">{{__('Город')}}
-                                            <input id="city" oninput="getCity($(this),'#country')" type="text" class="form-control" name="city" value="{{ Auth::user()->city }}" required autocomplete="off">
-                                            <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
-                                        </label>
-                                    </li>
-                                    <li class="col-sm-12">
-                                        <label>{{__('Тип клиента')}}
-                                            <select class="form-control" name="role" required>
-                                                @isset($roles)
-                                                    @foreach($roles as $role)
-                                                        <option @if($role->id == Auth::user()->role) selected @endif value="{{$role->id}}">{{$role->name}}</option>
-                                                    @endforeach
-                                                @endisset
-                                            </select>
-                                        </label>
-                                    </li>
-                                    <li class="col-sm-12 text-left">
-                                        <button type="submit" class="btn-round">{{__('Сохранить')}}</button>
-                                    </li>
-                                </ul>
-                            </form>
-                        </div>
-                    </div>
+                    @include('profile.partirals.user_info')
                 </div>
                 <div class="col-md-9 tab-item" id="tabs-2">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">{{__('Мои заказы')}}</div>
-                        <div class="panel-body panel-profile">
-                            <div class="row login-sec">
-                                <div class="col-xs-12">
-
-                                    <table class="table">
-                                        <caption>{{__('Мои заказы')}}</caption>
-                                        <thead>
-                                        <tr>
-                                            <th>{{__('ID')}}</th>
-                                            <th>{{__('Дата')}}</th>
-                                            <th>{{__('Сумма')}}</th>
-                                            <th>{{__('Статус')}}</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @forelse($orders as $order)
-                                            <tr>
-                                                <td>{{$order->id}}</td>
-                                                <td>{{$order->updated_at}}</td>
-                                                <td>{{$order->total_price . __(' грн.')}}</td>
-                                                <td>
-                                                    {{$order->status}}
-                                                    <span class="margin-left-5">
-                                                        <a href="{{route('track_order',$order->id)}}" title="Отследить посылку">
-                                                            <i class="fa fa-truck" aria-hidden="true"></i>
-                                                        </a>
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        @empty
-                                            <tr>
-                                                <td colspan="4">
-                                                    <div class="alert alert-info margin-15" role="alert">
-                                                        Похоже вы еще не делали заказы, <strong>начните прямо сейчас</strong>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforelse
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @include('profile.partirals.orders')
                 </div>
                 <div class="col-md-9 tab-item" id="tabs-3">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">{{__('Информация о доставке')}}</div>
-                        <div class="panel-body panel-profile">
-                            <form type="POST" action="{{route('change_delivery_info')}}" class="ajax-form ajax2">
-                                @csrf
-                                <ul class="row login-sec">
-                                    <li class="col-sm-12">
-                                        <label class="relative country">{{__('Страна')}}
-                                            <input id="delivery_country" oninput="getCountry($(this),'#delivery_country')" type="text" class="form-control" name="delivery_country" value="@isset($delivery_info){{ $delivery_info->delivery_country }}@endisset" autocomplete="off">
-                                            <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
-                                        </label>
-                                    </li>
-                                    <li class="col-sm-12">
-                                        <label class="relative city">{{__('Город')}}
-                                            <input id="delivery_city" oninput="getCity($(this),'#delivery_country')" type="text" class="form-control" name="delivery_city" value="@isset($delivery_info){{ $delivery_info->delivery_city }}@endisset" autocomplete="off">
-                                            <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
-                                        </label>
-                                    </li>
-
-                                    <li class="col-sm-12">
-                                        <label>{{ __('Улица') }}
-                                            <input type="text" class="form-control" name="street" value="@isset($delivery_info){{ $delivery_info->street }}@endisset">
-                                        </label>
-                                    </li>
-
-                                    <li class="col-sm-12">
-                                        <label>{{ __('Дом') }}
-                                            <input type="text" class="form-control" name="house" value="@isset($delivery_info){{ $delivery_info->house }}@endisset">
-                                        </label>
-                                    </li>
-
-                                    <li class="col-sm-12">
-                                        <label>{{ __('Контактный телефон') }}
-                                            <input type="text" class="form-control" name="phone" value="@isset($delivery_info){{ $delivery_info->phone }}@endisset">
-                                        </label>
-                                    </li>
-
-                                    <li class="col-sm-12">
-                                        <label>{{__('Служба доставки')}}
-                                            <select class="form-control" name="delivery_service" id="delivery_service">
-                                                <option @isset($delivery_info) @if($delivery_info->delivery_service === 'novaposhta') selected @endif @endisset value="{{__('novaposhta')}}">{{__('Новая Почта')}}</option>
-                                            </select>
-                                        </label>
-                                    </li>
-
-                                    <li class="col-sm-12 delivery-dep" style="display:none;">
-                                        <label class="relative delivery-department">{{ __('Номер отделения') }}
-                                            <input type="text" class="form-control" id="delivery_department" name="delivery_department" value="@isset($delivery_info){{ $delivery_info->delivery_department }}@endisset" autocomplete="off">
-                                            <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
-                                        </label>
-                                    </li>
-
-                                    <li class="col-sm-12">
-                                        <script src="{{asset('js/map.js')}}"></script>
-                                        <div id="map" style="height: 200px;"></div>
-                                        <script type="text/javascript" async defer
-                                                src="https://maps.googleapis.com/maps/api/js?v=3&libraries=places&callback=initMap&key={{config('app.google_key')}}"></script>
-                                    </li>
-
-                                    <li class="col-sm-12 text-left">
-                                        <button type="submit" class="btn-round">{{__('Сохранить')}}</button>
-                                    </li>
-                                </ul>
-                            </form>
-                        </div>
-                    </div>
+                    @include('profile.partirals.delivery_info')
                 </div>
                 <div class="col-md-9 tab-item" id="tabs-4">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">{{__('Мои автомобили')}}</div>
-                        <div class="panel-body panel-profile">
-                            <div class="row login-sec">
-                                <div class="col-sm-12 text-right">
-                                    <button type="button" data-toggle="modal" data-target="#addCar" class="btn-round">{{__('Добавить автомобиль')}}</button>
-                                </div>
-                                <div class="col-sm-12">
-                                    <div class="list-group padding-top-10" id="addedCars">
-                                        @isset($user_cars)
-                                            @foreach($user_cars as $user_car)
-                                                <a href="#" class="list-group-item" id="car-block{{$user_car->id}}">
-                                                    <p class="text-right">
-                                                        <button class="delete-car-btn" onclick="deleteCar({{$user_car->id}})" title="{{__('Удалить машину')}}">
-                                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                                        </button>
-                                                    </p>
-                                                    <p class="list-group-item-text"><strong>VIN код:</strong> {{$user_car->vin_code}}</p>
-                                                    <p class="list-group-item-text"><strong>Тип:</strong> {{$user_car->type_auto}}</p>
-                                                    <p class="list-group-item-text"><strong>Год выпуска:</strong> {{$user_car->year_auto}}</p>
-                                                    <p class="list-group-item-text"><strong>Марка:</strong> {{$user_car->brand_auto}}</p>
-                                                    <p class="list-group-item-text"><strong>Модель:</strong> {{$user_car->model_auto}}</p>
-                                                    <p class="list-group-item-text"><strong>Модификация:</strong> {{$user_car->modification_auto}}</p>
-                                                    <p class="list-group-item-text"><strong>Тип кузова:</strong> {{$user_car->body_auto}}</p>
-                                                    <p class="list-group-item-text"><strong>Тип двигателя:</strong> {{$user_car->type_motor}}</p>
-                                                </a>
-                                            @endforeach
-                                        @endisset
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @include('profile.partirals.user_cars')
                 </div>
                 <div class="col-md-9 tab-item" id="tabs-5">
                     <div class="panel panel-primary">
@@ -379,52 +95,7 @@
                     </div>
                 </div>
                 <div class="col-md-9 tab-item" id="tabs-7">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">{{__('Баланс')}}</div>
-                        <div class="panel-body panel-profile">
-                            <div class="col-sm-12">
-                                <ul class="row login-sec">
-                                    <li class="col-sm-6">
-                                        <p class="h4">Баланс: <strong>@if(isset($balance)){{floatval($balance->balance)}}@else{{__('0.00')}}@endif</strong> грн</p>
-                                    </li>
-                                    <li class="col-sm-6 text-right">
-                                        <button type="button" onclick="location.href = '{{route('liqpay')}}'" class="btn-round">{{__('Пополнить баланс')}}</button>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="col-sm-12">
-                                <table class="table">
-                                    <caption>{{__('История пополнений')}}</caption>
-                                    <thead>
-                                        <tr>
-                                            <th>{{__('ID')}}</th>
-                                            <th>{{__('Дата')}}</th>
-                                            <th>{{__('Сумма')}}</th>
-                                            <th>{{__('Статус')}}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @forelse($balance_history as $item)
-                                            <tr>
-                                                <td>{{$item->id}}</td>
-                                                <td>{{$item->created_at}}</td>
-                                                <td>{{$item->balance_refill}}</td>
-                                                <td>{{($item->status === 1)?__('успешно'):__('отказ')}}</td>
-                                            </tr>
-                                        @empty
-                                            <tr>
-                                                <td colspan="4">
-                                                    <div class="alert alert-info margin-15" role="alert">
-                                                        {{__('Платежи ещё не производились')}}
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                    @include('profile.partirals.balance')
                 </div>
                 <div class="col-md-9 tab-item" id="tabs-8">
                     <div class="panel panel-primary">
@@ -493,12 +164,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-9 tab-item" id="tabs-9">
+                    @include('profile.partirals.track_order')
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
     @component('profile.component.add_car_model')@endcomponent
+
+    @component('profile.component.add_phone')@endcomponent
 
     <script>
         $(document).ready(function () {

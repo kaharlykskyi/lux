@@ -375,6 +375,79 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('#profile_track_order').submit(function (e) {
+        e.preventDefault();
+        $('#result_track_order ').removeClass('hidden').find('.panel-body').html('<p class="text-center"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span></p>');
+        $.get(`${$(this).attr('action')}?id=${$('#profile_track_id_order').val()}`,function (data) {
+            if (data.no_success !== undefined){
+                $('#result_track_order .panel-body').html(`<div class="alert alert-danger" role="alert">${data.no_success}</div>`);
+            }else if(data.order !== undefined) {
+                switch (data.order.oder_status) {
+                    case 2:
+                        $('#result_track_order .panel-body').html('<div class="alert alert-info" role="alert"><p class="text-center">Заказ был сохранён, но ещё не обработан менеджером</p></div>');
+                        break;
+                    case 3:
+                        $('#result_track_order .panel-body').html(`<div class="alert alert-success" role="alert"><p class="text-center">Заказ был обработан менеджером.<strong> В ближайшее время будет отправлен</strong></p></div>`);
+                        break;
+                    case 4:
+                        $('#result_track_order .panel-body').html(`
+                            <div class="col-xs-12 padding-0">
+                                <div class="col-xs-2 hidden-xs">
+                                    <svg style="width: 100%;height: auto;" height="480pt" viewBox="0 -72 480 480" width="480pt" xmlns="http://www.w3.org/2000/svg"><path d="m280 88h48v112h-48zm0 0" fill="#2d72bc"/><path d="m328 200h96l-28.71875-100.398438c-1.964844-6.859374-8.226562-11.589843-15.359375-11.601562h-51.921875zm0 0" fill="#c4f236"/><path d="m472 280v-48c0-17.671875-14.328125-32-32-32h-160v80zm0 0" fill="#4891d3"/><path d="m280 280v-240c0-17.671875-14.328125-32-32-32h-216c-13.253906 0-24 10.746094-24 24v224c0 13.253906 10.746094 24 24 24zm0 0" fill="#57b7eb"/><path d="m144 56c-26.507812 0-48 21.492188-48 48 0 26.480469 21.519531 88 48 88s48-61.519531 48-88c0-26.507812-21.492188-48-48-48zm0 64c-8.835938 0-16-7.164062-16-16s7.164062-16 16-16 16 7.164062 16 16-7.164062 16-16 16zm0 0" fill="#f9e109"/><path d="m368 240c-22.089844 0-40-17.910156-40-40h-48v80h192v-40zm0 0" fill="#2d72bc"/><path d="m400 176c-26.507812 0-48-21.492188-48-48v-40h-24v112h96l-6.878906-24zm0 0" fill="#a1d51c"/><path d="m168 240c-70.691406 0-128-57.308594-128-128v-104h-8c-13.253906 0-24 10.746094-24 24v224c0 13.253906 10.746094 24 24 24h248v-40zm0 0" fill="#4891d3"/><path d="m112 104c.023438-23.402344 16.921875-43.378906 40-47.28125-2.644531-.441406-5.320312-.679688-8-.71875-26.507812 0-48 21.492188-48 48 0 26.480469 21.519531 88 48 88 2.78125-.085938 5.507812-.765625 8-2-22.71875-10.480469-40-62-40-86zm0 0" fill="#fcbc04"/><path d="m168 280c0 26.507812-21.492188 48-48 48s-48-21.492188-48-48 21.492188-48 48-48 48 21.492188 48 48zm0 0" fill="#f9e109"/><path d="m120 256c21.859375.035156 40.933594 14.835938 46.398438 36 1.066406-3.910156 1.601562-7.945312 1.601562-12 0-26.507812-21.492188-48-48-48s-48 21.492188-48 48c0 4.054688.535156 8.089844 1.601562 12 5.464844-21.164062 24.539063-35.964844 46.398438-36zm0 0" fill="#fcbc04"/><path d="m136 280c0 8.835938-7.164062 16-16 16s-16-7.164062-16-16 7.164062-16 16-16 16 7.164062 16 16zm0 0" fill="#4891d3"/><path d="m424 280c0 26.507812-21.492188 48-48 48s-48-21.492188-48-48 21.492188-48 48-48 48 21.492188 48 48zm0 0" fill="#f9e109"/><path d="m376 256c21.859375.035156 40.933594 14.835938 46.398438 36 1.066406-3.910156 1.601562-7.945312 1.601562-12 0-26.507812-21.492188-48-48-48s-48 21.492188-48 48c0 4.054688.535156 8.089844 1.601562 12 5.464844-21.164062 24.539063-35.964844 46.398438-36zm0 0" fill="#fcbc04"/><path d="m392 280c0 8.835938-7.164062 16-16 16s-16-7.164062-16-16 7.164062-16 16-16 16 7.164062 16 16zm0 0" fill="#4891d3"/><g fill="#39519d"><path d="m120 224c-30.929688 0-56 25.070312-56 56s25.070312 56 56 56 56-25.070312 56-56-25.070312-56-56-56zm0 96c-22.089844 0-40-17.910156-40-40s17.910156-40 40-40 40 17.910156 40 40-17.910156 40-40 40zm0 0"/><path d="m120 256c-13.253906 0-24 10.746094-24 24s10.746094 24 24 24 24-10.746094 24-24-10.746094-24-24-24zm0 32c-4.417969 0-8-3.582031-8-8s3.582031-8 8-8 8 3.582031 8 8-3.582031 8-8 8zm0 0"/><path d="m376 224c-30.929688 0-56 25.070312-56 56s25.070312 56 56 56 56-25.070312 56-56-25.070312-56-56-56zm0 96c-22.089844 0-40-17.910156-40-40s17.910156-40 40-40 40 17.910156 40 40-17.910156 40-40 40zm0 0"/><path d="m376 256c-13.253906 0-24 10.746094-24 24s10.746094 24 24 24 24-10.746094 24-24-10.746094-24-24-24zm0 32c-4.417969 0-8-3.582031-8-8s3.582031-8 8-8 8 3.582031 8 8-3.582031 8-8 8zm0 0"/><path d="m384 160h-16v-32c0-4.417969-3.582031-8-8-8s-8 3.582031-8 8v32c0 8.835938 7.164062 16 16 16h16c4.417969 0 8-3.582031 8-8s-3.582031-8-8-8zm0 0"/><path d="m144 48c-30.929688 0-56 25.070312-56 56 0 27.679688 22.320312 96 56 96s56-68.320312 56-96c0-30.929688-25.070312-56-56-56zm0 136c-18.398438 0-40-52.878906-40-80 0-22.089844 17.910156-40 40-40s40 17.910156 40 40c0 27.121094-21.601562 80-40 80zm0 0"/><path d="m144 80c-13.253906 0-24 10.746094-24 24s10.746094 24 24 24 24-10.746094 24-24-10.746094-24-24-24zm0 32c-4.417969 0-8-3.582031-8-8s3.582031-8 8-8 8 3.582031 8 8-3.582031 8-8 8zm0 0"/><path d="m192 184c0 4.417969 3.582031 8 8 8h32c4.417969 0 8-3.582031 8-8s-3.582031-8-8-8h-32c-4.417969 0-8 3.582031-8 8zm0 0"/><path d="m96 184c0-4.417969-3.582031-8-8-8h-32c-4.417969 0-8 3.582031-8 8s3.582031 8 8 8h32c4.417969 0 8-3.582031 8-8zm0 0"/><path d="m440 192h-10l-26.960938-94.640625c-2.964843-10.300781-12.402343-17.382813-23.117187-17.359375h-91.921875v-40c0-22.089844-17.910156-40-40-40h-216c-17.671875 0-32 14.328125-32 32v224c0 17.671875 14.328125 32 32 32h8c4.417969 0 8-3.582031 8-8s-3.582031-8-8-8h-8c-8.835938 0-16-7.164062-16-16v-224c0-8.835938 7.164062-16 16-16h216c13.253906 0 24 10.746094 24 24v232h-72c-4.417969 0-8 3.582031-8 8s3.582031 8 8 8h96c4.417969 0 8-3.582031 8-8s-3.582031-8-8-8h-8v-64h152c13.253906 0 24 10.746094 24 24v40h-8c-4.417969 0-8 3.582031-8 8s3.582031 8 8 8h16c4.417969 0 8-3.582031 8-8v-48c0-22.089844-17.910156-40-40-40zm-152-96h32v72c0 4.417969 3.582031 8 8 8s8-3.582031 8-8v-72h43.921875c3.671875-.144531 6.972656 2.230469 8 5.761719l25.4375 90.238281h-125.359375zm0 0"/></g></svg>
+                                </div>
+                                <div class="col-xs-12 col-sm-10">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <p class="h4 margin-bottom-0">${data.order.track_data.Status}</p>
+                                            <span class="text-info small">Ориентировочная дата доставки - ${data.order.track_data.ScheduledDeliveryDate}</span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <span class="text-info small">Маршрут</span>
+                                            <p class="h6">${data.order.track_data.CitySender} - ${data.order.track_data.CityRecipient}</p>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-3">
+                                                    <span class="text-info small">Вес</span>
+                                                    <p class="h6">${data.order.track_data.DocumentWeight} кг.</p>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-9">
+                                                    <span class="text-info small">Адрес доставки</span>
+                                                    <p class="h6">${data.order.track_data.WarehouseRecipient}</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <div class="row">
+                                                <div class="col-xs-12 col-sm-3">
+                                                    <span class="text-info small">Сумма к оплате</span>
+                                                    <p class="h6">${data.order.track_data.DocumentCost} грн.</p>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-9">
+                                                    <span class="text-info small">Плательщик</span>
+                                                    <p class="h6">${data.order.track_data.PayerType === 'Recipient'?'Получатель':'Отправитель'}</p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        `);
+                        break;
+                    case 5:
+                        $('#result_track_order .panel-body').html(`<div class="alert alert-danger" role="alert"><p class="text-center">Заказ был отменен. Свяжитесь с администрацией для более детальной информацией!</p></div>`);
+                        break;
+                    case 6:
+                        $('#result_track_order .panel-body').html(`<div class="alert alert-success" role="alert"><p class="text-center">Заказ был успешно закрыт.</p></div>`);
+                        break;
+                    default:
+                        $('#result_track_order .panel-body').html(`<div class="alert alert-warning" role="alert"><p class="text-center">Упсс, данных по такому номеру заказа нету =(</p></div>`);
+                }
+            }
+            console.log(data);
+        });
+    });
 });
 
 

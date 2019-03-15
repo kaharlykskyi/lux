@@ -39,6 +39,8 @@ Route::prefix('profile')->middleware(['auth'])->group(function () {
     Route::post('/change-user-info', 'ProfileController@changeUserInfo')->name('change_user_info');
     Route::post('/change-delivery-info', 'ProfileController@deliveryInfo')->name('change_delivery_info');
     Route::post('/delete-car', 'ProfileController@deleteCar')->name('delete_car');
+    Route::get('/track-order', 'ProfileController@trackOrder')->name('profile.track_order');
+    Route::match(['get', 'post'],'/dop-user-phone','ProfileController@dopUserPhone')->name('dop_user_phone');
 });
 /*-------CART--------*/
 Route::prefix('cart')->group(function () {

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Seliv
- * Date: 12.03.2019
- * Time: 15:55
- */
 
 namespace App\Services;
 
@@ -20,8 +14,6 @@ class VinDecoder
     protected $vin_cat_url = 'https://exist.ua/cat/oe/';
 
     public function getCatalogForImage($data){
-        $vin = $data['vin_code'];
-        $vin_title = $data['vin_title'];
         $catalog_data = null;
         $data['data'] = str_replace('quickGroup','listUnits',$data['data']);
 

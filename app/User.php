@@ -57,4 +57,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public function cart(){
         return $this->hasMany('App\Cart');
     }
+
+    public function userPhones(){
+        return $this->hasMany('App\UserPhone');
+    }
 }

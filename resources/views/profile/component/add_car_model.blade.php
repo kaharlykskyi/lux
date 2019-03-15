@@ -11,7 +11,7 @@
                     <ul class="row login-sec">
                         <li class="col-sm-12">
                             <label>{{ __('VIN код') }}
-                                <input type="text" class="form-control" name="vin_code" value="" required autofocus>
+                                <input type="text" class="form-control" name="vin_code" value="" required>
                             </label>
                         </li>
                         <li class="col-sm-12" id="type_auto">
