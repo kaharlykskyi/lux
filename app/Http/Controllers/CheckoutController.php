@@ -158,11 +158,17 @@ class CheckoutController extends Controller
             $products = $cart->cartProduct()->get();
             $user = User::find(Auth::id());
             $user_balance = isset($user->balance)?$user->balance->balance:null;
+            $discount = $user->discount;
             $sum = 0;
 
             foreach ($products as $product){
                 $sum += (double)$product->price * (integer)$product['pivot']['count'];
             }
+
+            if (isset($discount)){
+                $sum = $sum - ($sum * (int)$discount->percent / 100);
+            }
+
             if ($user_balance >= $sum && $sum > 0){
                 $pay_order = new OrderPay();
                 $pay_order->fill([

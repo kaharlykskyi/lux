@@ -58,7 +58,7 @@
                                                 @php
                                                     $orderPay = \App\OrderPay::where([
                                                         ['cart_id',$item->id],
-                                                        ['user_id',Auth::id()]
+                                                        ['user_id',(int)$item->user_id]
                                                     ])->first();
                                                 @endphp
                                                 @isset($orderPay)
@@ -71,7 +71,7 @@
                                                 {{$item->id}}
                                             </td>
                                             <td>{{$item->name}}</td>
-                                            <td class="text-right">&#8372; {{$item->total_price}}</td>
+                                            <td class="text-right">&#8372; {{isset($item->percent)?(round($item->total_price - ($item->total_price*$item->percent/100),2)):$item->total_price}}</td>
                                             <td style="padding: 12px 0;">
                                                 <div style="width: 90%;" class="rs-select2--dark rs-select2--md m-r-10 rs-select2--border">
                                                     <select class="js-select2" name="order_status_code" onchange="orderStatus({{$item->id}},this)">

@@ -2,15 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Cart;
-use App\CartProduct;
-use App\MutualSettlement;
-use App\Order;
-use App\Product;
-use App\User;
-use App\UserBalance;
+use App\{Cart, CartProduct, MutualSettlement, Order, Product, User, UserBalance, Http\Controllers\Controller};
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
@@ -113,11 +106,12 @@ class OrderController extends Controller
             $order_status = " IN (3,4,5,6)";
         }
 
-        return DB::select("SELECT c.id, c.updated_at,c.oder_status,u.name,c.invoice_np,
+        return DB::select("SELECT c.id, c.updated_at,c.oder_status,u.name,c.invoice_np,d.percent,u.id user_id,
                                       (SELECT SUM(p.price * cp.count) FROM `products` AS p 
                                               JOIN `cart_products` AS cp WHERE p.id=cp.product_id AND cp.cart_id=c.id) AS total_price
                                       FROM `carts` AS c
                                       JOIN `users` AS u ON u.id=c.user_id
+                                      JOIN `discounts` AS d ON d.id=u.discount_id
                                       WHERE c.oder_status{$order_status} ORDER BY c.updated_at DESC");
     }
 
