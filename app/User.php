@@ -35,7 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function cars(){
-        return $this->hasMany('App\UserCar');
+        return $this->hasMany('App\UserCar')->orderByDesc('created_at');
     }
 
     public function deliveryInfo(){
@@ -47,7 +47,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function historyBalance(){
-        return $this->hasMany('App\UserBalanceHistory');
+        return $this->hasMany('App\UserBalanceHistory')->orderByDesc('created_at');
     }
 
     public function discount(){
@@ -60,5 +60,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function userPhones(){
         return $this->hasMany('App\UserPhone');
+    }
+
+    public function mutualSettlements(){
+        return $this->hasMany('App\MutualSettlement')->orderByDesc('created_at');
     }
 }

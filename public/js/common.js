@@ -69,7 +69,7 @@ $(document).ready(function() {
         $('#root-category-modification-wrapper').show();
         $.post($('#search-detail-car-form').attr('action'),$('#search-detail-car-form').serialize(),function (data) {
             $('#root-category-modification-wrapper').show();
-            $('#root-category-modification').html(makeTemplateCategoryCar(data,modification_auto,type_auto));
+            $('#root-category-modification').html(makeTemplateCategoryCar(data));
         });
     });
 });
@@ -189,6 +189,12 @@ function getCarsDetail(type_auto,year_auto,brand_auto,model_auto,modification_au
 }
 
 function makeTemplateCategoryCar(data,modification_auto,type_auto) {
+    if (modification_auto === undefined){
+        modification_auto = data.modification_auto;
+    }
+    if (type_auto === undefined){
+        type_auto = data.type_auto;
+    }
     let str_data = '';
     data.response.forEach(function (item) {
         str_data += `<div class="col-xs-12 col-sm-6 col-lg-4 padding-0 margin-bottom-0">

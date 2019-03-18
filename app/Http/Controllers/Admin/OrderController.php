@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Cart;
 use App\CartProduct;
+use App\MutualSettlement;
 use App\Order;
 use App\Product;
 use App\User;
+use App\UserBalance;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -76,6 +78,28 @@ class OrderController extends Controller
             ->update([
                 'oder_status' => (int)$request->statusID
             ]);
+
+        if ((int)$request->statusID === 5){
+            $order = DB::table('carts')->where('id',$request->orderID)->first();
+            $order_pay = Order::where('cart_id',$order->id)->first();
+            $user_balance = UserBalance::where('user_id',(int)$order->user_id)->first();
+            if (isset($order_pay) && isset($user_balance)){
+                DB::transaction(function () use ($order_pay, $order, $user_balance) {
+                    $mutual_settelement = new MutualSettlement();
+                    $mutual_settelement->fill([
+                        'description' => 'Возврат по заказу №' . $order->id,
+                        'type_operation' => 3,
+                        'user_id' => (int)$order->user_id,
+                        'currency' => 'UAH',
+                        'change' => $order_pay->price_pay,
+                        'balance' => (float)$user_balance->balance + (float)$order_pay->price_pay
+                    ]);
+                    $mutual_settelement->save();
+                    UserBalance::where('id',$user_balance->id)->update(['balance' => round((float)$user_balance->balance + (float)$order_pay->price_pay,2)]);
+                },5);
+
+            }
+        }
 
         return response()->json([
             'response' => 'Статус заказа изменен'

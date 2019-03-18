@@ -26,6 +26,7 @@ class ProfileController extends Controller
         $balance_history = $user->historyBalance;
         $orders = $this->service->getOrders(Auth::id());
         $user_phones = $user->userPhones;
+        $mutual_settelement = $user->mutualSettlements;
 
         return view('profile.index',compact(
             'roles',
@@ -34,7 +35,8 @@ class ProfileController extends Controller
             'orders',
             'balance',
             'balance_history',
-            'user_phones'
+            'user_phones',
+            'mutual_settelement'
         ));
     }
 

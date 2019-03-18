@@ -98,71 +98,7 @@
                     @include('profile.partirals.balance')
                 </div>
                 <div class="col-md-9 tab-item" id="tabs-8">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">{{__('Взаиморасчеты')}}</div>
-                        <div class="panel-body panel-profile">
-                            <div class="row login-sec">
-                                <div class="col-sm-12 table-responsive" style="overflow: visible;">
-                                    <table class="table table-bordered table-hover" id="creaking_account">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>Дата</th>
-                                                <th>Документ</th>
-                                                <th>Валюта</th>
-                                                <th>Приход</th>
-                                                <th>Расход</th>
-                                                <th>Остаток</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="identification-wrapper">
-                                                    <i class="fa fa-plus-square-o" style="cursor: pointer" aria-hidden="true"></i>
-                                                    <div class="identification-info">
-                                                        <div class="table-responsive">
-                                                            <table class="table table-bordered">
-                                                                <thead>
-                                                                <tr>
-                                                                    <th>Дата</th>
-                                                                    <th>Вид действия</th>
-                                                                    <th>Идентификатор</th>
-                                                                    <th>Описание</th>
-                                                                    <th>Сумма</th>
-                                                                    <th>НДС</th>
-                                                                    <th>Дата</th>
-                                                                </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                <tr>
-                                                                    <td>23.06.18</td>
-                                                                    <td>Оплата</td>
-                                                                    <td>Оплата</td>
-                                                                    <td >Заказ SP32454623</td>
-                                                                    <td>-2000</td>
-                                                                    <td>00.00</td>
-                                                                    <td>23.05.18</td>
-                                                                </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>23.06.18</td>
-                                                <td>Расходная накладная №3245656</td>
-                                                <td>USD</td>
-                                                <td >354</td>
-                                                <td></td>
-                                                <td>0.00</td>
-                                                <td></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @include('profile.partirals.mutual_settlement')
                 </div>
                 <div class="col-md-9 tab-item" id="tabs-9">
                     @include('profile.partirals.track_order')

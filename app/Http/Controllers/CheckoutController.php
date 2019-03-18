@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AppTrait\GEO;
-use App\{Cart, DeliveryInfo, Http\Controllers\Auth\LoginController, OrderPay, User, UserBalance};
+use App\{Cart, DeliveryInfo, Http\Controllers\Auth\LoginController, MutualSettlement, OrderPay, User, UserBalance};
 use Illuminate\Foundation\Auth\{RegistersUsers};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Auth, DB, Hash, Validator};
@@ -177,6 +177,17 @@ class CheckoutController extends Controller
                         UserBalance::where('user_id',Auth::id())->update([
                             'balance' => $user_balance - $sum,
                         ]);
+
+                        $mutual_settelement = new MutualSettlement();
+                        $mutual_settelement->fill([
+                            'description' => 'Оплата заказа №' . $pay_order->id,
+                            'type_operation' => 4,
+                            'user_id' => Auth::id(),
+                            'currency' => 'UAH',
+                            'change' => -$sum,
+                            'balance' => $user_balance - $sum
+                        ]);
+                        $mutual_settelement->save();
                         $pay_order->update(['success_pay' => 'true']);
                     },5);
                 }

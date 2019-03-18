@@ -43,6 +43,7 @@
                         <table class="table">
                             <thead>
                             <tr>
+                                <td>{{__('id')}}</td>
                                 <td>{{__('Имя')}}</td>
                                 <td>{{__('Роль')}}</td>
                                 <td>{{__('Доступ')}}</td>
@@ -53,12 +54,13 @@
                                 @isset($users)
                                     @forelse($users as $user)
                                         <tr>
+                                            <td>{{$user->id}}</td>
                                             <td>
-                                                <div class="table-data__info">
+                                                <div onclick="location.href = '{{route('admin.user.show',$user->id)}}'" class="table-data__info">
                                                     <h6>{{$user->name}}</h6>
                                                     <span>
-                                                <a href="#">{{$user->email}}</a>
-                                            </span>
+                                                        <a href="#">{{$user->email}}</a>
+                                                    </span>
                                                 </div>
                                             </td>
                                             <td>

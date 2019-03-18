@@ -390,7 +390,8 @@ class Tecdoc
                     ->where(DB::raw("pds.nodeid"),(int)$section_id)
                     ->where(DB::raw('al.linkagetypeid'),2)
                     ->select(DB::raw('al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid supplierId, prd.description NormalizedDescription,p.id,p.name,p.price'))
-                    ->orderBy(DB::raw('s.description, al.datasupplierarticlenumber,p.price'),$sort)
+                    ->orderBy(DB::raw('p.price'),$sort)
+                    ->distinct()
                     ->paginate($pre);
                 break;
             case 'commercial':
@@ -406,7 +407,8 @@ class Tecdoc
                     ->where(DB::raw('pds.nodeid'),(int)$section_id)
                     ->where(DB::raw('al.linkagetypeid'),16)
                     ->select(DB::raw('al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid supplierId, prd.description NormalizedDescription,p.id,p.name,p.price'))
-                    ->orderBy(DB::raw('s.description, al.datasupplierarticlenumber,p.price'),$sort)
+                    ->orderBy(DB::raw('p.price'),$sort)
+                    ->distinct()
                     ->paginate($pre);
                 break;
             case 'motorbike':

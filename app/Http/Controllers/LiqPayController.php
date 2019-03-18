@@ -113,4 +113,23 @@ class LiqPayController extends Controller
         ));
         return view('liqpay.success_pay',compact('status_pay'));
     }
+
+    public function checkPayStatus(Request $request){
+        $pay_user = UserBalanceHistory::where([
+            ['user_id',Auth::id()],
+            ['id',(int)$request->id]
+        ])->first();
+
+        $liqpay = new LiqPay($this->public_key, $this->private_key);
+        $status_pay = $liqpay->api("request", array(
+            'action'        => 'status',
+            'version'       => '3',
+            'order_id'      => $pay_user->id
+        ));
+
+        return response()->json([
+            'pay' => $pay_user,
+            'liqpay_data' => $status_pay
+        ]);
+    }
 }

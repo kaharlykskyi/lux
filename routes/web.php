@@ -28,6 +28,7 @@ Route::prefix('liqpay')->middleware(['auth'])->group(function () {
     Route::get('/', 'LiqPayController@index')->name('liqpay');
     Route::post('/pay', 'LiqPayController@sendPayRequest')->name('liqpay.pay');
     Route::get('/result-pay', 'LiqPayController@resultPay')->name('liqpay.result_pay');
+    Route::get('/status-pay', 'LiqPayController@checkPayStatus')->name('liqpay.status_pay');
 });
 Route::post('/liqpay/response', 'LiqPayController@getLiqPayResponse')->name('liqpay.response');
 
@@ -83,13 +84,18 @@ Route::get('/filter', 'CatalogController@filter')->name('filter');
 Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth','permission']],function (){
     Route::get('/dashboard','DashboardController@index')->name('admin.dashboard');
     Route::get('/import-history','DashboardController@importHistory')->name('admin.import_history');
+
     Route::match(['get', 'post'], '/users','UserController@index')->name('admin.users');
+    Route::get('/user/{user}','UserController@show')->name('admin.user.show');
+    Route::post('/user/change-balance','UserController@userBalance')->name('admin.user.change_balance');
+
     Route::group(['prefix' => 'orders'],function (){
         Route::match(['get', 'post'], '/{status?}','OrderController@index')->name('admin.orders');
         Route::get('/change-status/orders','OrderController@changeStatusOrder')->name('admin.product.change_status_order');
         Route::get('/stock-product','OrderController@stockProductDelivery')->name('admin.product.stock');
         Route::match(['get', 'post'], '/edit/{order}','OrderController@editOder')->name('admin.order_edit');
     });
+
     Route::get('/full-order-info','OrderController@getOrderData')->name('admin.product.full_order_info');
     Route::get('/info-product-stock','OrderController@getInfoProductStock')->name('admin.product.info_product_stock');
     Route::post('/permission/{user?}','UserController@permission')->name('permission');
