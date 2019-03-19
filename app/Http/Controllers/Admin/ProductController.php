@@ -8,15 +8,19 @@ use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use \App\Services\Admin\Product as AdminProduct;
 
 class ProductController extends Controller
 {
 
     protected $tecdoc;
 
+    protected $service;
+
     public function __construct()
     {
         $this->tecdoc = new Tecdoc('mysql_tecdoc');
+        $this->service = new AdminProduct();
     }
 
     public function setFilterAdminProduct(Request $request){
@@ -197,5 +201,19 @@ class ProductController extends Controller
         return response()->json([
             'text' => 'Загрузка прошла успешно. Детальную информацию можно просмотреть в истории импортов'
         ]);
+    }
+
+    public function startExport(Request $request){
+
+        $limit_export = isset($request->limit)?$request->limit:10000;
+
+        $exportdata = $this->service->getExportData($limit_export);
+        foreach ($exportdata as $k => $item){
+            $exportdata[$k]->attribute = $this->service->getAttribute($item->articles,$item->SupplierId);
+        }
+
+        $xls_file = $this->service->createXlsFile($exportdata);
+
+        return response()->download($xls_file);
     }
 }

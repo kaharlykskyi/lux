@@ -120,4 +120,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
 
     Route::get('/menu','TopMenuController@index')->name('admin.menu.index');
     Route::match(['get', 'post'], '/menu/edit','TopMenuController@edit')->name('admin.menu.edit');
+
+    //Export
+    Route::get('/export-start','ProductController@startExport')->name('admin.export.start');
 });

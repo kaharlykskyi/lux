@@ -40,12 +40,23 @@
                         <button onclick="importPrice()" type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticModal">
                             {{__('Запустить импорт')}}
                         </button>
+                        <button onclick="importExport()" type="button" class="btn btn-warning" {{--data-toggle="modal" data-target="#exportModal"--}}>
+                            {{__('Запустить импорт')}}
+                        </button>
                         <script>
                             function importPrice() {
                                 $('#load-win').html(`<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>`);
                                 $.get("{{route('admin.start_import')}}",function (data) {
                                     $('#load-win').html(`<p>${data.text}</p>`);
                                 });
+                            }
+                            function importExport() {
+                                window.open("{{route('admin.export.start')}}", '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
+                                /*$('#exportModal #load-win').html(`<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>`);
+                                $.get("{{route('admin.export.start')}}",function (data) {
+                                    //$('#exportModal #load-win').html(`<p>${data.text}</p>`);
+                                    window.location = data;
+                                });*/
                             }
                         </script>
                     </div>
@@ -131,6 +142,23 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticModalLabel">Импорт прайс-листов</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body text-center" id="load-win"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- end modal static -->
+
+            <!-- modal static -->
+            <div class="modal fade" id="exportModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true"
+                 data-backdrop="static">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticModalLabel">Експорт товаров</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
