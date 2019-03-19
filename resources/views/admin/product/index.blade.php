@@ -41,7 +41,7 @@
                             {{__('Запустить импорт')}}
                         </button>
                         <button onclick="importExport()" type="button" class="btn btn-warning" {{--data-toggle="modal" data-target="#exportModal"--}}>
-                            {{__('Запустить импорт')}}
+                            {{__('Запустить експорт')}}
                         </button>
                         <script>
                             function importPrice() {
