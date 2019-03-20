@@ -24,9 +24,9 @@ class FastBuyController extends Controller
         }
 
         if ($request->status === 'new'){
-            $this->fast_buy = FastBuy::where('status',0)->with('product')->paginate($this->prePage);
+            $this->fast_buy = FastBuy::with('product')->where('status',0)->paginate($this->prePage);
         } else {
-            $this->fast_buy = FastBuy::where('status',1)->with('product')->paginate($this->prePage);
+            $this->fast_buy = FastBuy::with('product')->where('status',1)->paginate($this->prePage);
         }
 
         return view('admin.fast_buy.index')->with([

@@ -130,9 +130,6 @@
                                     <div class="col-xs-12 col-sm-3 col-md-2">
                                         <button type="submit" class="btn-round btn-sm">{{__('Подобрать')}}</button>
                                     </div>
-                                    <div class="col-xs-12 text-right padding-top-10">
-                                        <a class="link" href="">{{__('Просмотреные авто')}}</a>
-                                    </div>
                                 </div>
                             </form>
                         </div>

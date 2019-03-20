@@ -197,6 +197,10 @@ header .logo img {
     position: relative;
 }
 
+#car_f,#car_s{
+    max-width: 100%;
+}
+
 .filter-section .search-car__list .selectric-wrapper{
     position: unset;
 }
@@ -1062,6 +1066,10 @@ html .oe-list a {
     }
     .dropdown-list.open .dropdown-menu {
         left: -70px;
+    }
+    .filter-section .search-car__list li span {
+        text-align: left;
+        padding-left: 15px;
     }
 }
 

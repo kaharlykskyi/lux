@@ -27,9 +27,11 @@
                     <table class="table table-borderless table-data3" id="stock_product" style="display: none;">
                         <thead>
                         <tr>
-                            <th>Склад</th>
+                            <th>Название</th>
+                            <th>Бренд</th>
                             <th>Компания</th>
-                            <th>Остатки</th>
+                            <th>Количество</th>
+                            <th>Цена</th>
                         </tr>
                         </thead>
                         <tbody></tbody>
@@ -50,7 +52,7 @@
                                     <td>{{$item->phone}}</td>
                                     <td>{{$item->created_at}}</td>
                                     <td>
-                                        <span class="m-r-5" onclick="getStockProductInfo('{{$item->id}}',this)" style="cursor: pointer"><i class="fa fa-info" aria-hidden="true"></i></span>
+                                        <span class="m-r-5" onclick="getStockProductInfo('{{$item->product->articles}}',this)" style="cursor: pointer"><i class="fa fa-info" aria-hidden="true"></i></span>
                                         {{$item->product->name}}
                                     </td>
                                     <td>{{$item->product->articles}}</td>
@@ -85,25 +87,28 @@
                                                     </p>
                                                 </td>
                                             </tr>`);
-                            console.log($(obj).position());
+
                             const y = $(obj).position().left;
                             const x = $(obj).position().top;
                             $('#stock_product').css({
                                 position: 'absolute',
                                 top: x,
-                                left: y,
+                                left: '15px',
                                 display: 'block',
                                 zIndex: 10000
                             });
 
-                            $.get(`{{route('admin.product.info_product_stock')}}?productID=${id}`,function (data) {
+                            $.get(`{{route('admin.product.info_product_stock')}}?article=${id}`,function (data) {
+                                console.log(data);
                                 let data_str = '';
                                 data.response.forEach(function (item) {
                                     data_str += `
                                         <tr>
                                             <td>${item.name}</td>
+                                            <td>${item.brand}</td>
                                             <td>${item.company}</td>
                                             <td>${item.count}</td>
+                                            <td>${item.price}грн.</td>
                                         </tr>`;
                                 });
                                 $('#stock_product tbody').html(data_str);

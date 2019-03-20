@@ -46,12 +46,8 @@ class OrderController extends Controller
     }
 
     public function getInfoProductStock(Request $request){
-        $product_stock = DB::select("SELECT s.name,s.company,sp.count FROM `stocks` AS s 
-                                            JOIN `stock_products` AS sp ON sp.stock_id=s.id
-                                            WHERE sp.product_id={$request->productID}");
-
         return response()->json([
-            'response' => $product_stock
+            'response' => Product::where('articles',$request->article)->get()
         ]);
     }
 
