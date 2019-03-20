@@ -107,6 +107,17 @@ header>.container{
     padding-left: 200px;
 }
 
+.link.car-model{
+    height: 35px;
+    display: block;
+}
+
+.model-car-img{
+    width: 25px;
+    margin-left: 5px;
+    height: auto;
+}
+
 body header .logo{
     position: absolute;
     left: 15px;

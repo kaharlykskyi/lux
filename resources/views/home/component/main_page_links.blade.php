@@ -8,8 +8,11 @@
                     <div class="row">
                         @foreach($brands as $brand)
                             <div class="col-xs-12 col-sm-4 col-md-3">
-                                <a class="link" href="{{route('all_brands')}}?brand={{$brand->id}}">
+                                <a class="link car-model" href="{{route('all_brands')}}?brand={{$brand->id}}">
                                     <span>Запчасти на {{$brand->description}}</span>
+                                    @if(file_exists(public_path('images/images_carbrands/' . strtoupper(str_replace(' ','',$brand->description)) . '.png')))
+                                        <img class="model-car-img" src="{{asset('images/images_carbrands/' . strtoupper(str_replace(' ','',$brand->description)) . '.png')}}" alt="{{$brand->description}}">
+                                    @endif
                                 </a>
                             </div>
                         @endforeach
