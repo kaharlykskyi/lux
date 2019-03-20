@@ -108,6 +108,8 @@ class CatalogController extends Controller
                         ],
                         'supplier' => isset($request->supplier)?$filter_supplier:null
                     ]);
+                } else {
+                    $catalog_products = $this->arrayPaginator($catalog_products,$request,$this->pre_products);
                 }
                 break;
             default:

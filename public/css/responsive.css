@@ -130,9 +130,6 @@ header.header-style-3 .cate-bar-in {
 .shop-listing {
 	margin-bottom: 30px;
 }
-.cate-lst {
-	display: none;
-}
 .top-bar {
 	height: auto;
 	text-align: center;
@@ -1156,10 +1153,6 @@ header .logo {
 	width: 100%;
 	display: inline-block;
 	float: none;
-}
-header .cart-pop {
-	position: relative;
-	right: 0px;
 }
 .mega-inside .home-links li {
 	width: 50% !important;

@@ -7,7 +7,7 @@
                     <h3>Мы продаем запчасти для следующих марок автомобилей:</h3>
                     <div class="row">
                         @foreach($brands as $brand)
-                            <div class="col-xs-12 col-sm-2 col-md-3">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
                                 <a class="link" href="{{route('all_brands')}}?brand={{$brand->id}}">
                                     <span>Запчасти на {{$brand->description}}</span>
                                 </a>
@@ -20,7 +20,7 @@
                     <h4>В том числе для следующих популярных моделей:</h4>
                     <div class="row">
                         @foreach($models as $model)
-                            <div class="col-xs-12 col-sm-2 col-md-4">
+                            <div class="col-xs-12 col-sm-6 col-md-4">
                                 <a class="link" href="{{route('all_brands')}}?brand={{$model->manufacturerid}}&model={{$model->id}}">
                                     <span>{{$model->fulldescription}}</span>
                                 </a>
@@ -32,7 +32,7 @@
                     <h4>Самые популярные запчасти для иномарок:</h4>
                         <div class="row">
                             @foreach($popular_products as $product)
-                                <div class="col-xs-12 col-sm-2 col-md-4">
+                                <div class="col-xs-12 col-sm-6 col-md-4">
                                     <a class="link" href="{{route('product',['alias' => $product->articles,'supplierid' => $product->supplierId])}}">
                                         <span>{{$product->name}}</span>
                                     </a>

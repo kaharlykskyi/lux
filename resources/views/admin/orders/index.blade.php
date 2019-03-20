@@ -131,12 +131,7 @@
                 data.response.forEach(function (item) {
                     data_str += `
                                  <tr>
-                                    <td class="identification-wrapper">
-                                        <span class="m-r-10">
-                                            <i onclick="getStockProductInfo(${item.id},this)" class="fa fa-info" style="cursor: pointer" title="Остатки на складе"></i>
-                                        </span>
-                                        ${item.id}
-                                    </td>
+                                    <td class="identification-wrapper">${item.id}</td>
                                     <td>${item.articles}</td>
                                     <td>${item.name}</td>
                                     <td>${item.price}</td>
@@ -145,41 +140,6 @@
                     `;
                 });
                 $('#dataOrder').html(data_str);
-            });
-        }
-
-        function getStockProductInfo(id,obj) {
-            $('#stock_product tbody').html(`<tr>
-                                                <td colspan="3">
-                                                    <p class="text-center">
-                                                        <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-                                                        <span class="sr-only">Loading...</span>
-                                                    </p>
-                                                </td>
-                                            </tr>`);
-            console.log($(obj).position());
-            const y = $(obj).position().left;
-            const x = $(obj).position().top;
-            $('#stock_product').removeClass('hidden').css({
-                position: 'absolute',
-                top: x,
-                left: y,
-                display: 'block',
-                zIndex: 10000
-            });
-
-            $.get(`{{route('admin.product.info_product_stock')}}?productID=${id}`,function (data) {
-                let data_str = '';
-                data.response.forEach(function (item) {
-                    data_str += `
-                                <tr>
-                                    <td>${item.name}</td>
-                                    <td>${item.company}</td>
-                                    <td>${item.count}</td>
-                                </tr>
-                    `;
-                });
-                $('#stock_product tbody').html(data_str);
             });
         }
     </script>

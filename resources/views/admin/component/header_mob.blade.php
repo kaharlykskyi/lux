@@ -52,7 +52,7 @@
                 <li class="has-sub">
                     <a class="js-arrow" href="#">
                         <i class="zmdi zmdi-shopping-cart"></i>{{__('Заказы')}}</a>
-                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                    <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
                         <li>
                             <a href="{{route('admin.orders','new')}}">
                                 {{__('Заказы')}}

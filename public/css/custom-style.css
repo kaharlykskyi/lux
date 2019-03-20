@@ -968,15 +968,33 @@ html .oe-list a {
     body header .logo{
         position: relative;
         left: 0;
-        top: -20px;
+        top: 0;
     }
-    .cart-pop{
+    .cart-pop li{
         display: flex;
         justify-content: flex-end;
     }
 
+    .cart-pop li a #total-price{
+        font-size: 12px;
+    }
+    .filter-section .search-car__list .selectric-wrapper {
+        position: relative;
+    }
     header .logo img{
         width: 130px;
+    }
+    .main-page-links h3{
+        font-size: 25px;
+    }
+    .main-page-links h4 {
+        font-size: 20px;
+    }
+    .oe-category {
+        width: auto;
+    }
+    .dropdown-list.open .dropdown-menu {
+        left: -55px;
     }
 }
 
@@ -1039,11 +1057,24 @@ html .oe-list a {
     .filter-section .brand_auto .selectric-scroll ul{
         column-count: 2;
     }
+    #myTabContent .padding-30{
+        padding: 10px !important;
+    }
+    .dropdown-list.open .dropdown-menu {
+        left: -70px;
+    }
 }
 
 @media (max-width: 540px){
     body header .navbar {
         margin-top: 0;
+    }
+    header .search-cate {
+        display: block !important;
+        margin-top: 60px;
+    }
+    header .search-cate .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+        width: auto;
     }
 }
 
@@ -1074,6 +1105,12 @@ html .oe-list a {
         position: absolute;
         top: 5px;
         right: 15px;
+    }
+
+    body header .logo {
+        position: absolute;
+        left: 15px;
+        top: 0;
     }
 }
 
@@ -1112,5 +1149,38 @@ html .oe-list a {
     }
     .filter-section .brand_auto .selectric-scroll ul{
         column-count: 1;
+    }
+    header .search-cate {
+        padding-left: 5px;
+    }
+    header .search-cate input {
+        width: 60% !important;
+    }
+    header .search-cate .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+        width: 39%;
+    }
+
+    .nav>li>a {
+        padding: 10px 5px;
+    }
+
+    .top-bar .container{
+        padding: 0;
+    }
+
+    .dropdown-list.open .dropdown-menu {
+        left: -85px;
+    }
+
+    #root-category-modification-wrapper{
+        padding: 0;
+    }
+
+    #root-category-modification .list-group {
+        height: auto;
+        background-position: 100% 0;
+        padding-right: 0;
+        background-repeat: no-repeat;
+        background-size: 20%;
     }
 }

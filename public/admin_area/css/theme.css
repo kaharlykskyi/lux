@@ -11116,6 +11116,9 @@ section {
     .m-sm-l-125 {
         margin-left: 125px;
     }
+    .rs-select2--sm {
+        width: auto;
+    }
 }
 
 @media (max-width: 575px) {
