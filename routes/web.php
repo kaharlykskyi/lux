@@ -123,4 +123,6 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
 
     //Export
     Route::get('/export-start','ProductController@startExport')->name('admin.export.start');
+    //Import
+    Route::post('/import-ease-start','ProductController@startEaseImport')->name('admin.import_ease.start');
 });

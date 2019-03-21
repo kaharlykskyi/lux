@@ -216,4 +216,22 @@ class ProductController extends Controller
 
         return response()->download($xls_file);
     }
+
+    public function startEaseImport(Request $request){
+
+        if ($request->hasFile('price_list')){
+            $file = $request->file('price_list');
+            $file_name = time() . '_' . $file->getClientOriginalName();
+            $file->move(storage_path('app') . '/import_ease/',$file_name);
+        }
+
+        $data = (object)[
+            'company' => $request->company,
+            'file' => isset($file_name)?$file_name:null
+        ];
+
+        new ImportPriceList($data,true);
+
+        return back()->with('status','Импорт завершон');
+    }
 }

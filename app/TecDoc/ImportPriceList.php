@@ -26,7 +26,7 @@ class ImportPriceList
 
     protected $currency = null;
 
-    public function __construct()
+    public function __construct($data = null,$ease = false)
     {
         ini_set('memory_limit', '4090M');
         try{
@@ -43,7 +43,32 @@ class ImportPriceList
                 Log::error("Can't connect to privatbank: $e");
             }
         }
-        $this->getMail();
+        if ($ease){
+            $this->easeImport($data);
+        }else{
+            $this->getMail();
+        }
+
+    }
+
+    protected function easeImport($data){
+        $price_list_configs = config('price_list_settings');
+
+        foreach ($price_list_configs as $config){
+            if ($config['company'] === $data->company){
+                $this->config = $config;
+                $this->export(storage_path('app') . '/import_ease/' . $data->file);
+
+                DB::table('history_imports')->insert([
+                    'company' => $this->config['company'],
+                    'success' => $this->count_success,
+                    'fail' => $this->count_fail,
+                    'created_at' => Carbon::now()
+                ]);
+
+                unlink(storage_path('app') . '/import_ease/' . $data->file);
+            }
+        }
     }
 
     protected function getMail(){

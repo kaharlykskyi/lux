@@ -34,13 +34,16 @@
                         </div>
                     </div>
                     <div class="table-data__tool-right">
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#easeImportModal">
+                            {{__('Загрузить прайс')}}
+                        </button>
                         <button onclick="location.href = '{{route('admin.product.create')}}'" class="au-btn au-btn-icon au-btn--green au-btn--small">
                             <i class="zmdi zmdi-plus"></i>{{__('Создать')}}</button>
 
                         <button onclick="importPrice()" type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticModal">
                             {{__('Запустить импорт')}}
                         </button>
-                        <button onclick="importExport()" type="button" class="btn btn-warning" {{--data-toggle="modal" data-target="#exportModal"--}}>
+                        <button onclick="importExport()" type="button" class="btn btn-warning">
                             {{__('Запустить експорт')}}
                         </button>
                         <script>
@@ -52,11 +55,6 @@
                             }
                             function importExport() {
                                 window.open("{{route('admin.export.start')}}", '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
-                                /*$('#exportModal #load-win').html(`<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>`);
-                                $.get("{{route('admin.export.start')}}",function (data) {
-                                    //$('#exportModal #load-win').html(`<p>${data.text}</p>`);
-                                    window.location = data;
-                                });*/
                             }
                         </script>
                     </div>
@@ -153,17 +151,45 @@
             <!-- end modal static -->
 
             <!-- modal static -->
-            <div class="modal fade" id="exportModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true"
+            <div class="modal fade" id="easeImportModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true"
                  data-backdrop="static">
-                <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="staticModalLabel">Експорт товаров</h5>
+                            <h5 class="modal-title" id="easeImportModalLabel">Загрузка прайслиста</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body text-center" id="load-win"></div>
+                        <div class="modal-body text-center" id="load-win">
+                            <form action="{{route('admin.import_ease.start')}}" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                @csrf
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label for="company" class=" form-control-label">{{__('Выберите поставщика')}}</label>
+                                    </div>
+                                    <div class="col-12 col-md-9">
+                                        <select name="company" id="company" class="form-control">
+                                            <option value="0">{{__('Выберите поставщика')}}</option>
+                                            @foreach(config('price_list_settings') as $item)
+                                                <option value="{{$item['company']}}">{{$item['company']}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label for="price_list" class=" form-control-label">{{__('Выберите прайс-лист')}}</label>
+                                    </div>
+                                    <div class="col-12 col-md-9">
+                                        <input type="file" id="price_list" name="price_list" class="form-control-file">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-dot-circle-o"></i> {{__('Загрузить')}}
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
