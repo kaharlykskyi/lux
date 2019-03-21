@@ -504,9 +504,13 @@ class Tecdoc
      */
     public function getArtAttributes($number, $brand_id)
     {
+        $band_filter = '';
+        if (isset($brand_id)){
+            $band_filter = ' AND supplierId=' . (int)$brand_id;
+        }
+
         return DB::connection($this->connection)->select("
-            SELECT  * FROM article_attributes WHERE datasupplierarticlenumber='" . $number . "'  AND supplierId='" . $brand_id . "'
-        ");
+            SELECT  * FROM article_attributes WHERE datasupplierarticlenumber='" . $number . "'" . $band_filter);
     }
 
     /**
@@ -518,9 +522,13 @@ class Tecdoc
      */
     public function getArtFiles($number, $brand_id)
     {
+        $band_filter = '';
+        if (isset($brand_id)){
+            $band_filter = ' AND supplierId=' . (int)$brand_id;
+        }
+
         return DB::connection($this->connection)->select("
-            SELECT Description, PictureName FROM article_images WHERE DataSupplierArticleNumber='" . $number . "'  AND supplierId='" . $brand_id . "'
-        ");
+            SELECT Description, PictureName FROM article_images WHERE DataSupplierArticleNumber='" . $number . "'" . $band_filter);
     }
 
     /**

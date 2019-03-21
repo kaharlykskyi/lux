@@ -26,12 +26,20 @@ class ProductController extends Controller
         $request->alias = str_replace('@','/',$request->alias);
         if(!isset($request->supplierid)){
             $duff = DB::connection('mysql_tecdoc')->select("SELECT supplierId FROM articles WHERE DataSupplierArticleNumber='{$request->alias}' OR FoundString='{$request->alias}'");
-            $request->supplierid = $duff[0]->supplierId;
+            if (isset($duff[0])){
+                $request->supplierid = $duff[0]->supplierId;
+            }else{
+                $request->supplierid = null;
+            }
         }
         $product_attr = $this->tecdoc->getArtAttributes($request->alias,$request->supplierid);
-        $product_data= $this->tecdoc->getProductByArticle($request->alias,$request->supplierid);
-        $product_vehicles = $this->tecdoc->getArtVehicles($request->alias,$request->supplierid);
         $files = $this->tecdoc->getArtFiles($request->alias,$request->supplierid);
+
+        if (isset($request->supplierid)){
+            $product_data= $this->tecdoc->getProductByArticle($request->alias,$request->supplierid);
+            $product_vehicles = $this->tecdoc->getArtVehicles($request->alias,$request->supplierid);
+        }
+
         $product = Product::where('articles', $request->alias)->first();
 
         return view('product.product_detail',compact('product','product_attr','product_vehicles','product_data','files'));
