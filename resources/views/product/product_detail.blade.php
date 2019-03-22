@@ -62,8 +62,14 @@
                                         @isset($product)
                                             <div class="row">
                                                 <div class="col-sm-12 padding-top-10 padding-bottom-10">
-                                                    {!! $product->short_description !!}
+                                                    <p>{!! $product->short_description !!}</p>
                                                 </div>
+                                                @isset($supplier_details)
+                                                    <div class="col-sm-12 padding-top-10 padding-bottom-10">
+                                                        <span class="small">{{__('Информация про поставщика')}}:</span>
+                                                        <p>{{__('Название: ') . $supplier_details->name1}}</p>
+                                                    </div>
+                                                @endisset
                                             </div>
                                             <!-- Quinty -->
                                             <div class="add-car-block">
@@ -231,8 +237,8 @@
 
                         <!-- Related Products -->
                         @component('product.component.related',[
-                            'accessories' => $accessories,
-                            'art_replace' => $art_replace
+                            'accessories' => isset($accessories)?$accessories:null,
+                            'art_replace' => isset($art_replace)?$art_replace:null
                         ])
 
                         @endcomponent

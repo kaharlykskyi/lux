@@ -19,7 +19,7 @@
                         </div>
                     @endforeach
                 @else
-                    <div class="alert alert-warning" role="alert">{{__('Нету авто =(')}}</div>
+                    <div class="alert alert-warning" role="alert">{{__('В данный момент ваш гараж пуст. Пожалуйста, выберите авто для добавления')}}</div>
                 @endif
             </div>
         </div>

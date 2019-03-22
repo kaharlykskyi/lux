@@ -809,4 +809,11 @@ class Tecdoc
             ->where('supplierId',(int)$supplier_id)
             ->first();
     }
+
+    public function getSupplieInfo($supplier_id){
+        return DB::connection($this->connection)
+            ->table('supplier_details')
+            ->where('supplierid',(int)$supplier_id)
+            ->first();
+    }
 }
