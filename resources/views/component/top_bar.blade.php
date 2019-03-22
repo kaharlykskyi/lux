@@ -1,6 +1,6 @@
 <div class="top-bar">
     <div class="container">
-        <div class="col-sm-10">
+        <div class="col-lg-9">
             <ul class="nav nav-pills">
                 <li role="presentation"><a href="{{route('home')}}">{{__('Главная')}}</a></li>
                 @isset($pages_global)
@@ -10,9 +10,13 @@
                 @endisset
             </ul>
         </div>
-        <div class="col-sm-2 text-right">
+        <div class="col-lg-3 text-right">
             <ul style="margin-bottom: 0;height: 35px;display: flex;justify-content: flex-end;align-items: center;">
                 <!-- Authentication Links -->
+                <li class="margin-right-15">
+                    <i class="fa fa-phone"></i>
+                    {{config('app.company_phone')}}
+                </li>
                 @guest
                     <li class="margin-right-15">
                         <a href="{{ route('login') }}">{{ __('Войти') }}</a>

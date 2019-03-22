@@ -1,100 +1,47 @@
-<section class="padding-top-30 padding-bottom-0">
-    <!-- heading -->
-    <div class="heading">
-        <h2>{{__('Похожие товары')}}</h2>
-        <hr>
-    </div>
-    <!-- Items Slider -->
-    <div class="item-slide-4 with-nav">
-        <!-- Product -->
-        <div class="product">
-            <article> <img class="img-responsive" src="images/item-img-1-1.jpg" alt="" >
-                <!-- Content -->
-                <span class="tag">Latop</span> <a href="#." class="tittle">Laptop Alienware 15 i7 Perfect For Playing Game</a>
-                <!-- Reviews -->
-                <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
-                <div class="price">$350.00 </div>
-                <a href="#." class="cart-btn"><i class="icon-basket-loaded"></i></a> </article>
+@if(isset($accessories) && count($accessories) > 0)
+    <section class="padding-top-30 padding-bottom-0">
+        <div class="heading">
+            <h2>{{__('Сопутсвующие товары')}}</h2>
+            <hr>
         </div>
-        <!-- Product -->
-        <div class="product">
-            <article> <img class="img-responsive" src="images/item-img-1-2.jpg" alt="" > <span class="sale-tag">-25%</span>
-
-                <!-- Content -->
-                <span class="tag">Tablets</span> <a href="#." class="tittle">Mp3 Sumergible Deportivo Slim Con 8GB</a>
-                <!-- Reviews -->
-                <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
-                <div class="price">$350.00 <span>$200.00</span></div>
-                <a href="#." class="cart-btn"><i class="icon-basket-loaded"></i></a> </article>
+        <div class="item-slide-4 with-nav">
+            @foreach($accessories as $accessory)
+                <div class="product">
+                    <article>
+                        <img class="img-responsive" src="images/item-img-1-1.jpg" alt="" >
+                        @if(isset($accessory->old_price) && $accessory->old_price > 0)
+                            <span class="sale-tag">-{{(int)(100 - (100 *$accessory->price /$accessory->old_price))}}%</span>
+                        @endif
+                        <span class="tag">{{$accessory->matchcode}}</span> <a href="{{route('product',str_replace(' ','',str_replace('/','@',($accessory->DataSupplierArticleNumber))))}}?supplierid={{$accessory->supplierId}}" class="tittle">{{$accessory->name}}</a><br>
+                        <div class="price">{{$accessory->price}}грн. </div>
+                        <a href="#." onclick="{{(int)$accessory->count > 0?'addCartRelate(\''.route('add_cart',$accessory->id).'\');return false;':'alert(\'Извините, данный товар отсутсвует на складе\')'}}" class="cart-btn"><i class="icon-basket-loaded"></i></a>
+                    </article>
+                </div>
+            @endforeach
         </div>
+    </section>
+@endif
 
-        <!-- Product -->
-        <div class="product">
-            <article> <img class="img-responsive" src="images/item-img-1-3.jpg" alt="" >
-                <!-- Content -->
-                <span class="tag">Appliances</span> <a href="#." class="tittle">Reloj Inteligente Smart Watch M26 Touch </a>
-                <!-- Reviews -->
-                <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
-                <div class="price">$350.00</div>
-                <a href="#." class="cart-btn"><i class="icon-basket-loaded"></i></a> </article>
+@if(isset($art_replace) && count($art_replace) > 0)
+    <section class="padding-top-30 padding-bottom-0">
+        <div class="heading">
+            <h2>{{__('Сопутсвующие товары')}}</h2>
+            <hr>
         </div>
-
-        <!-- Product -->
-        <div class="product">
-            <article> <img class="img-responsive" src="images/item-img-1-4.jpg" alt="" > <span class="new-tag">New</span>
-
-                <!-- Content -->
-                <span class="tag">Accessories</span> <a href="#." class="tittle">Teclado Inalambrico Bluetooth Con Air Mouse</a>
-                <!-- Reviews -->
-                <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
-                <div class="price">$350.00</div>
-                <a href="#." class="cart-btn"><i class="icon-basket-loaded"></i></a> </article>
+        <div class="item-slide-4 with-nav">
+            @foreach($art_replace as $item)
+                <div class="product">
+                    <article>
+                        <img class="img-responsive" src="images/item-img-1-1.jpg" alt="" >
+                        @if(isset($item->old_price) && $item->old_price > 0)
+                            <span class="sale-tag">-{{(int)(100 - (100 *$item->price /$item->old_price))}}%</span>
+                        @endif
+                        <span class="tag">{{$item->matchcode}}</span> <a href="{{route('product',str_replace(' ','',str_replace('/','@',($item->DataSupplierArticleNumber))))}}?supplierid={{$item->supplierId}}" class="tittle">{{$item->name}}</a><br>
+                        <div class="price">{{$item->price}}грн. </div>
+                        <a href="#." onclick="{{(int)$item->count > 0?'addCartRelate(\''.route('add_cart',$item->id).'\');return false;':'alert(\'Извините, данный товар отсутсвует на складе\')'}}" class="cart-btn"><i class="icon-basket-loaded"></i></a>
+                    </article>
+                </div>
+            @endforeach
         </div>
-
-        <!-- Product -->
-        <div class="product">
-            <article> <img class="img-responsive" src="images/item-img-1-5.jpg" alt="" >
-                <!-- Content -->
-                <span class="tag">Appliances</span> <a href="#." class="tittle">Funda Para Ebook 7" 128GB full HD</a>
-                <!-- Reviews -->
-                <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
-                <div class="price">$350.00</div>
-                <a href="#." class="cart-btn"><i class="icon-basket-loaded"></i></a> </article>
-        </div>
-
-        <!-- Product -->
-        <div class="product">
-            <article> <img class="img-responsive" src="images/item-img-1-6.jpg" alt="" > <span class="sale-tag">-25%</span>
-
-                <!-- Content -->
-                <span class="tag">Tablets</span> <a href="#." class="tittle">Mp3 Sumergible Deportivo Slim Con 8GB</a>
-                <!-- Reviews -->
-                <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
-                <div class="price">$350.00 <span>$200.00</span></div>
-                <a href="#." class="cart-btn"><i class="icon-basket-loaded"></i></a> </article>
-        </div>
-
-        <!-- Product -->
-        <div class="product">
-            <article> <img class="img-responsive" src="images/item-img-1-7.jpg" alt="" >
-                <!-- Content -->
-                <span class="tag">Appliances</span> <a href="#." class="tittle">Reloj Inteligente Smart Watch M26 Touch </a>
-                <!-- Reviews -->
-                <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
-                <div class="price">$350.00</div>
-                <a href="#." class="cart-btn"><i class="icon-basket-loaded"></i></a> </article>
-        </div>
-
-        <!-- Product -->
-        <div class="product">
-            <article> <img class="img-responsive" src="images/item-img-1-8.jpg" alt="" > <span class="new-tag">New</span>
-
-                <!-- Content -->
-                <span class="tag">Accessories</span> <a href="#." class="tittle">Teclado Inalambrico Bluetooth Con Air Mouse</a>
-                <!-- Reviews -->
-                <p class="rev"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> <i class="fa fa-star-o"></i> <span class="margin-left-10">5 Review(s)</span></p>
-                <div class="price">$350.00</div>
-                <a href="#." class="cart-btn"><i class="icon-basket-loaded"></i></a> </article>
-        </div>
-    </div>
-</section>
+    </section>
+@endif

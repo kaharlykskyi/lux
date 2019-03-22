@@ -18,13 +18,15 @@
 
                     <!-- Shop Side Bar -->
                     <div class="col-md-3">
-                        @component('catalog.compenents.filter',[
-                            'brands' => $brands,
-                            'min_price' => $min_price,
-                            'max_price' => $max_price,
-                            'attributes' => $attribute,
-                            'filter_supplier' => $filter_supplier
-                        ])@endcomponent
+                        @if($catalog_products->total() > 0)
+                            @component('catalog.compenents.filter',[
+                                'brands' => $brands,
+                                'min_price' => $min_price,
+                                'max_price' => $max_price,
+                                'attributes' => $attribute,
+                                'filter_supplier' => $filter_supplier
+                            ])@endcomponent
+                        @endif
                     </div>
 
                     <!-- Products -->
@@ -53,20 +55,13 @@
 
                             @isset($catalog_products)
                                 @forelse($catalog_products as $product)
-                                    @php
-                                        $tecdoc = new App\TecDoc\Tecdoc('mysql_tecdoc');
-                                        $tecdoc->setType('passenger');
-                                        $file = $tecdoc->getArtFiles(isset($product->DataSupplierArticleNumber)?$product->DataSupplierArticleNumber:$product->articles,$product->supplierId);
-                                        $product->Description = isset($file[0])?$file[0]->Description:null;
-                                        $product->PictureName = isset($file[0])?$file[0]->PictureName:null;
-                                    @endphp
                                         <!-- Product -->
                                         <div class="product" @isset($product->id)id="product-{{$product->id}}"@endisset>
                                             <article>
                                                 <img class="img-responsive" src="{{asset('/images/item-img-1-2.jpg')}}" alt="" >
                                                 <!-- Content -->
-                                                <span class="tag">{{$product->matchcode}}</span> <a href="{{route('product',str_replace(' ','',str_replace('/','@',(isset($product->DataSupplierArticleNumber)?$product->DataSupplierArticleNumber:$product->articles))))}}?supplierid={{$product->supplierId}}" class="tittle">
-                                                    {{isset($product->NormalizedDescription)?$product->NormalizedDescription:$product->name}}
+                                                <span class="tag">{{$product->matchcode}}</span> <a href="{{route('product',str_replace(' ','',str_replace('/','@',($product->DataSupplierArticleNumber))))}}?supplierid={{$product->supplierId}}" class="tittle">
+                                                    {{$product->name}}
                                                 </a>
                                                 <p class="rev"></p>
                                                 @isset($product->price)<div class="price">{{$product->price . __(' грн')}} </div>@endisset

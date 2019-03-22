@@ -54,6 +54,7 @@ Route::prefix('product')->group(function () {
     Route::get('/{alias}', 'ProductController@index')->name('product');
     Route::post('/fast-buy/{id}', 'ProductController@fastBuy')->name('fast_buy');
     Route::post('/add-cart/{id}', 'ProductController@addCart')->name('add_cart');
+    Route::post('/comment', 'ProductController@writeComment')->middleware(['auth'])->name('product.comment');
 });
 /*-----CHECKOUT------*/
 Route::prefix('checkout')->group(function () {
@@ -120,6 +121,8 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
 
     Route::get('/menu','TopMenuController@index')->name('admin.menu.index');
     Route::match(['get', 'post'], '/menu/edit','TopMenuController@edit')->name('admin.menu.edit');
+    Route::match(['get', 'post'], '/comment','DashboardController@productComment')->name('admin.comment');
+    Route::match(['get', 'post'], '/shipping-payment','DashboardController@shippingPayment')->name('admin.shipping_payment');
 
     //Export
     Route::get('/export-start','ProductController@startExport')->name('admin.export.start');

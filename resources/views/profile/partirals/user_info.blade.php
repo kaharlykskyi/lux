@@ -25,7 +25,7 @@
                             <i class="fa fa-check text-success" aria-hidden="true" title="Подтверждён"></i>
                         @else
                             <a class="text-danger" href="{{ route('verification.resend') }}">
-                                <i class="fa fa-times" aria-hidden="true" title="Не подтверждён"></i>
+                                <span class="small">(нажмите здесь для повторной отапрвки письма)</span>
                             </a>
                         @endif
                         <input type="email" class="form-control" name="email" value="{{ Auth::user()->email }}" required>

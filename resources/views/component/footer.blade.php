@@ -14,10 +14,8 @@
                 <p>{{__('E-mail')}}: {{config('app.work_mail')}}</p>
                 <div class="social-links"> <a href="#."><i class="fa fa-facebook"></i></a> <a href="#."><i class="fa fa-twitter"></i></a> <a href="#."><i class="fa fa-linkedin"></i></a> <a href="#."><i class="fa fa-pinterest"></i></a> <a href="#."><i class="fa fa-instagram"></i></a> <a href="#."><i class="fa fa-google"></i></a> </div>
             </div>
-
-            <!-- Categories -->
-            <div class="col-md-3">
-                <h4>{{__('Категории')}}</h4>
+            <div class="col-md-4">
+                <h4>{{__('Для клиента')}}</h4>
                 <ul class="links-footer">
                     @isset($pages)
                         @foreach($pages as $page)
@@ -28,28 +26,12 @@
                     @endisset
                 </ul>
             </div>
-
-            <!-- Categories -->
-            <div class="col-md-3">
-                <h4>{{__('Для клиента')}}</h4>
-                <ul class="links-footer">
-                    @isset($pages)
-                        @foreach($pages as $page)
-                            @if($page->footer_column === 2)
-                                <li><a href="{{route('page',$page->alias)}}">{{$page->title}}</a></li>
-                            @endif
-                        @endforeach
-                    @endisset
-                </ul>
-            </div>
-
-            <!-- Categories -->
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <h4>{{__('Информация')}}</h4>
                 <ul class="links-footer">
                     @isset($pages)
                         @foreach($pages as $page)
-                            @if($page->footer_column === 3)
+                            @if($page->footer_column === 2)
                                 <li><a href="{{route('page',$page->alias)}}">{{$page->title}}</a></li>
                             @endif
                         @endforeach

@@ -589,11 +589,16 @@ class Tecdoc
      */
     public function getArtReplace($number, $brand_id)
     {
-        return DB::connection($this->connection)->select("
-            SELECT s.description supplier, a.replacenbr number FROM article_rn a 
-            JOIN suppliers s ON s.id=a.replacesupplierid
-            WHERE a.datasupplierarticlenumber='" . $number . "' AND a.supplierid='" . $brand_id . "'
-        ");
+        return DB::connection($this->connection)
+            ->table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_rn as ar'))
+            ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('ar.replacedatasupplierarticlenumber'))
+            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_images as img'),function ($join){
+                $join->on(DB::raw('img.DataSupplierArticleNumber'),'=',DB::raw('ar.replacedatasupplierarticlenumber'));
+                $join->on(DB::raw('img.SupplierId'),'=',DB::raw('ar.replacedupplierid'));
+            })
+            ->where(DB::raw('ar.DataSupplierArticleNumber'),$number)
+            ->select(DB::raw('ar.replacedupplierid AS supplierId,img.PictureName, ar.replacedatasupplierarticlenumber AS DataSupplierArticleNumber, p.brand matchcode, p.id, p.name, p.price,p.old_price,p.count'))
+            ->get();
     }
 
     /**
@@ -611,6 +616,20 @@ class Tecdoc
             JOIN suppliers s ON s.id=c.SupplierId
             WHERE a.datasupplierarticlenumber='" . $number . "' AND a.manufacturerId='" . $brand_id . "'
         ");
+    }
+
+    public function getAccessories($number)
+    {
+        return DB::connection($this->connection)
+            ->table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_acc as acc'))
+            ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('acc.AccDataSupplierArticleNumber'))
+            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_images as img'),function ($join){
+                $join->on(DB::raw('img.DataSupplierArticleNumber'),'=',DB::raw('acc.AccDataSupplierArticleNumber'));
+                $join->on(DB::raw('img.SupplierId'),'=',DB::raw('acc.AccSupplierId'));
+            })
+            ->where(DB::raw('acc.DataSupplierArticleNumber'),$number)
+            ->select(DB::raw('acc.AccSupplierId AS supplierId, acc.AccDataSupplierArticleNumber DataSupplierArticleNumber,img.PictureName, p.brand matchcode, p.id, p.name, p.price,p.old_price,p.count'))
+            ->get();
     }
 
     /**

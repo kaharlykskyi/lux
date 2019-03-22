@@ -78,6 +78,12 @@
                         <li>
                             <a href="{{route('admin.menu.index')}}">{{__('Меню')}}</a>
                         </li>
+                        <li>
+                            <a href="{{route('admin.comment')}}">{{__('Коментарии')}}</a>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.shipping_payment')}}">{{__('Доставка и оплата')}}</a>
+                        </li>
                     </ul>
                 </li>
             </ul>

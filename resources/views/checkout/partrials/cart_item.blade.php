@@ -25,7 +25,7 @@
                                 <input id="count{{$product->id}}" type="number" value="{{$product['pivot']['count']}}" oninput="changeCount({{$product->id}},{{$product['pivot']['cart_id']}},'{{route('product_count')}}')">
                             </div></td>
                         <td class="text-center padding-top-60" id="price{{$product->id}}">{{((double)$product->price * (integer)$product['pivot']['count'])}} грн</td>
-                        <td class="text-center padding-top-60"><a href="#." class="remove" onclick="deleteProduct({{$product->id}},{{$product->cart_id}},'{{route('product_delete')}}'); return false;"><i class="fa fa-close"></i></a></td>
+                        <td class="text-center padding-top-60"><a href="#." class="remove" onclick="deleteProduct({{$product->id}},{{$product['pivot']['cart_id']}},'{{route('product_delete')}}'); return false;"><i class="fa fa-close"></i></a></td>
                     </tr>
                 @empty
                     <tr>
@@ -60,7 +60,7 @@
                                     {{((double)$product->price * (integer)$product->count)}} грн <span class="show-480">{{__(' - общяя стоимость')}}</span>
                                 </div>
                                 <div>
-                                    <a href="#." class="remove" onclick="deleteProduct({{$product->id}},{{$product->cart_id}},'{{route('product_delete')}}'); return false;"><i class="fa fa-close"></i></a>
+                                    <a href="#." class="remove" onclick="deleteProduct({{$product->id}},{{$product['pivot']['cart_id']}},'{{route('product_delete')}}'); return false;"><i class="fa fa-close"></i></a>
                                 </div>
                             </li>
                         @empty
@@ -86,15 +86,15 @@
         <h6 class="text-right text-black text-uppercase">{{__('Общая сумма: ')}}
             @if(isset($user->discount))
                 <span id="total-price-checkout">
-                                        {{round($sum - ($sum * (int)$user->discount->percent / 100),2)}}
-                                    </span>грн
+                    {{round($sum - ($sum * (int)$user->discount->percent / 100),2)}}
+                </span>грн
                 <span class="margin-left-10 small text-line-through" id="total-not-discount">
-                                        {{$sum}}грн <i class="fa fa-question" aria-hidden="true" title="{{$user->discount->description}}"></i>
-                                    </span>
+                    {{$sum}}грн <i class="fa fa-question" aria-hidden="true" title="{{$user->discount->description}}"></i>
+                </span>
             @else
                 <span id="total-price-checkout">
-                                        {{$sum}}
-                                    </span>грн
+                    {{$sum}}
+                </span>грн
             @endif
         </h6>
     </div>

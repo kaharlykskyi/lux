@@ -23,4 +23,8 @@ class Product extends Model
     public function cart(){
         return $this->belongsToMany(Cart::class,'cart_products');
     }
+
+    public function comment(){
+        return $this->hasMany(ProductComment::class)->orderByDesc('created_at');
+    }
 }

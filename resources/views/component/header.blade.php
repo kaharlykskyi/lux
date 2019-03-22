@@ -124,10 +124,6 @@
                     @endisset
                 </ul>
             </div>
-
-
-            <!-- NAV RIGHT -->
-            <div class="nav-right"> <span class="call-mun"><i class="fa fa-phone"></i> <strong>{{__('Гарячая линия:')}}</strong> {{config('app.company_phone')}}</span> </div>
         </div>
     </nav>
 </header>
