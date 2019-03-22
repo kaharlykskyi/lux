@@ -51,8 +51,16 @@
             <option @isset($page->id) @if((int)$page->footer_column === 4) selected @endif @endisset value="4">{{__('Не показывать в футере')}}</option>
             <option @isset($page->id) @if((int)$page->footer_column === 1) selected @endif @endisset value="1">{{__('Колонка #1')}}</option>
             <option @isset($page->id) @if((int)$page->footer_column === 2) selected @endif @endisset value="2">{{__('Колонка #2')}}</option>
-            <option @isset($page->id) @if((int)$page->footer_column === 3) selected @endif @endisset value="3">{{__('Колонка #3')}}</option>
         </select>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col col-md-3">
+        <label for="show_header" class=" form-control-label">{{__('Показывать в хедере')}}</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <input style="width: 20px;height: 20px;" type="checkbox" @if(isset($page) && $page->show_header === 1) checked @endif id="show_header" value="1"  name="show_header" class="form-control-file">
     </div>
 </div>
 

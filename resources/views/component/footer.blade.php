@@ -1,4 +1,4 @@
-<footer>
+<footer style="background: #3134393d">
     <div class="container">
 
         <!-- Footer Upside Links -->
@@ -17,8 +17,8 @@
             <div class="col-md-4">
                 <h4>{{__('Для клиента')}}</h4>
                 <ul class="links-footer">
-                    @isset($pages)
-                        @foreach($pages as $page)
+                    @isset($pages_global)
+                        @foreach($pages_global as $page)
                             @if($page->footer_column === 1)
                                 <li><a href="{{route('page',$page->alias)}}">{{$page->title}}</a></li>
                             @endif
@@ -29,8 +29,8 @@
             <div class="col-md-4">
                 <h4>{{__('Информация')}}</h4>
                 <ul class="links-footer">
-                    @isset($pages)
-                        @foreach($pages as $page)
+                    @isset($pages_global)
+                        @foreach($pages_global as $page)
                             @if($page->footer_column === 2)
                                 <li><a href="{{route('page',$page->alias)}}">{{$page->title}}</a></li>
                             @endif
@@ -43,7 +43,7 @@
 </footer>
 
 <!-- Rights -->
-<div class="rights">
+<div class="rights" style="background: #31343952">
     <div class="container">
         <div class="row">
             <div class="col-sm-6">

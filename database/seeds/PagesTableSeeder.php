@@ -71,7 +71,8 @@ class PagesTableSeeder extends Seeder
                             <script>/*<![CDATA[*/function initMap(){var h=[{coordinates:{lat:50.44401,lng:30.366732},title:"вул. Перемоги, 9а"},{coordinates:{lat:50.44919,lng:30.591186},title:"вул. Раїси Окіпної, 8"}];var i=new google.maps.Map(document.getElementById("map"),{zoom:12,center:{lat:(h[0].coordinates.lat+h[1].coordinates.lat)/2,lng:(h[0].coordinates.lng+h[1].coordinates.lng)/2}});var g=[];for(var j=0;j<h.length;j++){g[j]=new google.maps.Marker({position:h[j].coordinates,map:i,title:h[j].title,clickable:true})}var f=null;g.forEach(function(b,a){google.maps.event.addListener(b,"click",function(){if(f){f.close()}f=new google.maps.InfoWindow({content:b.title});f.open(i,b)})})};/*]]>*/</script>
                             <br>',
             'user_id' => 1,
-            'footer_column' => 3,
+            'footer_column' => 2,
+            'show_header' => 1,
             'created_at'=> Carbon::now(),
             'updated_at'=> Carbon::now(),
         ]);
@@ -114,7 +115,8 @@ class PagesTableSeeder extends Seeder
                 </form></div>
                 </div>',
             'user_id' => 1,
-            'footer_column' => 3,
+            'footer_column' => 2,
+            'show_header' => 0,
             'created_at'=> Carbon::now(),
             'updated_at'=> Carbon::now(),
         ]);

@@ -31,6 +31,7 @@
                             <th>{{__('Заголовок')}}</th>
                             <th>{{__('Ссылка')}}</th>
                             <th>{{__('Колонка футера')}}</th>
+                            <th>{{__('Показывать в хедере')}}</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -43,6 +44,7 @@
                                         <span class="block-email">{{$page->alias}}</span>
                                     </td>
                                     <td>{{$page->footer_column}}</td>
+                                    <td>{{$page->show_header === 1?'да':'нет'}}</td>
                                     <td>
                                         <div class="table-data-feature">
                                             <button onclick="location.href = '{{route('admin.page.edit',$page->id)}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Редактирвать')}}">

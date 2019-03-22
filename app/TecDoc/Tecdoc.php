@@ -389,7 +389,7 @@ class Tecdoc
                     ->where(DB::raw("al.linkageid"),(int)$modification_id)
                     ->where(DB::raw("pds.nodeid"),(int)$section_id)
                     ->where(DB::raw('al.linkagetypeid'),2)
-                    ->select(DB::raw('al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid supplierId, prd.description NormalizedDescription,p.id,p.name,p.price'))
+                    ->select(DB::raw('al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid supplierId, prd.description NormalizedDescription,p.id,p.name,p.price,p.count'))
                     ->orderBy(DB::raw('p.price'),$sort)
                     ->distinct()
                     ->paginate($pre);
@@ -406,7 +406,7 @@ class Tecdoc
                     ->where(DB::raw('al.linkageid'),(int)$modification_id)
                     ->where(DB::raw('pds.nodeid'),(int)$section_id)
                     ->where(DB::raw('al.linkagetypeid'),16)
-                    ->select(DB::raw('al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid supplierId, prd.description NormalizedDescription,p.id,p.name,p.price'))
+                    ->select(DB::raw('al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid supplierId, prd.description NormalizedDescription,p.id,p.name,p.price,p.count'))
                     ->orderBy(DB::raw('p.price'),$sort)
                     ->distinct()
                     ->paginate($pre);
@@ -720,7 +720,7 @@ class Tecdoc
                 [DB::raw('p.price'),'<=',$filter['price']['max']]
             ])
             ->whereRaw(isset($filter['supplier'])? " s.id IN (".implode(',',$filter['supplier']).")":'s.id > 0')
-            ->select(DB::raw('al.SupplierId AS supplierId, al.DataSupplierArticleNumber, s.matchcode, p.id, p.name, p.price'))
+            ->select(DB::raw('al.SupplierId AS supplierId, al.DataSupplierArticleNumber, s.matchcode, p.id, p.name, p.price,p.count'))
             ->orderBy(DB::raw('p.price'),$sort)
             ->distinct()
             ->paginate((int)$pre);
@@ -745,7 +745,7 @@ class Tecdoc
                 [DB::raw('p.price'),'<=',$filter['price']['max']]
             ])
             ->whereRaw(isset($filter['supplier'])? " sp.id IN (".implode(',',$filter['supplier']).")":'sp.id > 0')
-            ->select(DB::raw('sp.id AS supplierId, ac.PartsDataSupplierArticleNumber as DataSupplierArticleNumber, sp.matchcode, p.id, p.name, p.price'))
+            ->select(DB::raw('sp.id AS supplierId, ac.PartsDataSupplierArticleNumber as DataSupplierArticleNumber, sp.matchcode, p.id, p.name, p.price,p.count'))
             ->orderBy(DB::raw('p.price'),$sort)
             ->distinct()
             ->paginate((int)$pre);
@@ -795,7 +795,7 @@ class Tecdoc
                     ->where(DB::raw('pc.modelid'),(int)$id)
                     ->where(DB::raw('pct.id'),(int)$id_category)
                     ->where(DB::raw('al.linkagetypeid'),2)
-                    ->select('pcp.supplierid AS supplierId','al.DataSupplierArticleNumber','p.brand matchcode','p.id','p.name','p.price')
+                    ->select('pcp.supplierid AS supplierId','al.DataSupplierArticleNumber','p.brand matchcode','p.id','p.name','p.price','p.count')
                     ->orderBy('p.price',$sort)
                     ->distinct()
                     ->paginate($pre);

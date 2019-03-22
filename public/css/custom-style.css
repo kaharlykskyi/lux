@@ -105,6 +105,19 @@ header .search-cate .submit {
     background: #0088ccc9 !important;
     color: #fff !important;
 }
+
+.cart-pop .fa-shopping-cart{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+    line-height: 50px;
+    color: #686868;
+    background: #eeeeee;
+    float: left;
+    text-align: center;
+    font-size: 23px;
+}
 /*----END GLOBAL VAR-----*/
 
 /*-----HOME-----*/

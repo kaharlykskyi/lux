@@ -5,7 +5,9 @@
                 <li role="presentation"><a href="{{route('home')}}">{{__('Главная')}}</a></li>
                 @isset($pages_global)
                     @foreach($pages_global as $page)
-                        <li><a href="{{route('page',$page->alias)}}">{{$page->title}}</a></li>
+                        @if($page->show_header === 1)
+                            <li><a href="{{route('page',$page->alias)}}">{{$page->title}}</a></li>
+                        @endif
                     @endforeach
                 @endisset
             </ul>

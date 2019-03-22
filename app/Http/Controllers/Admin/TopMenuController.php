@@ -43,7 +43,7 @@ class TopMenuController extends Controller
                 $top_menu->fill($data);
                 $top_menu->save();
             }
-            return back();
+            return back()->with('status','Изменено');
         }
 
         $tecdoc_name = $request->id;

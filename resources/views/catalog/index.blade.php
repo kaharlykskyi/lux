@@ -65,10 +65,10 @@
                                                 </a>
                                                 <p class="rev"></p>
                                                 @isset($product->price)<div class="price">{{$product->price . __(' грн')}} </div>@endisset
-                                                @if(isset($product->id))
+                                                @if($product->count > 0)
                                                     <a href="#." onclick="addCart('{{route('add_cart',$product->id)}}')" class="cart-btn"><i class="icon-basket-loaded"></i></a>
                                                 @else
-                                                    <span class="tag">{{__('Нет на складе')}}</span>
+                                                    <a href="#." onclick="alert('нет в наличии')" class="cart-btn"><i class="icon-basket-loaded"></i></a>
                                                 @endif</article>
                                         </div>
                                 @empty

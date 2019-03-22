@@ -8,6 +8,11 @@
                 <div class="card">
                     <div class="card-header">
                         <strong class="card-title">{{__('Редактирование категории')}}</strong>
+                        @if(session('status'))
+                            <small>
+                                <span class="badge badge-success float-right mt-1">{{session('status')}}</span>
+                            </small>
+                        @endif
                     </div>
                     <div class="card-body">
                         <div class="card-text">

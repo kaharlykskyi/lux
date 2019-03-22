@@ -53,7 +53,7 @@ class PageController extends Controller
                 ->withInput();
         }
 
-        $data['user_id'] = (int)Auth::user()->id;
+        $data['user_id'] = Auth::id();
 
         $page = new Page();
         $page->fill($data);
@@ -110,7 +110,7 @@ class PageController extends Controller
                 ->withInput();
         }
 
-        $data['user_id'] = (int)Auth::user()->id;
+        $data['user_id'] = Auth::id();
 
         $page->update($data);
         if ($page->save()){
