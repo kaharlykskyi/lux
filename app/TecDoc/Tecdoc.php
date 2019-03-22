@@ -770,7 +770,7 @@ class Tecdoc
             ])
             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('sp.matchcode'),DB::raw('p.brand'))
             ->whereRaw(isset($filter['supplier'])? " sp.id IN (".implode(',',$filter['supplier']).")":'sp.id > 0')
-            ->select(DB::raw('sp.id AS supplierId, sp.matchcode, p.id, p.name, p.price, p.articles AS DataSupplierArticleNumber,p.count'))
+            ->select(DB::raw('sp.id AS supplierId, sp.matchcode, p.id, p.name, p.price, p.articles,p.count'))
             ->orderBy(DB::raw('p.price'),$sort)
             ->groupBy(DB::raw('p.articles,p.count,p.name,p.id,sp.matchcode,sp.id'))
             ->havingRaw('MIN(p.price)')
