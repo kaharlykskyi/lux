@@ -35,7 +35,7 @@
                 <div class="col-md-3">
                     <div class="panel panel-primary">
                         <div class="panel-collapse">
-                            <ul class="list-group list-unstyled">
+                            <ul class="list-group list-unstyled" id="list-panel-profile">
                                 <li id="nav-tabs-1" data-id-href="tabs-1" class="list-group-item">{{__('Личные данные')}}</li>
                                 <li id="nav-tabs-3" data-id-href="tabs-3" class="list-group-item">{{__('Информация о доставке')}}</li>
                                 <li id="nav-tabs-2" data-id-href="tabs-2" class="list-group-item">{{__('Заказы')}}</li>
@@ -155,7 +155,7 @@
                 }
             });
 
-            $('.list-group-item, a.link-prof-item').click(function (e) {
+            $('#list-panel-profile .list-group-item, a.link-prof-item').click(function (e) {
                 e.preventDefault();
                 $('.tab-item').removeClass('active');
                 $('.list-group-item').removeClass('active');
