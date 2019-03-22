@@ -687,11 +687,15 @@ body .modal-content{
 }
 
 #root-category-modification .list-group {
-    height: 250px;
+    height: 185px;
     background-position: 100% 30%;
     padding-right: 110px;
     background-repeat: no-repeat;
     background-size: 40%;
+}
+
+#root-category-modification .panel-default>.panel-heading {
+    height: 75px;
 }
 
 #root-category-modification .list-group-item{

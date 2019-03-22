@@ -795,7 +795,7 @@ class Tecdoc
                     ->where(DB::raw('pc.modelid'),(int)$id)
                     ->where(DB::raw('pct.id'),(int)$id_category)
                     ->where(DB::raw('al.linkagetypeid'),2)
-                    ->select('pcp.supplierid AS supplierId','al.DataSupplierArticleNumber','p.brand matchcode','p.id','p.name','p.price','p.count')
+                    ->select(DB::raw('pcp.supplierid AS supplierId,al.DataSupplierArticleNumber,p.brand matchcode,p.id,p.name,p.price,p.count'))
                     ->orderBy('p.price',$sort)
                     ->distinct()
                     ->paginate($pre);

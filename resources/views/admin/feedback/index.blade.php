@@ -60,7 +60,7 @@
                                 <tr class="tr-shadow">
                                     <td colspan="6">
                                         <div class="alert alert-warning" role="alert">
-                                            {{__('Вопросов ещё не пресылалось')}}
+                                            {{__('Ничего не найдено')}}
                                         </div>
                                     </td>
                                 </tr>

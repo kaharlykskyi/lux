@@ -200,14 +200,19 @@ function makeTemplateCategoryCar(data,modification_auto,type_auto) {
         str_data += `<div class="col-xs-12 col-sm-6 col-lg-4 padding-0 margin-bottom-0">
                             <div class="panel panel-default">
                               <div class="panel-heading">
-                                <a target="_blank" href="/brands?modification_auto=${modification_auto}&type_auto=${type_auto}">${item.description}</a>
+                                <a class="h3" target="_blank" href="/brands?modification_auto=${modification_auto}&type_auto=${type_auto}">${item.description}</a>
                               </div>
                               <div class="panel-body row">
                                 <div class="list-group" style="background-image: url('${(item.image_data !== null)?'/images/catalog/'+item.image_data.logo:''}');">`;
-        item.sub_category.forEach(function (sub) {
-            str_data += `<a href="/catalog/${sub.id}?modification_auto=${modification_auto}&type_auto=${type_auto}" class="list-group-item text-primary border-0">${sub.description}</a>`
+        item.sub_category.forEach(function (sub,i) {
+            if(i <= 4){
+                str_data += `<a href="/catalog/${sub.id}?modification_auto=${modification_auto}&type_auto=${type_auto}" class="list-group-item text-primary border-0">${sub.description}</a>`
+            }
+            if(i === 5){
+                str_data += `<a class="list-group-item border-0" target="_blank" href="/brands?modification_auto=${modification_auto}&type_auto=${type_auto}"><small>показать все</small></a>`
+            }
         });
-        str_data += `<a class="list-group-item border-0" target="_blank" href="/brands?modification_auto=${modification_auto}&type_auto=${type_auto}"><small>показать все</small></a></div></div></div></div>`
+        str_data += '</div></div></div></div>';
     });
 
     return str_data;

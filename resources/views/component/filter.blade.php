@@ -71,7 +71,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="col-xs-12 text-right padding-top-10">
+                                    <div class="col-xs-12 padding-top-10">
                                         <a class="link" href="" onclick="return false;" data-toggle="modal" data-target="#search_cars_modal">{{__('Мой гараж')}}</a>
                                     </div>
                                 </div>
