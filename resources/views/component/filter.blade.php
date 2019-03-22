@@ -14,7 +14,7 @@
                 <li class="tab fancyTab">
                     <div class="arrow-down"><div class="arrow-down-inner"></div></div>
                     <a id="tab2" href="#tabBody2" role="tab" aria-controls="tabBody2" aria-selected="true" data-toggle="tab" tabindex="0">
-                        <span>{{__('Подбор по vin')}}</span>
+                        <span>{{__('Подбор по ')}}</span><strong>{{__('VIN')}}</strong>
                     </a>
                     <div class="whiteBlock"></div>
                 </li>
@@ -38,7 +38,7 @@
                                             </li>
                                             <li class="year_auto">
                                                 <select class="filter_select" name="year_auto" id="year_auto">
-                                                    <option selected value="">{{__('Выберите год')}}</option>
+                                                    <option selected value="">{{__('Год')}}</option>
                                                     @for($i=(int)date('Y');$i >= 1980;$i--)
                                                         <option value="{{$i}}">{{$i}}</option>
                                                     @endfor
@@ -46,27 +46,27 @@
                                             </li>
                                             <li class="brand_auto">
                                                 <select class="filter_select" name="brand_auto" id="brand_auto">
-                                                    <option selected value="">{{__('Выберите марку')}}</option>
+                                                    <option selected value="">{{__('Марка')}}</option>
                                                 </select>
                                             </li>
                                             <li>
                                                 <select class="filter_select" name="model_auto" id="model_auto">
-                                                    <option selected value="">{{__('Выберите модель')}}</option>
+                                                    <option selected value="">{{__('Модель')}}</option>
                                                 </select>
                                             </li>
                                             <li>
                                                 <select class="filter_select" name="body_auto" id="body_auto">
-                                                    <option selected value="">{{__('Выберите кузов')}}</option>
+                                                    <option selected value="">{{__('Кузов')}}</option>
                                                 </select>
                                             </li>
                                             <li>
                                                 <select class="filter_select" name="engine_auto" id="engine_auto">
-                                                    <option selected value="">{{__('Выберите двигатель')}}</option>
+                                                    <option selected value="">{{__('Двигатель')}}</option>
                                                 </select>
                                             </li>
                                             <li>
                                                 <select class="filter_select" name="modification_auto" id="modification_auto">
-                                                    <option selected value="">{{__('Выберите модификацию')}}</option>
+                                                    <option selected value="">{{__('Модификация')}}</option>
                                                 </select>
                                             </li>
                                         </ul>

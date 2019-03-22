@@ -42,6 +42,10 @@ class ProductController extends Controller
 
         $product = Product::with('comment')->where('articles', $request->alias)->first();
 
+        if (!isset($product)){
+            return back();
+        }
+
         return view('product.product_detail',compact('product','product_attr','product_vehicles','files','accessories','art_replace','supplier_details'));
     }
 

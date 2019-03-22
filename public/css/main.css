@@ -3261,7 +3261,7 @@ a.dropdown-toggle:after {
 	display: none;
 }
 header .search-cate {
-	min-width: 600px;
+	min-width: 74%;
 	display: inline-block;
 	height: 50px;
 	margin-left: 50px;

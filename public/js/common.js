@@ -216,35 +216,35 @@ function makeTemplateCategoryCar(data,modification_auto,type_auto) {
 function dataFilter(level,link) {
     switch (level) {
         case 1:
-            getDateFilter(link,'Выберите марку','#brand_auto',['id','description']);
+            getDateFilter(link,'Марка','#brand_auto',['id','description']);
             $('#search-detail-car').addClass('hidden');
             if ($('#year_auto').val() === ''){
                 $('#brand_auto').next().prop('disabled', 'disabled').selectric('refresh');
             }
             break;
         case 2:
-            getDateFilter(link,'Выберите модель','#model_auto',['id','name']);
+            getDateFilter(link,'Модель','#model_auto',['id','name']);
             $('#search-detail-car').addClass('hidden');
             if ($('#brand_auto').val() === ''){
                 $('#model_auto').prop('disabled', 'disabled').selectric('refresh');
             }
             break;
         case 3:
-            getDateFilter(link,'Выберите кузов','#body_auto',['displayvalue','displayvalue']);
+            getDateFilter(link,'Кузов','#body_auto',['displayvalue','displayvalue']);
             $('#search-detail-car').addClass('hidden');
             if ($('#model_auto').val()){
                 $('#body_auto').prop('disabled', 'disabled').selectric('refresh');
             }
             break;
         case 4:
-            getDateFilter(link,'Выберите двигатель','#engine_auto',['displayvalue','displayvalue']);
+            getDateFilter(link,'Двигатель','#engine_auto',['displayvalue','displayvalue']);
             $('#search-detail-car').addClass('hidden');
             if ( $('#body_auto').val() !== ''){
                 $('#engine_auto').prop('disabled', 'disabled').selectric('refresh');
             }
             break;
         case 5:
-            getDateFilter(link,'Выберите модификацию','#modification_auto',['id','name']);
+            getDateFilter(link,'Модификация','#modification_auto',['id','name']);
             $('#search-detail-car').addClass('hidden');
             if ($('#engine_auto').val() !== ''){
                 $('#modification_auto').prop('disabled', 'disabled').selectric('refresh');
