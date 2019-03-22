@@ -3298,12 +3298,10 @@ header .search-cate .bootstrap-select.btn-group .dropdown-menu ul {
 header .search-cate input {
 	border: none;
 	height: 48px;
-	padding: 0 20px;
+	padding: 0 30px;
 	width: 60%;
-	border-radius: 10px;
-	border-bottom-left-radius: 0px;
-	border-top-left-radius: 0px;
-	border-left: 1px solid #ededed;
+    border-radius: 0px 10px 10px 0px;
+    border-left: 1px solid #ededed;
 	outline: none !important;
 }
 header .search-cate .submit {

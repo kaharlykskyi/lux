@@ -829,6 +829,7 @@ section {
 	font-size: 14px;
 	display: inline-block;
 	min-height: 40px;
+    height: 45px;
 }
 .product article .tittle:hover {
 	color: #333;

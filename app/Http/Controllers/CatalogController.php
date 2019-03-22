@@ -56,6 +56,8 @@ class CatalogController extends Controller
 
                 $min_price->start_price = $this->service->getMinPrice('search_str',['str' => $request->search_str]);
                 $max_price->start_price = $this->service->getMaxPrice('search_str',['str' => $request->search_str]);
+                //$this->attribute = $this->service->getAttributes('search_str',['str' => $request->search_str]);
+                //dd($this->attribute);
                 $catalog_products = $this->tecdoc->getProductForArticle(trim(strip_tags($request->search_str)),$this->pre_products,[
                     'price' => [
                         'min' => ($min_price->filter_price > 0)?$min_price->filter_price:$min_price->start_price,
@@ -116,7 +118,7 @@ class CatalogController extends Controller
                 return redirect()->route('home');
         }
 
-        $attribute = /*$this->attribute*/null;
+        $attribute = $this->attribute;
         $brands = $this->brands;
 
         $catalog_products->withPath($request->fullUrl());

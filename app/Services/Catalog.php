@@ -76,6 +76,8 @@ class Catalog
                     ->get();
                 return round($min[0]->min,2);
                 break;
+            default:
+                return [];
         }
     }
 
@@ -112,7 +114,29 @@ class Catalog
                     ->distinct()
                     ->get();
                 break;
+            default:
+                return [];
         }
     }
 
+    public function getAttributes($level,$param){
+        switch ($level){
+            case 'search_str':
+                return DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
+                    ->orWhere([
+                        [DB::raw('p.articles'),'LIKE',"%{$param['str']}%",'OR'],
+                        [DB::raw('p.name'),'LIKE',"%{$param['str']}%",'OR']
+                    ])
+                    ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('sp.matchcode'),DB::raw('p.brand'))
+                    ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_attributes AS attr'),function ($join){
+                        $join->on(DB::raw('attr.DataSupplierArticleNumber'),'=',DB::raw('p.articles'));
+                        $join->on(DB::raw('attr.supplierId'),'=',DB::raw('sp.id'));
+                    })
+                    ->select(DB::raw('attr.id, attr.description, attr.displaytitle, attr.displayvalue'))
+                    ->get();
+                break;
+            default:
+                return [];
+        }
+    }
 }
