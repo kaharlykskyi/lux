@@ -67,4 +67,17 @@ class DashboardController extends Controller
         }
         return view('admin.dashboard.shipping_payment',compact('info'));
     }
+
+    public function advertising(Request $request){
+        if ($request->isMethod('post')){
+            Storage::put('advertising_code.txt',$request->content_file);
+            return back()->with('status','Данные сохранены');
+        }
+
+        $info = '';
+        if (file_exists(storage_path('app') . '/advertising_code.txt')){
+            $info = Storage::get('advertising_code.txt');
+        }
+        return view('admin.dashboard.advertising',compact('info'));
+    }
 }

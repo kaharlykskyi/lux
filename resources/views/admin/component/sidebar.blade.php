@@ -69,6 +69,9 @@
                         <li>
                             <a href="{{route('admin.shipping_payment')}}">{{__('Доставка и оплата')}}</a>
                         </li>
+                        <li>
+                            <a href="{{route('admin.advertising')}}">{{__('Настройка рекламы')}}</a>
+                        </li>
                     </ul>
                 </li>
             </ul>

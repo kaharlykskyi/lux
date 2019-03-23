@@ -17,6 +17,20 @@
 
         @endcomponent
 
+        @php
+            $advertising = Storage::get('advertising_code.txt');
+        @endphp
+
+        @if(isset($advertising) && !empty($advertising))
+            <div class="container">
+                <div class="row padding-bottom-15">
+                    <div class="col-sm-12">
+                        {!! $advertising !!}
+                    </div>
+                </div>
+            </div>
+        @endif
+
         @component('home.component.main_page_links',[
                 'brands' => $brands,
                 'models' => $models,
