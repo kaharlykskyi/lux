@@ -57,16 +57,31 @@ class HomeController extends Controller
 
         if (isset($request->brand) && isset($request->model)){
             $this->tecdoc->setType('passenger');
-            $modifications = $this->tecdoc->getModifications($request->model,'General');
+
+            $all_category = DB::connection('mysql_tecdoc')
+                ->table('manufacturers AS m')
+                ->join('models AS mod','m.id','=','mod.manufacturerid')
+                ->join('passanger_cars AS pc','pc.modelid','=','m.id')
+                ->join('passanger_car_trees AS pct','pct.passangercarid','=','pc.id')
+                ->where('m.id',(int)$request->brand)
+                ->where('m.ispassengercar','TRUE')
+                ->where('mod.id',(int)$request->model)
+                ->select('pct.id','pct.description','pct.parentid')
+                ->distinct()
+                ->get();
+
             $categories = null;
-            $uses_cat = [];
-            foreach ($modifications as $modification){
-                $buff = $this->tecdoc->getSections($modification->id);
-                foreach ($buff as $item){
-                    if (!in_array($item->id,$uses_cat)){
-                        $item->subCategories = $this->tecdoc->getSections($modification->id,$item->id);
-                        $categories[] = $item;
-                        $uses_cat[] = $item->id;
+
+            foreach ($all_category as $category){
+                if ($category->parentid === 0){
+                    $categories[] = $category;
+                }
+            }
+
+            foreach ($categories as $k => $category){
+                foreach ($all_category as $item){
+                    if ($category->id === $item->parentid){
+                        $categories[$k]->subCategories[] = $item;
                     }
                 }
             }

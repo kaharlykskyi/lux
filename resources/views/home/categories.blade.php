@@ -29,21 +29,23 @@
                                             ['type','passanger']
                                         ])->first();
                                     @endphp
-                                    <li class="list-group-item margin-bottom-15 row">
-                                        <h6 class="text-uppercase">{{$category->description}}</h6>
-                                        <div class="list-group col-xs-12 col-sm-8 row">
-                                            @foreach($category->subCategories as $sub)
-                                                <a class="border-0 col-xs-12 col-sm-6 list-group-item" href="{{route('catalog',$sub->id)}}?model={{$model[0]->id}}">{{$sub->description}}</a>
-                                            @endforeach
-                                        </div>
-                                        <div class="col-sm-4 hidden-xs">
-                                            @isset($img_data)
-                                                <div class="category-img" style="background-image: url('{{asset('images/catalog/' . $img_data->logo)}}')">
+                                    @if(isset($category->subCategories))
+                                        <li class="list-group-item margin-bottom-15 row">
+                                            <h6 class="text-uppercase">{{$category->description}}</h6>
+                                            <div class="list-group col-xs-12 col-sm-8 row">
+                                                @foreach($category->subCategories as $sub)
+                                                    <a class="border-0 col-xs-12 col-sm-6 list-group-item" href="{{route('catalog',$sub->id)}}?model={{$model[0]->id}}">{{$sub->description}}</a>
+                                                @endforeach
+                                            </div>
+                                            <div class="col-sm-4 hidden-xs">
+                                                @isset($img_data)
+                                                    <div class="category-img" style="background-image: url('{{asset('images/catalog/' . $img_data->logo)}}')">
 
-                                                </div>
-                                            @endisset
-                                        </div>
-                                    </li>
+                                                    </div>
+                                                @endisset
+                                            </div>
+                                        </li>
+                                    @endif
                                 @endforeach
                             </ul>
                         </div>

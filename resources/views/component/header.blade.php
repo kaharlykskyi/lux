@@ -10,7 +10,7 @@
                     <option selected value="article">{{__('Артикул, название')}}</option>
                     <option value="vin">{{__('По vin')}}</option>
                 </select>
-                <input type="search" name="vin" placeholder="поиск">
+                <input type="search" name="vin" placeholder="Поиск">
                 <button class="submit" type="submit"><i class="icon-magnifier"></i></button>
             </form>
             <script>

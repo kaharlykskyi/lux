@@ -18,7 +18,7 @@
         @endcomponent
 
         @php
-            $advertising = Storage::get('advertising_code.txt');
+            $advertising = file_exists(storage_path('app') . '/advertising_code.txt')?Storage::get('advertising_code.txt'):'';
         @endphp
 
         @if(isset($advertising) && !empty($advertising))

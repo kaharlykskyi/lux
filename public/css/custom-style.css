@@ -3,6 +3,10 @@
     outline: none;
 }
 
+body {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+}
+
 .bg-blue{
     background-color: #0088cc;
 }

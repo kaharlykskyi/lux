@@ -49,7 +49,7 @@
                                                 </div>
                                             @endif
                                             <div class="col-sm-6">
-                                                <p class="font-size-12-440">{{__('Достубность')}}:
+                                                <p class="font-size-12-440">{{__('Доступность')}}:
                                                     @if((int)$product->count > 0)
                                                         <span class="in-stock">{{__('В наличии')}}</span>
                                                     @else
@@ -170,7 +170,7 @@
                                     <div role="tabpanel" class="tab-pane fade" id="cus-rev">
                                         @guest
                                             <div class="alert alert-warning" role="alert">
-                                                {{__('Отзывы могут отставлять только зарегестрированиые пользователи')}}
+                                                {{__('Отзывы могут оставлять только зарегистрированные пользователи')}}
                                             </div>
                                         @else
                                             <form action="{{route('product.comment')}}" method="post" id="product-comment-form">
