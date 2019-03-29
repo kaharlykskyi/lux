@@ -19,6 +19,9 @@
                 <div class="user-data m-b-30">
                     <h3 class="title-3 m-b-30">
                         <i class="zmdi zmdi-account-calendar"></i>{{__('Информация о пользователе - ' . $user->name)}}</h3>
+                    <div class="col-12 m-b-15">
+                        <a href="{{route('admin.users')}}" class="btn btn-success">{{__('Назад')}}</a>
+                    </div>
                     <div class="au-card au-card--bg-blue au-card-top-countries m-b-30 m-l-10 m-r-10">
                         <div class="au-card-inner">
                             <div class="table-responsive">

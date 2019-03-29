@@ -85,7 +85,7 @@ Route::get('/filter', 'CatalogController@filter')->name('filter');
 Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth','permission']],function (){
     Route::get('/dashboard','DashboardController@index')->name('admin.dashboard');
     Route::get('/import-history','DashboardController@importHistory')->name('admin.import_history');
-
+    Route::match(['get', 'post'], '/filter/{status}','DashboardController@setFilterSettings')->name('admin.filter');
     Route::match(['get', 'post'], '/users','UserController@index')->name('admin.users');
     Route::get('/user/{user}','UserController@show')->name('admin.user.show');
     Route::post('/user/change-balance','UserController@userBalance')->name('admin.user.change_balance');

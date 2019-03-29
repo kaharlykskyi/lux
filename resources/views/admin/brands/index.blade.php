@@ -83,6 +83,9 @@
             </div>
         @endif
         <div class="row">
+            <div class="col-12 m-b-15 m-t-15">
+                <a href="{{route('admin.dashboard')}}" class="btn btn-success">{{__('Назад')}}</a>
+            </div>
             <div class="col-12">
                 <div class="card m-t-15">
                     <div class="card-header">

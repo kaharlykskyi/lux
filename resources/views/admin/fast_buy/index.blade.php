@@ -13,6 +13,9 @@
             </div>
         @endif
         <div class="row p-t-25">
+            <div class="col-12 m-b-15">
+                <a href="{{route('admin.dashboard')}}" class="btn btn-success">{{__('Назад')}}</a>
+            </div>
             <div class="col-12">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">

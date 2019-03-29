@@ -16,6 +16,9 @@
             <div class="col-md-12">
                 <!-- DATA TABLE -->
                 <h3 class="title-5 m-b-35 m-t-15">{{__('Коментарии')}}</h3>
+                <div class="col-12 m-b-15">
+                    <a href="{{route('admin.dashboard')}}" class="btn btn-success">{{__('Назад')}}</a>
+                </div>
                 <div class="table-responsive table-responsive-data2">
                     <table class="table table-data2">
                         <thead>
@@ -23,6 +26,7 @@
                             <th>{{__('Автор')}}</th>
                             <th>{{__('Дата')}}</th>
                             <th>{{__('Текст')}}</th>
+                            <th>{{__('Товар')}}</th>
                             <th>{{__('Рейтинг')}}</th>
                             <th></th>
                         </tr>
@@ -36,6 +40,7 @@
                                     <td>
                                         {{$comment->text}}
                                     </td>
+                                    <td>{{$comment->product->articles}}</td>
                                     <td>{{$comment->rating}}</td>
                                     <td>
                                         <div class="table-data-feature">
@@ -47,6 +52,9 @@
                                                     <i class="zmdi zmdi-delete"></i>
                                                 </button>
                                             </form>
+                                            <button onclick="location.href = '{{route('product',str_replace('/','@',($comment->product->articles)))}}'" class="item m-l-5" data-toggle="tooltip" data-placement="top" title="{{__('Просмотреть')}}">
+                                                <i class="zmdi zmdi-eye"></i>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>

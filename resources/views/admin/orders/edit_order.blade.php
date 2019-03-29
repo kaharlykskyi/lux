@@ -13,6 +13,9 @@
             </div>
         @endif
         <div class="row">
+            <div class="col-12 m-b-15 m-t-15">
+                <a href="{{route('admin.orders','new')}}" class="btn btn-success">{{__('Назад')}}</a>
+            </div>
             <div class="col-12 m-t-10 m-b-10">
                 <h3 class="pb-2 display-5">{{__('Заказ №') . $order->id}}</h3>
             </div>

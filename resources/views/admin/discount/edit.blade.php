@@ -13,6 +13,9 @@
             </div>
         @endif
         <div class="row p-t-10">
+            <div class="col-12 m-b-15">
+                <a href="{{route('admin.discount.index')}}" class="btn btn-success">{{__('Назад')}}</a>
+            </div>
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">

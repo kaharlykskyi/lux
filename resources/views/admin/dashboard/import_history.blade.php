@@ -16,7 +16,9 @@
             <div class="col-md-12">
                 <!-- DATA TABLE -->
                 <h3 class="title-5 m-b-35 m-t-15">{{__('История импортов')}}</h3>
-
+                <div class="col-12 m-b-15">
+                    <a href="{{route('admin.dashboard')}}" class="btn btn-success">{{__('Назад')}}</a>
+                </div>
                 <div class="table-responsive table--no-card m-b-30">
                     <table class="table table-borderless table-striped table-earning">
                         <thead>

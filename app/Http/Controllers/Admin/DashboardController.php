@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\{Cart, FastBuy, ProductComment, Services\Admin\Dashboard, User};
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -51,7 +52,7 @@ class DashboardController extends Controller
             }
         }
 
-        $comments = ProductComment::with('user')->orderByDesc('created_at')->paginate(30);
+        $comments = ProductComment::with(['user','product'])->orderByDesc('created_at')->paginate(30);
         return view('admin.dashboard.comment',compact('comments'));
     }
 
@@ -79,5 +80,64 @@ class DashboardController extends Controller
             $info = Storage::get('advertising_code.txt');
         }
         return view('admin.dashboard.advertising',compact('info'));
+    }
+
+    public function setFilterSettings(Request $request){
+        if ($request->isMethod('post')){
+            if ($request->status === 'all'){
+                $data = $request->except('_token');
+                $desc = explode(' ',$data['desc']);
+                $hurl = '';
+                foreach ($desc as $val){
+                    $hurl .= str_replace(['[',']'],'_',$this->transliterateRU($val));
+                }
+                DB::table('filter_settings')->insert([
+                    'filter_id' => $data['id'],
+                    'description' => $data['desc'],
+                    'hurl' => $hurl
+                ]);
+
+                return response()->json([
+                    'save' => true
+                ]);
+            }
+            if ($request->status === 'use'){
+                $data = $request->except('_token');
+                $insert_data = [];
+                foreach ($data as $k => $item){
+                    $buff = explode('_', $k);
+                    $insert_data[(int)$buff[1]][$buff[0]] = $item;
+                }
+
+                foreach ($insert_data as $k => $item){
+                    DB::table('filter_settings')->where('id',(int)$k)->update([
+                        'hurl' => $item['hurl'],
+                        'use' => isset($item['use'])?1:0
+                    ]);
+                }
+
+                return back()->with('status','Данные сохранены');
+            }
+        }
+
+        $all_filter_settings = null;
+        if ($request->status === 'all'){
+            if (Cache::has('all_filter_settings')){
+                $all_filter_settings = Cache::get('all_filter_settings');
+            } else{
+                $all_filter_settings = DB::connection('mysql_tecdoc')
+                    ->table('article_attributes')
+                    ->select('id','description')
+                    ->groupBy('id','description')
+                    ->distinct()
+                    ->get();
+                Cache::forever('all_filter_settings',$all_filter_settings);
+            }
+            $all_filter_settings = $this->arrayPaginator($all_filter_settings->toArray(),$request,50);
+        }
+
+        $status = $request->status;
+        $use_filters = DB::table('filter_settings')->distinct()->get();
+        return view('admin.dashboard.filter_setting',compact('use_filters','status','all_filter_settings'));
     }
 }

@@ -32,6 +32,9 @@
                         <li>
                             <a href="{{route('admin.import_history')}}">{{__('История импорта')}}</a>
                         </li>
+                        <li>
+                            <a href="{{route('admin.filter','use')}}">{{__('Настрайки фильтра')}}</a>
+                        </li>
                     </ul>
                 </li>
                 <li>

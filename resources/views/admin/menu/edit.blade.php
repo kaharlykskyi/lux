@@ -4,6 +4,9 @@
     <div class="container-fluid m-t-75">
 
         <div class="row">
+            <div class="col-12 m-b-15 m-t-15">
+                <a href="{{route('admin.menu.index')}}" class="btn btn-success">{{__('Назад')}}</a>
+            </div>
             <div class="col-12 m-t-15">
                 <div class="card">
                     <div class="card-header">

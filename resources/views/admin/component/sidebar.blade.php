@@ -16,6 +16,7 @@
                             <a href="{{route('admin.product.index')}}">{{__('Товары')}}</a>
                             <a href="{{route('admin.show_brand')}}">{{__('Бренды')}}</a>
                             <a href="{{route('admin.import_history')}}">{{__('История импорта')}}</a>
+                            <a href="{{route('admin.filter','use')}}">{{__('Настрайки фильтра')}}</a>
                         </li>
                     </ul>
                 </li>

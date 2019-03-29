@@ -54,8 +54,10 @@ class CatalogController extends Controller
                     'str' => $request->search_str
                 ]);
 
-                $min_price->start_price = $this->service->getMinPrice('search_str',['str' => $request->search_str]);
-                $max_price->start_price = $this->service->getMaxPrice('search_str',['str' => $request->search_str]);
+                $price = $this->service->getMinMaxPrice('search_str',['str' => $request->search_str]);
+                $min_price->start_price = round($price->min,2);
+                $max_price->start_price = round($price->max,2);
+
                 //$this->attribute = $this->service->getAttributes('search_str',['str' => $request->search_str]);
                 //dd($this->attribute);
                 $catalog_products = $this->tecdoc->getProductForArticle(trim(strip_tags($request->search_str)),$this->pre_products,[
@@ -81,8 +83,11 @@ class CatalogController extends Controller
                             'id' => $request->category,
                             'type' => $type
                         ]);
-                        $min_price->start_price = $this->service->getMinPrice('category',['id' => $request->category,'type' => $type]);
-                        $max_price->start_price = $this->service->getMaxPrice('category',['id' => $request->category,'type' => $type]);
+
+                        $price = $this->service->getMinMaxPrice('category',['id' => $request->category,'type' => $type]);
+                        $min_price->start_price = round($price->min,2);
+                        $max_price->start_price = round($price->max,2);
+
                         $catalog_products = $this->tecdoc->getCategoryProduct($request->category,$this->pre_products,[
                             'price' => [
                                 'min' => ($min_price->filter_price > 0)?$min_price->filter_price:$min_price->start_price,
@@ -101,8 +106,11 @@ class CatalogController extends Controller
 
                 if (isset($manufacturer[0])){
                     $this->brands = $this->service->getBrands('pcode',['OENbr' =>$request->pcode,'manufacturer' => $manufacturer[0]->id]);
-                    $min_price->start_price = $this->service->getMinPrice('pcode',['OENbr' =>$request->pcode,'manufacturer' => $manufacturer[0]->id]);
-                    $max_price->start_price = $this->service->getMaxPrice('pcode',['OENbr' =>$request->pcode,'manufacturer' => $manufacturer[0]->id]);
+
+                    $price = $this->service->getMinMaxPrice('pcode',['OENbr' =>$request->pcode,'manufacturer' => $manufacturer[0]->id]);
+                    $min_price->start_price = round($price->min,2);
+                    $max_price->start_price = round($price->max,2);
+
                     $catalog_products = $this->tecdoc->getProductForArticleOE($request->pcode,$manufacturer[0]->id,$this->pre_products,[
                         'price' => [
                             'min' => ($min_price->filter_price > 0)?$min_price->filter_price:$min_price->start_price,
