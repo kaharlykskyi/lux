@@ -84,7 +84,8 @@ class CheckoutController extends Controller
 
             Cart::where('session_id',$request->cookie('cart_session_id'))->update([
                 'user_id' => $user->id,
-                'oder_status' => 2
+                'oder_status' => 2,
+                'session_id' => null
             ]);
         }
 
@@ -202,7 +203,7 @@ class CheckoutController extends Controller
             Cart::where([
                 ['user_id',Auth::id()],
                 ['oder_status',1]
-            ])->update(['oder_status' => 2]);
+            ])->update(['oder_status' => 2,'session_id' => null]);
         }
 
         return redirect()->route('profile');

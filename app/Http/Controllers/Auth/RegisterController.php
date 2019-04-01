@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\AppTrait\GEO;
+use App\Cart;
 use App\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -95,5 +97,14 @@ class RegisterController extends Controller
     {
         $roles = DB::table('roles')->get();
         return view('auth.register',compact('roles'));
+    }
+
+    protected function registered(Request $request, $user)
+    {
+        if($request->hasCookie('cart_session_id')){
+            Cart::where([
+                ['session_id',$request->cookie('cart_session_id')]
+            ])->update(['user_id' => $user->id]);
+        }
     }
 }

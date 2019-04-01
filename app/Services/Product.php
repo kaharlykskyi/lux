@@ -19,10 +19,6 @@ class Product
         $product = ProductModel::find((integer)$request->id);
         $cart_session_id = $request->cookie('cart_session_id');
 
-        DB::table('carts')->where('user_id','<>',null)->update([
-            'session_id' => null
-        ]);
-
         $cart = CartModel::where([
             isset($iser_id)
                 ?['user_id',$iser_id]
@@ -34,7 +30,7 @@ class Product
             $cart = new CartModel();
             $data = [
                 'user_id' => (isset($iser_id))? $iser_id: null,
-                'session_id' => $cart_session_id,
+                'session_id' => (isset($iser_id))?null:$cart_session_id,
                 'oder_status' => 1
             ];
             $cart->fill($data);
