@@ -150,7 +150,7 @@ function urlRusLat(str) {
 
 
 
-function getCarsDetail(type_auto,year_auto,brand_auto,model_auto,modification_auto,engine_auto,body_auto,token,name,interval) {
+function getCarsDetail(type_auto,year_auto,brand_auto,model_auto,modification_auto,engine_auto,body_auto,token,name,interval,link) {
     $('#search_cars_modal').modal('hide');
     $('#search-detail-car-form .search-car__list').hide();
     $('#search-detail-car').hide();
@@ -160,20 +160,65 @@ function getCarsDetail(type_auto,year_auto,brand_auto,model_auto,modification_au
                                                 <span class="sr-only">Loading...</span>
                                             </p>
     `);
+
     $('#root-category-modification-wrapper').show();
     $('#history-car').html(`
         <div>
             <div class="col-sm-8">
                  <p class="h5 text-uppercase margin-bottom-0">${name}</p>
-                 <span class="small text-info">${interval}</span><br>
-                 <button type="button" class="add-car" onclick="$('#history-car').hide();$('#search-detail-car-form .search-car__list').show();$('#root-category-modification-wrapper').hide();"><span aria-hidden="true">+добавить авто</span></button>
+                 <span class="small text-info">${interval}</span>
             </div>
             <div class="col-sm-4 text-right">
                 <img style="width: 100%;max-width: 70px;" src="https://yii.dbroker.com.ua/img/all_cars/${model_auto}f.png" alt="">
                 <img style="width: 100%;max-width: 125px;" src="https://yii.dbroker.com.ua/img/all_cars/${model_auto}s.png" alt="">
             </div>
+            <div class="col-sm-12">
+                <div id="mod_info"></div>
+                <button type="button" class="add-car" onclick="$('#history-car').hide();$('#search-detail-car-form .search-car__list').show();$('#root-category-modification-wrapper').hide();"><span aria-hidden="true">+добавить авто</span></button>
+            </div>
         </div>
     `).show();
+
+
+    let mod_info = '';
+    $.get(`${link}?mod_id=${modification_auto}&type=${type_auto}`,function (data) {
+        mod_info += '';
+        data.forEach(function (item) {
+            if (item.attributetype === 'EngineType'){
+                mod_info +=`<div class="list-group">
+                          <a href="#" class="list-group-item active">ТИП ДВИГ.</a>
+                          <a href="#" class="list-group-item">${item.displayvalue}</a>
+                        </div>`;
+            }
+            if (item.attributetype === 'EngineCode'){
+                mod_info +=`<div class="list-group">
+                          <a href="#" class="list-group-item active">МОДЕЛЬ ДВИГ.</a>
+                          <a href="#" class="list-group-item">${item.displayvalue}</a>
+                        </div>`;
+            }
+            if (item.attributetype === 'Capacity_Technical'){
+                mod_info +=`<div class="list-group">
+                          <a href="#" class="list-group-item active">ОБЬЕМ ДВИГ.</a>
+                          <a href="#" class="list-group-item">${item.displayvalue}</a>
+                        </div>`;
+            }
+            if (item.attributetype === 'Power'){
+                mod_info +=`<div class="list-group">
+                          <a href="#" class="list-group-item active">МОЩНОСТЬ</a>
+                          <a href="#" class="list-group-item">${item.displayvalue}</a>
+                        </div>`;
+            }
+            if (item.attributetype === 'DriveType'){
+                mod_info +=`<div class="list-group">
+                          <a href="#" class="list-group-item active">ПРИВОД</a>
+                          <a href="#" class="list-group-item">${item.displayvalue}</a>
+                        </div>`;
+            }
+        });
+        console.log(data);
+        $('#mod_info').html(mod_info);
+    });
+
     $.post($('#search-detail-car-form').attr('action'),{
         'type_auto': type_auto,
         'year_auto': year_auto,

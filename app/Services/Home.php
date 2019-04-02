@@ -114,9 +114,25 @@ class Home
     }
 
     public function getAllBrands($request){
-        return DB::table('show_brand')
-            ->where(($request->type_auto === 'passenger')?'ispassengercar':'iscommercialvehicle','=','true')
-            ->select('brand_id AS id','description')->get();
+
+        if (isset($request->type_auto)){
+            $brands = DB::table('show_brand')
+                ->where(($request->type_auto === 'passenger')?'ispassengercar':'iscommercialvehicle','=','true')
+                ->select('brand_id AS id','description')->get();
+            return response()->json([
+                'response' => isset($brands[0])?$brands:[
+                    'id' => 0,
+                    'description' => 'не найдено'
+                ]
+            ]);
+        } else {
+            return response()->json([
+                'response' => [
+                    'id' => 0,
+                    'description' => 'не найдено'
+                ]
+            ]);
+        }
     }
 
     public function getModel($request){

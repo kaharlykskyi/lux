@@ -124,22 +124,7 @@ class HomeController extends Controller
     }
 
     public function getBrands(Request $request){
-        if (isset($request->type_auto)){
-            $brands = $this->service->getAllBrands($request);
-            return response()->json([
-                'response' => isset($brands[0])?$brands:[
-                    'id' => 0,
-                    'description' => 'не найдено'
-                ]
-            ]);
-        } else {
-            return response()->json([
-                'response' => [
-                    'id' => 0,
-                    'description' => 'не найдено'
-                ]
-            ]);
-        }
+        return $this->service->getAllBrands($request);
     }
 
     public function getModel(Request $request){
@@ -162,10 +147,10 @@ class HomeController extends Controller
             $this->tecdoc->setType($request->type_auto);
             switch ($request->type_mod){
                 case 'General':
-                    $this->data = $this->tecdoc->getModifications($request->model_id,$request->type_mod);
+                    $this->data = $this->tecdoc->getModifications($request->model_id,[['displayvalue','=',"'{$request->engine}'"]]);
                     break;
                 case 'Engine':
-                    $buff = $this->tecdoc->getModifications($request->model_id,'TechnicalData','FuelType');
+                    $buff = $this->tecdoc->getModifications($request->model_id,[['attributegroup','=','\'TechnicalData\''],['attributetype','=', '\'FuelType\'']]);
                     $use_val = [];
                     foreach ($buff as $item){
                         if(!in_array($item->displayvalue,$use_val)){
@@ -175,7 +160,7 @@ class HomeController extends Controller
                     }
                     break;
                 case 'Body':
-                    $buff = $this->tecdoc->getModifications($request->model_id,$request->type_mod,'BodyType');
+                    $buff = $this->tecdoc->getModifications($request->model_id,[['attributegroup' ,'=', '\''.$request->type_mod.'\'']]);
                     $use_val = [];
                     foreach ($buff as $item){
                         if(!in_array($item->displayvalue,$use_val)){
@@ -254,4 +239,8 @@ class HomeController extends Controller
         }
     }
 
+    public function modificationInfo(Request $request){
+        $this->tecdoc->setType($request->type);
+        return response()->json($this->tecdoc->getModificationById($request->mod_id));
+    }
 }

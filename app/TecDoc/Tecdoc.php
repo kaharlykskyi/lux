@@ -113,15 +113,17 @@ class Tecdoc
      * (1.3) Модификации авто
      *
      * @param $model_id
-     * @param null $attributegroup
-     * @param null $attributetype
+     * @param array $params -> [col - operator - val]
      * @return mixed
      */
-    public function getModifications($model_id, $attributegroup = null,$attributetype = null)
+    public function getModifications($model_id, array $params = null)
     {
         $where = '';
-        if (isset($attributegroup)) $where .= " AND attributegroup='{$attributegroup}'";
-        if (isset($attributetype)) $where .= " AND attributetype='{$attributetype}'";
+        if (isset($params)){
+            foreach ($params as $param){
+                $where .= " AND {$param[0]} {$param[1]} {$param[2]}";
+            }
+        }
 
         switch ($this->type) {
             case 'passenger':
