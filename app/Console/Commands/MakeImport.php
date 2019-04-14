@@ -28,8 +28,6 @@ class MakeImport extends Command
     public function __construct()
     {
         parent::__construct();
-
-        new ImportPriceList();
     }
 
     /**
@@ -39,6 +37,6 @@ class MakeImport extends Command
      */
     public function handle()
     {
-        //
+        new ImportPriceList();
     }
 }

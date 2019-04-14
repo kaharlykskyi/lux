@@ -171,9 +171,9 @@
                                     <div class="col-12 col-md-9">
                                         <select name="company" id="company" class="form-control">
                                             <option value="0">{{__('Выберите поставщика')}}</option>
-                                            @foreach(config('price_list_settings') as $item)
+                                            {{--@foreach(config('price_list_settings') as $item)
                                                 <option value="{{$item['company']}}">{{$item['company']}}</option>
-                                            @endforeach
+                                            @endforeach--}}
                                         </select>
                                     </div>
                                 </div>

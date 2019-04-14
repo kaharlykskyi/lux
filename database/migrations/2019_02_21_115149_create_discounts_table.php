@@ -15,10 +15,13 @@ class CreateDiscountsTable extends Migration
     {
         Schema::create('discounts', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('discount_id')->nullable();
             $table->unsignedTinyInteger('percent');
             $table->string('description');
             $table->unsignedTinyInteger('count_buy')->nullable()->default(null);
             $table->timestamps();
+
+            $table->foreign('discount_id')->references('id')->on('discounts')->onDelete('SET NULL');
         });
     }
 

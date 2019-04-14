@@ -15,9 +15,10 @@ class Product extends Model
         'full_description',
         'price',
         'old_price',
-        'company',
+        'provider_id',
         'brand',
-        'count'
+        'count',
+        'delivery_time'
     ];
 
     public function cart(){

@@ -21,12 +21,14 @@ class CreateProductsTable extends Migration
             $table->string('short_description')->nullable();
             $table->text('full_description')->nullable();
             $table->decimal('price',9,2);
-            $table->string('company')->nullable();
+            $table->unsignedInteger('provider_id')->nullable();
             $table->string('count')->default(0);
             $table->decimal('old_price',9,2)->nullable();
+            $table->unsignedTinyInteger('delivery_time')->default(1);
 
             $table->timestamps();
             $table->index('articles');
+            $table->foreign('provider_id')->references('id')->on('providers')->onDelete('SET NULL');
         });
     }
 

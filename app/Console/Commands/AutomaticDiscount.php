@@ -30,7 +30,6 @@ class AutomaticDiscount extends Command
     {
         parent::__construct();
 
-        new AutoDiscount();
     }
 
     /**
@@ -40,6 +39,6 @@ class AutomaticDiscount extends Command
      */
     public function handle()
     {
-        //
+        new AutoDiscount();
     }
 }

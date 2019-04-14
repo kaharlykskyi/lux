@@ -21,6 +21,7 @@ class CreatePagesTable extends Migration
             $table->text('content')->nullable();
             $table->unsignedInteger('user_id')->nullable();
             $table->unsignedTinyInteger('footer_column')->default(1);
+            $table->unsignedTinyInteger('show_header')->default(0);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('SET NULL');

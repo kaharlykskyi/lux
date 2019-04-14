@@ -17,6 +17,7 @@ class CreateFastBuyTable extends Migration
             $table->increments('id');
             $table->string('phone');
             $table->unsignedInteger('product_id');
+            $table->unsignedTinyInteger('status')->default(0);
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('CASCADE');

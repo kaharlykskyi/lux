@@ -1,5 +1,5 @@
 <!-- Slid Sec -->
-@isset($slides)
+@if(isset($slides[0]))
 <section class="slid-sec">
     <div class="container-fluid">
         <div class="row">
@@ -48,4 +48,4 @@
         </div>
     </div>
 </section>
-@endisset
+@endif

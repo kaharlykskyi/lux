@@ -30,9 +30,6 @@
                             <a href="{{route('admin.show_brand')}}">{{__('Бренды')}}</a>
                         </li>
                         <li>
-                            <a href="{{route('admin.import_history')}}">{{__('История импорта')}}</a>
-                        </li>
-                        <li>
                             <a href="{{route('admin.filter','use')}}">{{__('Настрайки фильтра')}}</a>
                         </li>
                     </ul>
@@ -51,6 +48,25 @@
                     <a href="{{route('admin.discount.index')}}">
                         <i class="fa fa-sort-numeric-desc" aria-hidden="true"></i>{{__('Скидки')}}
                     </a>
+                </li>
+                <li class="has-sub">
+                    <a class="js-arrow" href="#">
+                        <i class="fa fa-users" aria-hidden="true"></i></i>{{__('Поставщики')}}</a>
+                    <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                        <li>
+                            <a href="{{route('admin.provider.index')}}">
+                                {{__('Все поставщики')}}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.pro_file.index')}}">
+                                {{__('Профайлы прайсов')}}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.import_history')}}">{{__('История импорта')}}</a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="has-sub">
                     <a class="js-arrow" href="#">
