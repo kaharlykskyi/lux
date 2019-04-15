@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('import:start')
-            ->hourly();
+            ->dailyAt('23:00');
         $schedule->command('discount:auto')
             ->hourly();
     }

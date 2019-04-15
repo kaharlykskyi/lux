@@ -33,7 +33,7 @@
                         @isset($history_imports)
                             @forelse($history_imports as $import)
                                 <tr>
-                                    <td>{{$import->company}}</td>
+                                    <td>{!! $import->company !!}</td>
                                     <td>{{$import->success}}</td>
                                     <td>{{$import->fail}}</td>
                                     <td class="text-right">{{$import->created_at}}</td>

@@ -171,10 +171,11 @@
                                     <div class="col-12 col-md-9">
                                         <select name="company" id="company" class="form-control">
                                             <option value="0">{{__('Выберите поставщика')}}</option>
-                                            {{--@foreach(config('price_list_settings') as $item)
-                                                <option value="{{$item['company']}}">{{$item['company']}}</option>
-                                            @endforeach--}}
+                                            @foreach($providers as $provider)
+                                                <option value="{{$provider->id}}">{{$provider->name}}</option>
+                                            @endforeach
                                         </select>
+                                        <small class="form-text text-left text-info">Если не выбран поставщик то определение профайла будет происходить по части имени файла</small>
                                     </div>
                                 </div>
                                 <div class="row form-group">

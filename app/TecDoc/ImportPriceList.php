@@ -57,23 +57,40 @@ class ImportPriceList
     }
 
     protected function easeImport($data){
-        $price_list_configs = config('price_list_settings');
+        if (isset($data->company) && (int)$data->company > 0){
+            $profiles = ProFile::with('provider')->where('provider_id',(int)$data->company)->get();
+        } else {
+            $profiles = ProFile::with('provider')->get();
+        }
 
-        foreach ($price_list_configs as $config){
-            if ($config['company'] === $data->company){
-                $this->config = $config;
-                $this->export(storage_path('app') . '/import_ease/' . $data->file);
-
+        foreach ($profiles as $config){
+            if (isset($data->company) && (int)$data->company > 0 && $config->id === (int)$data->company){
+                $this->startImport($config,$data->file);
+            } elseif (stristr($data->file,$config->static_name)){
+                $this->startImport($config,$data->file);
+            } else {
                 DB::table('history_imports')->insert([
-                    'company' => $this->config['company'],
-                    'success' => $this->count_success,
-                    'fail' => $this->count_fail,
+                    'company' => '<a href="'.route('admin.incognito',$data->file).'">Файл</a> не распознан',
+                    'success' => 0,
+                    'fail' => 0,
                     'created_at' => Carbon::now()
                 ]);
-
-                unlink(storage_path('app') . '/import_ease/' . $data->file);
             }
         }
+    }
+
+    private function startImport($config,$file){
+        $this->config = $config;
+        $this->export(storage_path('app') . '/import_ease/' . $file);
+
+        DB::table('history_imports')->insert([
+            'company' => isset($config->provider)?$config->provider->name:$config->name,
+            'success' => $this->count_success,
+            'fail' => $this->count_fail,
+            'created_at' => Carbon::now()
+        ]);
+
+        unlink(storage_path('app') . '/import_ease/' . $file);
     }
 
     protected function getMail(){

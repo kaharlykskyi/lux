@@ -133,4 +133,6 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     Route::post('/import-ease-start','ProductController@startEaseImport')->name('admin.import_ease.start');
     //advertising
     Route::match(['get', 'post'], '/advertising','DashboardController@advertising')->name('admin.advertising');
+    //get incognito file
+    Route::get('/incognito-file/{file}','ProductController@incognitoFile')->name('admin.incognito');
 });

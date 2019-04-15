@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Product;
-use App\TecDoc\ImportPriceList;
-use App\TecDoc\Tecdoc;
+use App\Provider;
+use App\TecDoc\{ImportPriceList, Tecdoc};
+use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use \App\Services\Admin\Product as AdminProduct;
 
@@ -49,7 +51,7 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -65,13 +67,14 @@ class ProductController extends Controller
         }else{
             $products = Product::paginate(80);
         }
-        return view('admin.product.index',compact('products'));
+        $providers = Provider::all();
+        return view('admin.product.index',compact('products','providers'));
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -81,8 +84,8 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -120,8 +123,8 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Product  $product
-     * @return \Illuminate\Http\Response
+     * @param Product $product
+     * @return Response
      */
     public function show(Product $product)
     {
@@ -131,8 +134,8 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Product  $product
-     * @return \Illuminate\Http\Response
+     * @param Product $product
+     * @return Response
      */
     public function edit(Product $product)
     {
@@ -142,9 +145,9 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Product  $product
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Product $product
+     * @return Response
      */
     public function update(Request $request, Product $product)
     {
@@ -175,8 +178,8 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Product  $product
-     * @return \Illuminate\Http\Response
+     * @param Product $product
+     * @return Response
      */
     public function destroy(Product $product)
     {
@@ -184,7 +187,7 @@ class ProductController extends Controller
             $product->delete();
 
             return back()->with('status','Товар удален');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if (config('app.debug')){
                 dump($e);
             } else {
@@ -233,5 +236,13 @@ class ProductController extends Controller
         new ImportPriceList($data,true);
 
         return back()->with('status','Импорт завершон');
+    }
+
+    public function incognitoFile(Request $request){
+        if (isset($request->file)) {
+            return response()->download(storage_path('app') . '/import_ease/' . $request->file);
+        }else{
+            return back();
+        }
     }
 }
