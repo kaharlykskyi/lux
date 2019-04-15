@@ -2,26 +2,46 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\{Cart, CartProduct, MutualSettlement, Order, Product, User, UserBalance, Http\Controllers\Controller};
+use App\{Cart,
+    CartProduct,
+    MutualSettlement,
+    OderStatus,
+    OrderPay,
+    Product,
+    User,
+    UserBalance,
+    Http\Controllers\Controller};
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
     public function index(Request $request){
-        if ($request->status === 'new'){
-            $orders = $this->getOrder(true);
-        } else{
-            $orders = $this->getOrder();
+        if (isset($request->delete_oder)){
+            Cart::destroy((int)$request->delete_oder);
+            return back();
         }
-
-        $orders = $this->arrayPaginator($orders,$request,30);
-        $orders->setPath($request->fullUrl());
-
-        $order_code = DB::table('oder_status_codes')->get();
-
-        return view('admin.orders.index',compact('orders','order_code'));
+        $orders = Cart::with(['cartProduct','status','client' =>
+            function($query){
+                $query->with(['discount','type_user','deliveryInfo','userCity']);
+            }
+            ,'payOder'])
+            ->orderByDesc('carts.oder_dt')
+            ->where('carts.oder_status','<>',1)
+            ->where('carts.id',isset($request->oder_id)?'=':'<>',isset($request->oder_id)?$request->oder_id:null)
+            ->where('carts.oder_status',(int)$request->status_oder!==0?'=':'<>',(int)$request->status_oder!==0?$request->status_oder:1)
+            ->where('carts.seen',isset($request->seen)?'=':'>=',isset($request->seen)?1:0)
+            ->where([
+                ['carts.seen',isset($request->date_oder_start)?'>=':'<>',isset($request->date_oder_start)?$request->date_oder_start:null,'OR'],
+                ['carts.seen',isset($request->date_oder_end)?'<=':'<>',isset($request->date_oder_end)?$request->date_oder_end:null,'OR']
+            ])
+            ->join('users','users.id','=','carts.user_id')
+            ->where('carts.user_id',(int)$request->client_id!==0?'=':'<>',(int)$request->client_id!==0?$request->client_id:null)
+            ->select('carts.*')
+            ->paginate(50);
+        $order_code = OderStatus::all();
+        $clients = User::all();
+        return view('admin.orders.index',compact('orders','order_code','clients'));
     }
 
     public function getOrderData(Request $request){
@@ -70,7 +90,7 @@ class OrderController extends Controller
 
         if ((int)$request->statusID === 5){
             $order = DB::table('carts')->where('id',$request->orderID)->first();
-            $order_pay = Order::where('cart_id',$order->id)->first();
+            $order_pay = OrderPay::where('cart_id',$order->id)->first();
             $user_balance = UserBalance::where('user_id',(int)$order->user_id)->first();
             if (isset($order_pay) && isset($user_balance)){
                 DB::transaction(function () use ($order_pay, $order, $user_balance) {
@@ -95,22 +115,6 @@ class OrderController extends Controller
         ]);
     }
 
-    public function getOrder($new = false){
-        if ($new) {
-            $order_status = "=2";
-        } else{
-            $order_status = " IN (3,4,5,6)";
-        }
-
-        return DB::select("SELECT c.id, c.updated_at,c.oder_status,u.name,c.invoice_np,d.percent,u.id user_id,
-                                      (SELECT SUM(p.price * cp.count) FROM `products` AS p 
-                                              JOIN `cart_products` AS cp WHERE p.id=cp.product_id AND cp.cart_id=c.id) AS total_price
-                                      FROM `carts` AS c
-                                      JOIN `users` AS u ON u.id=c.user_id
-                                      JOIN `discounts` AS d ON d.id=u.discount_id
-                                      WHERE c.oder_status{$order_status} ORDER BY c.updated_at DESC");
-    }
-
     public function editOder(Cart $order,Request $request){
         /*if($request->isMethod('post')){
 
@@ -119,7 +123,7 @@ class OrderController extends Controller
         $product = Product::join('cart_products','cart_products.product_id','=','products.id')
             ->where('cart_products.cart_id','=',$order->id)
             ->select('products.*','cart_products.count')->get();
-        $order_pay = Order::where('cart_id',$order->id)->first();
+        $order_pay = OrderPay::where('cart_id',$order->id)->first();
         $order_code = DB::table('oder_status_codes')->get();
 
         return view('admin.orders.edit_order',compact('order','user','product','order_pay','order_code'));

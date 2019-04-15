@@ -6,6 +6,7 @@ use App\AppTrait\GEO;
 use App\{Cart, DeliveryInfo, Http\Controllers\Auth\LoginController, MutualSettlement, OrderPay, User, UserBalance};
 use Illuminate\Foundation\Auth\{RegistersUsers};
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\{Auth, DB, Hash, Validator};
 use Illuminate\Validation\ValidationException;
 
@@ -85,7 +86,8 @@ class CheckoutController extends Controller
             Cart::where('session_id',$request->cookie('cart_session_id'))->update([
                 'user_id' => $user->id,
                 'oder_status' => 2,
-                'session_id' => null
+                'session_id' => null,
+                'oder_dt' => Carbon::now()
             ]);
         }
 
@@ -203,7 +205,7 @@ class CheckoutController extends Controller
             Cart::where([
                 ['user_id',Auth::id()],
                 ['oder_status',1]
-            ])->update(['oder_status' => 2,'session_id' => null]);
+            ])->update(['oder_status' => 2,'session_id' => null,'oder_dt' => Carbon::now()]);
         }
 
         return redirect()->route('profile');

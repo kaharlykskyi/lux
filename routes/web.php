@@ -92,7 +92,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     Route::post('/user/change-balance','UserController@userBalance')->name('admin.user.change_balance');
 
     Route::group(['prefix' => 'orders'],function (){
-        Route::match(['get', 'post'], '/{status?}','OrderController@index')->name('admin.orders');
+        Route::match(['get', 'post'], '/','OrderController@index')->name('admin.orders');
         Route::get('/change-status/orders','OrderController@changeStatusOrder')->name('admin.product.change_status_order');
         Route::get('/stock-product','OrderController@stockProductDelivery')->name('admin.product.stock');
         Route::match(['get', 'post'], '/edit/{order}','OrderController@editOder')->name('admin.order_edit');

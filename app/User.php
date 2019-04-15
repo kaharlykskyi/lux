@@ -65,4 +65,12 @@ class User extends Authenticatable implements MustVerifyEmail
     public function mutualSettlements(){
         return $this->hasMany('App\MutualSettlement')->orderByDesc('created_at');
     }
+
+    public function type_user(){
+        return $this->belongsTo(Role::class,'role');
+    }
+
+    public function userCity(){
+        return $this->belongsTo(City::class,'city');
+    }
 }

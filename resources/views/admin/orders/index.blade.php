@@ -2,8 +2,8 @@
 
 @section('content')
 
-    <div class="main-content">
-        <div class="section__content section__content--p30">
+    <div class="main-content p-t-85">
+        <div class="section__content">
             @if (session('status'))
                 <div class="container">
                     <div class="row">
@@ -18,23 +18,102 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        <ul class="nav nav-tabs">
-                            <li class="nav-item">
-                                <a class="nav-link @if(URL::current() === route('admin.orders','new')) active @endif" href="{{route('admin.orders','new')}}">{{__('Новые заказа')}}</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @if(URL::current() === route('admin.orders','old')) active @endif" href="{{route('admin.orders','old')}}">{{__('Старые заказы')}}</a>
-                            </li>
-                        </ul>
+                        <div class="card">
+                            <div class="card-body card-block">
+                                <form action="{{route('admin.orders')}}" method="get" id="filter_oder">
+                                    <div class="row form-group">
+                                        <div class="col col-sm-4">
+                                            <div class="row form-group">
+                                                <div class="col col-md-3">
+                                                    <label for="oder_id" class=" form-control-label">Заказ</label>
+                                                </div>
+                                                <div class="col-12 col-md-9">
+                                                    <input type="text" id="oder_id" value="{{request()->query('oder_id')}}" name="oder_id" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col col-sm-4">
+                                            <div class="row form-group">
+                                                <div class="col col-md-3">
+                                                    <label for="status_oder" class=" form-control-label">Статус заказа</label>
+                                                </div>
+                                                <div class="col-12 col-md-9">
+                                                    <select name="status_oder" id="status_oder" class="form-control">
+                                                        <option value="0"></option>
+                                                        @foreach($order_code as $code)
+                                                            <option @if(request()->query('status_oder') == $code->id) selected @endif value="{{$code->id}}">{{$code->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col col-sm-4">
+                                            <div class="row form-group">
+                                                <div class="col col-md-3">
+                                                    <label for="client_id" class=" form-control-label">Заказчик</label>
+                                                </div>
+                                                <div class="col-12 col-md-9">
+                                                    <select name="client_id" id="client_id" class="form-control">
+                                                        <option value="0"></option>
+                                                        @foreach($clients as $client)
+                                                            <option @if((int)request()->query('client_id') === $client->id) selected @endif value="{{$client->id}}">{{$client->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col col-sm-4">
+                                            <div class="row form-group">
+                                                <div class="col col-md-8">
+                                                    <label for="new_oder" class=" form-control-label">Не просмотренные</label>
+                                                </div>
+                                                <div class="col-12 col-md-4">
+                                                    <input type="checkbox" @if(request()->has('new_oder')) checked @endif id="new_oder" name="new_oder" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col col-sm-4">
+                                            <div class="row form-group">
+                                                <div class="col col-md-3">
+                                                    <label for="date_oder_start"  class=" form-control-label">Дата от</label>
+                                                </div>
+                                                <div class="col-12 col-md-9">
+                                                    <input type="date" value="{{request()->query('date_oder_start')}}" id="date_oder_start" name="date_oder_start" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col col-sm-4">
+                                            <div class="row form-group">
+                                                <div class="col col-md-3">
+                                                    <label for="date_oder_end" class=" form-control-label">Дата до</label>
+                                                </div>
+                                                <div class="col-12 col-md-9">
+                                                    <input type="date" value="{{request()->query('date_oder_end')}}" id="date_oder_end" name="date_oder_end" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="card-footer">
+                                <button onclick="$('#filter_oder').submit();" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-dot-circle-o"></i> Фильтровать
+                                </button>
+                                <button onclick="location.href = '{{route('admin.orders')}}'" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-ban"></i> Отменить
+                                </button>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="col-12">
-                        <div class="table-responsive table--no-card m-b-30">
+                        <div class="table--no-card m-b-30">
                             <table class="table table-borderless table-striped table-earning">
                                 <thead>
                                 <tr>
-                                    <th>Дата</th>
                                     <th>ID заказа</th>
-                                    <th>клиент</th>
+                                    <th>Клиент/Дата</th>
+                                    <th>Номер / Фирма / Кол-во / Наименование</th>
                                     <th class="text-right">Общяя цена</th>
                                     <th class="text-right">Статус заказа</th>
                                 </tr>
@@ -49,29 +128,53 @@
                                                          <i class="fa fa-pencil-square-o" aria-hidden="true" style="cursor: pointer" title="{{__('Редактировать заказ')}}"></i>
                                                     </a>
                                                 </span>
-                                                <span class="m-r-10">
-                                                    <i data-toggle="modal" data-target="#orderInfo" onclick="getOrderInfo({{$item->id}})" class="fa fa-info" style="cursor: pointer"></i>
-                                                </span>
-                                                {{$item->updated_at}}
-                                            </td>
-                                            <td>
-                                                @php
-                                                    $orderPay = \App\OrderPay::where([
-                                                        ['cart_id',$item->id],
-                                                        ['user_id',(int)$item->user_id]
-                                                    ])->first();
-                                                @endphp
-                                                @isset($orderPay)
-                                                    @if($orderPay->success_pay === 'true')
+                                                @isset($item->payOder)
+                                                    @if($item->payOder->success_pay === 'true')
                                                         <span class="m-r-10">
-                                                            <i class="fa fa-usd" aria-hidden="true" title="{{__('Оплачен')}}"></i>
+                                                            <i class="fa fa-usd text-success" aria-hidden="true" title="{{__('Оплачен')}}"></i>
                                                         </span>
                                                     @endif
                                                 @endisset
                                                 {{$item->id}}
                                             </td>
-                                            <td>{{$item->name}}</td>
-                                            <td class="text-right">&#8372; {{isset($item->percent)?(round($item->total_price - ($item->total_price*$item->percent/100),2)):$item->total_price}}</td>
+                                            <td class="hover-trigger position-relative">
+                                                {{$item->client->name}}<br>
+                                                <div class="hidden hover-show">
+                                                    <p><strong>ФИО: </strong>{{$item->client->sername . ' '. $item->client->name . ' ' . $item->client->last_name}}</p>
+                                                    <p><strong>Email: </strong>{{$item->client->email}}</p>
+                                                    <p><strong>Тип пользователя: </strong>{{$item->client->type_user->name}}</p>
+                                                    <p><strong>Город: </strong>{{$item->client->userCity->name}}</p>
+                                                    <p><strong>Адрес: </strong>{{$item->client->deliveryInfo->street . '/' . $item->client->deliveryInfo->house}}</p>
+                                                    <p><strong>Телефон: </strong>{{$item->client->phone}}</p>
+                                                </div>
+                                                {{$item->oder_dt}}
+                                            </td>
+                                            <td>
+                                                @foreach($item->cartProduct as $product)
+                                                    <p style="font-size: 13px">
+                                                        {{$product->articles}}
+                                                        <strong>{{$product->brand}}
+                                                            [<span class="text-danger">{{$product->pivot->count}}</span>]
+                                                        </strong>
+                                                        <span class="text-success">{{$product->name}}</span>
+                                                    </p>
+                                                @endforeach
+                                                <a style="font-size: 12px;" href="{{route('admin.orders',['delete_oder' => $item->id])}}">
+                                                    <i class="fa fa-trash" aria-hidden="true"></i> удалить
+                                                </a>
+                                            </td>
+                                            <td class="text-right">&#8372;
+                                            @php
+                                                $sum = 0;
+                                                foreach ($item->cartProduct as $product){
+                                                    $sum += $product->price * $product->pivot->count;
+                                                }
+                                                if (isset($item->client->discount)){
+                                                    $sum -= round($sum*$item->client->discount->percent/100,2);
+                                                }
+                                            @endphp
+                                                {{$sum}}
+                                            </td>
                                             <td style="padding: 12px 0;">
                                                 <div style="width: 90%;" class="rs-select2--dark rs-select2--md m-r-10 rs-select2--border">
                                                     <select class="js-select2" name="order_status_code" onchange="orderStatus({{$item->id}},this)">
@@ -108,40 +211,4 @@
         </div>
         @component('admin.component.footer')@endcomponent
     </div>
-
-    <!-- modal order info -->
-    @include('admin.orders.partrials.modal_order_info')
-    <!-- end modal order info -->
-
-    <script>
-        $(function($){
-            $(document).mouseup(function (e){
-                const div = $("#stock_product");
-                if (!div.is(e.target)
-                    && div.has(e.target).length === 0) {
-                    div.hide();
-                }
-            });
-        });
-
-        function getOrderInfo(id) {
-            $('#orderInfoTitle').text(`Информация про заказ №${id}`);
-            $.get(`{{route('admin.product.full_order_info')}}?idOrder=${id}`,function (data) {
-                let data_str = '';
-                data.response.forEach(function (item) {
-                    data_str += `
-                                 <tr>
-                                    <td class="identification-wrapper">${item.id}</td>
-                                    <td>${item.articles}</td>
-                                    <td>${item.name}</td>
-                                    <td>${item.price}</td>
-                                    <td>${item.count_in_cart}</td>
-                                </tr>
-                    `;
-                });
-                $('#dataOrder').html(data_str);
-            });
-        }
-    </script>
-
 @endsection

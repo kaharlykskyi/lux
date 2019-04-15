@@ -14638,3 +14638,22 @@ section {
 .vue-lists ul, .vue-lists ol {
     padding-left: 30px;
 }
+
+/***********CUSTOM STYLE*************/
+.hover-show{
+    position: absolute;
+    top: 35px;
+    left: 55px;
+    z-index: 1000;
+    background: #fff;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.hidden{
+    display: none;
+}
+
+.hover-trigger:hover .hidden{
+    display: block; !important;
+}

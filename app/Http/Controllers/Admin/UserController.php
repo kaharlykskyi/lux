@@ -45,12 +45,13 @@ class UserController extends Controller
         DB::transaction(function () use ($data,$balance) {
             $mutual_settelement = new MutualSettlement();
             $mutual_settelement->fill($data);
-            $balance_val = round((float)$balance->balance,2) + ($mutual_settelement->change);
+            $balance_val = isset($balance->balance)?round((float)$balance->balance,2):0 + ($mutual_settelement->change);
             $mutual_settelement->balance = $balance_val;
             $mutual_settelement->save();
-            UserBalance::where('user_id',$data['user_id'])->update([
-                'balance' => $balance_val,
-            ]);
+            UserBalance::updateOrInsert(
+                ['user_id' => (int)$data['user_id']],
+                ['balance' => $balance_val]
+            );
         },5);
 
         return back()->with('status','Операция выполнена');
