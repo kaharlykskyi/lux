@@ -37,7 +37,7 @@
                             <li>
                                 <a href="{{route('profile')}}">{{__('Профиль')}}</a>
                             </li>
-                            @if(Auth::user()->permission === 'admin')
+                            @if(Auth::user()->permission === 'admin' || Auth::user()->permission === 'manager')
                                 <li>
                                     <a href="{{route('admin.dashboard')}}">{{__('Админ панель')}}</a>
                                 </li>

@@ -15,7 +15,7 @@ class CheckPermission
      */
     public function handle($request, Closure $next)
     {
-        if ($request->user()->permission !== 'admin'){
+        if ($request->user()->permission !== 'admin' && $request->user()->permission !== 'manager'){
             return redirect()->route('home');
         }
 

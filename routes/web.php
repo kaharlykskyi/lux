@@ -87,9 +87,13 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     Route::get('/dashboard','DashboardController@index')->name('admin.dashboard');
     Route::get('/import-history','DashboardController@importHistory')->name('admin.import_history');
     Route::match(['get', 'post'], '/filter/{status}','DashboardController@setFilterSettings')->name('admin.filter');
-    Route::match(['get', 'post'], '/users','UserController@index')->name('admin.users');
-    Route::get('/user/{user}','UserController@show')->name('admin.user.show');
-    Route::post('/user/change-balance','UserController@userBalance')->name('admin.user.change_balance');
+
+    Route::group(['users' => 'orders'],function (){
+        Route::match(['get', 'post'], '/','UserController@index')->name('admin.users');
+        Route::get('/{user}','UserController@show')->name('admin.user.show');
+        Route::match(['get', 'post'],'/{user}/garage','UserController@garageShow')->name('admin.user.garage');
+        Route::post('/change-balance','UserController@userBalance')->name('admin.user.change_balance');
+    });
 
     Route::group(['prefix' => 'orders'],function (){
         Route::match(['get', 'post'], '/','OrderController@index')->name('admin.orders');
@@ -100,7 +104,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
 
     Route::get('/full-order-info','OrderController@getOrderData')->name('admin.product.full_order_info');
     Route::get('/info-product-stock','OrderController@getInfoProductStock')->name('admin.product.info_product_stock');
-    Route::post('/permission/{user?}','UserController@permission')->name('permission');
+    Route::post('/permission','UserController@permission')->name('permission');
     Route::post('/discount-user/{user?}','UserController@setDiscount')->name('discount_user');
     Route::match(['get', 'post'], '/fast-buy/{status}','FastBuyController@index')->name('admin.fast_buy');
 

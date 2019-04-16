@@ -20,25 +20,54 @@
                     <h3 class="title-3 m-b-30">
                         <i class="zmdi zmdi-account-calendar"></i>{{__('Информация о пользователях')}}</h3>
                     <div class="filters m-b-45">
-                        <div class="rs-select2--dark rs-select2--sm rs-select2--border">
-                            <form class="form-header" action="{{route('admin.users')}}" method="POST">
-                                @csrf
-                                <input class="au-input au-input--xl" type="text" name="search" placeholder="{{__('Поиск пользователей за ником')}}" />
-                                <button class="au-btn--submit" type="submit">
-                                    <i class="zmdi zmdi-search"></i>
+                        <div class="card">
+                            <div class="card-body card-block">
+                                <form action="{{route('admin.users')}}" method="get" id="filter_user">
+                                    <div class="row form-group">
+                                        <div class="col col-sm-4">
+                                            <div class="row form-group">
+                                                <div class="col col-md-3">
+                                                    <label for="user_fio" class=" form-control-label">ФИО</label>
+                                                </div>
+                                                <div class="col-12 col-md-9">
+                                                    <input type="text" id="user_fio" value="{{request()->query('user_fio')}}" name="user_fio" class="form-control">
+                                                    <span class="small">Через пробел</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col col-sm-4">
+                                            <div class="row form-group">
+                                                <div class="col col-md-3">
+                                                    <label for="user_phone" class=" form-control-label">Телефон</label>
+                                                </div>
+                                                <div class="col-12 col-md-9">
+                                                    <input type="text" id="user_phone" value="{{request()->query('user_phone')}}" name="user_phone" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col col-sm-4">
+                                            <div class="row form-group">
+                                                <div class="col col-md-3">
+                                                    <label for="user_email" class="form-control-label">Email</label>
+                                                </div>
+                                                <div class="col-12 col-md-9">
+                                                    <input type="text" id="user_email" value="{{request()->query('user_email')}}" name="user_email" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="card-footer">
+                                <button onclick="$('#filter_user').submit();" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-dot-circle-o"></i> Фильтровать
                                 </button>
-                            </form>
-                        </div>
-                    </div>
-                    @isset ($search)
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="alert alert-primary" role="alert">
-                                    {{ __('Поиск по слову - ') . $search }}
-                                </div>
+                                <button onclick="location.href = '{{route('admin.users')}}'" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-ban"></i> Отменить
+                                </button>
                             </div>
                         </div>
-                    @endisset
+                    </div>
                     <div class="table-responsive table-data">
                         <table class="table">
                             <thead>
@@ -48,6 +77,7 @@
                                 <td>{{__('Роль')}}</td>
                                 <td>{{__('Доступ')}}</td>
                                 <td>{{__('Скидка')}}</td>
+                                <td></td>
                             </tr>
                             </thead>
                             <tbody>
@@ -56,11 +86,12 @@
                                         <tr>
                                             <td>{{$user->id}}</td>
                                             <td>
-                                                <div onclick="location.href = '{{route('admin.user.show',$user->id)}}'" class="table-data__info">
+                                                <div class="table-data__info">
                                                     <h6>{{$user->name}}</h6>
                                                     <span>
                                                         <a href="#">{{$user->email}}</a>
-                                                    </span>
+                                                    </span><br>
+                                                    <span class="small">{{$user->phone}}</span>
                                                 </div>
                                             </td>
                                             <td>
@@ -72,7 +103,7 @@
                                                             @endif
                                                         @endforeach
                                                     @endisset
-                                                </span>
+                                                </span><br>
                                             </td>
                                             <td>
                                                 <div class="rs-select2--trans rs-select2--sm">
@@ -98,10 +129,22 @@
                                                     </div>
                                                 @endisset
                                             </td>
+                                            <td class="font-size-12-440">
+                                                <a href="{{route('admin.user.garage',$user->id)}}">
+                                                    <i class="fa fa-car" aria-hidden="true"></i>
+                                                    @if(isset($user->cars) && $user->cars->count() > 0)
+                                                        [<span class="text-danger">{{$user->cars->count()}}</span>]
+                                                    @endif Гараж
+                                                </a><br>
+                                                <a href="{{route('admin.user.show',$user->id)}}">
+                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                    Редактировать
+                                                </a>
+                                            </td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="3">
+                                            <td colspan="6">
                                                 <div class="alert alert-warning" role="alert">
                                                     @if (isset($search))
                                                         {{__('Нету с таким именем пользователей')}}
@@ -129,8 +172,9 @@
 
     <script>
         function setPermission(id,obj) {
-            $.post('{{route('permission')}}/' + id,{
+            $.post('{{route('permission')}}',{
                 'permission' : $(obj).val(),
+                'user_id':id,
                 '_token': '{{ csrf_token() }}'
             },function (data) {
                 alert(data.response);

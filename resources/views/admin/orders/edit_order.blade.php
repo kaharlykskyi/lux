@@ -23,8 +23,8 @@
                 <div class="card">
                     <div class="card-header">
                         <strong class="card-title">{{__('Данные заказа')}}
-                            @isset($order_pay)
-                                @if($order_pay->success_pay === 'true')
+                            @isset($order->payOder)
+                                @if($order->payOder->success_pay === 'true')
                                     <small>
                                         <span class="badge badge-success float-right mt-1">{{__('оплачен')}}</span>
                                     </small>
@@ -33,37 +33,37 @@
                         </strong>
                     </div>
                     <div class="card-body">
-                        @isset($user)
+                        @isset($order->client)
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
                                         <tr>
                                             <th>{{__('Имя')}}</th>
-                                            <td>{{$user->name}}</td>
+                                            <td>{{$order->client->name}}</td>
                                         </tr>
                                         <tr>
                                             <th>{{__('E-mail')}}</th>
-                                            <td>{{$user->email}}</td>
+                                            <td>{{$order->client->email}}</td>
                                         </tr>
                                         <tr>
                                             <th>{{__('Телефон')}}</th>
-                                            <td>{{$user->phone}}</td>
+                                            <td>{{$order->client->phone}}</td>
                                         </tr>
                                         <tr>
                                             <th>{{__('Страна')}}</th>
-                                            <td>{{isset($user->deliveryInfo->delivery_country)?$user->deliveryInfo->delivery_country:$user->country}}</td>
+                                            <td>{{isset($order->client->deliveryInfo->delivery_country)?$order->client->deliveryInfo->delivery_country:$order->client->country}}</td>
                                         </tr>
                                         <tr>
                                             <th>{{__('Город')}}</th>
-                                            <td>{{isset($user->deliveryInfo->delivery_city)?$user->deliveryInfo->delivery_city:$user->city}}</td>
+                                            <td>{{isset($order->client->deliveryInfo->delivery_city)?$order->client->deliveryInfo->delivery_city:$order->client->city}}</td>
                                         </tr>
                                         <tr>
                                             <th>{{__('Служба доставки')}}</th>
-                                            <td>{{trans('custom.'.$user->deliveryInfo->delivery_service)}}</td>
+                                            <td>{{trans('custom.'.$order->client->deliveryInfo->delivery_service)}}</td>
                                         </tr>
                                         <tr>
                                             <th>{{__('Отделение почты')}}</th>
-                                            <td>{{$user->deliveryInfo->delivery_department}}</td>
+                                            <td>{{$order->client->deliveryInfo->delivery_department}}</td>
                                         </tr>
                                         <tr>
                                             <th>{{__('Номер накладной')}}</th>
@@ -77,7 +77,7 @@
                                             <th>{{__('Статус заказа')}}</th>
                                             <td>
                                                 <div style="width: 90%;" class="rs-select2--dark rs-select2--md m-r-10 rs-select2--border">
-                                                    <select class="js-select2" name="order_status_code" onchange="orderStatus({{$order->id}},this)">
+                                                    <select class="js-select2" name="order_status_code" onchange="orderStatus('{{$order->id}}',this)">
                                                         @isset($order_code)
                                                             @foreach($order_code as $v)
                                                                 <option @if($v->id === $order->oder_status) selected @endif value="{{$v->id}}">{{$v->name}}</option>
@@ -101,28 +101,44 @@
                         <strong class="card-title">{{__('Заказаные товары')}}</strong>
                     </div>
                     <div class="card-body">
-                        @isset($product)
+                        @isset($order->cartProduct)
                             <div class="table-responsive">
                                 <table class="table table-borderless table-data3">
                                     <thead>
                                         <tr>
                                             <th>Название</th>
                                             <th>Артикль</th>
-                                            <th>Цела</th>
+                                            <th>
+                                                Цена Магазина/<br>
+                                                Поставщика
+                                            </th>
                                             <th>Количество</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($product as $item)
+                                        @foreach($order->cartProduct as $item)
                                             <tr>
                                                 <td>
-                                                    <span class="m-r-10">
+                                                    {{--<span class="m-r-10">
                                                         <i onclick="" class="fa fa-info" style="cursor: pointer" title="Показать аналогичные товары"></i>
-                                                    </span>
+                                                    </span>--}}
                                                     {{$item->name}}
                                                 </td>
                                                 <td>{{$item->articles}}</td>
-                                                <td>{{$item->price}}</td>
+                                                <td>
+                                                    {{$item->price}}грн.<br>
+                                                    @php
+                                                        $provider_price = 0;
+                                                        if ($item->price < 2000){
+                                                            $provider_price = $item->price - $item->price * 0.2;
+                                                        } elseif ($item->price >= 2000 && $item->price <= 5000){
+                                                            $provider_price = $item->price - $item->price * 0.15;
+                                                        } elseif ($item->price > 5000){
+                                                            $provider_price = $item->price - $item->price * 0.1;
+                                                        }
+                                                    @endphp
+                                                    <span class="small">{{$provider_price}}грн.</span>
+                                                </td>
                                                 <td>{{$item->count}}</td>
                                             </tr>
                                         @endforeach

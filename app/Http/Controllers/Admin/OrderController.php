@@ -115,18 +115,19 @@ class OrderController extends Controller
         ]);
     }
 
-    public function editOder(Cart $order,Request $request){
+    public function editOder(Request $request){
         /*if($request->isMethod('post')){
 
         }*/
-        $user = User::with('deliveryInfo')->find($order->user_id);
-        $product = Product::join('cart_products','cart_products.product_id','=','products.id')
-            ->where('cart_products.cart_id','=',$order->id)
-            ->select('products.*','cart_products.count')->get();
-        $order_pay = OrderPay::where('cart_id',$order->id)->first();
+
+        $order = Cart::with(['cartProduct','status','client' =>
+            function($query){
+                $query->with(['type_user','deliveryInfo','userCity']);
+            }
+            ,'payOder'])->find((int)$request->order);
         $order_code = DB::table('oder_status_codes')->get();
 
-        return view('admin.orders.edit_order',compact('order','user','product','order_pay','order_code'));
+        return view('admin.orders.edit_order',compact('order','order_code'));
     }
 
     public function stockProductDelivery(Request $request){

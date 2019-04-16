@@ -104,9 +104,14 @@
                                 </button>
                             </div>
                         </div>
-
                     </div>
                     <div class="col-12">
+                        <div class="col-12">
+                            <div class="alert alert-warning">
+                                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                                <span class="small">После присвоению заказу статуса "отменен", если он оплачен, то средства будут возвращены пользователю на его счёт профиля</span>
+                            </div>
+                        </div>
                         <div class="table--no-card m-b-30">
                             <table class="table table-borderless table-striped table-earning">
                                 <thead>

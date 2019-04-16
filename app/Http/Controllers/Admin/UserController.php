@@ -4,24 +4,38 @@ namespace App\Http\Controllers\Admin;
 
 use App\Discount;
 use App\MutualSettlement;
+use App\TecDoc\Tecdoc;
 use App\User;
 use App\UserBalance;
+use App\UserCar;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+    protected $tecdoc;
+
+    public function __construct()
+    {
+        $this->tecdoc = new Tecdoc('mysql_tecdoc');
+    }
+
     public function index(Request $request){
         $roles = DB::table('roles')->get();
 
-        if ($request->isMethod('post')){
-            $search = trim($request->post('search'));
-            $users = User::where('name','LIKE',"%{$search}%")->paginate(30);
-            return view('admin.users.index',compact('users','roles','search'));
+        if (isset($request->user_fio)){
+            $user_fio = explode(' ',$request->user_fio);
         }
 
-        $users = User::paginate(30);
+        $users = User::with('cars')->where('email','LIKE',isset($request->user_email)?"%{$request->user_email}%":'%%')
+            ->where('phone','LIKE',isset($request->user_phone)?"%{$request->user_phone}%":'%%')
+            ->where([
+                ['sername','LIKE',isset($user_fio[0])?"%{$user_fio[0]}%":'%%'],
+                ['name','LIKE',isset($user_fio[1])?"%{$user_fio[1]}%":'%%'],
+                ['last_name','LIKE',isset($user_fio[2])?"%{$user_fio[2]}%":'%%'],
+            ])
+            ->paginate(50);
         $discount = Discount::get();
         return view('admin.users.index',compact('users','roles','discount'));
     }
@@ -31,7 +45,12 @@ class UserController extends Controller
         $balance = $user->balance;
         $balance_history = $user->historyBalance;
         $mutual_settelement = $user->mutualSettlements;
-        return view('admin.users.show',compact('user','dop_phone','balance','balance_history','mutual_settelement'));
+        $location = DB::table('city')
+            ->where('city.id',$user->city)
+            ->join('country','country.id','=','city.id_country')
+            ->select('city.name AS city','country.name AS country','country.flag')
+            ->first();
+        return view('admin.users.show',compact('user','dop_phone','balance','balance_history','mutual_settelement','location'));
     }
 
     public function userBalance(Request $request){
@@ -57,18 +76,22 @@ class UserController extends Controller
         return back()->with('status','Операция выполнена');
     }
 
-    public function permission(Request $request,User $user){
-
-        $user->update(['permission',$request->permission]);
-        if ($user->save()){
+    public function permission(Request $request){
+        if (!empty($request->user_id) && isset($request->permission)) {
+            $user = User::find((int)$request->user_id);
+            if ($user->permission === 'admin'){
+                return response()->json([
+                    'response' => 'Нельзя менять права администратора'
+                ]);
+            }
+            User::where('id',(int)$request->user_id)->update(['permission' => $request->permission]);
             return response()->json([
                 'response' => 'Данные обновлены'
             ]);
-        }else{
-            return response()->json([
-                'response' => 'Error'
-            ]);
         }
+        return response()->json([
+            'response' => 'Error'
+        ]);
     }
 
     public function setDiscount(Request $request,User $user){
@@ -83,5 +106,22 @@ class UserController extends Controller
                 'response' => 'Error'
             ]);
         }
+    }
+
+    public function garageShow(Request $request,User $user){
+        if ($request->has('delete_car')){
+            UserCar::destroy((int)$request->delete_car);
+            return back();
+        }
+        if ($request->has('car')){
+            $car = UserCar::find((int)$request->car);
+            $this->tecdoc->setType($car->type_auto);
+            $marka = $this->tecdoc->getBrandById((int)$car->brand_auto);
+            $model = $this->tecdoc->getModelById((int)$car->model_auto);
+            $modif = $this->tecdoc->getModificationById((int)$car->modification_auto);
+            return view('admin.users.car_info',compact('user','marka','model','modif','car'));
+        }
+        $cars = $user->cars;
+        return view('admin.users.garage',compact('user','cars'));
     }
 }

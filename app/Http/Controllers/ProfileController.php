@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\{AppTrait\GEO, DeliveryInfo, Services\Profile, User, UserCar};
+use App\{AppTrait\GEO, Services\Profile, User, UserCar};
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\{Auth,DB,Hash,Validator};
+use Illuminate\Support\Facades\{Auth,DB,Hash};
 
 class ProfileController extends Controller
 {
