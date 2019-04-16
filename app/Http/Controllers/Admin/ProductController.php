@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Product;
-use App\Provider;
-use App\TecDoc\{ImportPriceList, Tecdoc};
+use App\{Product,Provider,TecDoc\ImportPriceList,TecDoc\Tecdoc};
 use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use \App\Services\Admin\Product as AdminProduct;
 
@@ -244,5 +243,20 @@ class ProductController extends Controller
         }else{
             return back();
         }
+    }
+
+    public function popularProduct(Request $request){
+        $popular_products = DB::table('cart_products')
+            ->join('products','products.id','=','cart_products.product_id')
+            ->where('products.brand','LIKE',isset($request->supplier)?"%{$request->supplier}%":'%%')
+            ->where('products.articles','LIKE',isset($request->article)?"%{$request->article}%":'%%')
+            ->where('products.name','LIKE',isset($request->name)?"%{$request->name}%":'%%')
+            ->select('products.*',DB::raw('COUNT(cart_products.product_id) AS count_bay'))
+            ->groupBy('cart_products.product_id')
+            ->distinct()
+            ->orderByDesc('count_bay')
+            ->paginate(50);
+
+        return view('admin.product.popular',compact('popular_products'));
     }
 }

@@ -14,6 +14,7 @@
                         <li>
                             <a href="{{route('admin.category.index')}}">{{__('Категории')}}</a>
                             <a href="{{route('admin.product.index')}}">{{__('Товары')}}</a>
+                            <a href="{{route('admin.product.popular')}}">{{__('Популярные товары')}}</a>
                             <a href="{{route('admin.show_brand')}}">{{__('Бренды')}}</a>
                             <a href="{{route('admin.filter','use')}}">{{__('Настрайки фильтра')}}</a>
                         </li>

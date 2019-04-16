@@ -130,6 +130,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     Route::match(['get', 'post'], '/menu/edit','TopMenuController@edit')->name('admin.menu.edit');
     Route::match(['get', 'post'], '/comment','DashboardController@productComment')->name('admin.comment');
     Route::match(['get', 'post'], '/shipping-payment','DashboardController@shippingPayment')->name('admin.shipping_payment');
+    Route::get('/popular-product','ProductController@popularProduct')->name('admin.product.popular');
 
     //Export
     Route::get('/export-start','ProductController@startExport')->name('admin.export.start');
