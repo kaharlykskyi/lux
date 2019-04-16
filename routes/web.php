@@ -118,7 +118,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
         'pro_file' => 'ProFileController'
     ],['as' => 'admin']);
     Route::get('/start-import','ProductController@startImport')->name('admin.start_import');
-    Route::get('/product-filter','ProductController@setFilterAdminProduct')->name('admin.product.filter');
+
     Route::group(['prefix' => 'feedback'],function (){
         Route::get('/','FeedBackController@index')->name('admin.feedback');
         Route::delete('/{id}','FeedBackController@delete')->name('admin.feedback.delete');

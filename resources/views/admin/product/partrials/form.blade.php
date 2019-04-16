@@ -12,13 +12,14 @@
 
 <div class="row form-group">
     <div class="col col-md-3">
-        <label for="company" class=" form-control-label">{{__('Название компании')}}</label>
+        <label for="provider_id" class=" form-control-label">{{__('Название компании')}}</label>
     </div>
     <div class="col-12 col-md-9">
-        <input type="text" id="company" name="company" value="@if(isset($product->id)){{$product->company}}@else{{old('company')}}@endif" required class="form-control">
-        @if ($errors->has('company'))
-            <small class="form-text text-danger">{{ $errors->first('company') }}</small>
-        @endif
+        <select name="provider_id" id="provider_id" class="form-control">
+            @foreach($providers as $provider)
+                <option @isset($product->id) @if($product->provider_id == $provider->id) selected @endif @endisset value="{{$provider->id}}">{{$provider->name}}</option>
+            @endforeach
+        </select>
     </div>
 </div>
 
@@ -27,7 +28,7 @@
         <label for="articles" class=" form-control-label">{{__('Артикль')}}</label>
     </div>
     <div class="col-12 col-md-9">
-        <input type="text" id="company" name="articles" value="@if(isset($product->id)){{$product->articles}}@else{{old('articles')}}@endif" required class="form-control">
+        <input type="text" id="articles" name="articles" value="@if(isset($product->id)){{$product->articles}}@else{{old('articles')}}@endif" required class="form-control">
         @if ($errors->has('articles'))
             <small class="form-text text-danger">{{ $errors->first('articles') }}</small>
         @endif
@@ -39,7 +40,7 @@
         <label for="brand" class=" form-control-label">{{__('Бренд')}}</label>
     </div>
     <div class="col-12 col-md-9">
-        <input type="text" id="company" name="brand" value="@if(isset($product->id)){{$product->brand}}@else{{old('brand')}}@endif" required class="form-control">
+        <input type="text" id="brand" name="brand" value="@if(isset($product->id)){{$product->brand}}@else{{old('brand')}}@endif" required class="form-control">
         @if ($errors->has('brand'))
             <small class="form-text text-danger">{{ $errors->first('brand') }}</small>
         @endif

@@ -24,48 +24,17 @@ class ProductController extends Controller
         $this->service = new AdminProduct();
     }
 
-    public function setFilterAdminProduct(Request $request){
-        if (isset($request->str_search) && isset($request->field)){
-            if (session()->has("admin_filter.fields")){
-                $buff = session("admin_filter.fields");
-                array_push($buff,[
-                    $request->field,
-                    $request->str_search
-                ]);
-                session()->put("admin_filter.fields",$buff);
-            }else{
-                session()->put("admin_filter.fields",[
-                    [
-                        $request->field,
-                        $request->str_search
-                    ]
-                ]);
-            }
-        }
-        if (isset($request->clear_admin_filter)){
-            session()->forget('admin_filter.fields');
-        }
-    }
-
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        if (session()->has("admin_filter.fields") && !empty(session("admin_filter.fields")))
-        {
-            $where = [];
-            foreach (session("admin_filter.fields") as $filter){
-                $where[] = [
-                    $filter[0],'LIKE',"%{$filter[1]}%"
-                ];
-            }
-            $products = Product::where($where)->paginate(80);
-        }else{
-            $products = Product::paginate(80);
-        }
+        $products = Product::where('products.brand','LIKE',isset($request->supplier)?"%{$request->supplier}%":'%%')
+            ->where('products.articles','LIKE',isset($request->article)?"%{$request->article}%":'%%')
+            ->where('products.name','LIKE',isset($request->name)?"%{$request->name}%":'%%')->paginate(80);
         $providers = Provider::all();
         return view('admin.product.index',compact('products','providers'));
     }
@@ -138,7 +107,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('admin.product.edit',compact('product'));
+        $providers = Provider::all();
+        return view('admin.product.edit',compact('product','providers'));
     }
 
     /**

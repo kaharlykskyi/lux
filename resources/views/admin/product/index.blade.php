@@ -18,20 +18,6 @@
                 <h3 class="title-5 m-b-35 m-t-15">{{__('Каталог товаров')}}</h3>
                 <div class="table-data__tool">
                     <div class="table-data__tool-left">
-                        <div class="input-group">
-                            <input type="text" id="str_search" name="str_search" placeholder="Строка поиска" class="form-control" required>
-                            <div class="input-group-btn">
-                                <div class="rs-select2--dark rs-select2--sm rs-select2--border">
-                                    <select onchange="setFilterProd(this)" class="js-select2 au-select-dark" name="field">
-                                        <option selected="selected">Поля</option>
-                                        <option value="articles">{{__('Артикль')}}</option>
-                                        <option value="name">{{__('Название')}}</option>
-                                        <option value="brand">{{__('Бренд')}}</option>
-                                    </select>
-                                    <div class="dropDownSelect2"></div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="table-data__tool-right">
                         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#easeImportModal">
@@ -59,23 +45,11 @@
                         </script>
                     </div>
                 </div>
-                @if(session()->has("admin_filter.fields") && !empty(session("admin_filter.fields")))
-                    <div class="row">
-                        <div class="col-12 p-t-20 p-b-10">
-                            <div class="col-12 text-right">
-                                <button onclick="$.get(`{{route('admin.product.filter')}}?clear_admin_filter=true`,()=>{location.reload()})" type="button" class="btn btn-link btn-sm">
-                                    <i class="fa fa-trash" aria-hidden="true"></i>&nbsp; {{__('Отменить')}}</button>
-                            </div>
-                            <div class="alert alert-info" role="alert">
-                                <h4 class="alert-heading">{{__('Поиск по таким полям')}}</h4>
-                                @foreach(session("admin_filter.fields") as $data)
-                                    <p><strong>{{$data[0]}}</strong> - "{{$data[1]}}"</p>
-                                    <hr>
-                                @endforeach
-                            </div>
-                        </div>
+                <div class="row m-t-10 m-b-10">
+                    <div class="col-12">
+                        @component('admin.product.partrials.filter',['link' => route('admin.product.index')]) @endcomponent
                     </div>
-                @endif
+                </div>
                 <div class="table-responsive table--no-card m-b-30">
                     <table class="table table-borderless table-striped table-earning">
                         <thead>
@@ -196,12 +170,5 @@
             </div>
             <!-- end modal static -->
     </div>
-
-    <script>
-        function setFilterProd(obj) {
-            const str_search = $('#str_search').val();
-            $.get(`{{route('admin.product.filter')}}?str_search=${str_search}&field=${$(obj).val()}`,()=>{location.reload()});
-        }
-    </script>
 
 @endsection
