@@ -88,7 +88,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     Route::get('/import-history','DashboardController@importHistory')->name('admin.import_history');
     Route::match(['get', 'post'], '/filter/{status}','DashboardController@setFilterSettings')->name('admin.filter');
 
-    Route::group(['users' => 'orders'],function (){
+    Route::group(['prefix' => 'users'],function (){
         Route::match(['get', 'post'], '/','UserController@index')->name('admin.users');
         Route::get('/{user}','UserController@show')->name('admin.user.show');
         Route::match(['get', 'post'],'/{user}/garage','UserController@garageShow')->name('admin.user.garage');

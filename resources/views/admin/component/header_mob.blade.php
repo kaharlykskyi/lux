@@ -73,7 +73,7 @@
                         <i class="zmdi zmdi-shopping-cart"></i>{{__('Заказы')}}</a>
                     <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
                         <li>
-                            <a href="{{route('admin.orders','new')}}">
+                            <a href="{{route('admin.orders')}}">
                                 {{__('Заказы')}}
                             </a>
                         </li>

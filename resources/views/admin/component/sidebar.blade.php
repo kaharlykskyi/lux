@@ -34,7 +34,7 @@
                         <i class="zmdi zmdi-shopping-cart"></i>{{__('Заказы')}}</a>
                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                         <li>
-                            <a href="{{route('admin.orders','new')}}">
+                            <a href="{{route('admin.orders')}}">
                                 {{__('Заказы')}}
                             </a>
                         </li>
