@@ -46,13 +46,13 @@
                                     <tr>
                                         <td>{{__('Страна')}}</td>
                                         <td class="text-right">
-                                            <img style="width: 40px;" src="{{$location->flag}}" alt="{{$location->country}}">
-                                            {{$location->country}}
+                                            @isset($location->flag) <img style="width: 40px;" src="{{$location->flag}}" alt="{{$location->country}}"> @endisset
+                                            @isset($location->country){{$location->country}}@endisset
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>{{__('Город')}}</td>
-                                        <td class="text-right">{{$location->city}}</td>
+                                        <td class="text-right">@isset($location->city){{$location->city}}@endisset</td>
                                     </tr>
                                     <tr>
                                         <td>{{__('Телефон')}}</td>
