@@ -29,6 +29,9 @@
                     <a href="{{route('admin.call_orders')}}">
                         <i class="fa fa-phone" aria-hidden="true"></i>
                         {{__('Заказ звонка')}}
+                        @if(isset($count_new_call_orders_global) && $count_new_call_orders_global > 0)
+                            (<span class="text-danger">{{$count_new_call_orders_global}}</span>)
+                        @endif
                     </a>
                 </li>
                 <li>
@@ -43,6 +46,9 @@
                         <li>
                             <a href="{{route('admin.orders')}}">
                                 {{__('Заказы')}}
+                                @if(isset($count_new_orders_global) && $count_new_orders_global > 0)
+                                    (<span class="text-danger">{{$count_new_orders_global}}</span>)
+                                @endif
                             </a>
                         </li>
                         <li>

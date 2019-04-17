@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\{Cart,CartProduct,Page};
+use App\{CallOrder, Cart, CartProduct, Page};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\ServiceProvider;
@@ -24,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
                 Cookie::queue('vin_catalog', 'quickGroup');
             }
             view()->composer('*', function($view){
+                $count_new_orders = Cart::where('seen',0)->count();
+                $count_new_call_orders = CallOrder::where('status',0)->count();
                 $pages = Page::all();
                 $cart = Cart::where([
                     Auth::check()
@@ -39,7 +41,12 @@ class AppServiceProvider extends ServiceProvider
                 }else{
                     $products = null;
                 }
-                $view->with(['products_cart_global' => $products, 'pages_global' => $pages]);
+                $view->with([
+                    'products_cart_global' => $products,
+                    'pages_global' => $pages,
+                    'count_new_orders_global' => $count_new_orders,
+                    'count_new_call_orders_global' => $count_new_call_orders
+                ]);
             });
         }
     }

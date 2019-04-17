@@ -109,7 +109,7 @@ class OrderController extends Controller
 
             }
         }
-
+        Cart::where('id',(int)$request->orderID)->update(['seen' => 1]);
         return response()->json([
             'response' => 'Статус заказа изменен'
         ]);
@@ -119,7 +119,7 @@ class OrderController extends Controller
         /*if($request->isMethod('post')){
 
         }*/
-
+        Cart::where('id',(int)$request->order)->update(['seen' => 1]);
         $order = Cart::with(['cartProduct','status','client' =>
             function($query){
                 $query->with(['type_user','deliveryInfo','userCity']);
