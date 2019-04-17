@@ -31,10 +31,8 @@ class OrderController extends Controller
             ->where('carts.id',isset($request->oder_id)?'=':'<>',isset($request->oder_id)?$request->oder_id:null)
             ->where('carts.oder_status',(int)$request->status_oder!==0?'=':'<>',(int)$request->status_oder!==0?$request->status_oder:1)
             ->where('carts.seen',isset($request->seen)?'=':'>=',isset($request->seen)?1:0)
-            ->where([
-                ['carts.oder_dt',isset($request->date_oder_start)?'>=':'<>',isset($request->date_oder_start)?$request->date_oder_start:null,'OR'],
-                ['carts.oder_dt',isset($request->date_oder_end)?'<=':'<>',isset($request->date_oder_end)?$request->date_oder_end:null,'OR']
-            ])
+            ->where('carts.oder_dt',isset($request->date_oder_start)?'>=':'<>',isset($request->date_oder_start)?$request->date_oder_start:null)
+            ->where('carts.oder_dt',isset($request->date_oder_end)?'<=':'<>',isset($request->date_oder_end)?$request->date_oder_end:null)
             ->join('users','users.id','=','carts.user_id')
             ->where('carts.user_id',(int)$request->client_id!==0?'=':'<>',(int)$request->client_id!==0?$request->client_id:null)
             ->select('carts.*')

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\{CallOrder, Cart, FastBuy, ProductComment, Services\Admin\Dashboard, User};
+use App\{CallOrder, Cart, FastBuy, OrderPay, ProductComment, Services\Admin\Dashboard, User};
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
@@ -149,5 +149,21 @@ class DashboardController extends Controller
 
         $call_orders = CallOrder::orderBy('status')->orderBy('created_at','desc')->paginate(50);
         return view('admin.dashboard.call_oder',compact('call_orders'));
+    }
+
+    public function payMass(Request $request){
+        $pay_mass = OrderPay::with(['user' => function($query){
+            $query->with(['type_user','deliveryInfo','userCity']);
+        }])
+            ->where('success_pay','true')
+            ->where('cart_id',isset($request->oder_id)?'=':'<>',isset($request->oder_id)?$request->oder_id:null)
+            ->where('created_at',isset($request->date_pay_start)?'>=':'<>',isset($request->date_pay_start)?$request->date_pay_start:null)
+            ->where('created_at',isset($request->date_pay_end)?'<=':'<>',isset($request->date_pay_end)?$request->date_pay_end:null)
+            ->where('price_pay',isset($request->date_price_start)?'>=':'<>',isset($request->date_price_start)?$request->date_price_start:null)
+            ->where('price_pay',isset($request->date_price_end)?'<=':'<>',isset($request->date_price_end)?$request->date_price_end:null)
+            ->paginate(50);
+
+        OrderPay::where('seen',0)->update(['seen' => 1]);
+        return view('admin.dashboard.pay_mass',compact('pay_mass'));
     }
 }

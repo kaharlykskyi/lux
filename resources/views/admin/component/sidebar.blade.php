@@ -40,6 +40,14 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{route('admin.pay_mass')}}">
+                        <i class="fa fa-usd" aria-hidden="true"></i>{{__('Сообщения об оплате')}}
+                        @if(isset($count_new_pay_mass_global) && $count_new_pay_mass_global > 0)
+                            (<span class="text-danger">{{$count_new_pay_mass_global}}</span>)
+                        @endif
+                    </a>
+                </li>
+                <li>
                     <a href="{{route('admin.users')}}">
                         <i class="zmdi zmdi-account-o"></i>{{__('Пользователи')}}
                     </a>

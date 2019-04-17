@@ -133,18 +133,19 @@ class UserController extends Controller
         }
 
         $users_cart_product = CartProduct::with(['cart' => function($query){
-            $query->with('client');
-        },'product'])
+            $query->with(['client' =>
+                function($query){
+                    $query->with(['type_user','deliveryInfo','userCity']);
+                }]);
+            },'product'])
             ->join('carts','carts.id','=','cart_products.cart_id')
             ->join('products','products.id','=','cart_products.product_id')
             ->where('carts.oder_status','=',1)
             ->where('cart_products.cart_id',isset($request->cart_id)?'=':'<>',isset($request->cart_id)?$request->cart_id:null)
             ->where('carts.user_id',isset($request->client_id)?'=':'<>',isset($request->client_id)?(int)$request->client_id !== 0?$request->client_id:null:null)
             ->where('products.name','LIKE',isset($request->name_product)?"%{$request->name_product}%":'%%')
-            ->where([
-                ['cart_products.created_at',isset($request->date_add_start)?'>=':'<>',isset($request->date_add_start)?$request->date_add_start:null],
-                ['cart_products.created_at',isset($request->date_add_end)?'<=':'<>',isset($request->date_add_end)?$request->date_add_end:null]
-            ])
+            ->where('cart_products.created_at',isset($request->date_add_start)?'>=':'<>',isset($request->date_add_start)?$request->date_add_start:null)
+            ->where('cart_products.created_at',isset($request->date_add_end)?'<=':'<>',isset($request->date_add_end)?$request->date_add_end:null)
             ->select('cart_products.*')
             ->orderByDesc('cart_products.created_at')
             ->paginate(50);

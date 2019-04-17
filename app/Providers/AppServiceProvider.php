@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\{CallOrder, Cart, CartProduct, Page};
+use App\{CallOrder, Cart, CartProduct, OrderPay, Page};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\ServiceProvider;
@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
             view()->composer('*', function($view){
                 $count_new_orders = Cart::where('seen',0)->count();
                 $count_new_call_orders = CallOrder::where('status',0)->count();
+                $count_new_pay_mass = OrderPay::where('seen',0)->where('success_pay','true')->count();
                 $pages = Page::all();
                 $cart = Cart::where([
                     Auth::check()
@@ -45,7 +46,8 @@ class AppServiceProvider extends ServiceProvider
                     'products_cart_global' => $products,
                     'pages_global' => $pages,
                     'count_new_orders_global' => $count_new_orders,
-                    'count_new_call_orders_global' => $count_new_call_orders
+                    'count_new_call_orders_global' => $count_new_call_orders,
+                    'count_new_pay_mass_global' => $count_new_pay_mass
                 ]);
             });
         }
