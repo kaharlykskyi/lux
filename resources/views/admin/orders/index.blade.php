@@ -182,7 +182,7 @@
                                             </td>
                                             <td style="padding: 12px 0;">
                                                 <div style="width: 90%;" class="rs-select2--dark rs-select2--md m-r-10 rs-select2--border">
-                                                    <select class="js-select2" name="order_status_code" onchange="orderStatus({{$item->id}},this)">
+                                                    <select class="js-select2" name="order_status_code" onchange="orderStatus('{{$item->id}}',this)">
                                                         @isset($order_code)
                                                             @foreach($order_code as $v)
                                                                 <option @if($v->id === $item->oder_status) selected @endif value="{{$v->id}}">{{$v->name}}</option>

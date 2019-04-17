@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\CartProduct;
 use App\Discount;
 use App\MutualSettlement;
 use App\TecDoc\Tecdoc;
@@ -123,5 +124,31 @@ class UserController extends Controller
         }
         $cars = $user->cars;
         return view('admin.users.garage',compact('user','cars'));
+    }
+
+    public function userCart(Request $request){
+        if ($request->has('delete_product')){
+            CartProduct::destroy((int)$request->delete_product);
+            return back()->with('status','Товар удалён');
+        }
+
+        $users_cart_product = CartProduct::with(['cart' => function($query){
+            $query->with('client');
+        },'product'])
+            ->join('carts','carts.id','=','cart_products.cart_id')
+            ->join('products','products.id','=','cart_products.product_id')
+            ->where('carts.oder_status','=',1)
+            ->where('cart_products.cart_id',isset($request->cart_id)?'=':'<>',isset($request->cart_id)?$request->cart_id:null)
+            ->where('carts.user_id',isset($request->client_id)?'=':'<>',isset($request->client_id)?(int)$request->client_id !== 0?$request->client_id:null:null)
+            ->where('products.name','LIKE',isset($request->name_product)?"%{$request->name_product}%":'%%')
+            ->where([
+                ['cart_products.created_at',isset($request->date_add_start)?'>=':'<>',isset($request->date_add_start)?$request->date_add_start:null],
+                ['cart_products.created_at',isset($request->date_add_end)?'<=':'<>',isset($request->date_add_end)?$request->date_add_end:null]
+            ])
+            ->select('cart_products.*')
+            ->orderByDesc('cart_products.created_at')
+            ->paginate(50);
+        $clients = User::all();
+        return view('admin.users.users_cart',compact('users_cart_product','clients'));
     }
 }

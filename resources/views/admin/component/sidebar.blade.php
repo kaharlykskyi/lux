@@ -35,6 +35,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{route('admin.users_cart')}}">
+                        <i class="fa fa-cart-arrow-down" aria-hidden="true"></i>{{__('Корзина заказчиков')}}
+                    </a>
+                </li>
+                <li>
                     <a href="{{route('admin.users')}}">
                         <i class="zmdi zmdi-account-o"></i>{{__('Пользователи')}}
                     </a>
