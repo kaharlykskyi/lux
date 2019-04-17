@@ -9,7 +9,7 @@
                 <ul class="row login-sec">
                     <li class="col-sm-12">
                         <label>{{__('Номер телефона')}}
-                            <input type="tel" id="dop_user_phone_input" class="form-control" name="phone" placeholder="380452712312" aria-describedby="basic-addon1" required>
+                            <input type="tel" id="dop_user_phone_input" class="form-control phone_mask" name="phone" placeholder="380452712312" aria-describedby="basic-addon1" required>
                         </label>
                     </li>
                     <li class="col-sm-12 text-left">

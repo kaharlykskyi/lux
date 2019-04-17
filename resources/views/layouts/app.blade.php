@@ -107,8 +107,11 @@
     <script type="text/javascript" src="{{asset('rs-plugin/js/jquery.tp.min.js')}}"></script>
     <script src="{{asset('js/main.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/common.js')}}"></script>
+    <script type="text/javascript" src="{{asset('js/maskedinput.min.js')}}"></script>
 
     <script>
+        $(".phone_mask").mask("+380(99)999-99-99");
+
         const  getCountry = (obj) => {
             let word = $(obj).val();
             $( '#' + obj[0].id ).autocomplete({

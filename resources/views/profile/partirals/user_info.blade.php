@@ -33,7 +33,7 @@
                 </li>
                 <li class="col-sm-12">
                     <label>{{__('Телефон')}}
-                        <input type="tel" class="form-control" name="phone" value="{{ Auth::user()->phone }}" required>
+                        <input type="tel" class="phone_mask form-control" name="phone" value="{{ Auth::user()->phone }}" required>
                     </label>
                     <hr class="margin-0">
                     <button data-toggle="modal" data-target="#add_user_phone_modal" type="button" class="add-car margin-bottom-5">

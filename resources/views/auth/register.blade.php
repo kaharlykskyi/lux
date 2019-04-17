@@ -74,7 +74,7 @@
                                 </li>
                                 <li class="col-sm-12">
                                     <label class="relative country">{{__('Страна')}}
-                                        <input id="country" oninput="getCountry($(this))" type="text" class="form-control{{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" value="{{ old('country') }}" required autocomplete="off">
+                                        <input id="country" oninput="getCountry($(this))" type="text" class="phone_mask form-control{{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" value="{{ old('country') }}" required autocomplete="off">
                                         <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
                                     </label>
                                     @if ($errors->has('country'))

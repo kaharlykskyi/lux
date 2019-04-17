@@ -21,6 +21,7 @@ Route::post('/get-section-part', 'HomeController@getSectionParts')->name('get_se
 Route::get('/del-garage-car', 'HomeController@delGarageCar')->name('del_garage_car');
 Route::get('/brands', 'HomeController@allBrands')->name('all_brands');
 Route::get('/modification-info', 'HomeController@modificationInfo')->name('modification_info');
+Route::post('/call-order', 'HomeController@callOrder')->name('call_order');
 
 Route::get('/track-order/{id}', 'TrackOrderController@index')->name('track_order');
 
@@ -87,6 +88,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     Route::get('/dashboard','DashboardController@index')->name('admin.dashboard');
     Route::get('/import-history','DashboardController@importHistory')->name('admin.import_history');
     Route::match(['get', 'post'], '/filter/{status}','DashboardController@setFilterSettings')->name('admin.filter');
+    Route::match(['get', 'post'],'/call-orders','DashboardController@callOrder')->name('admin.call_orders');
 
     Route::group(['prefix' => 'users'],function (){
         Route::match(['get', 'post'], '/','UserController@index')->name('admin.users');

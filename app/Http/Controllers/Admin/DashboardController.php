@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\{Cart, FastBuy, ProductComment, Services\Admin\Dashboard, User};
+use App\{CallOrder, Cart, FastBuy, ProductComment, Services\Admin\Dashboard, User};
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
@@ -139,5 +139,15 @@ class DashboardController extends Controller
         $status = $request->status;
         $use_filters = DB::table('filter_settings')->distinct()->get();
         return view('admin.dashboard.filter_setting',compact('use_filters','status','all_filter_settings'));
+    }
+
+    public function callOrder(Request $request){
+        CallOrder::where('id',(int)$request->id)->update(['status' => (int)$request->status === 0?1:0]);
+        if ($request->isMethod('post')){
+            return response()->json('Данные обновлены');
+        }
+
+        $call_orders = CallOrder::orderBy('status')->orderBy('created_at','desc')->paginate(50);
+        return view('admin.dashboard.call_oder',compact('call_orders'));
     }
 }

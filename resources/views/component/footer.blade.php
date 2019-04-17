@@ -57,3 +57,58 @@
 <!-- GO TO TOP  -->
 <a href="#" class="cd-top"><i class="fa fa-angle-up"></i></a>
 <!-- GO TO TOP End -->
+
+{{--ODER CALL--}}
+<div type="button" class="callback-bt" data-toggle="modal" data-target="#callOder">
+    <div class="text-call">
+        <i class="fa fa-phone"></i>
+        <span>Заказать<br>звонок</span>
+    </div>
+</div>
+
+<div class="modal fade" id="callOder" tabindex="-1" role="dialog" aria-labelledby="callOderLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="callOderLabel">Заказать звонок</h4>
+            </div>
+            <div class="modal-body">
+                <form role="form" action="" method="post" id="call-oder-form">
+                    @csrf
+                    <div class="form-group">
+                        <label for="call-oder-name">Имя</label>
+                        <input type="text" class="form-control" name="name" id="call-oder-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="call-oder-phone">Телефон</label>
+                        <input type="tel" class="form-control phone_mask" name="phone" id="call-oder-phone" required>
+                    </div>
+                    <button type="submit" class="btn btn-round">Заказать</button><i style="display: none;margin-left: 5px;" class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#call-oder-form').submit(function (e) {
+            e.preventDefault();
+            $('.fa-spinner.fa-spin').show();
+            $.post('{{route('call_order')}}',$(this).serialize(),function (data) {
+                if (data.error !== undefined){
+                    let error_mass = '';
+                    for (let prop in data.error){
+                        error_mass += data.error[prop][0] + "\n";
+                    }
+                    alert(error_mass);
+                } else {
+                    alert(data);
+                    $(this).trigger("reset");
+                    $('#callOder').modal('hide')
+                }
+                $('.fa-spinner.fa-spin').hide();
+            });
+        });
+    });
+</script>

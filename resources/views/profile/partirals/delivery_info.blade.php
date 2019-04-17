@@ -31,7 +31,7 @@
 
                 <li class="col-sm-12">
                     <label>{{ __('Контактный телефон') }}
-                        <input type="text" class="form-control" name="phone" value="@isset($delivery_info){{ $delivery_info->phone }}@endisset">
+                        <input type="text" class="phone_mask form-control" name="phone" value="@isset($delivery_info){{ $delivery_info->phone }}@endisset">
                     </label>
                 </li>
 

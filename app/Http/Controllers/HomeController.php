@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Banner;
+use App\CallOrder;
 use App\Category;
 use App\Services\Home;
 use App\TecDoc\Tecdoc;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class HomeController extends Controller
 {
@@ -242,5 +244,30 @@ class HomeController extends Controller
     public function modificationInfo(Request $request){
         $this->tecdoc->setType($request->type);
         return response()->json($this->tecdoc->getModificationById($request->mod_id));
+    }
+
+    public function callOrder(Request $request){
+        $data = $request->except('_token');
+
+        $validate = Validator::make($data,[
+            'name' => 'required|max:255',
+            'phone' => 'required|max:255',
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json([
+                'error' => $validate->errors()
+            ]);
+        }
+
+        $call_oder = new CallOrder();
+        $call_oder->fill($data);
+
+        if ($call_oder->save()){
+            return response()->json(['Заявка принята']);
+        } else{
+            return response()->json(['Произошла ошибка!Попробуйте позже']);
+        }
+
     }
 }

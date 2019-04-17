@@ -26,6 +26,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{route('admin.call_orders')}}">
+                        <i class="fa fa-phone" aria-hidden="true"></i>
+                        {{__('Заказ звонка')}}
+                    </a>
+                </li>
+                <li>
                     <a href="{{route('admin.users')}}">
                         <i class="zmdi zmdi-account-o"></i>{{__('Пользователи')}}
                     </a>

@@ -52,6 +52,12 @@
                         <i class="fa fa-sort-numeric-desc" aria-hidden="true"></i>{{__('Скидки')}}
                     </a>
                 </li>
+                <li>
+                    <a href="{{route('admin.call_orders')}}">
+                        <i class="fa fa-phone" aria-hidden="true"></i>
+                        {{__('Заказ звонка')}}
+                    </a>
+                </li>
                 <li class="has-sub">
                     <a class="js-arrow" href="#">
                         <i class="fa fa-users" aria-hidden="true"></i></i>{{__('Поставщики')}}</a>

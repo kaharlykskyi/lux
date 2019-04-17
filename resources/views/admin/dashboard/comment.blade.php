@@ -61,9 +61,9 @@
                                 <tr class="spacer"></tr>
                             @empty
                                 <tr class="tr-shadow">
-                                    <td colspan="4">
+                                    <td colspan="6">
                                         <div class="alert alert-warning" role="alert">
-                                            {{__('Страниц ещё нету')}}
+                                            {{__('Коментариев ещё нету')}}
                                         </div>
                                     </td>
                                 </tr>
