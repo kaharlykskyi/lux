@@ -91,6 +91,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     Route::match(['get', 'post'],'/call-orders','DashboardController@callOrder')->name('admin.call_orders');
     Route::get('/pay-mass','DashboardController@payMass')->name('admin.pay_mass');
 
+    //USER
     Route::group(['prefix' => 'users'],function (){
         Route::match(['get', 'post'], '/','UserController@index')->name('admin.users');
         Route::get('/{user}','UserController@show')->name('admin.user.show');
@@ -98,6 +99,15 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
         Route::post('/change-balance','UserController@userBalance')->name('admin.user.change_balance');
     });
 
+    //CROSS NUMBER MANEGE
+    Route::group(['prefix' => 'cross'],function (){
+        Route::get('/','CrossController@index')->name('admin.cross.index');
+        Route::match(['get', 'post'],'/edit','CrossController@edit')->name('admin.cross.edit');
+        Route::match(['get', 'post'],'/create','CrossController@create')->name('admin.cross.create');
+        Route::get('/delete','CrossController@delete')->name('admin.cross.delete');
+    });
+
+    //MANAGE ORDERS
     Route::group(['prefix' => 'orders'],function (){
         Route::match(['get', 'post'], '/','OrderController@index')->name('admin.orders');
         Route::get('/change-status/orders','OrderController@changeStatusOrder')->name('admin.product.change_status_order');

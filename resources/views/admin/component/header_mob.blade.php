@@ -66,6 +66,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{route('admin.cross.index')}}">
+                        <i class="fa fa-cogs" aria-hidden="true"></i>{{__('Расширение кроссов')}}
+                    </a>
+                </li>
+                <li>
                     <a href="{{route('admin.call_orders')}}">
                         <i class="fa fa-phone" aria-hidden="true"></i>
                         {{__('Заказ звонка')}}

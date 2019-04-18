@@ -95,6 +95,11 @@
                         <i class="fa fa-sort-numeric-desc" aria-hidden="true"></i>{{__('Скидки')}}
                     </a>
                 </li>
+                <li>
+                    <a href="{{route('admin.cross.index')}}">
+                        <i class="fa fa-cogs" aria-hidden="true"></i>{{__('Расширение кроссов')}}
+                    </a>
+                </li>
                 <li class="has-sub">
                     <a class="js-arrow" href="#">
                         <i class="fas fa-copy"></i>{{__('Управление контентом')}}</a>

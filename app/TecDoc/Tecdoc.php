@@ -2,6 +2,7 @@
 namespace App\TecDoc;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class Tecdoc
@@ -56,16 +57,20 @@ class Tecdoc
             case 'axle':
                 $where = " AND isaxle = 'True'";
                 break;
+            default:
+                $where = " AND ispassengercar = 'True'";
         }
 
         $order = $this->type == 'motorbike' ? 'description' : 'matchcode';
 
-        return DB::connection($this->connection)->select("
+        return cache()->remember('all_brands', 60*24, function () use ($where,$order) {
+            return DB::connection($this->connection)->select("
             SELECT id, description,matchcode
             FROM manufacturers
             WHERE canbedisplayed = 'True' " . $where . "
             ORDER BY " . $order
-        );
+            );
+        });
     }
 
     /**
@@ -199,6 +204,16 @@ class Tecdoc
             FROM manufacturers
             WHERE canbedisplayed = 'True' " . $where . " AND id = " . (int)$id . ";
         ");
+    }
+
+    public function getAllSuppliers(){
+        return cache()->remember('all_suppliers', 60*24, function () {
+            return DB::connection($this->connection)->select("
+            SELECT id,matchcode
+            FROM suppliers
+            ORDER BY matchcode"
+            );
+        });
     }
 
     /**
@@ -815,5 +830,17 @@ class Tecdoc
             ->table('supplier_details')
             ->where('supplierid',(int)$supplier_id)
             ->first();
+    }
+
+    public function getCross($manufacturerId = null,$OENbr = null,$page = null){
+        return Cache::remember('cross_' . $manufacturerId . $OENbr . '_page_' . $page, 5, function() use ($manufacturerId, $OENbr) {
+            return DB::connection($this->connection)
+                ->table('article_cross')
+                ->leftJoin('suppliers','suppliers.id','=','article_cross.SupplierId')
+                ->where('article_cross.manufacturerId',isset($manufacturerId)?'=':'<>',isset($manufacturerId)?$manufacturerId:null)
+                ->where('article_cross.OENbr','LIKE',isset($OENbr)?"%{$OENbr}%":"%%")
+                ->select('article_cross.*','suppliers.matchcode')
+                ->paginate(20);
+        });
     }
 }
