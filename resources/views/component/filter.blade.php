@@ -60,14 +60,11 @@
                                                 </select>
                                             </li>
                                             <li>
-                                                <select class="filter_select" name="engine_auto" id="engine_auto">
-                                                    <option selected value="">{{__('Двигатель')}}</option>
-                                                </select>
-                                            </li>
-                                            <li>
-                                                <select class="filter_select" name="modification_auto" id="modification_auto">
-                                                    <option selected value="">{{__('Модификация')}}</option>
-                                                </select>
+                                                <div id="modification_auto_block" class="position-relative" style="height: 100%;">
+                                                    <input type="text" style="cursor: pointer;" name="modification_auto" id="modification_auto" value="{{__('Модификация')}}">
+                                                    <b class="button" style="position: absolute;top: 7px;right: 15px;color: #ccc;">▾</b>
+                                                </div>
+                                                <div id="modification_auto_block_result"></div>
                                             </li>
                                         </ul>
                                     </div>
@@ -81,7 +78,7 @@
                                         <img id="car_s" src="" alt="">
                                     </div>
                                     <div class="col-xs-12 text-center">
-                                        <button type="submit" style="width: 200px;" class="btn-round btn-sm">{{__('Подобрать')}}</button>
+                                        <button type="submit" onclick="$('#modification_auto').val($('#modification_auto').attr('data-id'));" style="width: 200px;" class="btn-round btn-sm">{{__('Подобрать')}}</button>
                                     </div>
                                 </div>
                             </form>
@@ -90,6 +87,13 @@
                                 <div id="root-category-modification"></div>
                             </div>
                             <script>
+                                $(document).ready(function () {
+                                    $('#modification_auto_block').click(function () {
+                                        if ($(this).hasClass('active')){
+                                            $('#modification_auto_block_result').show();
+                                        }
+                                    });
+                                });
                                 $(function() {
                                     $('select.filter_select').selectric();
                                     $(document).ready(function () {
@@ -106,13 +110,7 @@
                                     dataFilter(3,`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}&type_mod=Body`);
                                 });
                                 $('#body_auto').change(function () {
-                                    dataFilter(4,`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}&type_mod=Engine`);
-                                });
-                                $('#engine_auto').change(function () {
-                                    dataFilter(5,`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}&type_mod=General&body=${$('#body_auto').val()}&engine=${$('#engine_auto').val()}`);
-                                });
-                                $('#modification_auto').change(function () {
-                                    dataFilter(6);
+                                    dataFilter(4,`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}&type_mod=General&body=${$('#body_auto').val()}`);
                                 });
                             </script>
                         </div>

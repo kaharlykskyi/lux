@@ -23,7 +23,6 @@ class CreateUserCarsTable extends Migration
             $table->unsignedInteger('model_auto');
             $table->unsignedInteger('modification_auto');
             $table->string('body_auto')->nullable();
-            $table->string('type_motor')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');

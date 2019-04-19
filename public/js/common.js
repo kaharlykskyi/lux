@@ -266,41 +266,37 @@ function makeTemplateCategoryCar(data,modification_auto,type_auto) {
 function dataFilter(level,link) {
     switch (level) {
         case 1:
-            getDateFilter(link,'Марка','#brand_auto',['id','description']);
+            getDateFilter(link,'#brand_auto',['id','description']);
             $('#search-detail-car').addClass('hidden');
+            $('#modification_auto_block_result').hide();
             if ($('#year_auto').val() === ''){
                 $('#brand_auto').next().prop('disabled', 'disabled').selectric('refresh');
             }
             break;
         case 2:
-            getDateFilter(link,'Модель','#model_auto',['id','name']);
+            getDateFilter(link,'#model_auto',['id','name']);
+            $('#modification_auto_block_result').hide();
             $('#search-detail-car').addClass('hidden');
             if ($('#brand_auto').val() === ''){
                 $('#model_auto').prop('disabled', 'disabled').selectric('refresh');
             }
             break;
         case 3:
-            getDateFilter(link,'Кузов','#body_auto',['displayvalue','displayvalue']);
+            getDateFilter(link,'#body_auto',['displayvalue','displayvalue']);
+            $('#modification_auto_block_result').hide();
             $('#search-detail-car').addClass('hidden');
             if ($('#model_auto').val()){
                 $('#body_auto').prop('disabled', 'disabled').selectric('refresh');
             }
             break;
         case 4:
-            getDateFilter(link,'Двигатель','#engine_auto',['displayvalue','displayvalue']);
-            $('#search-detail-car').addClass('hidden');
             if ( $('#body_auto').val() !== ''){
-                $('#engine_auto').prop('disabled', 'disabled').selectric('refresh');
+                getDataFilterModification(link);
+                $('#modification_auto_block').addClass('active');
+                $('#search-detail-car').addClass('hidden');
             }
             break;
         case 5:
-            getDateFilter(link,'Модификация','#modification_auto',['id','name']);
-            $('#search-detail-car').addClass('hidden');
-            if ($('#engine_auto').val() !== ''){
-                $('#modification_auto').prop('disabled', 'disabled').selectric('refresh');
-            }
-            break;
-        case 6:
             if($('#modification_auto').val() !== ''){
                 $('#search-detail-car').removeClass('hidden').show();
                 $('#car_f').attr('src',`https://yii.dbroker.com.ua/img/all_cars/${$('#model_auto').val()}f.png`);
@@ -312,9 +308,82 @@ function dataFilter(level,link) {
     }
 }
 
-function getDateFilter(link,mass,obj,dataKey) {
+function getDataFilterModification(link) {
     $.get(link, function(data) {
-        let str_data = `<option selected value="">${mass}</option>`;
+        let html = '';
+        if (window.innerWidth > 768){
+            html = `<table class="table table-hover">
+                       <thead>
+                          <tr class="info">
+                           <th>Модификация</th>
+                           <th>Тип двиг.</th>
+                           <th>Модель двиг.</th>
+                           <th>Объем двиг.</th>
+                           <th>Мощность</th>
+                           <th>Привод</th>
+                           <th>Дата выпуска</th>
+                          </tr>
+                       </thead><tbody>`;
+
+            let current_id = 0;
+            let interval = '';
+            let EngineType = '';
+            let Power = '';
+            let Capacity_Tax = '';
+            let DriveType = '';
+            let EngineCode = '';
+            data.response.forEach(function (item,key) {
+                if ((current_id !== parseInt(item.id) && current_id !== 0) || key + 1 === data.response.length){
+                    html += `   <td>${EngineType}</td>
+                                <td>${EngineCode}</td>
+                                <td>${Capacity_Tax}</td>
+                                <td>${Power}</td>
+                                <td>${DriveType}</td>   
+                                <td>${interval}</td>
+                             </tr>`;
+                    EngineCode = '';
+                }
+
+                if (current_id !== parseInt(item.id)){
+                    html += `<tr style="cursor: pointer;" onclick="$('#modification_auto').val('${item.name}').attr('data-id',${item.id});$('#modification_auto_block_result').hide();dataFilter(5);">`;
+                    current_id = item.id;
+                }
+
+                if (current_id === item.id){
+                    if (item.attributegroup === 'General' && item.attributetype === 'ConstructionInterval'){
+                        interval = item.displayvalue;
+                        html += `<td>${item.name}</td>`
+                    }
+                    if (item.attributegroup === 'TechnicalData' && item.attributetype === 'EngineType'){
+                        EngineType = item.displayvalue;
+                    }
+                    if (item.attributegroup === 'TechnicalData' && item.attributetype === 'Power'){
+                        Power = item.displayvalue;
+                    }
+                    if (item.attributegroup === 'TechnicalData' && item.attributetype === 'Capacity_Tax'){
+                        Capacity_Tax = item.displayvalue;
+                    }
+                    if (item.attributegroup === 'Body' && item.attributetype === 'DriveType'){
+                        DriveType = item.displayvalue;
+                    }
+                    if (item.attributegroup === 'Engine' && item.attributetype === 'EngineCode'){
+                        EngineCode += item.displayvalue + ',';
+                    }
+                }
+            });
+
+            html += '</tbody></table>';
+        } else{
+            console.log(window.innerWidth);
+        }
+
+        $('#modification_auto_block_result').html(html).show();
+    });
+}
+
+function getDateFilter(link,obj,dataKey) {
+    $.get(link, function(data) {
+        let str_data = `<option selected value=""></option>`;
         data.response.forEach(function (item) {
             str_data += `<option value="${item[dataKey[0]]}">${item[dataKey[1]]}</option>`
         });

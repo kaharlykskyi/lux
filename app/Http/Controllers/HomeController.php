@@ -2,17 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Banner;
-use App\CallOrder;
-use App\Category;
-use App\Services\Home;
-use App\TecDoc\Tecdoc;
-use App\UserCar;
+use App\{Banner, CallOrder, Category, Services\Home, TecDoc\Tecdoc, UserCar};
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\{Facades\Auth, Facades\Cookie, Facades\DB, Facades\Validator};
 
 class HomeController extends Controller
 {
@@ -37,22 +29,12 @@ class HomeController extends Controller
         $brands = DB::table('show_brand')
             ->where('ispassengercar','=','true')
             ->select('brand_id AS id','description')->limit(20)->get();
-        $models = [];
-        if (isset($brands)) {
-            foreach ($brands as $key){
-                $buff = $this->tecdoc->getModels($key->id,null,2);
-                foreach ($buff as $item){
-                    $item->manufacturerid = $key->id;
-                    $models[] = $item;
-                }
-            }
-        }
 
         $popular_products = $this->service->getPopularProduct();
 
         $slides = Banner::all();
 
-        return view('home.index',compact('search_cars','brands','models','popular_products','slides'));
+        return view('home.index',compact('search_cars','brands','popular_products','slides'));
     }
 
     public function allBrands(Request $request){
@@ -145,44 +127,38 @@ class HomeController extends Controller
     }
 
     public function getModifications(Request $request){
-        if (isset($request->type_auto)){
-            $this->tecdoc->setType($request->type_auto);
-            switch ($request->type_mod){
-                case 'General':
-                    $this->data = $this->tecdoc->getModifications($request->model_id,[['displayvalue','=',"'{$request->engine}'"]]);
-                    break;
-                case 'Engine':
-                    $buff = $this->tecdoc->getModifications($request->model_id,[['attributegroup','=','\'TechnicalData\''],['attributetype','=', '\'FuelType\'']]);
-                    $use_val = [];
-                    foreach ($buff as $item){
-                        if(!in_array($item->displayvalue,$use_val)){
-                            $use_val[] = $item->displayvalue;
-                            $this->data[] = $item;
-                        }
+
+        $this->tecdoc->setType(isset($request->type_auto)?$request->type_auto:'passenger');
+        switch ($request->type_mod){
+            case 'General':
+                $buff = $this->tecdoc->getModifications($request->model_id);
+                $search_mod_id = [];
+                foreach ($buff as $item){
+                    if ($item->attributetype === 'BodyType' && $item->displayvalue === $request->body){
+                        array_push($search_mod_id,$item->id);
                     }
-                    break;
-                case 'Body':
-                    $buff = $this->tecdoc->getModifications($request->model_id,[['attributegroup' ,'=', '\''.$request->type_mod.'\'']]);
-                    $use_val = [];
-                    foreach ($buff as $item){
-                        if(!in_array($item->displayvalue,$use_val)){
-                            $use_val[] = $item->displayvalue;
-                            $this->data[] = $item;
-                        }
+                }
+                foreach ($buff as $item){
+                    if (in_array($item->id,$search_mod_id)){
+                        $this->data[] = $item;
                     }
-                    break;
-            }
-            return response()->json([
-                'response' => $this->data
-            ]);
-        } else {
-            return response()->json([
-                'response' => [
-                    'id' => 0,
-                    'description' => 'не найдено'
-                ]
-            ]);
+                }
+                break;
+            case 'Body':
+                $buff = $this->tecdoc->getModifications($request->model_id,[['attributegroup' ,'=', '\''.$request->type_mod.'\'']]);
+                $use_val = [];
+                foreach ($buff as $item){
+                    if(!in_array($item->displayvalue,$use_val)){
+                        $use_val[] = $item->displayvalue;
+                        $this->data[] = $item;
+                    }
+                }
+                break;
         }
+        return response()->json([
+            'response' => $this->data
+        ]);
+
     }
 
     public function getSectionParts(Request $request){

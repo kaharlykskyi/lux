@@ -135,8 +135,8 @@ header .search-cate .submit {
     text-align:center;
     width:68px;
     position: fixed;
-    left: 1%;
-    bottom: 5%;
+    right: 1%;
+    bottom: 15%;
     z-index:999;
     transition:.3s;
     -webkit-animation:hoverWave linear 1s infinite;
@@ -145,7 +145,7 @@ header .search-cate .submit {
 
 .callback-bt .text-call{
     height:68px;
-    width:68px;
+    width: 100%;
     border-radius:50%;
     position:relative;
     overflow:hidden;
@@ -157,7 +157,7 @@ header .search-cate .submit {
     opacity: 0;
     font-size: 0;
     position:absolute;
-    right: 4px;
+    right: 2px;
     top: 22px;
     line-height: 14px;
     font-weight: 600;
@@ -357,7 +357,7 @@ header>.container{
 
 .model-car-img{
     width: 25px;
-    margin-left: 5px;
+    margin-right: 5px;
     height: auto;
 }
 
@@ -484,7 +484,39 @@ header .logo img {
 .filter-section .search-car__list > li{
     border: 2px solid #ccc;
     border-radius: 15px;
-    width: 150px;
+    width: 170px;
+}
+
+#modification_auto{
+    border: none;
+    background: transparent;
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding: 0 5px;
+    color: #ccc;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.active > #modification_auto{
+    color: #000 !important;
+}
+
+#modification_auto_block_result{
+    display: none;
+    position: absolute;
+    right: 0;
+    left: 0;
+    background: #fff;
+    z-index: 1000;
+    border: 1px solid #ccc;
+    top: 45px;
+    padding: 5px;
+    border-radius: 10px;
+    max-height: 310px;
+    overflow: auto;
 }
 
 .filter-section .search-car__list li span{

@@ -49,8 +49,7 @@ class Home
                             'brand_auto' => (int)$cookie['brand_auto'],
                             'model_auto' => (int)$cookie['model_auto'],
                             'modification_auto' => (int)$cookie['modification_auto'],
-                            'body_auto' => (int)$cookie['body_auto'],
-                            'type_motor' => (int)$cookie['engine_auto']
+                            'body_auto' => (int)$cookie['body_auto']
                         ]);
                         $userCar->save();
                     }

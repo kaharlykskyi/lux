@@ -16,7 +16,6 @@ class UserCar extends Model
         'brand_auto',
         'model_auto',
         'modification_auto',
-        'body_auto',
-        'type_motor'
+        'body_auto'
     ];
 }

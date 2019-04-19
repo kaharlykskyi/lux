@@ -33,7 +33,6 @@
 
         @component('home.component.main_page_links',[
                 'brands' => $brands,
-                'models' => $models,
                 'popular_products' => $popular_products
             ])
         @endcomponent
