@@ -27,13 +27,19 @@
                             <a href="{{route('admin.product.popular')}}">{{__('Популярные товары')}}</a>
                         </li>
                         <li>
-                            <a href="{{route('admin.category.index')}}">{{__('Категории')}}</a>
+                            <a href="{{route('admin.category.index')}}">{{__('Категории для типов машин')}}</a>
                         </li>
                         <li>
                             <a href="{{route('admin.show_brand')}}">{{__('Бренды')}}</a>
                         </li>
                         <li>
                             <a href="{{route('admin.filter','use')}}">{{__('Настрайки фильтра')}}</a>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.all_category.index')}}">{{__('Общяя структура категорий')}}</a>
+                        </li>
+                        <li>
+                            <a href="{{route('admin.home_category.index')}}">{{__('Групировка категорий для главной страници')}}</a>
                         </li>
                     </ul>
                 </li>

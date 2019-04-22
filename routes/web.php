@@ -131,7 +131,8 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
         'discount' => 'DiscountController',
         'banner' => 'BannerController',
         'provider' => 'ProviderController',
-        'pro_file' => 'ProFileController'
+        'pro_file' => 'ProFileController',
+        'home_category' => 'HomeCategoryGroupController'
     ],['as' => 'admin']);
     Route::get('/start-import','ProductController@startImport')->name('admin.start_import');
 
@@ -156,4 +157,10 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     Route::match(['get', 'post'], '/advertising','DashboardController@advertising')->name('admin.advertising');
     //get incognito file
     Route::get('/incognito-file/{file}','ProductController@incognitoFile')->name('admin.incognito');
+
+    //MANAGE ALL CATEGORY TREE
+    Route::group(['prefix' => 'all-category'],function (){
+        Route::get('/','AllCategoryTreeController@index')->name('admin.all_category.index');
+        Route::match(['get', 'post'], '/edit','AllCategoryTreeController@edit')->name('admin.all_category.edit');
+    });
 });

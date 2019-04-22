@@ -462,7 +462,7 @@ header .logo img {
 .filter-section .search-car__list .selectric-items{
     width: 100% !important;
     max-height: 302px;
-    z-index: 100;
+    z-index: 10000;
     height: auto;
     right: 0;
     overflow: auto;

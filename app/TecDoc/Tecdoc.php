@@ -843,4 +843,24 @@ class Tecdoc
                 ->paginate(20);
         });
     }
+
+    public function getAllCategoryTree($parent = null,$level = null){
+
+        switch ($level){
+            case 1:
+                $where = "WHERE assemblygroupdescription='{$parent}'";
+                $select = " normalizeddescription as name";
+                break;
+            case 2:
+                $where = "WHERE normalizeddescription='{$parent}'";
+                $select = " usagedescription as name";
+                break;
+            default:
+                $where = '';
+                $select = ' assemblygroupdescription as name';
+        }
+
+        return DB::connection($this->connection)
+            ->select("SELECT DISTINCT {$select} FROM prd {$where}");
+    }
 }

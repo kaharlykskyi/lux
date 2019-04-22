@@ -79,8 +79,8 @@
 <script src="{{asset('admin_area/vendor/circle-progress/circle-progress.min.js')}}"></script>
 <script src="{{asset('admin_area/vendor/perfect-scrollbar/perfect-scrollbar.js')}}"></script>
 <script src="{{asset('admin_area/vendor/chartjs/Chart.bundle.min.js')}}"></script>
-<script src="{{asset('admin_area/vendor/select2/select2.min.js')}}">
-</script>
+<script src="{{asset('admin_area/vendor/select2/select2.min.js')}}"></script>
+@yield('script')
 
 <!-- Main JS-->
 <script src="{{asset('admin_area/js/main.js')}}"></script>

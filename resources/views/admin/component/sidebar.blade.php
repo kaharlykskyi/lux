@@ -12,11 +12,13 @@
                         <i class="fa fa-list-alt" aria-hidden="true"></i>{{__('Каталог')}}</a>
                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                         <li>
-                            <a href="{{route('admin.category.index')}}">{{__('Категории')}}</a>
+                            <a href="{{route('admin.category.index')}}">{{__('Категории для типов машин')}}</a>
                             <a href="{{route('admin.product.index')}}">{{__('Товары')}}</a>
                             <a href="{{route('admin.product.popular')}}">{{__('Популярные товары')}}</a>
                             <a href="{{route('admin.show_brand')}}">{{__('Бренды')}}</a>
                             <a href="{{route('admin.filter','use')}}">{{__('Настрайки фильтра')}}</a>
+                            <a href="{{route('admin.all_category.index')}}">{{__('Общяя структура категорий')}}</a>
+                            <a href="{{route('admin.home_category.index')}}">{{__('Групировка категорий для главной страници')}}</a>
                         </li>
                     </ul>
                 </li>
