@@ -339,6 +339,19 @@ $("#blog-slide").owlCarousel({
     },
 	animateOut: 'fadeOut'		
 });
+
+    $("#category-slide").owlCarousel({
+        items : 1,
+        autoplay:true,
+        loop:false,
+        margin: 30,
+        autoplayTimeout:5000,
+        autoplayHoverPause:true,
+        navText: ["<i class='fa fa-angle-left'></i>","<i class='fa fa-angle-right'></i>"],
+        lazyLoad:true,
+        nav: true,
+        animateOut: 'fadeOut'
+    });
 /*-----------------------------------------------------------------------------------*/
 /* 	CASE SLIDER
 /*-----------------------------------------------------------------------------------*/

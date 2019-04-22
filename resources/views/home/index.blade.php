@@ -31,6 +31,12 @@
             </div>
         @endif
 
+        @component('home.component.category',[
+            'home_category' => $home_category
+        ])
+
+        @endcomponent
+
         @component('home.component.main_page_links',[
                 'brands' => $brands,
                 'popular_products' => $popular_products

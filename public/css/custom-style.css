@@ -376,6 +376,48 @@ header .logo img {
     flex-basis: 100%;
 }
 
+.home-category{
+    position: relative;
+    overflow: hidden;
+}
+
+.home-category h5{
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 50px 10px 5px;
+    color: #fff;
+}
+
+.home-category p{
+    padding: 5px 10px;
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 600;
+    z-index: 100;
+    background: #ffffff70;
+}
+
+.home-category img{
+    width: 70%;
+    margin: 0 auto;
+    display: block !important;
+    margin-bottom: 10px;
+}
+
+#category-slide img.category-img{
+    max-width: 150px;
+    display: block !important;
+    margin: 0 auto;
+    width: 100%;
+    height: auto;
+}
+
+#category-slide a.category-title{
+    text-align: center !important;
+    height: auto !important;
+    min-height: auto !important;
+}
+
 .custom-select.is-invalid,
 .form-control.is-invalid,
 .was-validated .custom-select:invalid,

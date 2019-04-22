@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\{Banner, CallOrder, Category, Services\Home, TecDoc\Tecdoc, UserCar};
+use App\{Banner, CallOrder, Category, HomeCategoryGroup, Services\Home, TecDoc\Tecdoc, UserCar};
 use Illuminate\Http\Request;
 use Illuminate\Support\{Facades\Auth, Facades\Cookie, Facades\DB, Facades\Validator};
 
@@ -33,8 +33,9 @@ class HomeController extends Controller
         $popular_products = $this->service->getPopularProduct();
 
         $slides = Banner::all();
+        $home_category = HomeCategoryGroup::all();
 
-        return view('home.index',compact('search_cars','brands','popular_products','slides'));
+        return view('home.index',compact('search_cars','brands','popular_products','slides','home_category'));
     }
 
     public function allBrands(Request $request){
