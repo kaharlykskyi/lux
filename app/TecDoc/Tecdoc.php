@@ -794,29 +794,6 @@ class Tecdoc
             ->paginate((int)$pre);
     }
 
-    public function getProductByModelCategory($model_id,$pre,$id_category,$sort = 'ASC'){
-        switch ($this->type){
-            case 'passenger':
-                return DB::connection($this->connection)
-                    ->table(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_trees AS pct'))
-                    ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_cars AS pc'),DB::raw('pc.id'),DB::raw('pct.passangercarid'))
-                    ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_pds AS pcp'),DB::raw('pcp.passangercarid'),DB::raw('pc.id'))
-                    ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'),function ($join){
-                        $join->on(DB::raw('al.productid'),'=',DB::raw('pcp.productid'));
-                        $join->on(DB::raw('al.SupplierId'),'=',DB::raw('pcp.supplierid'));
-                    })
-                    ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
-                    ->where(DB::raw('pc.modelid'),(int)$model_id)
-                    ->where(DB::raw('pct.id'),(int)$id_category)
-                    ->where(DB::raw('pc.ispassengercar'),'=','True')
-                    ->where(DB::raw('al.linkagetypeid'),2)
-                    ->select(DB::raw('pcp.supplierid AS supplierId,al.DataSupplierArticleNumber,p.brand matchcode,p.id,p.name,p.price,p.count'))
-                    ->orderBy('p.price',$sort)
-                    ->distinct()
-                    ->paginate($pre);
-        }
-    }
-
     public function getProductByArticle($article, $supplier_id){
         return DB::connection($this->connection)
             ->table('articles')

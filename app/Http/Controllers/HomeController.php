@@ -42,36 +42,11 @@ class HomeController extends Controller
 
         if (isset($request->brand) && isset($request->model)){
             $this->tecdoc->setType('passenger');
+            $brand = $this->tecdoc->getBrandById($request->brand);
+            $model = $this->tecdoc->getModelById($request->model);
+            $modification = $this->tecdoc->getModifications($request->model);
 
-            $all_category = DB::connection('mysql_tecdoc')
-                ->table('manufacturers AS m')
-                ->join('models AS mod','m.id','=','mod.manufacturerid')
-                ->join('passanger_cars AS pc','pc.modelid','=','m.id')
-                ->join('passanger_car_trees AS pct','pct.passangercarid','=','pc.id')
-                ->where('m.id',(int)$request->brand)
-                ->where('m.ispassengercar','TRUE')
-                ->where('mod.id',(int)$request->model)
-                ->select('pct.id','pct.description','pct.parentid')
-                ->distinct()
-                ->get();
-
-            $categories = null;
-
-            foreach ($all_category as $category){
-                if ($category->parentid === 0){
-                    $categories[] = $category;
-                }
-            }
-
-            foreach ($categories as $k => $category){
-                foreach ($all_category as $item){
-                    if ($category->id === $item->parentid){
-                        $categories[$k]->subCategories[] = $item;
-                    }
-                }
-            }
-
-            return view('home.categories',['categories' => $categories,'model' => $this->tecdoc->getModelById($request->model),'brand' => $this->tecdoc->getBrandById($request->brand)]);
+            return view('home.modifications',compact('brand','model','modification'));
         }
 
         if (isset($request->modification_auto)){

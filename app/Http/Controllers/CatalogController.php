@@ -77,9 +77,6 @@ class CatalogController extends Controller
                     case isset($request->modification_auto):
                         $catalog_products = $this->tecdoc->getSectionParts($request->modification_auto,$request->category,$this->pre_products);
                         break;
-                    case isset($request->model):
-                        $catalog_products = $this->tecdoc->getProductByModelCategory($request->model,$this->pre_products,$request->category);
-                        break;
                     default:
 
                         $rubric_category = AllCategoryTree::where('hurl',$request->category)->first();
