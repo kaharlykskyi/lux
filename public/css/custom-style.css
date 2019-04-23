@@ -879,7 +879,7 @@ li.fancyTab.active a {
 }
 
 .block {
-    display:block;
+    display:block !important;
 }
 
 .tab-item{

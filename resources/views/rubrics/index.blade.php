@@ -16,14 +16,27 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-12">
-                    @isset($sub_category)
+                    @isset($category->subCategory)
                         <div class="panel panel-default">
                             <div class="panel-heading">{{$category->name}}</div>
                             <div class="panel-body">
-                                <div class="list-group">
-                                    @foreach($sub_category as $item)
-                                        <a href="{{route('catalog',$item->id)}}" class="list-group-item">{{$item->description}}</a>
-                                    @endforeach
+                                <div class="row">
+                                    @forelse($category->subCategory as $item)
+                                        <div class="col-sm-3">
+                                            <div class="product">
+                                                <article>
+                                                    <img class="img-responsive category-img" src="{{asset('images/catalog/' . $item->image)}}" alt="{{$item->name}}" >
+                                                    <a href="{{route('rubric',$item->hurl)}}" class="tittle text-center block category-title">{{$item->name}}</a>
+                                                </article>
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <div class="col-sm-12">
+                                            <div class="alert bg-warning">
+                                                Нету данных
+                                            </div>
+                                        </div>
+                                    @endforelse
                                 </div>
                             </div>
                         </div>

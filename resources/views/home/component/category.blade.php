@@ -15,7 +15,11 @@
                         <div class="text-right home-category" style="background: {{isset($item->background)?$item->background:'#fff'}};">
                             <h5>{{$item->name}}</h5>
                             @isset($item->key_words)
-                                <p>{{$item->key_words}}</p>
+                                <p>
+                                    {{$item->key_words}}
+                                    <br>
+                                    <a class="margin-top-10 block" href="{{route('rubric',$item->hurl)}}">смотреть все</a>
+                                </p>
                             @endisset
                             @isset($item->img)
                                 <img src="{{asset('images/catalog/' . $item->img)}}" alt="{{$item->name}}">
@@ -34,11 +38,10 @@
                                         @php $data = \App\AllCategoryTree::find((int)$val) @endphp
                                         @isset($data)
                                            <div class="col-sm-4">
-                                                {{--@php dump($data) @endphp--}}
                                                <div class="product">
                                                    <article>
                                                        <img class="img-responsive category-img" src="{{asset('images/catalog/' . $data->image)}}" alt="{{$item->name}}" >
-                                                       <a href="#." class="tittle category-title">{{$item->name}}</a>
+                                                       <a href="{{route('rubric',$data->hurl)}}" class="tittle category-title">{{$data->name}}</a>
                                                    </article>
                                                </div>
                                            </div>

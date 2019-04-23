@@ -20,4 +20,8 @@ class AllCategoryTree extends Model
     ];
 
     public $timestamps = false;
+
+    public function subCategory(){
+        return $this->hasMany(AllCategoryTree::class,'parent_category');
+    }
 }

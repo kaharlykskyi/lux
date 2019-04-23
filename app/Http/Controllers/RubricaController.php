@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
+use App\AllCategoryTree;
+use App\HomeCategoryGroup;
 use App\Services\Rubric;
 use Illuminate\Http\Request;
 
@@ -16,8 +17,17 @@ class RubricaController extends Controller
     }
 
     public function index(Request $request){
-        $category = $to_category = Category::where('tecdoc_id',$request->category)->first();
-        $sub_category = $this->service->getSubCategory($request->category);
-        return view('rubrics.index',compact('category','sub_category'));
+        $category = HomeCategoryGroup::where('hurl',$request->category)->first();
+        if (!isset($category)){
+            $category = AllCategoryTree::with('subCategory')->where('hurl',$request->category)->firstOrFail();
+            if ($category->level === 2){
+                return redirect()->route('catalog',$category->hurl);
+            }
+        }else{
+            $sub_category_id = explode(',',$category->categories_id);
+            $category->subCategory = $this->service->getSubCategory($sub_category_id);
+        }
+
+        return view('rubrics.index',compact('category'));
     }
 }

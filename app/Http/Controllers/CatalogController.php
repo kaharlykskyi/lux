@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\AllCategoryTree;
 use App\Services\Catalog;
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CatalogController extends Controller
 {
@@ -79,6 +81,19 @@ class CatalogController extends Controller
                         $catalog_products = $this->tecdoc->getProductByModelCategory($request->model,$this->pre_products,$request->category);
                         break;
                     default:
+
+                        $rubric_category = AllCategoryTree::where('hurl',$request->category)->first();
+                        if (isset($rubric_category)){
+                            $category = DB::connection('mysql_tecdoc')
+                                ->table('prd')
+                                ->orWhere('normalizeddescription',$rubric_category->tecdoc_name)
+                                ->orWhere('usagedescription',$rubric_category->tecdoc_name)
+                                ->first();
+                            if (isset($category)){
+                                $request->category = $category->id;
+                            }
+                        }
+
                         $this->brands = $this->service->getBrands('category',[
                             'id' => $request->category,
                             'type' => $type
