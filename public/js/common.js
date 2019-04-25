@@ -282,21 +282,14 @@ function dataFilter(level,link) {
             }
             break;
         case 3:
-            getDateFilter(link,'#body_auto',['displayvalue','displayvalue']);
             $('#modification_auto_block_result').hide();
             $('#search-detail-car').addClass('hidden');
             if ($('#model_auto').val()){
-                $('#body_auto').prop('disabled', 'disabled').selectric('refresh');
+                getDataFilterModification(link);
+                $('#modification_auto_block').addClass('active');
             }
             break;
         case 4:
-            if ( $('#body_auto').val() !== ''){
-                getDataFilterModification(link);
-                $('#modification_auto_block').addClass('active');
-                $('#search-detail-car').addClass('hidden');
-            }
-            break;
-        case 5:
             if($('#modification_auto').val() !== ''){
                 $('#search-detail-car').removeClass('hidden').show();
                 $('#car_f').attr('src',`https://yii.dbroker.com.ua/img/all_cars/${$('#model_auto').val()}f.png`);
@@ -310,7 +303,6 @@ function dataFilter(level,link) {
 
 function getDataFilterModification(link) {
     $.get(link, function(data) {
-        console.log(data.response);
         let html = '';
         if (window.innerWidth > 768){
             html = `<table class="table table-hover">
@@ -346,7 +338,7 @@ function getDataFilterModification(link) {
                 }
 
                 if (current_id !== parseInt(item.id)){
-                    html += `<tr style="cursor: pointer;" onclick="$('#modification_auto').val('${item.name}').attr('data-id',${item.id});$('#modification_auto_block_result').hide();dataFilter(5);">`;
+                    html += `<tr style="cursor: pointer;" onclick="$('#modification_auto').val('${item.name}').attr('data-id',${item.id});$('#modification_auto_block_result').hide();dataFilter(4);">`;
                     current_id = item.id;
                 }
 

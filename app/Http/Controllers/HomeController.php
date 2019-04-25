@@ -103,38 +103,11 @@ class HomeController extends Controller
     }
 
     public function getModifications(Request $request){
-
         $this->tecdoc->setType(isset($request->type_auto)?$request->type_auto:'passenger');
-        switch ($request->type_mod){
-            case 'General':
-                $buff = $this->tecdoc->getModifications($request->model_id);
-                $search_mod_id = [];
-                foreach ($buff as $item){
-                    if ($item->attributetype === 'BodyType' && $item->displayvalue === $request->body){
-                        array_push($search_mod_id,$item->id);
-                    }
-                }
-                foreach ($buff as $item){
-                    if (in_array($item->id,$search_mod_id)){
-                        $this->data[] = $item;
-                    }
-                }
-                break;
-            case 'Body':
-                $buff = $this->tecdoc->getModifications($request->model_id,[['attributegroup' ,'=', '\''.$request->type_mod.'\'']]);
-                $use_val = [];
-                foreach ($buff as $item){
-                    if(!in_array($item->displayvalue,$use_val)){
-                        $use_val[] = $item->displayvalue;
-                        $this->data[] = $item;
-                    }
-                }
-                break;
-        }
+        $this->data = $this->tecdoc->getModifications($request->model_id);
         return response()->json([
             'response' => $this->data
         ]);
-
     }
 
     public function getSectionParts(Request $request){

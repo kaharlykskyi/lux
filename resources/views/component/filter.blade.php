@@ -55,11 +55,6 @@
                                                 </select>
                                             </li>
                                             <li>
-                                                <select class="filter_select" name="body_auto" id="body_auto">
-                                                    <option selected value="">{{__('Кузов')}}</option>
-                                                </select>
-                                            </li>
-                                            <li>
                                                 <div id="modification_auto_block" class="position-relative" style="height: 100%;">
                                                     <input type="text" style="cursor: pointer;" name="modification_auto" readonly id="modification_auto" value="{{__('Модификация')}}">
                                                     <b class="button" style="position: absolute;top: 7px;right: 15px;color: #ccc;">▾</b>
@@ -107,10 +102,7 @@
                                     dataFilter(2,`{{route('gat_model')}}?type_auto=${$('#type_auto').val()}&brand_id=${$('#brand_auto').val()}&year_auto=${$('#year_auto').val()}`);
                                 });
                                 $('#model_auto').change(function () {
-                                    dataFilter(3,`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}&type_mod=Body`);
-                                });
-                                $('#body_auto').change(function () {
-                                    dataFilter(4,`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}&type_mod=General&body=${$('#body_auto').val()}`);
+                                    dataFilter(3,`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}`);
                                 });
                             </script>
                         </div>
