@@ -190,8 +190,6 @@
                                      <p class="list-group-item-text">Марка: ${data.response.brand_auto}</p>
                                      <p class="list-group-item-text">Модель: ${data.response.model_auto}</p>
                                      <p class="list-group-item-text">Модификация: ${data.response.modification_auto}</p>
-                                     <p class="list-group-item-text">Тип кузова: ${data.response.body_auto}}</p>
-                                     <p class="list-group-item-text">Тип двигателя: ${data.response.type_motor}</p>
                                 </a>`);
                         }
                         $('#year_auto,#brand_auto,#model_auto,#modification_auto,#body_auto,#type_motor').addClass('hidden');

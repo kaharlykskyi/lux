@@ -48,8 +48,7 @@ class Home
                             'year_auto' => (int)$cookie['year_auto'],
                             'brand_auto' => (int)$cookie['brand_auto'],
                             'model_auto' => (int)$cookie['model_auto'],
-                            'modification_auto' => (int)$cookie['modification_auto'],
-                            'body_auto' => (int)$cookie['body_auto']
+                            'modification_auto' => (int)$cookie['modification_auto']
                         ]);
                         $userCar->save();
                     }

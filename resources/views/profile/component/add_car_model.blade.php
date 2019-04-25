@@ -54,13 +54,6 @@
                                 </select>
                             </label>
                         </li>
-                        <li class="col-sm-12 hidden" id="body_auto">
-                            <label>{{ __('Тип кузова') }}
-                                <select class="form-control selectpicker" data-live-search="true" name="body_auto" required>
-                                    <option label="" value="0">{{__('загрузка...')}}</option>
-                                </select>
-                            </label>
-                        </li>
                         <li class="col-sm-12 error-response"></li>
                         <li class="col-sm-12 text-left">
                             <button disabled="disabled" id="add-car-btn" type="submit" style="cursor: not-allowed;" class="btn-round">{{__('Добавить')}}</button>
@@ -99,19 +92,12 @@
             $('#modification_auto').removeClass('hidden');
             $('#body_auto').removeClass('hidden');
             $('#type_motor').removeClass('hidden');
-            $.get(`{{route('get_modifications')}}?type_auto=${$('#type_auto select').val()}&model_id=${$('#model_auto select').val()}&type_mod=General`, function(data) {
+            $.get(`{{route('get_modifications')}}?type_auto=${$('#type_auto select').val()}&model_id=${$('#model_auto select').val()}`, function(data) {
                 let str_data = `<option label="" value="0"></option>`;
                 data.response.forEach(function (item) {
                     str_data += `<option label="${item.name}" value="${item.id}">${item.name}</option>`
                 });
                 $('#modification_auto select').html(str_data).selectpicker('refresh');
-            });
-            $.get(`{{route('get_modifications')}}?type_auto=${$('#type_auto select').val()}&model_id=${$('#model_auto select').val()}&type_mod=Body`, function(data) {
-                let str_data = `<option label="" value="0"></option>`;
-                data.response.forEach(function (item) {
-                    str_data += `<option label="${item.displayvalue}" value="${item.displayvalue}">${item.displayvalue}</option>`
-                });
-                $('#body_auto select').removeAttr('disabled').html(str_data).selectpicker('refresh');
             });
         });
 

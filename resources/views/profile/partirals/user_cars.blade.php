@@ -21,8 +21,6 @@
                                 <p class="list-group-item-text"><strong>Марка:</strong> {{$user_car->brand_auto}}</p>
                                 <p class="list-group-item-text"><strong>Модель:</strong> {{$user_car->model_auto}}</p>
                                 <p class="list-group-item-text"><strong>Модификация:</strong> {{$user_car->modification_auto}}</p>
-                                <p class="list-group-item-text"><strong>Тип кузова:</strong> {{$user_car->body_auto}}</p>
-                                <p class="list-group-item-text"><strong>Тип двигателя:</strong> {{$user_car->type_motor}}</p>
                             </a>
                         @endforeach
                     @endisset
