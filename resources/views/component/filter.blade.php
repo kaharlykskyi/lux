@@ -61,7 +61,7 @@
                                             </li>
                                             <li>
                                                 <div id="modification_auto_block" class="position-relative" style="height: 100%;">
-                                                    <input type="text" style="cursor: pointer;" name="modification_auto" id="modification_auto" value="{{__('Модификация')}}">
+                                                    <input type="text" style="cursor: pointer;" name="modification_auto" readonly id="modification_auto" value="{{__('Модификация')}}">
                                                     <b class="button" style="position: absolute;top: 7px;right: 15px;color: #ccc;">▾</b>
                                                 </div>
                                                 <div id="modification_auto_block_result"></div>

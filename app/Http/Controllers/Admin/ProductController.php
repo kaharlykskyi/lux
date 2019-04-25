@@ -34,15 +34,15 @@ class ProductController extends Controller
     {
         $filter = [];
 
-        if (isset($request->prov_min_price)) $filter[] = ['provider_price','>=',(int)$request->prov_min_price];
-        if (isset($request->prov_max_price)) $filter[] = ['provider_price','<=',(int)$request->prov_max_price];
-        if (isset($request->min_price)) $filter[] = ['price','>=',(int)$request->min_price];
-        if (isset($request->max_price)) $filter[] = ['price','<=',(int)$request->max_price];
-        if (isset($request->provider)) $filter[] = ['provider_id','=',(int)$request->provider];
-        if (isset($request->name)) $filter[] = ['name','LIKE',"%{$request->name}%"];
-        if (isset($request->article)) $filter[] = ['articles','LIKE',"%{$request->article}%"];
-        if (isset($request->supplier)) $filter[] = ['brand','LIKE',"%{$request->supplier}%"];
-        if (isset($request->count)) $filter[] = ['count','>=',(int)$request->count];
+        if (isset($request->prov_min_price) && !empty($request->prov_min_price)) $filter[] = ['provider_price','>=',(int)$request->prov_min_price];
+        if (isset($request->prov_max_price) && !empty($request->prov_max_price)) $filter[] = ['provider_price','<=',(int)$request->prov_max_price];
+        if (isset($request->min_price) && !empty($request->min_price)) $filter[] = ['price','>=',(int)$request->min_price];
+        if (isset($request->max_price) && !empty($request->max_price)) $filter[] = ['price','<=',(int)$request->max_price];
+        if (isset($request->provider) && !empty($request->provider)) $filter[] = ['provider_id','=',(int)$request->provider];
+        if (isset($request->name) && !empty($request->name)) $filter[] = ['name','LIKE',"%{$request->name}%"];
+        if (isset($request->article) && !empty($request->article)) $filter[] = ['articles','LIKE',"%{$request->article}%"];
+        if (isset($request->supplier) && !empty($request->supplier)) $filter[] = ['brand','LIKE',"%{$request->supplier}%"];
+        if (isset($request->count) && !empty($request->count)) $filter[] = ['count','>=',(int)$request->count];
 
         $products = Product::where($filter)
             ->paginate(80);

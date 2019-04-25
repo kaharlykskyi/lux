@@ -310,6 +310,7 @@ function dataFilter(level,link) {
 
 function getDataFilterModification(link) {
     $.get(link, function(data) {
+        console.log(data.response);
         let html = '';
         if (window.innerWidth > 768){
             html = `<table class="table table-hover">
@@ -329,14 +330,14 @@ function getDataFilterModification(link) {
             let interval = '';
             let EngineType = '';
             let Power = '';
-            let Capacity_Tax = '';
+            let Capacity = '';
             let DriveType = '';
             let EngineCode = '';
             data.response.forEach(function (item,key) {
                 if ((current_id !== parseInt(item.id) && current_id !== 0) || key + 1 === data.response.length){
                     html += `   <td>${EngineType}</td>
                                 <td>${EngineCode}</td>
-                                <td>${Capacity_Tax}</td>
+                                <td>${Capacity}</td>
                                 <td>${Power}</td>
                                 <td>${DriveType}</td>   
                                 <td>${interval}</td>
@@ -360,8 +361,8 @@ function getDataFilterModification(link) {
                     if (item.attributegroup === 'TechnicalData' && item.attributetype === 'Power'){
                         Power = item.displayvalue;
                     }
-                    if (item.attributegroup === 'TechnicalData' && item.attributetype === 'Capacity_Tax'){
-                        Capacity_Tax = item.displayvalue;
+                    if (item.attributegroup === 'TechnicalData' && item.attributetype === 'Capacity'){
+                        Capacity = item.displayvalue;
                     }
                     if (item.attributegroup === 'Body' && item.attributetype === 'DriveType'){
                         DriveType = item.displayvalue;

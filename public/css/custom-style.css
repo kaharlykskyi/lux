@@ -985,6 +985,10 @@ body .modal-content{
     align-items: center;
 }
 
+.selectric-scroll ul > li:first-child{
+    display: none;
+}
+
 /*-----PRODUCT PAGE-----*/
 .fast-buy-block{
     position: absolute;
