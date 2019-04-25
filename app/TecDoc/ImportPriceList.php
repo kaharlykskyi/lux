@@ -206,6 +206,7 @@ class ImportPriceList
     protected function productQuery(){
         if (!empty($this->product_data)){
             foreach ($this->product_data as $k => $productInfo){
+                $productInfo['provider_price'] = $productInfo['price'];
                 if((isset($this->config->currency) || isset($this->config->provider->currency)) && isset($this->currency)){
                     if (isset($this->config->currency) && $this->config->currency !== 'UAH'){
                         foreach ($this->currency as $item){
@@ -247,7 +248,9 @@ class ImportPriceList
                         'provider_id' => isset($this->config->provider_id)?$this->config->provider_id:null,
                         'old_price' => isset($productInfo['old_price'])? round($productInfo['old_price'],2): null,
                         'count' => isset($productInfo['count'])? $productInfo['count']: 0,
-                        'delivery_time' => isset($productInfo['delivery_time'])?$productInfo['delivery_time']:0
+                        'delivery_time' => isset($productInfo['delivery_time'])?$productInfo['delivery_time']:0,
+                        'provider_price' => $productInfo['provider_price'],
+                        'provider_currency' => isset($this->config->provider->currency)?$this->config->provider->currency:'UAH'
                     ];
 
                     $insert_data = Product::updateOrInsert(

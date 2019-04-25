@@ -80,7 +80,8 @@ class AllCategoryTreeController extends Controller
                     'image' => isset($file_name)?$file_name:null,
                     'show' => $data['show'],
                     'tecdoc_name' => $data['tecdoc_name'],
-                    'level' => $data['level']
+                    'level' => $data['level'],
+                    'tecdoc_id' => $data['tecdoc_id']
                 ]);
                 $save_category->save();
             } else{

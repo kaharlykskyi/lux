@@ -81,14 +81,7 @@ class CatalogController extends Controller
 
                         $rubric_category = AllCategoryTree::where('hurl',$request->category)->first();
                         if (isset($rubric_category)){
-                            $category = DB::connection('mysql_tecdoc')
-                                ->table('prd')
-                                ->orWhere('normalizeddescription',$rubric_category->tecdoc_name)
-                                ->orWhere('usagedescription',$rubric_category->tecdoc_name)
-                                ->first();
-                            if (isset($category)){
-                                $request->category = $category->id;
-                            }
+                            $request->category = $rubric_category->tecdoc_id;
                         }
 
                         $this->brands = $this->service->getBrands('category',[

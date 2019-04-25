@@ -18,7 +18,9 @@ class Product extends Model
         'provider_id',
         'brand',
         'count',
-        'delivery_time'
+        'delivery_time',
+        'provider_price',
+        'provider_currency'
     ];
 
     public function cart(){

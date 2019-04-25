@@ -826,11 +826,7 @@ class Tecdoc
         switch ($level){
             case 1:
                 $where = "WHERE assemblygroupdescription='{$parent}'";
-                $select = " normalizeddescription as name";
-                break;
-            case 2:
-                $where = "WHERE normalizeddescription='{$parent}'";
-                $select = " usagedescription as name";
+                $select = " normalizeddescription as name,id";
                 break;
             default:
                 $where = '';

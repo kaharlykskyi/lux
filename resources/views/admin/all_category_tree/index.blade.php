@@ -40,10 +40,10 @@
                                         <th>{{$category->name}}</th>
                                         <th>
                                             <div class="table-data-feature">
-                                                <button onclick="location.href = '{{route('admin.all_category.edit')}}?category={{$category->name}}&level={{request()->query('level')}}&parent={{$parent}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Редактирвать')}}">
+                                                <button onclick="location.href = '{{route('admin.all_category.edit')}}?category={{$category->name}}&level={{request()->query('level')}}&parent={{$parent}}{{isset($category->id)?'&id='.$category->id:''}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Редактирвать')}}">
                                                     <i class="zmdi zmdi-edit"></i>
                                                 </button>
-                                                @if((int)request()->query('level') < 2)
+                                                @if((int)request()->query('level') === 0)
                                                     <button onclick="location.href = '{{route('admin.all_category.index')}}?parent_category={{$category->name}}&level={{request()->has('level')?(int)request()->query('level') + 1:1}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Дочерние категории')}}">
                                                         <i class="fa fa-sitemap" style="font-size: 17px;" aria-hidden="true"></i>
                                                     </button>

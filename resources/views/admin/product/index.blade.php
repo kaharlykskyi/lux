@@ -47,7 +47,7 @@
                 </div>
                 <div class="row m-t-10 m-b-10">
                     <div class="col-12">
-                        @component('admin.product.partrials.filter',['link' => route('admin.product.index')]) @endcomponent
+                        @component('admin.product.partrials.filter',['link' => route('admin.product.index'),'providers' => $providers]) @endcomponent
                     </div>
                 </div>
                 <div class="table-responsive table--no-card m-b-30">

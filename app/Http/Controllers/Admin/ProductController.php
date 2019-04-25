@@ -32,9 +32,20 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $products = Product::where('products.brand','LIKE',isset($request->supplier)?"%{$request->supplier}%":'%%')
-            ->where('products.articles','LIKE',isset($request->article)?"%{$request->article}%":'%%')
-            ->where('products.name','LIKE',isset($request->name)?"%{$request->name}%":'%%')->paginate(80);
+        $filter = [];
+
+        if (isset($request->prov_min_price)) $filter[] = ['provider_price','>=',(int)$request->prov_min_price];
+        if (isset($request->prov_max_price)) $filter[] = ['provider_price','<=',(int)$request->prov_max_price];
+        if (isset($request->min_price)) $filter[] = ['price','>=',(int)$request->min_price];
+        if (isset($request->max_price)) $filter[] = ['price','<=',(int)$request->max_price];
+        if (isset($request->provider)) $filter[] = ['provider_id','=',(int)$request->provider];
+        if (isset($request->name)) $filter[] = ['name','LIKE',"%{$request->name}%"];
+        if (isset($request->article)) $filter[] = ['articles','LIKE',"%{$request->article}%"];
+        if (isset($request->supplier)) $filter[] = ['brand','LIKE',"%{$request->supplier}%"];
+        if (isset($request->count)) $filter[] = ['count','>=',(int)$request->count];
+
+        $products = Product::where($filter)
+            ->paginate(80);
         $providers = Provider::all();
         return view('admin.product.index',compact('products','providers'));
     }
