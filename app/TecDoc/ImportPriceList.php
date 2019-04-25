@@ -248,7 +248,7 @@ class ImportPriceList
                         'provider_id' => isset($this->config->provider_id)?$this->config->provider_id:null,
                         'old_price' => isset($productInfo['old_price'])? round($productInfo['old_price'],2): null,
                         'count' => isset($productInfo['count'])? $productInfo['count']: 0,
-                        'delivery_time' => isset($productInfo['delivery_time'])?$productInfo['delivery_time']:0,
+                        'delivery_time' => isset($productInfo['delivery_time'])?(int)preg_replace("/[^0-9,.]/", "", $productInfo['delivery_time']):0,
                         'provider_price' => $productInfo['provider_price'],
                         'provider_currency' => isset($this->config->provider->currency)?$this->config->provider->currency:'UAH'
                     ];
