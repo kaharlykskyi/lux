@@ -227,7 +227,7 @@ class CheckoutController extends Controller
     }
 
     private function makeTemplateMassage($products, $user, $sum, $oder_id){
-        $template = "<b>Новый заказ:</b> {$oder_id} \n<b>Заказчик:</b> {$user->email}\n<b>Телефон:</b> {$user->phone}\n<b>Заказаные товары</b>:\n";
+        $template = "<b>Новый заказ:</b> {$oder_id} \n<b>Заказчик:</b> {$user->email}\n<b>Телефон:</b> {$user->phone}\n<b>Заказанные товары</b>:\n";
         foreach ($products as $k => $product){
             $template .= $k + 1 .") {$product->articles}| {$product->name} | {$product->price}грн.\n";
         }
