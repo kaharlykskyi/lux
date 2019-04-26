@@ -28,6 +28,10 @@ class ProfileController extends Controller
         $user_phones = $user->userPhones;
         $mutual_settelement = $user->mutualSettlements;
 
+        foreach ($user_cars as $k => $data){
+            $user_cars[$k] = $this->service->getCarInfo($data);
+        }
+
         return view('profile.index',compact(
             'roles',
             'user_cars',

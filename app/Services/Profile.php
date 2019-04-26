@@ -4,13 +4,20 @@
 namespace App\Services;
 
 
-use App\{AppTrait\GEO, DeliveryInfo, UserCar, Cart, UserPhone};
+use App\{AppTrait\GEO, DeliveryInfo, TecDoc\Tecdoc, UserCar, Cart, UserPhone};
 use Illuminate\Support\Facades\{DB, Log, Validator};
 use LisDev\Delivery\NovaPoshtaApi2;
 
 class Profile
 {
     use GEO;
+
+    protected $tecdoc;
+
+    public function __construct()
+    {
+        $this->tecdoc = new Tecdoc('mysql_tecdoc');
+    }
 
     public function getOrders($user_id){
         $orders = DB::select("SELECT c.id, c.updated_at,osc.name as status,osc.id as oder_status, c.invoice_np,
@@ -213,5 +220,16 @@ class Profile
             ->where('id',(int)$phone_id)
             ->where('user_id',$user_id)->delete();
         return ['response' => 'Номер удалён'];
+    }
+
+    public function getCarInfo($car){
+        $this->tecdoc->setType($car->type_auto);
+        $brand = $this->tecdoc->getBrandById($car->brand_auto);
+        $car->brand_auto = $brand[0]->name;
+        $model = $this->tecdoc->getModelById($car->model_auto);
+        $car->model_auto = $model[0]->name;
+        $modification = $this->tecdoc->getModificationById($car->modification_auto);
+        $car->modification_auto = $modification[0]->name;
+        return $car;
     }
 }
