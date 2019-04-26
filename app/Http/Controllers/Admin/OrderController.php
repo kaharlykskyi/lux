@@ -134,4 +134,8 @@ class OrderController extends Controller
             ['product_id',$request->id_product]
         ])->update(['stock_id' => $request->id_stock]);
     }
+
+    public function generatePdf(Request $request){
+
+    }
 }

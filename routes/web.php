@@ -113,6 +113,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
         Route::get('/change-status/orders','OrderController@changeStatusOrder')->name('admin.product.change_status_order');
         Route::get('/stock-product','OrderController@stockProductDelivery')->name('admin.product.stock');
         Route::match(['get', 'post'], '/edit/{order}','OrderController@editOder')->name('admin.order_edit');
+        Route::get('/generate-order-pdf/{order}','OrderController@generatePdf')->name('admin.order.pdf');
     });
 
     Route::get('/full-order-info','OrderController@getOrderData')->name('admin.product.full_order_info');

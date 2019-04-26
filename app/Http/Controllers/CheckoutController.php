@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\{Auth, DB, Hash, Validator};
 use Illuminate\Validation\ValidationException;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 class CheckoutController extends Controller
 {
@@ -206,8 +207,32 @@ class CheckoutController extends Controller
                 ['user_id',Auth::id()],
                 ['oder_status',1]
             ])->update(['oder_status' => 2,'session_id' => null,'oder_dt' => Carbon::now()]);
+
+            try{
+                $this->sendTelegramNotification($products,$user,$sum,$data['order_id']);
+            }catch (\Exception $e){
+                report($e);
+            }
         }
 
         return redirect()->route('profile');
+    }
+
+    private function sendTelegramNotification($products,$user,$sum,$oder_id){
+        Telegram::sendMessage([
+            'chat_id' => config('app.telegram_channel_id'),
+            'parse_mode' => 'HTML',
+            'text' => $this->makeTemplateMassage($products,$user,$sum,$oder_id)
+        ]);
+    }
+
+    private function makeTemplateMassage($products, $user, $sum, $oder_id){
+        $template = "<b>Новый заказ:</b> {$oder_id} \n<b>Заказчик:</b> {$user->email}\n<b>Телефон:</b> {$user->phone}\n<b>Заказаные товары</b>:\n";
+        foreach ($products as $k => $product){
+            $template .= $k + 1 .") {$product->articles}| {$product->name} | {$product->price}грн.\n";
+        }
+
+        $template .= "<b>Сумма:</b> {$sum}грн.";
+        return $template;
     }
 }
