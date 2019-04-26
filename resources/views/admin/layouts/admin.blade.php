@@ -98,6 +98,13 @@
             });
         }
     }
+    function setPosition(id) {
+        const client_val = document.getElementById(id).getBoundingClientRect();
+        $(`div[data-id="${id}"]`).css({
+            top:`${client_val.y + 20}px`,
+            left: `${client_val.x + 30}px`,
+        }).show();
+    }
 </script>
 </body>
 

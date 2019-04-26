@@ -1,7 +1,24 @@
 @extends('admin.layouts.admin')
 
-@section('content')
+@section('style')
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .select2-container{
+            display: block !important;
+        }
+    </style>
+@endsection
 
+@section('script')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#client_id').select2();
+        });
+    </script>
+@endsection
+
+@section('content')
     <div class="container-fluid m-t-75">
         @if (session('status'))
             <div class="row">
@@ -112,12 +129,12 @@
                                     <td>{{$product->cart->id}}</td>
                                     <td>{{$product->product->name}}</td>
                                     <td>{{$product->product->articles}}</td>
-                                    <td class="hover-trigger position-relative">
+                                    <td onmouseleave="$('.hover-show').hide()" onmouseenter="setPosition('loc_block_{{$product->id}}')"  class="hover-trigger position-relative">
                                         @if($product->cart->client)
-                                            <div class="table-data__info">
+                                            <div id="loc_block_{{$product->id}}" class="table-data__info">
                                                 <h6>{{$product->cart->client->name}}</h6>
                                             </div>
-                                            <div class="hidden hover-show">
+                                            <div data-id="loc_block_{{$product->id}}" class="hidden hover-show">
                                                 <p><strong>ФИО: </strong>{{$product->cart->client->sername . ' '. $product->cart->client->name . ' ' . $product->cart->client->last_name}}</p>
                                                 <p><strong>Email: </strong>{{$product->cart->client->email}}</p>
                                                 <p><strong>Тип пользователя: </strong>{{$product->cart->client->type_user->name}}</p>

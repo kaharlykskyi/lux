@@ -112,7 +112,7 @@
                                 <span class="small">После присвоению заказу статуса "отменен", если он оплачен, то средства будут возвращены пользователю на его счёт профиля</span>
                             </div>
                         </div>
-                        <div class="table--no-card m-b-30">
+                        <div class="table--no-card m-b-30 table-responsive">
                             <table class="table table-borderless table-striped table-earning">
                                 <thead>
                                 <tr>
@@ -142,16 +142,16 @@
                                                 @endisset
                                                 {{$item->id}}
                                             </td>
-                                            <td class="hover-trigger position-relative">
-                                                {{$item->client->name}}<br>
-                                                <div class="hidden hover-show">
+                                            <td onmouseleave="$('.hover-show').hide()" onmouseenter="setPosition('loc_block_{{$item->id}}')" class="hover-trigger position-relative">
+                                                <span id="loc_block_{{$item->id}}">{{$item->client->name}}</span>
+                                                <div data-id="loc_block_{{$item->id}}" class="hover-show">
                                                     <p><strong>ФИО: </strong>{{$item->client->sername . ' '. $item->client->name . ' ' . $item->client->last_name}}</p>
                                                     <p><strong>Email: </strong>{{$item->client->email}}</p>
                                                     <p><strong>Тип пользователя: </strong>{{$item->client->type_user->name}}</p>
                                                     <p><strong>Город: </strong>{{$item->client->userCity->name}}</p>
                                                     <p><strong>Адрес: </strong>{{$item->client->deliveryInfo->street . '/' . $item->client->deliveryInfo->house}}</p>
                                                     <p><strong>Телефон: </strong>{{$item->client->phone}}</p>
-                                                </div>
+                                                </div><br>
                                                 {{$item->oder_dt}}
                                             </td>
                                             <td>
@@ -167,6 +167,11 @@
                                                 <a style="font-size: 12px;" href="{{route('admin.orders',['delete_oder' => $item->id])}}">
                                                     <i class="fa fa-trash" aria-hidden="true"></i> удалить
                                                 </a>
+                                                    @if($item->oder_status !== 5)
+                                                        <a onclick="backOrder('{{$item->id}}')" style="font-size: 12px;margin-left: 10px;color: #ff0000" href="javascript:void(0);">
+                                                            <i style="margin-right: 5px;" class="fa fa-ban" aria-hidden="true"></i>отменить
+                                                        </a>
+                                                    @endif
                                             </td>
                                             <td class="text-right">&#8372;
                                             @php
@@ -181,16 +186,22 @@
                                                 {{$sum}}
                                             </td>
                                             <td style="padding: 12px 0;">
-                                                <div style="width: 90%;" class="rs-select2--dark rs-select2--md m-r-10 rs-select2--border">
-                                                    <select class="js-select2" name="order_status_code" onchange="orderStatus('{{$item->id}}',this)">
-                                                        @isset($order_code)
-                                                            @foreach($order_code as $v)
-                                                                <option @if($v->id === $item->oder_status) selected @endif value="{{$v->id}}">{{$v->name}}</option>
-                                                            @endforeach
-                                                        @endisset
-                                                    </select>
-                                                    <div class="dropDownSelect2"></div>
-                                                </div>
+                                                @if($item->oder_status !== 5)
+                                                    <div style="width: 90%;" class="rs-select2--dark rs-select2--md m-r-10 rs-select2--border">
+                                                        <select class="js-select2" name="order_status_code" onchange="orderStatus('{{$item->id}}',this)">
+                                                            @isset($order_code)
+                                                                @foreach($order_code as $v)
+                                                                    @if($v->id !== 5)
+                                                                        <option @if($v->id === $item->oder_status) selected @endif value="{{$v->id}}">{{$v->name}}</option>
+                                                                    @endif
+                                                                @endforeach
+                                                            @endisset
+                                                        </select>
+                                                        <div class="dropDownSelect2"></div>
+                                                    </div>
+                                                @else
+                                                    <span class="small text-warning">(отменён)</span>
+                                                @endif
                                             </td>
                                         </tr>
                                     @empty
@@ -216,4 +227,14 @@
         </div>
         @component('admin.component.footer')@endcomponent
     </div>
+    <script>
+        function backOrder(id) {
+            const confirm_var = confirm('Отменить заказа?Есле заказ был оплачен то это повлечет возврат денег на счёт профиля');
+            if (confirm_var) {
+                $.get(`{{route('admin.product.change_status_order')}}?orderID=${id}&statusID=5`,function (data) {
+                    alert(data.response);
+                });
+            }
+        }
+    </script>
 @endsection

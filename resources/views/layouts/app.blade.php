@@ -110,7 +110,7 @@
     <script type="text/javascript" src="{{asset('js/maskedinput.min.js')}}"></script>
 
     <script>
-        $(".phone_mask").mask("+380(99)999-99-99");
+        $(".phone_mask").mask("(999) 999-99-99");
 
         const  getCountry = (obj) => {
             let word = $(obj).val();
