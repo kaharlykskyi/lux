@@ -6,8 +6,7 @@ use App\AppTrait\GEO;
 use App\{Cart, DeliveryInfo, Http\Controllers\Auth\LoginController, MutualSettlement, OrderPay, User, UserBalance};
 use Illuminate\Foundation\Auth\{RegistersUsers};
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\{Auth, DB, Hash, Validator};
+use Illuminate\Support\{Carbon, Facades\Auth, Facades\DB, Facades\Hash, Facades\Validator};
 use Illuminate\Validation\ValidationException;
 use Telegram\Bot\Laravel\Facades\Telegram;
 

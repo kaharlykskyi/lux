@@ -33,37 +33,21 @@
 
     <!--Attribute-->
     @isset($attributes)
-        @foreach($attributes as $attribute)
-            @php $buff = []; @endphp
-            @foreach($attribute as $k => $item)
-                @if($k === 0)
-                    <h6>{{$item->description}}</h6>
-                    <div class="checkbox checkbox-primary" style="max-height: 155px;overflow: auto;">
-                        <ul>
-                @endif
-                @if(!in_array($item->displayvalue,$buff))
-                     @php
-                         $filter_attr_data = session("filter.attributes.{$item->id}");
-                         $filter_attr = null;
-                         if (isset($filter_attr_data)){
-                            foreach ($filter_attr_data as $val){
-                                if ($val === $item->displayvalue){
-                                    $filter_attr = true;
-                                }
-                            }
-                         }
-                     @endphp
+        @foreach($attributes as $attr)
+            @isset($attr['filter_item'])
+                @php $request_attr = request()->has($attr['hurl'])?explode(',',request($attr['hurl'])):[] @endphp
+                <h6>{{$attr['description']}}</h6>
+                <div class="checkbox checkbox-primary" style="max-height: 155px;overflow: auto;">
+                    <ul>
+                        @foreach($attr['filter_item'] as $k => $item)
                             <li>
-                                <input @isset($filter_attr) checked @endisset onchange="setAttrFilter(this)" value="{{__("{$item->id}@{$item->displayvalue}")}}" id="cate_{{$item->id .'_'. $k}}" class="styled" type="checkbox" >
+                                <input @if(in_array($item->displayvalue,$request_attr)) checked @endif onchange="setAttrFilter(this)" data-hurl="{{$attr['hurl']}}" value="{{$item->displayvalue}}" id="cate_{{$item->id .'_'. $k}}" class="styled" type="checkbox" >
                                 <label for="cate_{{$item->id .'_'. $k}}">{{$item->displayvalue}}</label>
                             </li>
-                    @php array_push($buff,$item->displayvalue); @endphp
-                @endif
-                @if($k + 1 === count($attribute))
-                        </ul>
-                    </div>
-                @endif
-            @endforeach
+                        @endforeach
+                    </ul>
+                </div>
+            @endisset
         @endforeach
     @endisset
 
@@ -169,17 +153,47 @@
             search_str.push(`supplier=${data_checkbox[0].value}`);
         }
 
-        parser.protocol; // => "http:"
-        parser.pathname; // => "/pathname/"
-        parser.search;   // => "?search=test"
-        parser.host; // => "example.com:3000"
-
         location.href = `${parser.protocol}//${parser.host}${parser.pathname}?${search_str.join('&')}`;
     }
 
     function setAttrFilter(obj) {
-        const data = $(obj);
-        $.get(`{{route('filter')}}?attrFilter=${data[0].value}&active=${data[0].checked}`,()=>{location.reload()});
+        const url = window.location.href;
+        let parser = document.createElement('a');
+        parser.href = url;
+        const data_checkbox = $(obj);
+
+        let search_str = parser.search.substring(1, parser.search.length).split('&');
+        let use_attr  = true;
+
+        search_str.forEach(function (item, i, search_str) {
+            let data = item.split('=');
+            const hurl = $(obj).attr('data-hurl');
+            if (data[0] === hurl) {
+                let attr_item = data[1].split(',');
+                attr_item.forEach(function (val,key,attr_item) {
+                    if (data_checkbox[0].checked && $.inArray(data_checkbox[0].value,attr_item) === -1){
+                        attr_item.push(data_checkbox[0].value);
+                    }else {
+                        if(data_checkbox[0].value === val){
+                            attr_item.splice(key,1);
+                        }
+                    }
+                });
+                search_str[i] = `${$(obj).attr('data-hurl')}=${attr_item.join(',')}`;
+                use_attr = false;
+            }
+        });
+
+        if (use_attr){
+            search_str.push(`${$(obj).attr('data-hurl')}=${data_checkbox[0].value}`);
+        }
+
+        /*parser.protocol; // => "http:"
+        parser.pathname; // => "/pathname/"
+        parser.search;   // => "?search=test"
+        parser.host; // => "example.com:3000"*/
+
+        location.href = `${parser.protocol}//${parser.host}${parser.pathname}?${search_str.join('&')}`;
     }
 
 </script>

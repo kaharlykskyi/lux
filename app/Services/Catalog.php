@@ -78,24 +78,41 @@ class Catalog
         }
     }
 
-    public function getAttributes($level,$param){
-        switch ($level){
-            case 'search_str':
-                return DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
-                    ->orWhere([
-                        [DB::raw('p.articles'),'LIKE',"%{$param['str']}%",'OR'],
-                        [DB::raw('p.name'),'LIKE',"%{$param['str']}%",'OR']
-                    ])
-                    ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('sp.matchcode'),DB::raw('p.brand'))
-                    ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_attributes AS attr'),function ($join){
-                        $join->on(DB::raw('attr.DataSupplierArticleNumber'),'=',DB::raw('p.articles'));
-                        $join->on(DB::raw('attr.supplierId'),'=',DB::raw('sp.id'));
-                    })
-                    ->select(DB::raw('attr.id, attr.description, attr.displaytitle, attr.displayvalue'))
-                    ->get();
-                break;
-            default:
-                return [];
+    public function getAttributes($level,$param,$filters){
+
+        foreach ($filters as $filter){
+            $attr_ids[] = $filter->filter_id;
         }
+
+        $filters_data = [];
+        if (isset($attr_ids)){
+            switch ($level){
+                case 'search_str':
+                    $filters_data = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_attributes AS attr'))
+                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('attr.DataSupplierArticleNumber'),'=',DB::raw('p.articles'))
+                        ->where([
+                            [DB::raw('p.articles'),'LIKE',"%{$param['str']}%",'OR'],
+                            [DB::raw('p.name'),'LIKE',"%{$param['str']}%",'OR']
+                        ])
+                        ->whereIn('attr.id',$attr_ids)
+                        ->select(DB::raw('attr.id, attr.description, attr.displaytitle, attr.displayvalue'))
+                        ->distinct()
+                        ->get();
+                    break;
+            }
+        }
+
+        $parse_filter_data = [];
+        foreach ($filters as $filter){
+            $parse_filter_data[$filter->filter_id]['description'] = $filter->description;
+            $parse_filter_data[$filter->filter_id]['hurl'] = $filter->hurl . '_' . $filter->filter_id;
+            foreach ($filters_data as $item){
+                if ((int)$filter->filter_id === (int)$item->id){
+                    $parse_filter_data[$filter->filter_id]['filter_item'][] = $item;
+                }
+            }
+        }
+
+        return $parse_filter_data;
     }
 }

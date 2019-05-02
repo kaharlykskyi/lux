@@ -50,6 +50,9 @@ class CatalogController extends Controller
         if (isset($request->max)){
             $max_price->filter_price = round($request->max,2);
         }
+
+        $save_filetrs = DB::table('filter_settings')->where('use','=',1)->get();
+
         switch ($request){
             case isset($request->search_str):
                 $this->brands = $this->service->getBrands('search_str',[
@@ -60,8 +63,8 @@ class CatalogController extends Controller
                 $min_price->start_price = round($price->min,2);
                 $max_price->start_price = round($price->max,2);
 
-                //$this->attribute = $this->service->getAttributes('search_str',['str' => $request->search_str]);
-                //dd($this->attribute);
+                $this->attribute = $this->service->getAttributes('search_str',['str' => $request->search_str],$save_filetrs);
+
                 $catalog_products = $this->tecdoc->getProductForArticle(trim(strip_tags($request->search_str)),$this->pre_products,[
                     'price' => [
                         'min' => ($min_price->filter_price > 0)?$min_price->filter_price:$min_price->start_price,
@@ -136,7 +139,14 @@ class CatalogController extends Controller
 
         $catalog_products->withPath($request->fullUrl());
 
-        return view('catalog.index',compact('catalog_products','brands','min_price','max_price','attribute','filter_supplier'));
+        return view('catalog.index',compact(
+            'catalog_products',
+            'brands',
+            'min_price',
+            'max_price',
+            'attribute',
+            'filter_supplier')
+        );
     }
 
     public function filter(Request $request){
