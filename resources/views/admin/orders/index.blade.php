@@ -167,11 +167,14 @@
                                                 <a style="font-size: 12px;" href="{{route('admin.orders',['delete_oder' => $item->id])}}">
                                                     <i class="fa fa-trash" aria-hidden="true"></i> удалить
                                                 </a>
-                                                    @if($item->oder_status !== 5)
-                                                        <a onclick="backOrder('{{$item->id}}')" style="font-size: 12px;margin-left: 10px;color: #ff0000" href="javascript:void(0);">
-                                                            <i style="margin-right: 5px;" class="fa fa-ban" aria-hidden="true"></i>отменить
-                                                        </a>
-                                                    @endif
+                                                @if($item->oder_status !== 5)
+                                                    <a onclick="backOrder('{{$item->id}}')" style="font-size: 12px;margin-left: 10px;color: #ff0000" href="javascript:void(0);">
+                                                        <i style="margin-right: 5px;" class="fa fa-ban" aria-hidden="true"></i>отменить
+                                                    </a>
+                                                    <a onclick="getOderInfo('{{$item->id}}')" href="javascript:void(0);" style="font-size: 12px;margin-left: 10px" data-toggle="modal" data-target="#oderInfoModal">
+                                                        <i style="margin-right: 5px;" class="fa fa-print" aria-hidden="true"></i>Сформировать товарный чек
+                                                    </a>
+                                                @endif
                                             </td>
                                             <td class="text-right">&#8372;
                                             @php
@@ -227,6 +230,9 @@
         </div>
         @component('admin.component.footer')@endcomponent
     </div>
+
+    @include('admin.orders.partrials.pgf_form')
+
     <script>
         function backOrder(id) {
             const confirm_var = confirm('Отменить заказа?Есле заказ был оплачен то это повлечет возврат денег на счёт профиля');

@@ -8,58 +8,37 @@ use App\{Cart,
     OderStatus,
     OrderPay,
     Product,
+    Services\Admin\Order,
     User,
     UserBalance,
     Http\Controllers\Controller};
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
+    protected $service;
+
+    public function __construct()
+    {
+        $this->service = new Order();
+    }
+
     public function index(Request $request){
         if (isset($request->delete_oder)){
             Cart::destroy((int)$request->delete_oder);
             return back();
         }
-        $orders = Cart::with(['cartProduct','status','client' =>
-            function($query){
-                $query->with(['discount','type_user','deliveryInfo','userCity']);
-            }
-            ,'payOder'])
-            ->orderByDesc('carts.oder_dt')
-            ->where('carts.oder_status','<>',1)
-            ->where('carts.id',isset($request->oder_id)?'=':'<>',isset($request->oder_id)?$request->oder_id:null)
-            ->where('carts.oder_status',(int)$request->status_oder!==0?'=':'<>',(int)$request->status_oder!==0?$request->status_oder:1)
-            ->where('carts.seen',isset($request->seen)?'=':'>=',isset($request->seen)?1:0)
-            ->where('carts.oder_dt',isset($request->date_oder_start)?'>=':'<>',isset($request->date_oder_start)?$request->date_oder_start:null)
-            ->where('carts.oder_dt',isset($request->date_oder_end)?'<=':'<>',isset($request->date_oder_end)?$request->date_oder_end:null)
-            ->join('users','users.id','=','carts.user_id')
-            ->where('carts.user_id',(int)$request->client_id!==0?'=':'<>',(int)$request->client_id!==0?$request->client_id:null)
-            ->select('carts.*')
-            ->paginate(50);
+        $orders = $this->service->getOrders($request);
         $order_code = OderStatus::all();
         $clients = User::all();
         return view('admin.orders.index',compact('orders','order_code','clients'));
     }
 
     public function getOrderData(Request $request){
-        $product_data = DB::select("SELECT p.id,p.price,p.name,p.articles,cp.count AS count_in_cart FROM `products` AS p 
-                                          JOIN `cart_products` AS cp ON cp.product_id=p.id 
-                                          WHERE cp.product_id=p.id AND cp.cart_id={$request->idOrder}");
-
-        foreach ($product_data as $k => $item){
-            if ($item->price < 2000){
-                $product_data[$k]->price = $item->price - $item->price * 0.2;
-            } elseif ($item->price >= 2000 && $item->price <= 5000){
-                $product_data[$k]->price = $item->price - $item->price * 0.15;
-            } elseif ($item->price > 5000){
-                $product_data[$k]->price = $item->price - $item->price * 0.1;
-            }
-            $product_data[$k]->price = round($product_data[$k]->price,2);
-        }
-
         return response()->json([
-            'response' => $product_data
+            'response' => $this->service->getOrderData($request)
         ]);
     }
 
@@ -136,6 +115,16 @@ class OrderController extends Controller
     }
 
     public function generatePdf(Request $request){
+        if ($request->isMethod('post')){
+            $data = $request->except('_token');
+            $pdf = App::make('dompdf.wrapper');
 
+            $pdf->loadHTML($this->service->makeOrderCheckTemplate($data));
+            return $pdf->stream();
+        }
+
+        $oder_info = Cart::with(['cartProduct','client'=>function($query){$query->with(['deliveryInfo','discount']);}])->where('id',$request->id)->first();
+
+        return response()->json($oder_info);
     }
 }
