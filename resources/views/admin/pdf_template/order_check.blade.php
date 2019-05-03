@@ -50,7 +50,7 @@
             </ul>
         </div>
         <div class="col-xs-6 text-right">
-            <img style="width: 200px;height: auto;" src="{{asset('images/logo_pdf.png')}}" alt="{{ config('app.name', 'Laravel') }}">
+            <img style="width: 200px;height: auto;margin-right: 50px;margin-top: 30px;" src="{{asset('images/logo_pdf.png')}}" alt="{{ config('app.name', 'Laravel') }}">
         </div>
     </div>
     <div class="row">
@@ -89,10 +89,25 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-12 text-right">
+        <div class="col-xs-12 text-right" style="margin-top: 15px;">
             <p class="text-right"><strong>Всего к оплате:</strong>{{$data['sum']}}грн.</p>
         </div>
     </div>
+    @isset($data['price_abc'])
+        <div class="row">
+            <div class="col-xs-12">
+                <p><strong>Всего к оплате буквами: </strong>{{$data['price_abc']}}</p>
+            </div>
+        </div>
+    @endisset
+    @isset($data['client_info'])
+        <div class="row">
+            <div class="col-xs-12" style="font-size: 13px;">
+                <strong>Информация для покупателя</strong>
+                {!! $data['client_info'] !!}
+            </div>
+        </div>
+    @endisset
     <div class="row" style="margin-top: 50px;">
         <div class="col-xs-12 text-right">
             <p style="display: inline-block;width: 100px;">Заказчик</p><span style="display: inline-block;height: 1px;width: 100px;background: #000000"></span>

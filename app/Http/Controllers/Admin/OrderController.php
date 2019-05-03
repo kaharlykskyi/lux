@@ -118,7 +118,9 @@ class OrderController extends Controller
         if ($request->isMethod('post')){
             $data = $request->except('_token');
             $pdf = App::make('dompdf.wrapper');
-
+            if ($request->has('client_info')){
+                session(['client_info' => $request->client_info]);
+            }
             $pdf->loadHTML($this->service->makeOrderCheckTemplate($data));
             return $pdf->stream();
         }

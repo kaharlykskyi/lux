@@ -38,7 +38,7 @@
                     <div id="product_oder_pdf" class="table-responsive"></div>
                     <div class="form-group">
                         <label for="client_info">Информация для покупателя</label>
-                        <textarea class="form-control" name="client_info" id="client_info" rows="5"></textarea>
+                        <textarea class="form-control" name="client_info" id="client_info" rows="5">@if(session()->has('client_info')){!! session('client_info') !!}@endif</textarea>
                     </div>
                 </form>
             </div>
@@ -122,4 +122,6 @@
             $('#product_oder_pdf').html(html);
         });
     }
+
+    CKEDITOR.replace( 'client_info' );
 </script>
