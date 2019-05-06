@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
                 Cookie::queue('vin_catalog', 'quickGroup');
             }
             view()->composer('*', function($view){
-                $count_new_orders = Cart::where('seen',0)->count();
+                $count_new_orders = Cart::where([['seen',0],['oder_status','<>',1]])->count();
                 $count_new_call_orders = CallOrder::where('status',0)->count();
                 $count_new_pay_mass = OrderPay::where('seen',0)->where('success_pay','true')->count();
                 $pages = Page::all();

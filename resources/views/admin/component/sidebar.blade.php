@@ -42,6 +42,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{route('admin.sto_manager.index')}}">
+                        <i class="fa fa-address-card" aria-hidden="true"></i>{{__('СТО база')}}
+                    </a>
+                </li>
+                <li>
                     <a href="{{route('admin.pay_mass')}}">
                         <i class="fa fa-usd" aria-hidden="true"></i>{{__('Сообщения об оплате')}}
                         @if(isset($count_new_pay_mass_global) && $count_new_pay_mass_global > 0)

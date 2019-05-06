@@ -72,6 +72,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{route('admin.sto_manager.index')}}">
+                        <i class="fa fa-address-card" aria-hidden="true"></i>{{__('СТО база')}}
+                    </a>
+                </li>
+                <li>
                     <a href="{{route('admin.cross.index')}}">
                         <i class="fa fa-cogs" aria-hidden="true"></i>{{__('Расширение кроссов')}}
                     </a>

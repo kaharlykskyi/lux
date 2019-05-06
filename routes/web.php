@@ -133,7 +133,8 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
         'banner' => 'BannerController',
         'provider' => 'ProviderController',
         'pro_file' => 'ProFileController',
-        'home_category' => 'HomeCategoryGroupController'
+        'home_category' => 'HomeCategoryGroupController',
+        'sto_manager' => 'STOManagerController'
     ],['as' => 'admin']);
     Route::get('/start-import','ProductController@startImport')->name('admin.start_import');
 
