@@ -46,20 +46,20 @@
                 <h4 style="margin-bottom: 0;line-height: 1;padding-bottom: 0"><strong>Акт виконаних робіт</strong></h4>
                 <p style="font-size: 11px;line-height: 1;margin-bottom: 15px">
                     Технічне обслуговування,ремонт<br>
-                    <strong>№ W252412 / 122094728</strong>
+                    <strong>№ {{$data->id}}</strong>
                 </p>
                 <p style="font-size: 11px;line-height: 1;text-align: left;padding-left: 15px">
-                    Місце складання<span style="display: inline-block;height: 1px;width: 100px;background: #ccc;margin-left: 5px"></span><br>
-                    Дата зверненя<span style="display: inline-block;height: 1px;width: 100px;background: #ccc;margin-left: 5px"></span><br>
-                    Дата складання<span style="display: inline-block;height: 1px;width: 100px;background: #ccc;margin-left: 5px"></span><br>
-                    Приймальник<span style="display: inline-block;height: 1px;width: 100px;background: #ccc;margin-left: 5px"></span><br>
+                    Місце складання {{$data->place}}<br>
+                    Дата зверненя {{$data->application_date}}<br>
+                    Дата складання {{$data->date_compilation}}<br>
+                    Приймальник {{$data->acceptor}}<br>
                 </p>
             </div>
         </div>
     </div>
     <div class="row" style="margin-top: 20px">
         <div class="col-xs-12">
-            <p>Автомобіль:<span style="display: inline-block;height: 1px;width: 100px;background: #cccccc;margin-left: 15px"></span></p>
+            <p>Автомобіль: {{$data->car_name}}</p>
         </div>
     </div>
     <div class="row" style="margin-bottom: 20px">
@@ -68,7 +68,7 @@
                 <thead>
                 <tr style="font-size: 10px">
                     <td scope="col">Державний номер</td>
-                    <td scope="col">Бренд</td>
+                    <td scope="col">Марка</td>
                     <td scope="col">Номер кузова</td>
                     <td scope="col">Дата продажу</td>
                     <td scope="col">Пробіг км</td>
@@ -136,7 +136,7 @@
                 <p style="margin-bottom: 0;font-size: 14px" class="text-right">Вартість виконаних робіт: {{$action_price}}грн.</p>
             @endif
             @if($material_price > 0)
-                <p style="margin-bottom: 0;font-size: 14px"  class="text-right">Вартість встановленіх запчастин: {{$material_price}}грн.</p>
+                <p style="margin-bottom: 0;font-size: 14px"  class="text-right">Вартість встановлених запчастин: {{$material_price}}грн.</p>
             @endif
             <p style="margin-bottom: 0;font-size: 14px"  class="text-right"><strong>Всього до сплати:</strong> {{$sum}}грн.</p>
         </div>
@@ -164,7 +164,7 @@
         <div class="col-xs-6">
             <p style="margin-bottom: 15px;font-size: 11px;line-height: 1;padding-right: 60px">
                 <strong>Автомобіль після ремонту прийняв.</strong><br>
-                Притензій до об'єму і якості виконаних робіт, послуг<br>
+                Претензій до об'єму і якості виконаних робіт, послуг<br>
                 комплектності автомобіля та його стану не маю.<br>
                 З особливостями експлуатації автомобіля ознайомлений
             </p>

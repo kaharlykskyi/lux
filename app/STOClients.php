@@ -17,7 +17,13 @@ class STOClients extends Model
         'data',
         'sum',
         'info_for_user',
-        'price_abc'
+        'price_abc',
+        'acceptor',
+        'application_date',
+        'date_compilation',
+        'car_name',
+        'phone',
+        'place'
     ];
 
     public function work(){

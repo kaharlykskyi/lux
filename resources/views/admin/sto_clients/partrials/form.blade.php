@@ -12,6 +12,18 @@
 
 <div class="row form-group">
     <div class="col col-md-3">
+        <label for="car_name" class=" form-control-label">{{__('Автомобиль')}}</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <input type="text" id="car_name" name="car_name" value="@if(isset($sto_client->id)){{$sto_client->car_name}}@else{{old('car_name')}}@endif" class="form-control">
+        @if ($errors->has('car_name'))
+            <small class="form-text text-danger">{{ $errors->first('car_name') }}</small>
+        @endif
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col col-md-3">
         <label for="num_auto" class=" form-control-label">{{__('Номер авто')}}</label>
     </div>
     <div class="col-12 col-md-9">
@@ -60,12 +72,72 @@
 
 <div class="row form-group">
     <div class="col col-md-3">
-        <label for="data" class=" form-control-label">{{__('Дата')}}</label>
+        <label for="data" class=" form-control-label">{{__('Дата продажи')}}</label>
     </div>
     <div class="col-12 col-md-9">
         <input type="date" id="data" name="data" value="@if(isset($sto_client->id)){{date('Y-m-d',strtotime($sto_client->data))}}@else{{old('data')}}@endif" class="form-control">
         @if ($errors->has('data'))
             <small class="form-text text-danger">{{ $errors->first('data') }}</small>
+        @endif
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col col-md-3">
+        <label for="place" class=" form-control-label">{{__('Место составления')}}</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <input type="text" id="place" name="place" value="@if(isset($sto_client->id)){{$sto_client->place}}@else{{old('place')}}@endif" class="form-control">
+        @if ($errors->has('place'))
+            <small class="form-text text-danger">{{ $errors->first('place') }}</small>
+        @endif
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col col-md-3">
+        <label for="acceptor" class=" form-control-label">{{__('Приниматель')}}</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <input type="text" id="acceptor" name="acceptor" value="@if(isset($sto_client->id)){{$sto_client->acceptor}}@else{{old('acceptor')}}@endif" class="form-control">
+        @if ($errors->has('acceptor'))
+            <small class="form-text text-danger">{{ $errors->first('acceptor') }}</small>
+        @endif
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col col-md-3">
+        <label for="acceptor" class=" form-control-label">{{__('Телефон')}}</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <input type="text" id="phone" name="phone" value="@if(isset($sto_client->id)){{$sto_client->phone}}@else{{old('phone')}}@endif" class="form-control">
+        @if ($errors->has('phone'))
+            <small class="form-text text-danger">{{ $errors->first('phone') }}</small>
+        @endif
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col col-md-3">
+        <label for="application_date" class=" form-control-label">{{__('Дата заявки')}}</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <input type="date" id="application_date" name="application_date" value="@if(isset($sto_client->id)){{date('Y-m-d',strtotime($sto_client->application_date))}}@else{{old('application_date')}}@endif" class="form-control">
+        @if ($errors->has('application_date'))
+            <small class="form-text text-danger">{{ $errors->first('application_date') }}</small>
+        @endif
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col col-md-3">
+        <label for="date_compilation" class=" form-control-label">{{__('Дата составления')}}</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <input type="date" id="date_compilation" name="date_compilation" value="@if(isset($sto_client->id)){{date('Y-m-d',strtotime($sto_client->date_compilation))}}@else{{old('date_compilation')}}@endif" class="form-control">
+        @if ($errors->has('date_compilation'))
+            <small class="form-text text-danger">{{ $errors->first('date_compilation') }}</small>
         @endif
     </div>
 </div>

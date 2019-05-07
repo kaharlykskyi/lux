@@ -141,7 +141,13 @@ class STOManagerController extends Controller
             'data' => $data['data'],
             'sum' => $data['sum'],
             'info_for_user' => $data['info_for_user'],
-            'price_abc' => $data['price_abc']
+            'price_abc' => $data['price_abc'],
+            'acceptor' => $data['acceptor'],
+            'application_date' => $data['application_date'],
+            'date_compilation' => $data['date_compilation'],
+            'car_name' => $data['car_name'],
+            'phone' => $data['phone'],
+            'place' => $data['place'],
         ]);
 
         foreach ($data['id'] as $k => $item){
