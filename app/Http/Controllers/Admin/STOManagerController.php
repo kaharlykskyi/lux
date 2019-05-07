@@ -19,6 +19,7 @@ class STOManagerController extends Controller
         $filter = [];
         if (isset($request->fio_user) && !empty($request->fio_user)) $filter[] = ['fio','LIKE',"%{$request->fio_user}%"];
         if (isset($request->date_crate) && !empty($request->date_crate)) $filter[] = ['data',$request->date_crate];
+        if (isset($request->phone_user) && !empty($request->phone_user)) $filter[] = ['phone','LIKE',"%{$request->phone_user}%"];
 
         $clients = STOClients::where($filter)->orderBy('created_at', 'desc')->paginate(80);
         return view('admin.sto_clients.index',compact('clients'));

@@ -53,6 +53,16 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col col-sm-4">
+                                            <div class="row form-group">
+                                                <div class="col col-md-3">
+                                                    <label for="phone_user" class=" form-control-label">Телефон</label>
+                                                </div>
+                                                <div class="col-12 col-md-9">
+                                                    <input type="text" id="phone_user" value="{{request()->query('phone_user')}}" name="phone_user" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </form>
                             </div>
