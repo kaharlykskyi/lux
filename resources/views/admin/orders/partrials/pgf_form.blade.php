@@ -11,29 +11,35 @@
             <div class="modal-body">
                 <form action="{{route('admin.order.pdf')}}" method="post" id="pdf_data_form">
                     @csrf
+                    @php
+                        $settings = App\StoreSettings::where('type','company')->first();
+                        if ($settings){
+                            $data = json_decode($settings->settings);
+                        }
+                    @endphp
                     <div class="form-group">
                         <label for="company_name">Название компании</label>
-                        <input type="text" class="form-control" value="{{config('company_info.name')}}" id="company_name" name="company_name">
+                        <input type="text" class="form-control" value="@isset($data) {{$data->company_name}} @endisset" id="company_name" name="company_name">
                     </div>
                     <div class="form-group">
                         <label for="company_address">Адресс компании</label>
-                        <input type="text" class="form-control" value="{{config('company_info.address')}}" id="company_address" name="company_address">
+                        <input type="text" class="form-control" value="@isset($data) {{$data->company_address}} @endisset" id="company_address" name="company_address">
                     </div>
                     <div class="form-group">
                         <label for="company_tel">Телефон компании</label>
-                        <input type="text" class="form-control" value="{{config('company_info.tel')}}" id="company_tel" name="company_tel">
+                        <input type="text" class="form-control" value="@isset($data) {{$data->company_tel}} @endisset" id="company_tel" name="company_tel">
                     </div>
                     <div class="form-group">
                         <label for="company_bank">Банк</label>
-                        <input type="text" class="form-control" value="{{config('company_info.bank')}}" id="company_bank" name="company_bank">
+                        <input type="text" class="form-control" value="@isset($data) {{$data->company_bank}} @endisset" id="company_bank" name="company_bank">
                     </div>
                     <div class="form-group">
                         <label for="company_code">Код компании</label>
-                        <input type="text" class="form-control" value="{{config('company_info.code')}}" id="company_code" name="company_code">
+                        <input type="text" class="form-control" value="@isset($data) {{$data->company_code}} @endisset" id="company_code" name="company_code">
                     </div>
                     <div class="form-group">
                         <label for="company_mfo">МФО компании</label>
-                        <input type="text" class="form-control" value="{{config('company_info.mfo')}}" id="company_mfo" name="company_mfo">
+                        <input type="text" class="form-control" value="@isset($data) {{$data->company_mfo}} @endisset" id="company_mfo" name="company_mfo">
                     </div>
                     <div id="product_oder_pdf" class="table-responsive"></div>
                     <div class="form-group">

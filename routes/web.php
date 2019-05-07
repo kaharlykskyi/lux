@@ -90,6 +90,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     Route::match(['get', 'post'], '/filter/{status}','DashboardController@setFilterSettings')->name('admin.filter');
     Route::match(['get', 'post'],'/call-orders','DashboardController@callOrder')->name('admin.call_orders');
     Route::get('/pay-mass','DashboardController@payMass')->name('admin.pay_mass');
+    Route::match(['get', 'post'],'/company-settings','DashboardController@companySettings')->name('admin.company.settings');
 
     //USER
     Route::group(['prefix' => 'users'],function (){
@@ -159,6 +160,8 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     Route::match(['get', 'post'], '/advertising','DashboardController@advertising')->name('admin.advertising');
     //get incognito file
     Route::get('/incognito-file/{file}','ProductController@incognitoFile')->name('admin.incognito');
+    //STO pdf
+    Route::get('/sto-pdf/{clients}','STOManagerController@pdfGenerator')->name('admin.sto_manager.pdf');
 
     //MANAGE ALL CATEGORY TREE
     Route::group(['prefix' => 'all-category'],function (){

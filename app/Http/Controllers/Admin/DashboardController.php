@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\{CallOrder, Cart, FastBuy, OrderPay, ProductComment, Services\Admin\Dashboard, User};
+use App\{CallOrder, Cart, FastBuy, OrderPay, ProductComment, Services\Admin\Dashboard, StoreSettings, User};
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
@@ -165,5 +165,23 @@ class DashboardController extends Controller
 
         OrderPay::where('seen',0)->update(['seen' => 1]);
         return view('admin.dashboard.pay_mass',compact('pay_mass'));
+    }
+
+    public function companySettings(Request $request){
+        $type = $request->type;
+        $data = $request->except(['type','_token']);
+        if (StoreSettings::where('type',$type)->exists()){
+            StoreSettings::where('type',$type)->update([
+                'settings' => json_encode($data)
+            ]);
+        }else{
+            $settings = new StoreSettings();
+            $settings->fill([
+                'type' => $type,
+                'settings' => json_encode($data)
+            ]);
+            $settings->save();
+        }
+        return response()->json(true);
     }
 }

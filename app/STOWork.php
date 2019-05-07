@@ -14,6 +14,7 @@ class STOWork extends Model
         'name',
         'count',
         'price',
-        'price_discount'
+        'price_discount',
+        'type'
     ];
 }

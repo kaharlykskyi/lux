@@ -70,6 +70,11 @@
     </div>
 </div>
 
+<div class="form-group">
+    <label for="info_for_user">Информация для покупателя</label>
+    <textarea class="form-control" name="info_for_user" id="info_for_user" rows="5">@if(isset($sto_client->id)){{$sto_client->info_for_user}}@else{{old('info_for_user')}}@endif</textarea>
+</div>
+
 <hr>
 
 <div class="row">
@@ -84,6 +89,7 @@
                 <th scope="col">№ материала/действия</th>
                 <th scope="col">Название</th>
                 <th scope="col">Кол.</th>
+                <th scope="col">Тип</th>
                 <th scope="col">Цена</th>
                 <th scope="col">Цена со скидкой</th>
                 <th scope="col">Сумма</th>
@@ -102,6 +108,12 @@
                         <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_article[]" value="{{$work->article_operation}}"></td>
                         <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_name[]" value="{{$work->name}}"></td>
                         <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_col[]" value="{{$work->count}}"></td>
+                        <td>
+                            <select style="background: #cccccc5e;padding: 5px;" name="type[]">
+                                <option @if($work->type === 'material') selected @endif value="material">материал</option>
+                                <option @if($work->type === 'action') selected @endif value="action">действие</option>
+                            </select>
+                        </td>
                         <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_price[]" value="{{round($work->price,2)}}"></td>
                         <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_price_discount[]" value="{{round($work->price_discount,2)}}"></td>
                         <td><input onblur="sumProduct()" class="product_sum" style="background: #cccccc5e;padding: 5px;" type="text" name="product_sum[]" value="{{round((float)(($work->price_discount > 0)?$work->price_discount : $work->price) * $work->count,2)}}"></td>
@@ -113,6 +125,12 @@
                     <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_article[]" value=""></td>
                     <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_name[]" value=""></td>
                     <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_col[]" value=""></td>
+                    <td>
+                        <select style="background: #cccccc5e;padding: 5px;" name="type[]">
+                            <option selected value="material">материал</option>
+                            <option value="action">действие</option>
+                        </select>
+                    </td>
                     <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_price[]" value=""></td>
                     <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_price_discount[]" value=""></td>
                     <td><input onblur="sumProduct()" class="product_sum" style="background: #cccccc5e;padding: 5px;" type="text" name="product_sum[]" value=""></td>
@@ -151,6 +169,18 @@
     </div>
 </div>
 
+<div class="row form-group">
+    <div class="col col-md-3">
+        <label for="price_abc" class=" form-control-label">{{__('Всего к оплате буквами')}}</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <input type="text" id="price_abc" name="price_abc" value="@if(isset($sto_client->id)){{$sto_client->price_abc}}@else{{old('price_abc')}}@endif" class="form-control">
+        @if ($errors->has('price_abc'))
+            <small class="form-text text-danger">{{ $errors->first('price_abc') }}</small>
+        @endif
+    </div>
+</div>
+
 @isset($sto_client->id)
     <input id="delete_work" type="hidden" name="delete_work" value="">
 @endisset
@@ -160,6 +190,7 @@
 </button>
 
 <script>
+    CKEDITOR.replace( 'info_for_user' );
 
     @isset($sto_client->id)
         function deleteWork(obj,id) {
@@ -205,6 +236,12 @@
                     <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_article[]" value=""></td>
                     <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_name[]" value=""></td>
                     <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_col[]" value=""></td>
+                    <td>
+                        <select style="background: #cccccc5e;padding: 5px;" name="type[]">
+                            <option selected value="material">материал</option>
+                            <option value="action">действие</option>
+                        </select>
+                    </td>
                     <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_price[]" value=""></td>
                     <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_price_discount[]" value=""></td>
                     <td><input class="product_sum" onblur="sumProduct()" style="background: #cccccc5e;padding: 5px;" type="text" name="product_sum[]" value=""></td>

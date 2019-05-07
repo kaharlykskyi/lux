@@ -20,8 +20,51 @@
                     <div class="table-data__tool-left">
                     </div>
                     <div class="table-data__tool-right">
+                        <button data-toggle="modal" data-target="#companySettingsModal" class="au-btn au-btn-icon au-btn--blue au-btn--small">
+                            <i class="fa fa-refresh" aria-hidden="true"></i>{{__('Обновить данные ФОП')}}</button>
+
                         <button onclick="location.href = '{{route('admin.sto_manager.create')}}'" class="au-btn au-btn-icon au-btn--green au-btn--small">
                             <i class="zmdi zmdi-plus"></i>{{__('Создать')}}</button>
+                    </div>
+                </div>
+                <div class="row m-t-10 m-b-10">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body card-block">
+                                <form action="{{route('admin.sto_manager.index')}}" method="get" id="filter_sto" style="font-size: 13px;">
+                                    <div class="row form-group">
+                                        <div class="col col-sm-4">
+                                            <div class="row form-group">
+                                                <div class="col col-md-3">
+                                                    <label for="fio_user" class=" form-control-label">ФИО</label>
+                                                </div>
+                                                <div class="col-12 col-md-9">
+                                                    <input type="text" id="fio_user" value="{{request()->query('fio_user')}}" name="fio_user" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col col-sm-4">
+                                            <div class="row form-group">
+                                                <div class="col col-md-3">
+                                                    <label for="date_crate" class=" form-control-label">Дата</label>
+                                                </div>
+                                                <div class="col-12 col-md-9">
+                                                    <input type="date" id="date_crate" value="{{request()->query('date_crate')}}" name="date_crate" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="card-footer">
+                                <button onclick="$('#filter_sto').submit();" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-dot-circle-o"></i> Фильтровать
+                                </button>
+                                <button onclick="location.href = '{{route('admin.sto_manager.index')}}'" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-ban"></i> Отменить
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -47,6 +90,9 @@
                                     <td>{{$client->data}}</td>
                                     <td>
                                         <div class="table-data-feature">
+                                            <button onclick="location.href = '{{route('admin.sto_manager.pdf',$client->id)}}'" class="item" data-toggle="tooltip" data-placement="bottom" title="{{__('Сформировать товарный чек')}}">
+                                                <i class="fa fa-print" aria-hidden="true"></i>
+                                            </button>
                                             <button onclick="location.href = '{{route('admin.sto_manager.edit',$client->id)}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Редактирвать')}}">
                                                 <i class="zmdi zmdi-edit"></i>
                                             </button>
@@ -84,5 +130,7 @@
         </div>
         @component('admin.component.footer')@endcomponent
     </div>
+
+    @include('admin.component.company_settings')
 
 @endsection

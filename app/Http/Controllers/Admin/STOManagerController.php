@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\STOClients;
-use App\STOWork;
+use App\{STOClients, StoreSettings, STOWork, Http\Controllers\Controller};
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Validator;
 
 class STOManagerController extends Controller
@@ -15,9 +14,13 @@ class STOManagerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $clients = STOClients::paginate(80);
+        $filter = [];
+        if (isset($request->fio_user) && !empty($request->fio_user)) $filter[] = ['fio','LIKE',"%{$request->fio_user}%"];
+        if (isset($request->date_crate) && !empty($request->date_crate)) $filter[] = ['data',$request->date_crate];
+
+        $clients = STOClients::where($filter)->orderBy('created_at', 'desc')->paginate(80);
         return view('admin.sto_clients.index',compact('clients'));
     }
 
@@ -70,7 +73,8 @@ class STOManagerController extends Controller
                         'name' => $data['product_name'][$k],
                         'count' => $data['product_col'][$k],
                         'price' => (float)$data['product_price'][$k],
-                        'price_discount' => (float)$data['product_price_discount'][$k]
+                        'price_discount' => (float)$data['product_price_discount'][$k],
+                        'type' => $data['type'][$k]
                     ]);
                     $stoWork->save();
                 }
@@ -135,7 +139,9 @@ class STOManagerController extends Controller
             'brand' => $data['brand'],
             'vin' => $data['vin'],
             'data' => $data['data'],
-            'sum' => $data['sum']
+            'sum' => $data['sum'],
+            'info_for_user' => $data['info_for_user'],
+            'price_abc' => $data['price_abc']
         ]);
 
         foreach ($data['id'] as $k => $item){
@@ -149,7 +155,8 @@ class STOManagerController extends Controller
                             'name' => $data['product_name'][$k],
                             'count' => $data['product_col'][$k],
                             'price' => (float)$data['product_price'][$k],
-                            'price_discount' => (float)$data['product_price_discount'][$k]
+                            'price_discount' => (float)$data['product_price_discount'][$k],
+                            'type' => $data['type'][$k]
                         ]);
                     }
                 }
@@ -161,7 +168,8 @@ class STOManagerController extends Controller
                     'name' => $data['product_name'][$k],
                     'count' => $data['product_col'][$k],
                     'price' => (float)$data['product_price'][$k],
-                    'price_discount' => (float)$data['product_price_discount'][$k]
+                    'price_discount' => (float)$data['product_price_discount'][$k],
+                    'type' => $data['type'][$k]
                 ]);
                 $stoWork->save();
             }
@@ -180,6 +188,19 @@ class STOManagerController extends Controller
     {
         STOClients::where('id',(int)$request->sto_manager)->delete();
         return redirect()->back()->with('status','Запись удалена');
+    }
+
+    public function pdfGenerator(Request $request){
+        $sto_client = STOClients::with('work')->where('id',(int)$request->clients)->first();
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadHTML($this->makeSTOCheckTemplate($sto_client));
+        return $pdf->stream();
+    }
+
+    private function makeSTOCheckTemplate($data){
+        $company_data = StoreSettings::where('type','company')->first();
+        $decode_company_data = json_decode($company_data->settings);
+        return view('admin.pdf_template.sto_check',compact('data','decode_company_data'));
     }
 
 }

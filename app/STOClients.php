@@ -15,7 +15,9 @@ class STOClients extends Model
         'mileage',
         'vin',
         'data',
-        'sum'
+        'sum',
+        'info_for_user',
+        'price_abc'
     ];
 
     public function work(){
