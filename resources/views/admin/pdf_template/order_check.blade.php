@@ -21,7 +21,7 @@
             <h4 style="font-weight: 600;margin-bottom: 5px">{{$data['company_name']}}</h4>
             <ul class="list-group" style="border: none;font-size: 13px;">
                 <li style="border: none;padding: 0;" class="list-group-item">
-                    Адресс:{{$data['company_address']}}
+                    Адреса:{{$data['company_address']}}
                 </li>
                 <li style="border: none;padding: 0;" class="list-group-item">
                     Тел: {{$data['company_tel']}}
@@ -39,10 +39,10 @@
             <hr>
             <ul class="list-group" style="border: none;font-size: 13px;">
                 <li style="border: none;padding: 0;" class="list-group-item">
-                    <strong>Заказчик: </strong>{{$data['name_user']}}
+                    <strong>Замовник: </strong>{{$data['name_user']}}
                 </li>
                 <li style="border: none;padding: 0;" class="list-group-item">
-                    <strong>Код клиента: </strong> {{$data['client_id']}}
+                    <strong>Код клієнта: </strong> {{$data['client_id']}}
                 </li>
                 <li style="border: none;padding: 0;" class="list-group-item">
                     <strong>Тел.: </strong>  {{$data['client_phone']}}
@@ -55,7 +55,7 @@
     </div>
     <div class="row">
         <div class="col-xs-12 text-center">
-            <strong>Заказаные товары</strong>
+            <strong>Замовлені товари</strong>
         </div>
     </div>
     <div class="row">
@@ -64,12 +64,12 @@
                 <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">№ детали</th>
-                    <th scope="col">Название</th>
+                    <th scope="col">№ деталі</th>
+                    <th scope="col">Назва</th>
                     <th scope="col">Кол.</th>
-                    <th scope="col">Цена</th>
-                    <th scope="col">Цена со скидкой</th>
-                    <th scope="col">Сумма</th>
+                    <th scope="col">Ціна</th>
+                    <th scope="col">Ціна зі знижкою</th>
+                    <th scope="col">Сума</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -90,27 +90,27 @@
     </div>
     <div class="row">
         <div class="col-xs-12 text-right" style="margin-top: 15px;">
-            <p class="text-right"><strong>Всего к оплате:</strong>{{$data['sum']}}грн.</p>
+            <p class="text-right"><strong>Всього до оплати:</strong>{{$data['sum']}}грн.</p>
         </div>
     </div>
     @isset($data['price_abc'])
         <div class="row">
             <div class="col-xs-12">
-                <p><strong>Всего к оплате буквами: </strong>{{$data['price_abc']}}</p>
+                <p><strong>Всього до оплати прописом: </strong>{{$data['price_abc']}}</p>
             </div>
         </div>
     @endisset
     @isset($data['client_info'])
         <div class="row">
             <div class="col-xs-12" style="font-size: 13px;">
-                <strong>Информация для покупателя</strong>
+                <strong>Інформація для покупця</strong>
                 {!! $data['client_info'] !!}
             </div>
         </div>
     @endisset
     <div class="row" style="margin-top: 50px;">
         <div class="col-xs-12 text-right">
-            <p style="display: inline-block;width: 100px;">Заказчик</p><span style="display: inline-block;height: 1px;width: 100px;background: #000000"></span>
+            <p style="display: inline-block;width: 100px;">Замовник</p><span style="display: inline-block;height: 1px;width: 100px;background: #000000"></span>
         </div>
     </div>
 </div>

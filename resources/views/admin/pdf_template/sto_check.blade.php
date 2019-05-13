@@ -24,7 +24,7 @@
             <h4 style="font-weight: 600;margin-bottom: 5px">{{$decode_company_data->company_name}}</h4>
             <ul class="list-group" style="border: none;font-size: 13px;">
                 <li style="border: none;padding: 0;" class="list-group-item">
-                    Адресс:{{$decode_company_data->company_address}}
+                    Адреса:{{$decode_company_data->company_address}}
                 </li>
                 <li style="border: none;padding: 0;" class="list-group-item">
                     Тел: {{$decode_company_data->company_tel}}

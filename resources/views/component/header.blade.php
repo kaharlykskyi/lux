@@ -7,7 +7,8 @@
             <form action="{{route('vin_decode')}}" method="post" id="search_global_form">
                 @csrf
                 <select class="selectpicker" name="type_search_global">
-                    <option selected value="article">{{__('Артикул, название')}}</option>
+                    <option selected value="articles">{{__('По артикулу')}}</option>
+                    <option value="name">{{__('По названию')}}</option>
                     <option value="vin">{{__('По vin')}}</option>
                 </select>
                 <input type="search" name="vin" placeholder="Поиск">
@@ -16,9 +17,14 @@
             <script>
                 $(document).ready(function () {
                     $('#search_global_form').submit(function (e) {
-                        if ($(this).find('select').val() === 'article'){
+                        if ($(this).find('select').val() !== 'vin'){
                             e.preventDefault();
-                            location.href = `{{route('catalog',['category' => null])}}?search_str=${$(this).find('input[type="search"]').val()}`;
+                            const search = encodeURIComponent($(this).find('input[type="search"]').val());
+                            if (search.length > 2){
+                                location.href = `{{route('catalog',['category' => null])}}?search_str=${search}&type=${$(this).find('select').val()}`;
+                            } else{
+                                alert('Длина стоки должна быть больше 2');
+                            }
                         }
                     });
                 });
