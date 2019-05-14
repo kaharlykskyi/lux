@@ -21,7 +21,8 @@ class CreateSTOClientsTable extends Migration
             $table->unsignedInteger('mileage')->default(0);
             $table->string('vin');
             $table->timestamp('data')->useCurrent();
-            $table->decimal('sum',9,2)->default(0);
+            $table->string('car_name')->nullable();
+            $table->string('phone')->nullable();
             $table->timestamps();
         });
     }

@@ -46,20 +46,20 @@
                 <h4 style="margin-bottom: 0;line-height: 1;padding-bottom: 0"><strong>Акт виконаних робіт</strong></h4>
                 <p style="font-size: 11px;line-height: 1;margin-bottom: 15px">
                     Технічне обслуговування,ремонт<br>
-                    <strong>№ {{$data->id}}</strong>
+                    <strong>№ {{$check->id}}</strong>
                 </p>
                 <p style="font-size: 11px;line-height: 1;text-align: left;padding-left: 15px">
-                    Місце складання {{$data->place}}<br>
-                    Дата зверненя {{$data->application_date}}<br>
-                    Дата складання {{$data->date_compilation}}<br>
-                    Приймальник {{$data->acceptor}}<br>
+                    Місце складання {{$check->place}}<br>
+                    Дата зверненя {{$check->application_date}}<br>
+                    Дата складання {{$check->date_compilation}}<br>
+                    Приймальник {{$check->acceptor}}<br>
                 </p>
             </div>
         </div>
     </div>
     <div class="row" style="margin-top: 20px">
         <div class="col-xs-12">
-            <p>Автомобіль: {{$data->car_name}}</p>
+            <p>Автомобіль: {{$check->client->car_name}}</p>
         </div>
     </div>
     <div class="row" style="margin-bottom: 20px">
@@ -76,11 +76,11 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <th>{{$data->num_auto}}</th>
-                        <th>{{$data->brand}}</th>
-                        <th>{{$data->vin}}</th>
-                        <th>{{date('Y-m-d',strtotime($data->data))}}</th>
-                        <th>{{$data->mileage}}</th>
+                        <th>{{$check->client->num_auto}}</th>
+                        <th>{{$check->client->brand}}</th>
+                        <th>{{$check->client->vin}}</th>
+                        <th>{{date('Y-m-d',strtotime($check->client->data))}}</th>
+                        <th>{{$check->client->mileage}}</th>
                     </tr>
                 </tbody>
             </table>
@@ -106,7 +106,7 @@
                     $material_price = 0;
                     $sum = 0;
                 @endphp
-                @foreach($data->work as $k => $work)
+                @foreach($check->work as $k => $work)
                     @php
                         $price = (isset($work->price_discount) && $work->price_discount > 0)?$work->price_discount * $work->count:$work->price * $work->count;
                         if ($work->type === 'material'){
@@ -141,18 +141,18 @@
             <p style="margin-bottom: 0;font-size: 14px"  class="text-right"><strong>Всього до сплати:</strong> {{$sum}}грн.</p>
         </div>
     </div>
-     @isset($data->price_abc)
+     @isset($check->price_abc)
         <div class="row">
             <div class="col-xs-12">
-                <p><strong>Всього до сплати прописом: </strong>{{$data->price_abc}}</p>
+                <p><strong>Всього до сплати прописом: </strong>{{$check->price_abc}}</p>
             </div>
         </div>
     @endisset
-    @isset($data->info_for_user)
+    @isset($check->info_for_user)
         <div class="row">
             <div class="col-xs-12" style="font-size: 13px;">
                 <strong>Інформація для покупця</strong>
-                {!! $data->info_for_user !!}
+                {!! $check->info_for_user !!}
             </div>
         </div>
     @endisset

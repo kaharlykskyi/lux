@@ -15,18 +15,11 @@ class STOClients extends Model
         'mileage',
         'vin',
         'data',
-        'sum',
-        'info_for_user',
-        'price_abc',
-        'acceptor',
-        'application_date',
-        'date_compilation',
         'car_name',
         'phone',
-        'place'
     ];
 
-    public function work(){
-        return $this->hasMany(STOWork::class,'sto_clint_id');
+    public function check(){
+        return $this->hasMany(STOСheck::class,'sto_clint_id');
     }
 }

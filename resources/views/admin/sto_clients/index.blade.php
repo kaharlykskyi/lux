@@ -24,7 +24,7 @@
                             <i class="fa fa-refresh" aria-hidden="true"></i>{{__('Обновить данные ФОП')}}</button>
 
                         <button onclick="location.href = '{{route('admin.sto_manager.create')}}'" class="au-btn au-btn-icon au-btn--green au-btn--small">
-                            <i class="zmdi zmdi-plus"></i>{{__('Создать')}}</button>
+                            <i class="zmdi zmdi-plus"></i>{{__('Создать клиента')}}</button>
                     </div>
                 </div>
                 <div class="row m-t-10 m-b-10">
@@ -83,8 +83,7 @@
                         <tr>
                             <th>{{__('ID')}}</th>
                             <th>{{__('ФИО')}}</th>
-                            <th>{{__('№ авто')}}</th>
-                            <th>{{__('Дата')}}</th>
+                            <th>{{__('Телефон')}}</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -96,12 +95,11 @@
                                     <td>
                                         <span class="block-email">{{$client->fio}}</span>
                                     </td>
-                                    <td>{{$client->num_auto}}</td>
-                                    <td>{{$client->data}}</td>
+                                    <td>{{$client->phone}}</td>
                                     <td>
                                         <div class="table-data-feature">
-                                            <button onclick="location.href = '{{route('admin.sto_manager.pdf',$client->id)}}'" class="item" data-toggle="tooltip" data-placement="bottom" title="{{__('Сформировать товарный чек')}}">
-                                                <i class="fa fa-print" aria-hidden="true"></i>
+                                            <button onclick="location.href = '{{route('admin.sto_check_manager.index',['client' => $client->id])}}'" class="item" data-toggle="tooltip" data-placement="bottom" title="{{__('Все чеки')}}">
+                                                <i class="fa fa-th-list" aria-hidden="true"></i>
                                             </button>
                                             <button onclick="location.href = '{{route('admin.sto_manager.edit',$client->id)}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Редактирвать')}}">
                                                 <i class="zmdi zmdi-edit"></i>

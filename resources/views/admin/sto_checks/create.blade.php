@@ -14,19 +14,17 @@
         @endif
 
         <div class="row p-t-10">
-            <div class="col-12 m-b-15">
-                <a href="{{route('admin.sto_manager.index')}}" class="btn btn-success">{{__('Назад')}}</a>
-            </div>
+            @include('admin.component.back')
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{{__('Создание ')}}</strong> {{__('клиента для СТО базы')}}
+                        <strong>{{__('Создание ')}}</strong> {{__('чека')}}
                     </div>
                     <div class="card-body card-block">
-                        <form action="{{route('admin.sto_manager.store')}}" method="post" class="form-horizontal">
+                        <form action="{{route('admin.sto_check_manager.store')}}" method="post" class="form-horizontal">
                             @csrf
 
-                            @include('admin.sto_clients.partrials.form')
+                            @include('admin.sto_checks.partrials.form')
                         </form>
                     </div>
                 </div>

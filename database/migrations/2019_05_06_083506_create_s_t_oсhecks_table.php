@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddDataActWorkToSTOClientsTable extends Migration
+class CreateSTOсhecksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,19 @@ class AddDataActWorkToSTOClientsTable extends Migration
      */
     public function up()
     {
-        Schema::table('s_t_o_clients', function (Blueprint $table) {
+        Schema::create('s_t_o_сhecks', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('sto_clint_id');
             $table->string('acceptor')->nullable();
             $table->date('application_date')->nullable();
             $table->date('date_compilation')->nullable();
-            $table->string('car_name')->nullable();
-            $table->string('phone')->nullable();
             $table->string('place')->nullable();
+            $table->text('info_for_user')->nullable();
+            $table->string('price_abc')->nullable();
+            $table->decimal('sum',9,2)->default(0);
+            $table->timestamps();
+
+            $table->foreign('sto_clint_id')->references('id')->on('s_t_o_clients')->onDelete('CASCADE');
         });
     }
 
@@ -30,8 +36,6 @@ class AddDataActWorkToSTOClientsTable extends Migration
      */
     public function down()
     {
-        Schema::table('s_t_o_clients', function (Blueprint $table) {
-            $table->dropColumn(['acceptor','application_date','date_compilation','car_name','phone','place']);
-        });
+        Schema::dropIfExists('s_t_oсhecks');
     }
 }

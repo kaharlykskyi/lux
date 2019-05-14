@@ -13,13 +13,11 @@
             </div>
         @endif
         <div class="row p-t-10">
-            <div class="col-12 m-b-15">
-                <a href="{{route('admin.sto_manager.index')}}" class="btn btn-success">{{__('Назад')}}</a>
-            </div>
+            @include('admin.component.back')
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{{__('Редактирование ')}}</strong> <em>{{__('запсиси СТО - ' . $sto_client->fio)}}</em>
+                        <strong>{{__('Редактирование ')}}</strong> <em>{{__('клиента СТО - ' . $sto_client->fio)}}</em>
                     </div>
                     <div class="card-body card-block">
                         <form action="{{route('admin.sto_manager.update',$sto_client->id)}}" method="post" class="form-horizontal">

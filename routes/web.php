@@ -135,7 +135,8 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
         'provider' => 'ProviderController',
         'pro_file' => 'ProFileController',
         'home_category' => 'HomeCategoryGroupController',
-        'sto_manager' => 'STOManagerController'
+        'sto_manager' => 'STOManagerController',
+        'sto_check_manager' => 'STOCheackManagerController'
     ],['as' => 'admin']);
     Route::get('/start-import','ProductController@startImport')->name('admin.start_import');
 
@@ -161,7 +162,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     //get incognito file
     Route::get('/incognito-file/{file}','ProductController@incognitoFile')->name('admin.incognito');
     //STO pdf
-    Route::get('/sto-pdf/{clients}','STOManagerController@pdfGenerator')->name('admin.sto_manager.pdf');
+    Route::get('/sto-pdf/{check}','STOCheackManagerController@pdfGenerator')->name('admin.sto_check_manager.pdf');
 
     //MANAGE ALL CATEGORY TREE
     Route::group(['prefix' => 'all-category'],function (){
