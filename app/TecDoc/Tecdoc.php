@@ -768,7 +768,7 @@ class Tecdoc
             ->paginate((int)$pre);
     }
 
-    public function getProductForArticle($str,$pre,array $filter,$sort = 'ASC'){
+    public function getProductForName($str,$pre,array $filter,$sort = 'ASC'){
 
         if (isset($filter['supplier'])){
             foreach ($filter['supplier'] as $k => $item){
@@ -777,10 +777,7 @@ class Tecdoc
         }
         return DB::connection($this->connection)
             ->table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
-            ->orWhere([
-                [DB::raw('p.articles'),'LIKE',"%{$str}%",'OR'],
-                [DB::raw('p.name'),'LIKE',"%{$str}%",'OR']
-            ])
+            ->where(DB::raw('p.name'),'LIKE',"%{$str}%")
             ->where([
                 [DB::raw('p.price'),'>=',$filter['price']['min']],
                 [DB::raw('p.price'),'<=',$filter['price']['max']]

@@ -225,7 +225,7 @@ class CatalogController extends Controller
 
             //$this->attribute = $this->service->getAttributes('search_str',['str' => $request->search_str],$save_filetrs);
 
-            $this->catalog_products = $this->tecdoc->getProductForArticle(trim(strip_tags($request->search_str)),$this->pre_products,[
+            $this->catalog_products = $this->tecdoc->getProductForName(trim(strip_tags($request->search_str)),$this->pre_products,[
                 'price' => [
                     'min' => ($this->min_price->filter_price > 0)?$this->min_price->filter_price:$this->min_price->start_price,
                     'max' => ($this->max_price->filter_price > 0)?$this->max_price->filter_price:$this->max_price->start_price
