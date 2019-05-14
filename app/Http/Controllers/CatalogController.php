@@ -159,9 +159,9 @@ class CatalogController extends Controller
         if ($request->type === 'articles'){
             if ($request->has('supplier')){
                 $list_product_loc = Product::with('provider')
-                    ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers'),'suppliers.matchcode','=','products.brand')
-                    ->where('suppliers.id',(int)$request->supplier)
-                    ->where('products.articles','LIKE',"%$request->search_str%")
+                    ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_numbers'),'article_numbers.DataSupplierArticleNumber','=','products.articles')
+                    ->where('article_numbers.SupplierId',(int)$request->supplier)
+                    ->where('article_numbers.DataSupplierArticleNumber','LIKE',"%$request->search_str%")
                     ->select('products.*')
                     ->orderBy('products.price')
                     ->get();
