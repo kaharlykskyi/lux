@@ -10,7 +10,7 @@
 
             @foreach($home_category as $item)
                 @php $category_tree = explode(',',$item->categories_id) @endphp
-                <div class="row">
+                <div class="row margin-bottom-10">
                     <div class="col-sm-3">
                         <div class="text-right home-category" style="background: {{isset($item->background)?$item->background:'#fff'}};">
                             <h5>{{$item->name}}</h5>

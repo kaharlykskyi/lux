@@ -1026,12 +1026,8 @@ body .modal-content{
 }
 
 #reviewStars-input {
-
-    /*fix floating problems*/
     overflow: hidden;
     *zoom: 1;
-    /*end of fix floating problems*/
-
     position: relative;
     float: left;
 }
@@ -1097,6 +1093,37 @@ body .modal-content{
 
 #ship li{
     list-style: disc;
+}
+
+.list-product-block{
+    display: flex;
+    border: none;
+    border-top: 1px solid #ddd;
+}
+
+.list-product-wrapper{
+    flex-basis: 20%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.list-product-item{
+    flex-basis: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.list-product-item .cart-btn{
+    width: 30px;
+    height: 30px;
+    min-width: 40px;
+    background: #ffe289;
+    border-radius: 4px;
+    display: inline-block;
+    text-align: center;
+    padding: 9px 0;
 }
 
 /*-----SITE PAGE-----*/

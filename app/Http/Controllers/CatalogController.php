@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AllCategoryTree;
+use App\Product;
 use App\Services\Catalog;
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
@@ -157,18 +158,16 @@ class CatalogController extends Controller
     private function getSearchResult($request){
         if ($request->type === 'articles'){
             if ($request->has('supplier')){
-                $list_product_loc = DB::connection($this->tecdoc->connection)
-                    ->table('article_numbers')
-                    ->where('article_numbers.DataSupplierArticleNumber','LIKE',"{$request->search_str}%")
-                    ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),'p.articles','=','article_numbers.DataSupplierArticleNumber')
-                    ->join('suppliers','suppliers.id','=','article_numbers.SupplierId')
-                    ->join(DB::raw(config('database.connections.mysql.database').'.providers'),'providers.id','=','p.provider_id')
+                $list_product_loc = Product::with('provider')
+                    ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers'),'suppliers.matchcode','=','products.brand')
                     ->where('suppliers.id',(int)$request->supplier)
-                    ->select('p.*','providers.name as provider')
-                    ->orderBy('p.price')
+                    ->where('products.articles','LIKE',"%$request->search_str%")
+                    ->select('products.*')
+                    ->orderBy('products.price')
                     ->get();
 
                 $buff_is = [];
+                $this->list_product = [];
                 foreach ($list_product_loc as $item){
                     foreach ($list_product_loc as $val){
                         if ($item->articles === $val->articles && !in_array($val->id,$buff_is)){
@@ -178,25 +177,38 @@ class CatalogController extends Controller
                     }
                 }
 
+                $this->list_product = $this->arrayPaginator($this->list_product,$request,$this->pre_products);
+
                 if (count($this->list_product) === 1){
-                    $product = array_shift($this->list_product);
-                    $this->replace_product = DB::connection($this->tecdoc->connection)
+                    $product = $list_product_loc[0];
+                    $replace_product_loc = DB::connection($this->tecdoc->connection)
                         ->table('article_rn')
-                        ->where('article_rn.replacedatasupplierarticlenumber',$product[0]->articles)
+                        ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),'p.articles','=','article_rn.datasupplierarticlenumber')
+                        ->where('article_rn.replacedatasupplierarticlenumber',$product->articles)
+                        ->select('p.*','article_rn.supplierid as SupplierId')
                         ->get();
+
+                    $buff_is = [];
+                    $this->replace_product = [];
+                    foreach ($replace_product_loc as $item){
+                        foreach ($list_product_loc as $val){
+                            if ($item->articles === $val->articles && !in_array($val->id,$buff_is)){
+                                $buff_is[] = $val->id;
+                                $this->replace_product[$item->articles][] = $val;
+                            }
+                        }
+                    }
                 }
 
             }else{
                 $this->list_catalog = DB::connection($this->tecdoc->connection)
                     ->table('suppliers')
-                    ->select('suppliers.id AS SupplierId','suppliers.matchcode',
-                        DB::raw('(SELECT GROUP_CONCAT(DISTINCT a.NormalizedDescription SEPARATOR ", ") FROM '
-                            .config('database.connections.mysql.database')
-                            .'.products AS p 
-                            JOIN '.config('database.connections.mysql_tecdoc.database')
-                            .'.articles as a ON a.DataSupplierArticleNumber = p.articles
-                             WHERE a.supplierId = suppliers.id AND p.articles LIKE "%'
-                            .$request->search_str.'%") AS NormalizedDescription'))
+                    ->join('article_numbers','article_numbers.SupplierId','=','suppliers.id')
+                    ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),'p.articles','=','article_numbers.DataSupplierArticleNumber')
+                    ->where('article_numbers.DataSupplierArticleNumber','LIKE',"%$request->search_str%")
+                    ->select('suppliers.id AS SupplierId','suppliers.matchcode',DB::raw('COUNT(p.articles) as count'))
+                    ->groupBy('suppliers.id','suppliers.matchcode')
+                    ->having('count','>',0)
                     ->distinct()
                     ->get();
             }
@@ -213,7 +225,7 @@ class CatalogController extends Controller
 
             //$this->attribute = $this->service->getAttributes('search_str',['str' => $request->search_str],$save_filetrs);
 
-            $this->catalog_prfoducts = $this->tecdoc->getProductForArticle(trim(strip_tags($request->search_str)),$this->pre_products,[
+            $this->catalog_products = $this->tecdoc->getProductForArticle(trim(strip_tags($request->search_str)),$this->pre_products,[
                 'price' => [
                     'min' => ($this->min_price->filter_price > 0)?$this->min_price->filter_price:$this->min_price->start_price,
                     'max' => ($this->max_price->filter_price > 0)?$this->max_price->filter_price:$this->max_price->start_price

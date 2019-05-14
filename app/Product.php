@@ -30,4 +30,8 @@ class Product extends Model
     public function comment(){
         return $this->hasMany(ProductComment::class)->orderByDesc('created_at');
     }
+
+    public function provider(){
+        return $this->belongsTo(Provider::class,'provider_id');
+    }
 }

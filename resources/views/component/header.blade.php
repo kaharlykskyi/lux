@@ -20,10 +20,10 @@
                         if ($(this).find('select').val() !== 'vin'){
                             e.preventDefault();
                             const search = encodeURIComponent($(this).find('input[type="search"]').val());
-                            if (search.length > 2){
+                            if (search.length > 1){
                                 location.href = `{{route('catalog',['category' => null])}}?search_str=${search}&type=${$(this).find('select').val()}`;
                             } else{
-                                alert('Длина стоки должна быть больше 2');
+                                alert('Длина стоки должна быть больше 1');
                             }
                         }
                     });
