@@ -183,11 +183,10 @@ class CatalogController extends Controller
                     $product = $list_product_loc[0];
                     $replace_product_loc = DB::connection($this->tecdoc->connection)
                         ->table('article_rn')
-                        ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),'p.articles','=','article_rn.datasupplierarticlenumber')
-                        ->where('article_rn.replacedatasupplierarticlenumber',$product->articles)
+                        ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),'p.articles','=','article_rn.replacedatasupplierarticlenumber')
+                        ->where('article_rn.DataSupplierArticleNumber',$product->articles)
                         ->select('p.*','article_rn.supplierid as SupplierId')
                         ->get();
-
                     $buff_is = [];
                     $this->replace_product = [];
                     foreach ($replace_product_loc as $item){
