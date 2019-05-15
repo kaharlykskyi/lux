@@ -27,7 +27,7 @@
                         </a>
                     </div>
                     <div class="col-sm-6 col-lg-3">
-                        <a href="{{route('admin.orders','new')}}">
+                        <a href="{{route('admin.orders')}}">
                             <div class="overview-item overview-item--c2">
                                 <div class="overview__inner">
                                     <div class="overview-box clearfix">

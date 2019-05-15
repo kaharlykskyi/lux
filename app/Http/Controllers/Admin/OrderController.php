@@ -8,6 +8,7 @@ use App\{Cart,
     OderStatus,
     OrderPay,
     Product,
+    Provider,
     Services\Admin\Order,
     User,
     UserBalance,
@@ -93,9 +94,21 @@ class OrderController extends Controller
     }
 
     public function editOder(Request $request){
-        /*if($request->isMethod('post')){
 
-        }*/
+        if($request->isMethod('post')){
+            $cart_product = new CartProduct();
+            $cart_product->fill([
+                'cart_id' => $request->order,
+                'product_id' => $request->id,
+                'count' => $request->count
+            ]);
+            if ($cart_product->save()){
+                return response()->json('Товар добавлен');
+            }else{
+                return response()->json('Произошла ошибка');
+            }
+        }
+
         Cart::where('id',(int)$request->order)->update(['seen' => 1]);
         $order = Cart::with(['cartProduct','status','client' =>
             function($query){
@@ -103,8 +116,21 @@ class OrderController extends Controller
             }
             ,'payOder'])->find((int)$request->order);
         $order_code = DB::table('oder_status_codes')->get();
+        $providers = Provider::all();
 
-        return view('admin.orders.edit_order',compact('order','order_code'));
+        return view('admin.orders.edit_order',compact('order','order_code','providers'));
+    }
+
+    public function searchProduct(Request $request){
+        $filter = [];
+
+        if (isset($request->provider) && !empty($request->provider)) $filter[] = ['provider_id','=',(int)$request->provider];
+        if (isset($request->name) && !empty($request->name)) $filter[] = ['name','LIKE',"%{$request->name}%"];
+        if (isset($request->article) && !empty($request->article)) $filter[] = ['articles','LIKE',"%{$request->article}%"];
+        if (isset($request->supplier) && !empty($request->supplier)) $filter[] = ['brand','LIKE',"%{$request->supplier}%"];
+        if (isset($request->count) && !empty($request->count)) $filter[] = ['count','>=',(int)$request->count];
+
+        return response()->json(Product::where($filter)->get());
     }
 
     public function stockProductDelivery(Request $request){
