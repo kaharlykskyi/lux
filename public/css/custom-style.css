@@ -1066,6 +1066,17 @@ body .modal-content{
     transform: scale(1.1);
 }
 
+.product-info-icon{
+    margin-left: 20px;
+    background: #ccc;
+    height: 18px;
+    width: 25px;
+    text-align: center;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #0088cc;
+}
+
 #reviewStars-input label:hover, #reviewStars-input label:hover ~ label {
     background-position: 0 -40px;
     height: 40px;

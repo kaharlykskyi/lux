@@ -57,6 +57,7 @@ Route::prefix('product')->group(function () {
     Route::post('/fast-buy/{id}', 'ProductController@fastBuy')->name('fast_buy');
     Route::post('/add-cart/{id}', 'ProductController@addCart')->name('add_cart');
     Route::post('/comment', 'ProductController@writeComment')->middleware(['auth'])->name('product.comment');
+    Route::post('/full-info', 'ProductController@fullInfoProduct')->name('product.full_info');
 });
 /*-----CHECKOUT------*/
 Route::prefix('checkout')->group(function () {

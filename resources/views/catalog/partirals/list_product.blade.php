@@ -28,11 +28,14 @@
                             </div>
                             <div style="flex-basis: 80%;display: flex">
                                 {{$data->name}}
+                                <span onclick="productInfo('{{$data->articles}}','{{$data->supplierId}}')" class="product-info-icon" data-toggle="modal" data-target="#productInfoModal" title="Больше инфи">
+                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                </span>
                             </div>
                         </div>
                         <div class="list-product-wrapper">
                     @endif
-                            <div style="@if($k !== 0) display: none; @endif" class="list-product-item relative @if($k !== 0) prod_{{$data->articles}}@endif">
+                            <div style="@if($k !== 0) display: none; @endif" class="list-product-item relative @if($k !== 0) prod_{{str_replace(' ','_',$data->articles)}}@endif">
                                 <div style="cursor: pointer" onclick="location.href = '{{route('product',str_replace('/','@',($data->articles)))}}?supplierid={{$data->supplierId}}'">
                                     <strong>
                                         {{$data->price}}грн.
@@ -51,7 +54,7 @@
                     @if($k === count($item) - 1)
                              @if(count($item) > 1 && $k === count($item) - 1)
                                  <div class="list-product-item" style="justify-content: flex-end;">
-                                     <span class="small" data-text="скрыть" onclick="moreProduct(this,'.prod_{{$data->articles}}')">ещё предложения({{count($item) - 1}})</span>
+                                     <span class="small" data-text="скрыть" onclick="moreProduct(this,'.prod_{{str_replace(' ','_',$data->articles)}}')">ещё предложения({{count($item) - 1}})</span>
                                  </div>
                              @endif
                         </div>
@@ -110,7 +113,7 @@
                             @if($k === count($item) - 1)
                                 @if(count($item) > 1 && $k === count($item) - 1)
                                     <div class="list-product-item" style="justify-content: flex-end;">
-                                        <span class="small" data-text="скрыть" onclick="moreProduct(this,'.prod_{{$data->articles}}')">ещё предложения({{count($item) - 1}})</span>
+                                        <span class="small" data-text="скрыть" onclick="moreProduct(this,'.prod_{{str_replace(' ','_',$data->articles)}}')">ещё предложения({{count($item) - 1}})</span>
                                     </div>
                                 @endif
                         </div>
@@ -125,6 +128,8 @@
     </ul>
 
 @endif
+
+@include('catalog.partirals.pruduct_info_modal')
 
 <script>
     function moreProduct(obj,id) {

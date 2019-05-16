@@ -23,12 +23,7 @@ class ProductController extends Controller
     public function index(Request $request){
         $request->alias = str_replace('@','/',$request->alias);
         if(!isset($request->supplierid)){
-            $duff = DB::connection('mysql_tecdoc')->select("SELECT supplierId FROM articles WHERE DataSupplierArticleNumber='{$request->alias}' OR FoundString='{$request->alias}'");
-            if (isset($duff[0])){
-                $request->supplierid = $duff[0]->supplierId;
-            }else{
-                $request->supplierid = null;
-            }
+            $request->supplierid = $this->getSupplier($request->alias);
         }
 
         if (isset($request->supplierid)){
@@ -62,5 +57,36 @@ class ProductController extends Controller
 
     public function writeComment(Request $request){
         return response()->json($this->service->setProductComment($request->except('_token'),Auth::id(),Auth::user()->name));
+    }
+
+    public function fullInfoProduct(Request $request){
+        if(!isset($request->supplier)){
+            $request->supplier = $this->getSupplier($request->article);
+        }
+
+        $product = Product::with('comment')->where('articles', $request->article)->first();
+
+        if (isset($request->supplier)){
+            $product_vehicles = $this->tecdoc->getArtVehicles($request->article,$request->supplier);
+            $product_attr = $this->tecdoc->getArtAttributes($request->article,$request->supplier);
+            $files = $this->tecdoc->getArtFiles($request->article,$request->supplier);
+        }
+
+        return response()->json([
+            'product' => $product,
+            'file' => isset($files[0])?$files[0]:null,
+            'sup' => $request->supplier,
+            'attr' => !empty($product_attr)?$product_attr:null,
+            'vehicles' => !empty($product_vehicles)?$product_vehicles:null
+        ]);
+    }
+
+    protected function getSupplier($article){
+        $duff = DB::connection('mysql_tecdoc')->select("SELECT supplierId FROM articles WHERE DataSupplierArticleNumber='{$article}'");
+        if (isset($duff[0])){
+            return $duff[0]->supplierId;
+        }else{
+            return null;
+        }
     }
 }
