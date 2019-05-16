@@ -150,7 +150,7 @@ function urlRusLat(str) {
 
 
 
-function getCarsDetail(type_auto,year_auto,brand_auto,model_auto,modification_auto,engine_auto,body_auto,token,name,interval,link) {
+function getCarsDetail(type_auto,year_auto,brand_auto,model_auto,modification_auto,token,name,interval,link) {
     $('#search_cars_modal').modal('hide');
     $('#search-detail-car-form .search-car__list').hide();
     $('#search-detail-car').hide();
@@ -225,8 +225,6 @@ function getCarsDetail(type_auto,year_auto,brand_auto,model_auto,modification_au
         'brand_auto': brand_auto,
         'model_auto': model_auto,
         'modification_auto': modification_auto,
-        'engine_auto': engine_auto,
-        'body_auto': body_auto,
         '_token': token
     },function (data) {
         $('#root-category-modification').html(makeTemplateCategoryCar(data,modification_auto,type_auto));

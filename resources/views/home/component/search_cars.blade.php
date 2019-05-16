@@ -12,7 +12,7 @@
                             <button class="delete-car-btn" onclick="deleteCarModal('{{$item['cookie']['modification_auto']}}',{{$k}})" title="{{__('Удалить машину')}}">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                             </button>
-                            <button type="button" class="list-group-item" onclick="getCarsDetail('{{$item['cookie']['type_auto']}}','{{$item['cookie']['year_auto']}}','{{$item['cookie']['brand_auto']}}','{{$item['cookie']['model_auto']}}','{{$item['cookie']['modification_auto']}}','{{$item['cookie']['engine_auto']}}','{{$item['cookie']['body_auto']}}','{{csrf_token()}}','{{$item['data'][0]->name}}','{{$item['data'][0]->displayvalue}}','{{route('modification_info')}}')">
+                            <button type="button" class="list-group-item" onclick="getCarsDetail('{{$item['cookie']['type_auto']}}','{{$item['cookie']['year_auto']}}','{{$item['cookie']['brand_auto']}}','{{$item['cookie']['model_auto']}}','{{$item['cookie']['modification_auto']}}','{{csrf_token()}}','{{$item['data'][0]->name}}','{{$item['data'][0]->displayvalue}}','{{route('modification_info')}}')">
                                 {{$item['data'][0]->name}}
                                 <br><span class="small">{{$item['data'][0]->displayvalue}}</span>
                                 <img style="float:right;width: 100px;" src="https://yii.dbroker.com.ua/img/all_cars/{{$item['cookie']['model_auto']}}f.png" alt="{{$item['data'][0]->name}}">
