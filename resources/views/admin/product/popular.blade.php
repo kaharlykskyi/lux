@@ -8,7 +8,7 @@
                 <h3 class="title-5 m-b-35 m-t-15">{{__('Популярные товары')}}</h3>
             </div>
             <div class="col-12">
-                @component('admin.product.partrials.filter',['link' => route('admin.product.popular')]) @endcomponent
+                @component('admin.product.partrials.filter',['link' => route('admin.product.popular'),'providers' => $providers]) @endcomponent
             </div>
             <div class="col-md-12">
                 <div class="table-responsive table--no-card m-b-30">

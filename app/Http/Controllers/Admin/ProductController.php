@@ -32,19 +32,8 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $filter = [];
 
-        if (isset($request->prov_min_price) && !empty($request->prov_min_price)) $filter[] = ['provider_price','>=',(int)$request->prov_min_price];
-        if (isset($request->prov_max_price) && !empty($request->prov_max_price)) $filter[] = ['provider_price','<=',(int)$request->prov_max_price];
-        if (isset($request->min_price) && !empty($request->min_price)) $filter[] = ['price','>=',(int)$request->min_price];
-        if (isset($request->max_price) && !empty($request->max_price)) $filter[] = ['price','<=',(int)$request->max_price];
-        if (isset($request->provider) && !empty($request->provider)) $filter[] = ['provider_id','=',(int)$request->provider];
-        if (isset($request->name) && !empty($request->name)) $filter[] = ['name','LIKE',"%{$request->name}%"];
-        if (isset($request->article) && !empty($request->article)) $filter[] = ['articles','LIKE',"%{$request->article}%"];
-        if (isset($request->supplier) && !empty($request->supplier)) $filter[] = ['brand','LIKE',"%{$request->supplier}%"];
-        if (isset($request->count) && !empty($request->count)) $filter[] = ['count','>=',(int)$request->count];
-
-        $products = Product::where($filter)
+        $products = Product::where($this->filterProduct($request))
             ->paginate(80);
         $providers = Provider::all();
         return view('admin.product.index',compact('products','providers'));
@@ -227,17 +216,34 @@ class ProductController extends Controller
     }
 
     public function popularProduct(Request $request){
+
         $popular_products = DB::table('cart_products')
             ->join('products','products.id','=','cart_products.product_id')
-            ->where('products.brand','LIKE',isset($request->supplier)?"%{$request->supplier}%":'%%')
-            ->where('products.articles','LIKE',isset($request->article)?"%{$request->article}%":'%%')
-            ->where('products.name','LIKE',isset($request->name)?"%{$request->name}%":'%%')
+            ->where($this->filterProduct($request))
             ->select('products.*',DB::raw('COUNT(cart_products.product_id) AS count_bay'))
             ->groupBy('cart_products.product_id')
             ->distinct()
             ->orderByDesc('count_bay')
             ->paginate(50);
 
-        return view('admin.product.popular',compact('popular_products'));
+        $providers = Provider::all();
+
+        return view('admin.product.popular',compact('popular_products','providers'));
+    }
+
+    protected function filterProduct($request){
+        $filter = [];
+
+        if (isset($request->prov_min_price) && !empty($request->prov_min_price)) $filter[] = ['provider_price','>=',(int)$request->prov_min_price];
+        if (isset($request->prov_max_price) && !empty($request->prov_max_price)) $filter[] = ['provider_price','<=',(int)$request->prov_max_price];
+        if (isset($request->min_price) && !empty($request->min_price)) $filter[] = ['price','>=',(int)$request->min_price];
+        if (isset($request->max_price) && !empty($request->max_price)) $filter[] = ['price','<=',(int)$request->max_price];
+        if (isset($request->provider) && !empty($request->provider)) $filter[] = ['provider_id','=',(int)$request->provider];
+        if (isset($request->name) && !empty($request->name)) $filter[] = ['name','LIKE',"%{$request->name}%"];
+        if (isset($request->article) && !empty($request->article)) $filter[] = ['articles','LIKE',"%{$request->article}%"];
+        if (isset($request->supplier) && !empty($request->supplier)) $filter[] = ['brand','LIKE',"%{$request->supplier}%"];
+        if (isset($request->count) && !empty($request->count)) $filter[] = ['count','>=',(int)$request->count];
+
+        return $filter;
     }
 }
