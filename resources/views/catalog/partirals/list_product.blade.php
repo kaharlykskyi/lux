@@ -3,8 +3,12 @@
     <ul class="list-group">
         @forelse($list_catalog as $item)
             <a href="{{route('catalog')}}?search_str={{request('search_str')}}&type={{request('type')}}&supplier={{$item->SupplierId}}" class="list-group-item">
-                <span class="badge">{{$item->count}}</span>
-                <strong>{{$item->matchcode}}</strong>
+                <div style="display: flex;">
+                    <strong style="flex-basis: 25%;">{{$item->matchcode}}</strong>
+                    @if($item->count === 1)
+                        <span style="flex-basis: 85%;">{{$item->product_name}}</span>
+                    @endif
+                </div>
             </a>
         @empty
             <li class="list-group-item">
@@ -28,7 +32,7 @@
                             </div>
                             <div style="flex-basis: 80%;display: flex">
                                 {{$data->name}}
-                                <span onclick="productInfo('{{$data->articles}}','{{$data->supplierId}}')" class="product-info-icon" data-toggle="modal" data-target="#productInfoModal" title="Больше инфи">
+                                <span onclick="productInfo('{{$data->articles}}' @isset($data->supplierId) ,'{{$data->supplierId}}' @endisset )" class="product-info-icon" data-toggle="modal" data-target="#productInfoModal" title="Больше инфи">
                                     <i class="fa fa-info-circle" aria-hidden="true"></i>
                                 </span>
                             </div>
@@ -36,7 +40,7 @@
                         <div class="list-product-wrapper">
                     @endif
                             <div style="@if($k !== 0) display: none; @endif" class="list-product-item relative @if($k !== 0) prod_{{str_replace(' ','_',$data->articles)}}@endif">
-                                <div style="cursor: pointer" onclick="location.href = '{{route('product',str_replace('/','@',($data->articles)))}}?supplierid={{$data->supplierId}}'">
+                                <div style="cursor: pointer" onclick="location.href = '{{route('product',str_replace('/','@',($data->articles)))}} @isset($data->supplierId)?supplierid={{$data->supplierId}}@endisset'">
                                     <strong>
                                         {{$data->price}}грн.
                                     </strong>
@@ -90,12 +94,15 @@
                             </div>
                             <div style="flex-basis: 80%;display: flex">
                                 {{$data->name}}
+                                <span onclick="productInfo('{{$data->articles}}','{{$data->SupplierId}}')" class="product-info-icon" data-toggle="modal" data-target="#productInfoModal" title="Больше инфи">
+                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                </span>
                             </div>
                         </div>
                         <div class="list-product-wrapper">
                             @endif
                             <div style="@if($k !== 0) display: none; @endif" class="list-product-item relative @if($k !== 0) prod_{{$data->articles}}@endif">
-                                <div style="cursor: pointer" onclick="location.href = '{{route('product',str_replace('/','@',($data->articles)))}}?supplierid={{$data->supplierId}}'">
+                                <div style="cursor: pointer" onclick="location.href = '{{route('product',str_replace('/','@',($data->articles)))}}?supplierid={{$data->SupplierId}}'">
                                     <strong>
                                         {{$data->price}}грн.
                                     </strong>

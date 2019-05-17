@@ -1066,6 +1066,10 @@ body .modal-content{
     transform: scale(1.1);
 }
 
+#nothing-found{
+    display: none !important;
+}
+
 .product-info-icon{
     margin-left: 20px;
     background: #ccc;
