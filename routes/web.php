@@ -83,6 +83,7 @@ Route::post('/vin-decode/catalog/ajax-data','VinDecodeController@ajaxData')->nam
 Route::match(['get', 'post'],'/catalog/{category?}','CatalogController@index')->name('catalog');
 Route::get('/get-subcategory', 'HomeController@subcategory')->name('get_subcategory');
 Route::get('/filter', 'CatalogController@filter')->name('filter');
+Route::get('/alternate/{article}', 'CatalogController@replaceProducts')->name('alternate');
 
 /*!!--------ADMIN--------!!*/
 Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth','permission']],function (){

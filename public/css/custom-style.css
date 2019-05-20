@@ -1070,6 +1070,16 @@ body .modal-content{
     display: none !important;
 }
 
+.alternate-link{
+    margin-left: 10px;
+    background: #cccccc63;
+    display: block;
+    height: 18px;
+    line-height: 1.2;
+    padding: 0 5px;
+    border-radius: 8px;
+}
+
 .product-info-icon{
     margin-left: 20px;
     background: #ccc;

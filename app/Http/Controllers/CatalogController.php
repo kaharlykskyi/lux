@@ -179,10 +179,6 @@ class CatalogController extends Controller
 
                 $this->list_product = $this->arrayPaginator($this->list_product,$request,$this->pre_products);
 
-                if (count($this->list_product) === 1){
-                    $this->getReplaceProducts($list_product_loc[0]->articles);
-                }
-
             }else{
                 $this->getProduct([
                     ['products.articles','=',$request->search_str]
@@ -190,9 +186,6 @@ class CatalogController extends Controller
 
                 if (count($this->list_product) === 1){
                     $this->list_product = $this->arrayPaginator($this->list_product,$request,$this->pre_products);
-                    foreach ($this->list_product as $item) $buff = $item;
-                    $this->getReplaceProducts($buff[0]->articles);
-
                 } else{
                     $this->list_catalog = DB::connection($this->tecdoc->connection)
                         ->table('suppliers')
@@ -237,7 +230,7 @@ class CatalogController extends Controller
     protected function getProduct($filter = []){
         $list_product_loc = Product::with('provider')
             ->where($filter)
-            ->select('products.*')
+            ->select('products.*',DB::raw("(SELECT s.id FROM " . config('database.connections.mysql_tecdoc.database').".suppliers AS s WHERE s.matchcode=products.brand) AS supplierId"))
             ->orderBy('products.price')
             ->get();
 
@@ -253,13 +246,21 @@ class CatalogController extends Controller
         }
     }
 
-    protected function getReplaceProducts($articles){
+    protected function replaceProducts(Request $request){
+        $filter = [];
+
+        if (isset($request->article) && !empty($request->article)) $filter[] = ['article_oe.DataSupplierArticleNumber','=',$request->article];
+        if (isset($request->supplierId) && !empty($request->supplierId)) $filter[] = ['article_oe.SupplierId','=',(int)$request->supplierId];
+
         $replace_product_loc = DB::connection($this->tecdoc->connection)
             ->table('article_oe')
-            ->join('article_cross','article_cross.OENbr','=','article_oe.OENbr')
+            ->join('article_cross',function ($query){
+                $query->on('article_cross.OENbr','=','article_oe.OENbr');
+                $query->on('article_cross.manufacturerId','=','article_oe.manufacturerId');
+            })
             ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),'p.articles','=','article_cross.PartsDataSupplierArticleNumber')
-            ->where('article_oe.DataSupplierArticleNumber','=',$articles)
-            ->where('p.articles','<>',$articles)
+            ->where($filter)
+            ->where('p.articles','<>',$request->article)
             ->select('p.*','article_cross.SupplierId')
             ->get();
 
@@ -273,5 +274,8 @@ class CatalogController extends Controller
                 }
             }
         }
+        return view('catalog.replace_products')->with([
+            'replace_product' => $this->replace_product
+        ]);
     }
 }
