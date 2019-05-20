@@ -35,7 +35,7 @@
                                 <span onclick="productInfo('{{$data->articles}}' @isset($data->supplierId) ,'{{$data->supplierId}}' @endisset )" class="product-info-icon" data-toggle="modal" data-target="#productInfoModal" title="Больше инфи">
                                     <i class="fa fa-info-circle" aria-hidden="true"></i>
                                 </span>
-                                <a class="alternate-link" href="{{route('alternate',['article' => $data->articles,'supplierId' =>isset($data->supplierId)?$data->supplierId:''])}}">аналоги</a>
+                                @isset($data->supplierId)<a class="alternate-link" href="{{route('alternate',['article' => $data->articles,'supplierId' => $data->supplierId])}}">аналоги</a>@endisset
                             </div>
                         </div>
                         <div class="list-product-wrapper">
