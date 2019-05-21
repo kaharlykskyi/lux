@@ -122,9 +122,14 @@ class Catalog
         return DB::connection($connection)
             ->table('articles')
             ->join('suppliers','suppliers.id','=','articles.supplierId')
+            ->leftJoin(DB::raw(config('database.connections.mysql.database') . '.products AS p'),function ($query){
+                $query->on('p.articles','=','articles.NormalizedDescription')
+                    ->orOn('p.articles','=','articles.FoundString');
+                $query->on('p.brand','=','suppliers.matchcode');
+            })
             ->where('articles.DataSupplierArticleNumber',$article)
             ->orWhere('articles.FoundString',$article)
-            ->select('articles.DataSupplierArticleNumber','suppliers.id AS supplierId','suppliers.matchcode','articles.NormalizedDescription')
+            ->select('articles.DataSupplierArticleNumber','suppliers.id AS supplierId','suppliers.matchcode','articles.NormalizedDescription','p.brand','p.name')
             ->distinct()
             ->get();
     }
@@ -132,9 +137,10 @@ class Catalog
     public function getCatalogProduct($article,$supplerId){
         $list_product_loc = Product::with('provider')
             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_numbers'),'article_numbers.DataSupplierArticleNumber','=','products.articles')
+            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers'),'suppliers.id','=','article_numbers.SupplierId')
             ->where('article_numbers.SupplierId',(int)$supplerId)
             ->where('article_numbers.DataSupplierArticleNumber',$article)
-            ->select('products.*','article_numbers.SupplierId AS supplierId')
+            ->select('products.*','suppliers.id AS supplierId','suppliers.matchcode')
             ->orderBy('products.price')
             ->get();
 

@@ -2,11 +2,11 @@
     <h4>{{__('Выбор производителя:')}}</h4>
     <ul class="list-group">
         @forelse($list_catalog as $item)
-            <a href="{{route('catalog')}}?search_str={{$item->DataSupplierArticleNumber}}&type={{request('type')}}&supplier={{$item->supplierId}}" class="list-group-item">
+            <a href="{{route('catalog')}}?search_str={{isset($item->articles)?$item->articles:$item->DataSupplierArticleNumber}}&type={{request('type')}}&supplier={{$item->supplierId}}" class="list-group-item">
                 <div style="display: flex;">
-                    <span style="flex-basis: 25%;"><strong>{{$item->matchcode}}</strong> - <span class="text-info">{{$item->DataSupplierArticleNumber}}</span></span>
+                    <span style="flex-basis: 25%;"><strong>{{isset($item->brand)?$item->brand:$item->matchcode}}</strong> - <span class="text-info">{{isset($item->articles)?$item->articles:$item->DataSupplierArticleNumber}}</span></span>
 
-                    <span style="flex-basis: 85%;">{{$item->NormalizedDescription}}</span>
+                    <span style="flex-basis: 85%;">{{isset($item->name)?$item->name:$item->NormalizedDescription}}</span>
                 </div>
             </a>
         @empty
@@ -18,7 +18,7 @@
 @elseif(isset($list_product))
     <ul class="list-group margin-bottom-10">
         <li class="list-group-item active">
-            Запрашиваемый артикл
+            Запрашиваемый артикл - {{request('search_str')}}
         </li>
         @forelse($list_product as $item)
             <div class="list-group-item list-product-block">
@@ -28,7 +28,7 @@
                         <div style="flex-basis: 80%;display: flex">
                             <div style="flex-basis: 20%;display: flex">
                                 <div>
-                                    {{$data->brand}}
+                                    {{($data->brand === $data->matchcode)?$data->brand:$data->matchcode}}
                                     <br><span class="text-info">{{$data->articles}}</span>
                                 </div>
                             </div>
