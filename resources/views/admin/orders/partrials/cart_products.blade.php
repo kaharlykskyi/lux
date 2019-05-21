@@ -36,7 +36,7 @@
                         @endphp
                         <span class="small">{{$provider_price}}грн.</span>
                     </td>
-                    <td>{{$item->count}}</td>
+                    <td>{{$item->pivot['count']}}</td>
                 </tr>
             @endforeach
             </tbody>

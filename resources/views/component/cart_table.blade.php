@@ -79,7 +79,7 @@
 </div>
 
 <h6 class="text-right text-black text-uppercase">{{__('Общая сумма: ')}}
-    <span>
+    <span id="total-price-modal">
                 @php
                     $sum = 0.00;
                         if (isset($products)){
