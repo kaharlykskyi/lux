@@ -162,7 +162,7 @@ class CatalogController extends Controller
                     ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_numbers'),'article_numbers.DataSupplierArticleNumber','=','products.articles')
                     ->where('article_numbers.SupplierId',(int)$request->supplier)
                     ->where('article_numbers.DataSupplierArticleNumber','LIKE',"%$request->search_str%")
-                    ->select('products.*')
+                    ->select('products.*','article_numbers.SupplierId AS supplierId')
                     ->orderBy('products.price')
                     ->get();
 

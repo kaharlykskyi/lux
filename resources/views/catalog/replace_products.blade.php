@@ -10,7 +10,10 @@
                     @if($k === 0)
                         <div style="flex-basis: 80%;display: flex">
                             <div style="flex-basis: 20%;display: flex">
-                                {{$data->brand}}
+                                <div>
+                                    {{$data->brand}}
+                                    <br><span class="text-info">{{$data->articles}}</span>
+                                </div>
                             </div>
                             <div style="flex-basis: 80%;display: flex">
                                 {{$data->name}}
