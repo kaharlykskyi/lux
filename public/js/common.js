@@ -634,17 +634,3 @@ function getAllInfoVinDecode(link) {
     $('#form_vin_decode_page').submit();
     return false;
 }
-
-function getReplaceProduct(link) {
-    $('#replace-product-block').html(`
-        <ul class="list-group margin-bottom-10">
-            <li class="list-group-item active">
-                Предложения по заменителям
-            </li>
-            <li class="list-group-item"><p class="text-center"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></p></li>                   
-        </ul>
-    `);
-    $.get(link,function (data) {
-        $('#replace-product-block').html(data);
-    });
-}

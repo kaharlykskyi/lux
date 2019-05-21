@@ -3,6 +3,7 @@
 namespace App\Services;
 
 
+use App\Product;
 use Illuminate\Support\Facades\DB;
 
 class Catalog
@@ -114,5 +115,77 @@ class Catalog
         }
 
         return $parse_filter_data;
+    }
+
+
+    public function brandCatalog($article,$connection = 'mysql'){
+        return DB::connection($connection)
+            ->table('articles')
+            ->join('suppliers','suppliers.id','=','articles.supplierId')
+            ->where('articles.DataSupplierArticleNumber',$article)
+            ->orWhere('articles.FoundString',$article)
+            ->select('articles.DataSupplierArticleNumber','suppliers.id AS supplierId','suppliers.matchcode','articles.NormalizedDescription')
+            ->distinct()
+            ->get();
+    }
+
+    public function getCatalogProduct($article,$supplerId){
+        $list_product_loc = Product::with('provider')
+            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_numbers'),'article_numbers.DataSupplierArticleNumber','=','products.articles')
+            ->where('article_numbers.SupplierId',(int)$supplerId)
+            ->where('article_numbers.DataSupplierArticleNumber',$article)
+            ->select('products.*','article_numbers.SupplierId AS supplierId')
+            ->orderBy('products.price')
+            ->get();
+
+        $buff_is = [];
+        $list_product_loc_sort = [];
+        foreach ($list_product_loc as $item){
+            foreach ($list_product_loc as $val){
+                if ($item->articles === $val->articles && !in_array($val->id,$buff_is)){
+                    $buff_is[] = $val->id;
+                    $list_product_loc_sort[$item->articles][] = $val;
+                }
+            }
+        }
+
+        return $list_product_loc_sort;
+    }
+
+    public function replaceProducts($article,$supplerId,$connection = 'mysql'){
+        $filter = [
+            ['article_oe.DataSupplierArticleNumber','=',$article],
+            ['article_oe.SupplierId','=',(int)$supplerId]
+        ];
+
+        $replace_product_loc = DB::connection($connection)
+            ->table('article_oe')
+            ->join('article_cross',function ($query){
+                $query->on('article_cross.OENbr','=','article_oe.OENbr');
+                $query->on('article_cross.manufacturerId','=','article_oe.manufacturerId');
+            })
+            ->join('article_links',function ($query){
+                $query->on('article_links.SupplierId','=','article_cross.SupplierId');
+                $query->on('article_links.DataSupplierArticleNumber','=','article_cross.PartsDataSupplierArticleNumber');
+            })
+            ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),'p.articles','=','article_cross.PartsDataSupplierArticleNumber')
+            ->where($filter)
+            ->where('p.articles','<>',$article)
+            ->select('p.*','article_cross.SupplierId')
+            ->distinct()
+            ->get();
+
+        $buff_is = [];
+        $replace_product_loc_sort = [];
+        foreach ($replace_product_loc as $item){
+            foreach ($replace_product_loc as $val){
+                if ($item->articles === $val->articles && !in_array($val->id,$buff_is)){
+                    $buff_is[] = $val->id;
+                    $replace_product_loc_sort[$item->articles][] = $val;
+                }
+            }
+        }
+
+        return $replace_product_loc_sort;
     }
 }

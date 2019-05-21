@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\AllCategoryTree;
-use App\Product;
 use App\Services\Catalog;
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class CatalogController extends Controller
 {
@@ -157,52 +155,12 @@ class CatalogController extends Controller
 
     private function getSearchResult($request){
         if ($request->type === 'articles'){
+
             if ($request->has('supplier')){
-                $list_product_loc = Product::with('provider')
-                    ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_numbers'),'article_numbers.DataSupplierArticleNumber','=','products.articles')
-                    ->where('article_numbers.SupplierId',(int)$request->supplier)
-                    ->where('article_numbers.DataSupplierArticleNumber','LIKE',"%$request->search_str%")
-                    ->select('products.*','article_numbers.SupplierId AS supplierId')
-                    ->orderBy('products.price')
-                    ->get();
-
-                $buff_is = [];
-                $this->list_product = [];
-                foreach ($list_product_loc as $item){
-                    foreach ($list_product_loc as $val){
-                        if ($item->articles === $val->articles && !in_array($val->id,$buff_is)){
-                            $buff_is[] = $val->id;
-                            $this->list_product[$item->articles][] = $val;
-                        }
-                    }
-                }
-
-                $this->list_product = $this->arrayPaginator($this->list_product,$request,$this->pre_products);
-
+                $this->list_product = $this->service->getCatalogProduct($request->search_str,$request->supplier);
+                $this->replace_product = $this->service->replaceProducts($request->search_str,$request->supplier,$this->tecdoc->connection);
             }else{
-                $this->getProduct([
-                    ['products.articles','=',$request->search_str]
-                ]);
-
-                if (count($this->list_product) === 1){
-                    $this->list_product = $this->arrayPaginator($this->list_product,$request,$this->pre_products);
-                } else{
-                    $this->list_catalog = DB::connection($this->tecdoc->connection)
-                        ->table('suppliers')
-                        ->join('article_numbers','article_numbers.SupplierId','=','suppliers.id')
-                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
-                            $query->on('p.articles','=','article_numbers.DataSupplierArticleNumber');
-                            $query->on('p.brand','=','suppliers.matchcode');
-                        })
-                        ->where('article_numbers.DataSupplierArticleNumber','LIKE',"%$request->search_str%")
-                        ->select('suppliers.id AS SupplierId','suppliers.matchcode',
-                            DB::raw('(SELECT p2.name FROM '.config('database.connections.mysql.database').
-                                '.products AS p2 WHERE p2.articles LIKE "%'.$request->search_str.'%" AND p2.brand = suppliers.matchcode LIMIT 1) as product_name'),
-                            DB::raw('COUNT(p.articles) AS count'))
-                        ->groupBy('suppliers.id','suppliers.matchcode','product_name')
-                        ->distinct()
-                        ->get();
-                }
+                $this->list_catalog = $this->service->brandCatalog($request->search_str,$this->tecdoc->connection);
             }
 
         } elseif ($request->type === 'name'){
@@ -227,60 +185,4 @@ class CatalogController extends Controller
         }
     }
 
-    protected function getProduct($filter = []){
-        $list_product_loc = Product::with('provider')
-            ->where($filter)
-            ->select('products.*',DB::raw("(SELECT s.id FROM " . config('database.connections.mysql_tecdoc.database').".suppliers AS s WHERE s.matchcode=products.brand) AS supplierId"))
-            ->orderBy('products.price')
-            ->get();
-
-        $buff_is = [];
-        $this->list_product = [];
-        foreach ($list_product_loc as $item){
-            foreach ($list_product_loc as $val){
-                if ($item->articles === $val->articles && !in_array($val->id,$buff_is)){
-                    $buff_is[] = $val->id;
-                    $this->list_product[$item->articles][] = $val;
-                }
-            }
-        }
-    }
-
-    protected function replaceProducts(Request $request){
-        $filter = [];
-
-        if (isset($request->article) && !empty($request->article)) $filter[] = ['article_oe.DataSupplierArticleNumber','=',$request->article];
-        if (isset($request->supplierId) && !empty($request->supplierId)) $filter[] = ['article_oe.SupplierId','=',(int)$request->supplierId];
-
-        $replace_product_loc = DB::connection($this->tecdoc->connection)
-            ->table('article_oe')
-            ->join('article_cross',function ($query){
-                $query->on('article_cross.OENbr','=','article_oe.OENbr');
-                $query->on('article_cross.manufacturerId','=','article_oe.manufacturerId');
-            })
-            ->join('article_links',function ($query){
-                $query->on('article_links.SupplierId','=','article_cross.SupplierId');
-                $query->on('article_links.DataSupplierArticleNumber','=','article_cross.PartsDataSupplierArticleNumber');
-            })
-            ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),'p.articles','=','article_cross.PartsDataSupplierArticleNumber')
-            ->where($filter)
-            ->where('p.articles','<>',$request->article)
-            ->select('p.*','article_cross.SupplierId')
-            ->distinct()
-            ->get();
-
-        $buff_is = [];
-        $this->replace_product = [];
-        foreach ($replace_product_loc as $item){
-            foreach ($replace_product_loc as $val){
-                if ($item->articles === $val->articles && !in_array($val->id,$buff_is)){
-                    $buff_is[] = $val->id;
-                    $this->replace_product[$item->articles][] = $val;
-                }
-            }
-        }
-        return view('catalog.replace_products')->with([
-            'replace_product' => $this->replace_product
-        ]);
-    }
 }
