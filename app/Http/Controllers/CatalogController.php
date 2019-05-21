@@ -261,7 +261,6 @@ class CatalogController extends Controller
             ->join('article_links',function ($query){
                 $query->on('article_links.SupplierId','=','article_cross.SupplierId');
                 $query->on('article_links.DataSupplierArticleNumber','=','article_cross.PartsDataSupplierArticleNumber');
-                //$query->on('article_links.linkageid','=','article_oe.manufacturerId');
             })
             ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),'p.articles','=','article_cross.PartsDataSupplierArticleNumber')
             ->where($filter)

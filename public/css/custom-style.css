@@ -1078,6 +1078,7 @@ body .modal-content{
     line-height: 1.2;
     padding: 0 5px;
     border-radius: 8px;
+    border: none;
 }
 
 .product-info-icon{
