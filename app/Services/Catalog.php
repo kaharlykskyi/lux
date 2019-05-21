@@ -122,25 +122,23 @@ class Catalog
         return DB::connection($connection)
             ->table('articles')
             ->join('suppliers','suppliers.id','=','articles.supplierId')
-            ->leftJoin(DB::raw(config('database.connections.mysql.database') . '.products AS p'),function ($query){
-                $query->on('p.articles','=','articles.NormalizedDescription')
+            ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),function ($query){
+                $query->on('p.articles','=','articles.DataSupplierArticleNumber')
                     ->orOn('p.articles','=','articles.FoundString');
                 $query->on('p.brand','=','suppliers.matchcode');
             })
             ->where('articles.DataSupplierArticleNumber',$article)
             ->orWhere('articles.FoundString',$article)
-            ->select('articles.DataSupplierArticleNumber','suppliers.id AS supplierId','suppliers.matchcode','articles.NormalizedDescription','p.brand','p.name')
-            ->distinct()
+            ->select('p.articles','suppliers.id AS supplierId','p.brand','p.name')
             ->get();
     }
 
     public function getCatalogProduct($article,$supplerId){
         $list_product_loc = Product::with('provider')
             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_numbers'),'article_numbers.DataSupplierArticleNumber','=','products.articles')
-            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers'),'suppliers.id','=','article_numbers.SupplierId')
             ->where('article_numbers.SupplierId',(int)$supplerId)
             ->where('article_numbers.DataSupplierArticleNumber',$article)
-            ->select('products.*','suppliers.id AS supplierId','suppliers.matchcode')
+            ->select('products.*','article_numbers.SupplierId')
             ->orderBy('products.price')
             ->get();
 
@@ -175,9 +173,10 @@ class Catalog
                 $query->on('article_links.DataSupplierArticleNumber','=','article_cross.PartsDataSupplierArticleNumber');
             })
             ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),'p.articles','=','article_cross.PartsDataSupplierArticleNumber')
+            ->join(DB::raw(config('database.connections.mysql.database') . '.providers'),'providers.id','=','p.provider_id')
             ->where($filter)
             ->where('p.articles','<>',$article)
-            ->select('p.*','article_cross.SupplierId')
+            ->select('p.*','article_cross.SupplierId','providers.name AS provider_name')
             ->distinct()
             ->get();
 

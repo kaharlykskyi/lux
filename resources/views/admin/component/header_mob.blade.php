@@ -109,24 +109,18 @@
                         </li>
                     </ul>
                 </li>
-                <li class="has-sub">
-                    <a class="js-arrow" href="#">
-                        <i class="zmdi zmdi-shopping-cart"></i>{{__('Заказы')}}</a>
-                    <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
-                        <li>
-                            <a href="{{route('admin.orders')}}">
-                                {{__('Заказы')}}
-                                @if(isset($count_new_orders_global) && $count_new_orders_global > 0)
-                                    (<span class="text-danger">{{$count_new_orders_global}}</span>)
-                                @endif
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{route('admin.fast_buy','new')}}">
-                                {{__('Быстрая покупка')}}
-                            </a>
-                        </li>
-                    </ul>
+                <li>
+                    <a href="{{route('admin.orders')}}">
+                        <i class="zmdi zmdi-shopping-cart"></i>{{__('Заказы')}}
+                        @if(isset($count_new_orders_global) && $count_new_orders_global > 0)
+                            (<span class="text-danger">{{$count_new_orders_global}}</span>)
+                        @endif
+                    </a>
+                </li>
+                <li>
+                    <a href="{{route('admin.fast_buy','new')}}">
+                        <i class="fa fa-fighter-jet" aria-hidden="true"></i>{{__('Быстрая покупка')}}
+                    </a>
                 </li>
                 <li class="has-sub">
                     <a class="js-arrow" href="#">
