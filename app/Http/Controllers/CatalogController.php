@@ -258,10 +258,16 @@ class CatalogController extends Controller
                 $query->on('article_cross.OENbr','=','article_oe.OENbr');
                 $query->on('article_cross.manufacturerId','=','article_oe.manufacturerId');
             })
+            ->join('article_links',function ($query){
+                $query->on('article_links.SupplierId','=','article_cross.SupplierId');
+                $query->on('article_links.DataSupplierArticleNumber','=','article_cross.PartsDataSupplierArticleNumber');
+                //$query->on('article_links.linkageid','=','article_oe.manufacturerId');
+            })
             ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),'p.articles','=','article_cross.PartsDataSupplierArticleNumber')
             ->where($filter)
             ->where('p.articles','<>',$request->article)
             ->select('p.*','article_cross.SupplierId')
+            ->distinct()
             ->get();
 
         $buff_is = [];
