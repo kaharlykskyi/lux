@@ -1,5 +1,5 @@
 <div style="@if($k !== 0) display: none; @endif" class="list-product-item relative @if($k !== 0) prod_{{str_replace(' ','_',$data->articles)}}@endif">
-    <div style="cursor: pointer" onclick="location.href = '{{route('product',str_replace('/','@',($data->articles)))}}@isset($data->SupplierId)?supplierid={{$data->SupplierId}}@endisset'">
+    <div style="cursor: pointer" onclick="location.href = '{{route('product',str_replace('/','@',($data->articles)))}}?product_id={{$data->id}}@isset($data->SupplierId)&supplierid={{$data->SupplierId}}@endisset'">
         <strong>
             {{$data->price}}грн.
         </strong>

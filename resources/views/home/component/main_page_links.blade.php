@@ -24,7 +24,7 @@
                         <div class="row">
                             @foreach($popular_products as $product)
                                 <div class="col-xs-12 col-sm-6 col-md-4">
-                                    <a class="link" href="{{route('product',['alias' => $product->articles,'supplierid' => isset($product->supplierId)?$product->supplierId:''])}}">
+                                    <a class="link" href="{{route('product',['alias' => $product->articles,'supplierid' => isset($product->supplierId)?$product->supplierId:'','product_id' => $product->id])}}">
                                         <span>{{$product->name}}</span>
                                     </a>
                                 </div>

@@ -84,6 +84,9 @@
             Предложения по заменителям
         </li>
         @forelse($replace_product as $item)
+            @php
+                $count = 0;
+            @endphp
             <div class="list-group-item list-product-block">
                 @foreach($item as $k => $data)
 

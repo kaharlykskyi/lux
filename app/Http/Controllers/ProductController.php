@@ -35,7 +35,10 @@ class ProductController extends Controller
             $supplier_details = $this->tecdoc->getSupplieInfo($request->supplierid);
         }
 
-        $product = Product::with('comment')->where('articles', $request->alias)->first();
+        $product = Product::with('comment')
+            ->where('articles', $request->alias)
+            ->where('id',$request->product_id)
+            ->first();
 
         if (!isset($product)){
             return back();
