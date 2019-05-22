@@ -42,12 +42,18 @@ class CartController extends Controller
         $sum = $this->service->getSumOrder($cart->cartProduct);
         $product_cost = $this->service->getCostProduct($cart->cartProduct,$data['product_id']);
 
+        $sum_not_discount = $sum;
+
         if (isset($cart->user_id)){
             $sum = $this->service->getDiscountSum($cart->user_id,$sum);
         }
 
         return response()->json([
-            'response' => ['product_cost' => $product_cost,'sum' => $sum]
+            'response' => [
+                'product_cost' => $product_cost,
+                'sum' => round($sum,2),
+                'sum_not_disc' => round($sum_not_discount,2)
+            ]
         ]);
     }
 
@@ -66,12 +72,19 @@ class CartController extends Controller
         $cart = Cart::with('cartProduct')->find((int)$data['cart_id']);
         $sum = $this->service->getSumOrder($cart->cartProduct);
 
+        $sum_not_discount = $sum;
+
         if (isset($cart->user_id)){
             $sum = $this->service->getDiscountSum($cart->user_id,$sum);
         }
 
         return response()->json([
-            'response' => ['id_product' => $id_product,'sum' => (float)$sum,'count' => count($cart->cartProduct)]
+            'response' => [
+                'id_product' => $id_product,
+                'sum' => round((float)$sum,2),
+                'count' => count($cart->cartProduct),
+                'sum_not_disc' => round($sum_not_discount,2)
+            ]
         ]);
     }
 }

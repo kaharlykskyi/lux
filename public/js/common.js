@@ -29,6 +29,8 @@ function changeCount(product,cart,link) {
             $('#price'+product).text(`${data.response.product_cost} грн`);
             $('#cart .g-totel span').text(`${data.response.sum} грн`);
             $('#total-price,#total-price-checkout').text(`${data.response.sum} грн`);
+            $('#total-not-discount').text(`${data.response.sum_not_disc} грн`);
+            $('#count-product-mini-cart').text(data.response.count);
         }
     });
 }
@@ -48,10 +50,10 @@ function deleteProduct(product,cart,link) {
         success: function (data) {
             $('#tr_product'+data.response.id_product).remove();
             $('#li_product'+data.response.id_product).remove();
-            $('#cart .g-totel span').text(`${data.response.sum} грн`);
-            $('#total-price').text(`${data.response.sum} грн`);
-            $('#total-price-modal').text(`${data.response.sum} грн`);
+            $('#cart .g-totel span,#total-price,#total-price-modal').text(`${data.response.sum} грн`);
+            $('#total-price-checkout').text(`${data.response.sum}`);
             $('#count-product-mini-cart').text(data.response.count);
+            $('#total-not-discount').text(`${data.response.sum_not_disc} грн`);
         }
     });
 }
