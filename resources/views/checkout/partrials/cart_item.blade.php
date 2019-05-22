@@ -54,10 +54,10 @@
                                 </div>
                                 <div>{{$product->product->price}} грн <span class="show-480">{{__('  - за 1 единицу')}}</span></div>
                                 <div class="quinty">
-                                    <input id="count-mob{{$product->product->id}}" type="number" value="{{$product->product->count}}" oninput="changeCount({{$product->product->id}},{{$product->cart_id}},'{{route('product_count')}}')">
+                                    <input id="count-mob{{$product->product->id}}" type="number" value="{{$product->count}}" oninput="changeCount({{$product->product->id}},{{$product->cart_id}},'{{route('product_count')}}')">
                                 </div>
                                 <div id="price-mob{{$product->id}}">
-                                    {{((double)$product->price * (integer)$product->count)}} грн <span class="show-480">{{__(' - общяя стоимость')}}</span>
+                                    {{((double)$product->product->price * (integer)$product->count)}} грн <span class="show-480">{{__(' - общяя стоимость')}}</span>
                                 </div>
                                 <div>
                                     <a href="#." class="remove" onclick="deleteProduct({{$product->product->id}},{{$product->cart_id}},'{{route('product_delete')}}'); return false;"><i class="fa fa-close"></i></a>
