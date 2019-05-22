@@ -47,8 +47,11 @@
                         @if(count($item) > 1)
                             @if(Auth::check() && (Auth::user()->permission === 'admin' || Auth::user()->permission === 'manager'))
                                 @include('catalog.partirals.product_item_list')
+                                @php
+                                    $count += 1;
+                                @endphp
                             @else
-                                @if($count === 0 && $data->count > 0 && $k !== count($item) - 1)
+                                @if($count === 0 && $data->count > 0)
                                     @include('catalog.partirals.product_item_list')
                                     @php
                                         $count += 1;
@@ -111,8 +114,11 @@
                             @if(count($item) > 1)
                                 @if(Auth::check() && (Auth::user()->permission === 'admin' || Auth::user()->permission === 'manager'))
                                     @include('catalog.partirals.product_item_list')
+                                    @php
+                                        $count += 1;
+                                    @endphp
                                 @else
-                                    @if($count === 0 && $data->count > 0 && $k !== count($item) - 1)
+                                    @if($count === 0 && (int)$data->count > 0)
                                         @include('catalog.partirals.product_item_list')
                                         @php
                                             $count += 1;

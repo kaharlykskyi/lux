@@ -124,7 +124,6 @@ class ProductController extends Controller
 
         $validate = Validator::make($data,[
             'name' => 'required|max:255',
-            'company' => 'required|max:255',
             'articles' => 'required|max:255',
             'brand' => 'required|max:255',
             'price' => 'required|numeric',
