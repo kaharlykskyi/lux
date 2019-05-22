@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\VinDecoder;
-use Illuminate\Http\Request;
+use Illuminate\Http\{Request, Response};
 use Symfony\Component\DomCrawler\Crawler;
 
 class VinDecodeController extends Controller
@@ -74,7 +74,7 @@ class VinDecodeController extends Controller
     public function catalog(Request $request){
 
         if ($request->has('vin_catalog_type') && $request->ajax()){
-            $response = new \Illuminate\Http\Response();
+            $response = new Response();
             $response->withCookie(cookie()->forever('vin_catalog',$request->vin_catalog_type));
             return $response;
         }
@@ -107,6 +107,8 @@ class VinDecodeController extends Controller
         $data = $request->except('_token');
         $vin = $data['vin_code'];
         $vin_title = $data['vin_title'];
+
+        $data['data'] = preg_replace('/&comment=(.)*$/mixs','',$data['data']);
 
         $html = file_get_contents($this->vin_cat_url . $data['data']);
         $crawler = new Crawler($html);
