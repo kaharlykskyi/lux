@@ -46,7 +46,7 @@
             </li>
             <li class="col-sm-12">
                 <label>{{__('Телефон')}}
-                    <input type="tel" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" name="phone" value="{{ isset($user->deliveryInfo) ? $user->deliveryInfo->phone : '' }}" required>
+                    <input type="tel" class="phone_mask form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" name="phone" value="{{ isset($user->deliveryInfo) ? $user->deliveryInfo->phone : $user->phone }}" required>
                 </label>
                 @if ($errors->has('phone'))
                     <span class="invalid-feedback">
@@ -56,7 +56,7 @@
             </li>
             <li class="col-sm-12">
                 <label class="relative country">{{__('Страна')}}
-                    <input id="country" oninput="getCountry($(this))" type="text" class="form-control{{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" value="{{ isset($user->deliveryInfo) ? $user->deliveryInfo->delivery_country : '' }}" required autocomplete="off">
+                    <input id="country" oninput="getCountry($(this))" type="text" class="form-control{{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" value="{{ isset($user->deliveryInfo) ? $user->deliveryInfo->delivery_country : $user->country }}" required autocomplete="off">
                     <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
                 </label>
                 @if ($errors->has('country'))
@@ -67,7 +67,7 @@
             </li>
             <li class="col-sm-12">
                 <label class="relative city">{{__('Город')}}
-                    <input id="city" oninput="getCity($(this),'#country')" type="text" class="form-control{{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" value="{{ isset($user->deliveryInfo) ? $user->deliveryInfo->delivery_city : '' }}" required autocomplete="off">
+                    <input id="city" oninput="getCity($(this),'#country')" type="text" class="form-control{{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" value="{{ isset($user->deliveryInfo) ? $user->deliveryInfo->delivery_city : $user->city }}" required autocomplete="off">
                     <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
                 </label>
                 @if ($errors->has('city'))

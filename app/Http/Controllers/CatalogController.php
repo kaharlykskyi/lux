@@ -6,6 +6,7 @@ use App\AllCategoryTree;
 use App\Services\Catalog;
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CatalogController extends Controller
 {
@@ -101,22 +102,19 @@ class CatalogController extends Controller
                         ]);
                 }
                 break;
-            case isset($request->pcode) || isset($request->query):
-                $OENbr = isset($request->pcode)?$request->pcode:$request->query;
-                if (!isset($request->trademark)){
-                    $manufacturer = $this->tecdoc->getManufacturerForOed($OENbr);
-                } else{
-                    $manufacturer = $this->tecdoc->getManufacturer(trim($request->trademark));
-                }
+            case isset($request->pcode) || !empty($request->query('query')):
+                $OENbr = isset($request->pcode)?$request->pcode:$request->query('query');
 
-                if (isset($manufacturer[0])){
-                    $this->brands = $this->service->getBrands('pcode',['OENbr' =>$OENbr,'manufacturer' => $manufacturer[0]->id]);
+                $manufacturer = $this->tecdoc->getManufacturerForOed($OENbr,isset($request->trademark)?$request->trademark:null,$this->alias_manufactures);
 
-                    $price = $this->service->getMinMaxPrice('pcode',['OENbr' =>$OENbr,'manufacturer' => $manufacturer[0]->id]);
+                if (isset($manufacturer)){
+                    $this->brands = $this->service->getBrands('pcode',['OENbr' =>$OENbr,'manufacturer' => $manufacturer->id]);
+
+                    $price = $this->service->getMinMaxPrice('pcode',['OENbr' =>$OENbr,'manufacturer' => $manufacturer->id]);
                     $this->min_price->start_price = round($price->min,2);
                     $this->max_price->start_price = round($price->max,2);
 
-                    $this->catalog_products = $this->tecdoc->getProductForArticleOE($OENbr,$manufacturer[0]->id,$this->pre_products,[
+                    $this->catalog_products = $this->tecdoc->getProductForArticleOE($OENbr,$manufacturer->id,$this->pre_products,[
                         'price' => [
                             'min' => ($this->min_price->filter_price > 0)?$this->min_price->filter_price:$this->min_price->start_price,
                             'max' => ($this->max_price->filter_price > 0)?$this->max_price->filter_price:$this->max_price->start_price

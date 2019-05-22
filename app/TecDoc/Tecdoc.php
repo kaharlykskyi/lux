@@ -488,14 +488,24 @@ class Tecdoc
         ");
     }
 
-    public function getManufacturerForOed($oem_id){
+    public function getManufacturerForOed($oem_id,$matchcode,$alies_manfactias){
+
+        $lifter = [
+            ['oe.OENbr',$oem_id]
+        ];
+
+        if (isset($matchcode)){
+            $str = isset($alies_manfactias[$matchcode])?$alies_manfactias[$matchcode]:$matchcode;
+            $lifter[] = ['m.matchcode',$str];
+        }
+
         return DB::connection($this->connection)
-            ->table(DB::raw(config('database.connections.mysql_tecdoc.database').'.manufacturers as m'))
-            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_cross  as ac'),DB::raw('ac.manufacturerId'),DB::raw('m.id'))
-            ->where(DB::raw('ac.OENbr'),$oem_id)
+            ->table('manufacturers as m')
+            ->join('article_oe as oe','oe.manufacturerId','=','m.id')
+            ->where($lifter)
             ->select(DB::raw('m.id, m.matchcode, m.description'))
             ->distinct()
-            ->get();
+            ->first();
     }
 
     /**
@@ -665,11 +675,6 @@ class Tecdoc
         ");
     }
 
-    public function getManufacturer($matchcode){
-        return DB::connection($this->connection)
-            ->select("SELECT DISTINCT `id`,`matchcode`,`description` FROM `manufacturers` WHERE `matchcode`='{$matchcode}' OR `description`='{$matchcode}'");
-    }
-
     /**
      * Get category
      * @param array|null $param
@@ -752,17 +757,17 @@ class Tecdoc
         }
 
         return DB::connection($this->connection)
-            ->table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_cross AS ac'))
-            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('ac.SupplierId'),DB::raw('sp.id'))
-            ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('ac.PartsDataSupplierArticleNumber'))
-            ->where(DB::raw('ac.OENbr'),$OENbr)
-            ->where(DB::raw('ac.manufacturerId'),(int)$manufacturer_id)
+            ->table('article_oe AS ae')
+            ->join('suppliers AS sp',DB::raw('ae.SupplierId'),DB::raw('sp.id'))
+            ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('ae.DataSupplierArticleNumber'))
+            ->where(DB::raw('ae.OENbr'),$OENbr)
+            ->where(DB::raw('ae.manufacturerId'),(int)$manufacturer_id)
             ->where([
                 [DB::raw('p.price'),'>=',$filter['price']['min']],
                 [DB::raw('p.price'),'<=',$filter['price']['max']]
             ])
             ->whereRaw(isset($filter['supplier'])? " sp.id IN (".implode(',',$filter['supplier']).")":'sp.id > 0')
-            ->select(DB::raw('sp.id AS supplierId, ac.PartsDataSupplierArticleNumber as DataSupplierArticleNumber, sp.matchcode, p.id, p.name, p.price,p.count'))
+            ->select(DB::raw('sp.id AS supplierId, ae.DataSupplierArticleNumber as DataSupplierArticleNumber, sp.matchcode, p.id, p.name, p.price,p.count'))
             ->orderBy(DB::raw('p.price'),$sort)
             ->distinct()
             ->paginate((int)$pre);

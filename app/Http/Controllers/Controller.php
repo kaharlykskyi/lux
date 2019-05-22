@@ -15,6 +15,10 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    protected $alias_manufactures = [
+        'VOLKSWAGEN' => 'VW'
+    ];
+
     public function getCartProducts($cart){
         return DB::table('cart_products')
             ->where('cart_products.cart_id',$cart)
