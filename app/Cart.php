@@ -11,7 +11,7 @@ class Cart extends Model
     protected $fillable = ['user_id','oder_status','session_id','invoice_np','manager_id','oder_dt','seen'];
 
     public function cartProduct(){
-        return $this->belongsToMany(Product::class,'cart_products')->withPivot('count');
+        return $this->belongsToMany(Product::class,'cart_products')->withPivot(['count','id']);
     }
 
     public function status(){

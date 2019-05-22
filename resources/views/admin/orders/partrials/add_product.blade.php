@@ -128,7 +128,8 @@
     function addProduct(id) {
         const count = $(`#prod_${id}`).val();
         $.post('{{route('admin.order_edit',request('order'))}}',{_token:'{{csrf_token()}}',id:id,count:count},function (data) {
-            alert(data);
+            $('#order-product-block').html(htmlProduct(data.products));
+            alert(data.mass);
         });
     }
 </script>

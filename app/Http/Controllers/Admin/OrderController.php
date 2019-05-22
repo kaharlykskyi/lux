@@ -96,26 +96,37 @@ class OrderController extends Controller
     public function editOder(Request $request){
 
         if($request->isMethod('post')){
-            if (CartProduct::where([['cart_id',$request->order],['product_id',$request->id]])->exists()){
-                CartProduct::where([
-                    ['cart_id',$request->order],
-                    ['product_id',$request->id]
-                ])->increment('count',$request->count);
+            $mass = '';
+            if ($request->has('id') && $request->has('count')){
+                if (CartProduct::where([['cart_id',$request->order],['product_id',$request->id]])->exists()){
+                    CartProduct::where([
+                        ['cart_id',$request->order],
+                        ['product_id',$request->id]
+                    ])->increment('count',$request->count);
 
-                return response()->json('Товар обновлён');
-            } else {
-                $cart_product = new CartProduct();
-                $cart_product->fill([
-                    'cart_id' => $request->order,
-                    'product_id' => $request->id,
-                    'count' => $request->count
-                ]);
-                if ($cart_product->save()){
-                    return response()->json('Товар добавлен');
-                }else{
-                    return response()->json('Произошла ошибка');
+                    $mass = 'Товар обновлён';
+                } else {
+                    $cart_product = new CartProduct();
+                    $cart_product->fill([
+                        'cart_id' => $request->order,
+                        'product_id' => $request->id,
+                        'count' => $request->count
+                    ]);
+                    if ($cart_product->save()){
+                        $mass = 'Товар добавлен';
+                    }else{
+                        $mass = 'Произошла ошибка';
+                    }
                 }
+            } elseif ($request->has('delete_product')){
+                CartProduct::where('id',$request->delete_product)->delete();
+                $mass = 'Товар удалён';
             }
+
+            return response()->json([
+                'mass' => $mass,
+                'products' => CartProduct::with('product')->where('cart_id',$request->order)->get()
+            ]);
         }
 
         Cart::where('id',(int)$request->order)->update(['seen' => 1]);

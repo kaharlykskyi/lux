@@ -61,6 +61,39 @@
                 alert('Сохранено');
             });
         }
+
+        function deleteProductOrder(id) {
+            if(confirm('Удалить?')){
+                $.post('{{route('admin.order_edit',request('order'))}}',{_token:'{{csrf_token()}}',delete_product:id},function (data) {
+                    $('#order-product-block').html(htmlProduct(data.products));
+                    alert(data.mass);
+                });
+            }
+        }
+
+        function htmlProduct(data) {
+            let template = '';
+
+            for (let i in data){
+                template += `<tr>
+                                <td>${data[i].product.name}</td>
+                                <td>${data[i].product.articles}</td>
+                                <td>
+                                    ${data[i].product.price}грн.<br>
+                                    <span class="small">${data[i].product.provider_price} ${data[i].product.provider_currency}</span>
+                                </td>
+                                <td>${data[i].count}</td>
+                                <td>
+                                    <div class="table-data-feature">
+                                        <button onclick="deleteProductOrder('${data[i].id}')" type="button" class="item" data-toggle="tooltip" data-placement="top" title="Удалить">
+                                            <i class="zmdi zmdi-delete"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>`;
+            }
+            return template;
+        }
     </script>
 
 @endsection

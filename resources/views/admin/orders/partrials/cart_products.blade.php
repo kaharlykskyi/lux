@@ -10,9 +10,10 @@
                     Поставщика
                 </th>
                 <th>Количество</th>
+                <th></th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="order-product-block">
             @foreach($order->cartProduct as $item)
                 <tr>
                     <td>
@@ -24,19 +25,16 @@
                     <td>{{$item->articles}}</td>
                     <td>
                         {{$item->price}}грн.<br>
-                        @php
-                            $provider_price = 0;
-                            if ($item->price < 2000){
-                                $provider_price = $item->price - $item->price * 0.2;
-                            } elseif ($item->price >= 2000 && $item->price <= 5000){
-                                $provider_price = $item->price - $item->price * 0.15;
-                            } elseif ($item->price > 5000){
-                                $provider_price = $item->price - $item->price * 0.1;
-                            }
-                        @endphp
-                        <span class="small">{{$provider_price}}грн.</span>
+                        <span class="small">{{$item->provider_price}} {{$item->provider_currency}}</span>
                     </td>
                     <td>{{$item->pivot['count']}}</td>
+                    <td>
+                        <div class="table-data-feature">
+                            <button onclick="deleteProductOrder('{{$item->pivot['id']}}')" type="button" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Удалить')}}">
+                                <i class="zmdi zmdi-delete"></i>
+                            </button>
+                        </div>
+                    </td>
                 </tr>
             @endforeach
             </tbody>
