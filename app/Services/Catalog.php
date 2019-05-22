@@ -123,13 +123,13 @@ class Catalog
             ->table('articles')
             ->join('suppliers','suppliers.id','=','articles.supplierId')
             ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),function ($query){
-                $query->on('p.articles','=','articles.DataSupplierArticleNumber')
-                    ->orOn('p.articles','=','articles.FoundString');
+                $query->on('p.articles','=','articles.DataSupplierArticleNumber');
                 $query->on('p.brand','=','suppliers.matchcode');
             })
             ->where('articles.DataSupplierArticleNumber',$article)
             ->orWhere('articles.FoundString',$article)
             ->select('p.articles','suppliers.id AS supplierId','p.brand','p.name')
+            ->distinct()
             ->get();
     }
 
@@ -177,6 +177,7 @@ class Catalog
             ->where($filter)
             ->where('p.articles','<>',$article)
             ->select('p.*','article_cross.SupplierId','providers.name AS provider_name')
+            ->orderBy('p.price')
             ->distinct()
             ->get();
 

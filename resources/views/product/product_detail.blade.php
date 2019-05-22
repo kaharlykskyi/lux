@@ -234,6 +234,7 @@
                 data: `product_count=${count}`,
                 success: function (data) {
                     $('#total-price').text(`${data.response.sum} грн`);
+                    $('#count-product-mini-cart').text(data.response.count);
                     alert(data.response.save);
                 }
             });

@@ -51,6 +51,7 @@ function deleteProduct(product,cart,link) {
             $('#cart .g-totel span').text(`${data.response.sum} грн`);
             $('#total-price').text(`${data.response.sum} грн`);
             $('#total-price-modal').text(`${data.response.sum} грн`);
+            $('#count-product-mini-cart').text(data.response.count);
         }
     });
 }

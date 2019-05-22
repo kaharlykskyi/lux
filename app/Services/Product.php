@@ -61,7 +61,8 @@ class Product
         return [
             'response' => [
                 'sum' => $sum,
-                'save' => $save
+                'save' => $save,
+                'count' => count($added_products)
             ]
         ];
     }

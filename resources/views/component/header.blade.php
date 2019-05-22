@@ -35,7 +35,7 @@
         <ul class="nav navbar-right cart-pop">
             <li>
                 <a href="#" onclick="getCartItem('{{route('cart')}}'); return false;" data-toggle="modal" data-target="#cart">
-                    <span class="itm-cont">@if(isset($products_cart_global)){{count($products_cart_global )}}@else{{__('0')}}@endif</span>
+                    <span id="count-product-mini-cart" class="itm-cont">@if(isset($products_cart_global)){{count($products_cart_global )}}@else{{__('0')}}@endif</span>
                     <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                     <strong>{{__('Корзина')}}</strong> <br>
                     <span id="total-price">

@@ -47,7 +47,7 @@
             $.post(hurl,{'product_count':1,'_token':'{{csrf_token()}}'}, function (data) {
                 console.log(data.response);
                 $('#total-price').text(`${data.response.sum} грн`);
-
+                $('#count-product-mini-cart').text(data.response.count);
                 alert(data.response.save);
             });
         }

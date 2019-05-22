@@ -71,7 +71,7 @@ class CartController extends Controller
         }
 
         return response()->json([
-            'response' => ['id_product' => $id_product,'sum' => (float)$sum]
+            'response' => ['id_product' => $id_product,'sum' => (float)$sum,'count' => count($cart->cartProduct)]
         ]);
     }
 }
