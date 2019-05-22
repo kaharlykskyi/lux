@@ -1411,6 +1411,18 @@ html .oe-list a {
     transition: background-color 0.3s ease;
 }
 
+#mob-phone{
+    display: none;
+}
+
+.reg-link{
+    margin-bottom: 0;
+    height: 35px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
 
 @media (max-width: 1200px) {
 
@@ -1490,6 +1502,20 @@ html .oe-list a {
     }
     #mod_info .list-group a{
         height: auto;
+    }
+    #modification_auto{
+        height: 30px;
+    }
+    #mob-phone{
+        display: block;
+        padding-top: 10px;
+    }
+    #desc-phone{
+        display: none;
+    }
+    .top-bar .nav-pills,.top-bar .reg-link{
+        display: flex !important;
+        justify-content: center;
     }
 }
 
@@ -1655,9 +1681,6 @@ html .oe-list a {
     header .search-cate {
         padding-left: 5px;
     }
-    header .search-cate input {
-        width: 60% !important;
-    }
     header .search-cate .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
         width: 39%;
     }
@@ -1684,5 +1707,9 @@ html .oe-list a {
         padding-right: 0;
         background-repeat: no-repeat;
         background-size: 20%;
+    }
+    #mob-phone{
+        font-size: 12px;
+        padding-top: 12px;
     }
 }

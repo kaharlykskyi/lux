@@ -10,12 +10,16 @@
                         @endif
                     @endforeach
                 @endisset
+                <li id="mob-phone" class="margin-right-15">
+                    <i class="fa fa-phone"></i>
+                    {{config('app.company_phone')}}
+                </li>
             </ul>
         </div>
         <div class="col-lg-4 text-right">
-            <ul style="margin-bottom: 0;height: 35px;display: flex;justify-content: flex-end;align-items: center;">
+            <ul class="reg-link">
                 <!-- Authentication Links -->
-                <li class="margin-right-15">
+                <li id="desc-phone" class="margin-right-15">
                     <i class="fa fa-phone"></i>
                     {{config('app.company_phone')}}
                 </li>
