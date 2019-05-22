@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Cart;
+use App\CartProduct;
 use Illuminate\{Http\Request, Support\Facades\DB};
 use App\Services\Cart as CartService;
 
@@ -19,11 +20,7 @@ class CartController extends Controller
         $cart = $this->getCart($request);
         $products = [];
         if (isset($cart)){
-            $products = DB::table('cart_products')
-                ->where('cart_products.cart_id',$cart->id)
-                ->join('products','products.id','=','cart_products.product_id')
-                ->select('products.*','cart_products.count','cart_products.cart_id')
-                ->get();
+            $products = CartProduct::with('product')->where('cart_id',$cart->id)->get();
         }
 
         return view('component.cart_table', compact('products'));

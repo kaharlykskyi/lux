@@ -14,18 +14,18 @@
             <!-- Item Cart -->
             @isset($products)
                 @forelse($products as $product)
-                    <tr id="tr_product{{$product->id}}">
+                    <tr id="tr_product{{$product->product->id}}">
                         <td><div class="media">
-                                <div class="media-left"> <a href="{{route('product',$product->articles)}}"> <img class="img-responsive" src="{{asset('images/item-img-1-1.jpg')}}" alt="{{$product->name}}" > </a> </div>
+                                <div class="media-left"> <a href="{{route('product',$product->product->articles)}}"> <img class="img-responsive" src="{{asset('images/item-img-1-1.jpg')}}" alt="{{$product->product->name}}" > </a> </div>
                             </div></td>
-                        <td class="text-center padding-top-60">{{$product->price}} грн</td>
+                        <td class="text-center padding-top-60">{{$product->product->price}} грн</td>
                         <td class="text-center"><!-- Quinty -->
 
                             <div class="quinty padding-top-20">
-                                <input id="count{{$product->id}}" type="number" value="{{$product['pivot']['count']}}" oninput="changeCount({{$product->id}},{{$product['pivot']['cart_id']}},'{{route('product_count')}}')">
+                                <input id="count{{$product->product->id}}" type="number" value="{{$product->count}}" oninput="changeCount({{$product->product->id}},{{$product->cart_id}},'{{route('product_count')}}')">
                             </div></td>
-                        <td class="text-center padding-top-60" id="price{{$product->id}}">{{((double)$product->price * (integer)$product['pivot']['count'])}} грн</td>
-                        <td class="text-center padding-top-60"><a href="#." class="remove" onclick="deleteProduct({{$product->id}},{{$product['pivot']['cart_id']}},'{{route('product_delete')}}'); return false;"><i class="fa fa-close"></i></a></td>
+                        <td class="text-center padding-top-60" id="price{{$product->product->id}}">{{((double)$product->product->price * (integer)$product->count)}} грн</td>
+                        <td class="text-center padding-top-60"><a href="#." class="remove" onclick="deleteProduct({{$product->product->id}},{{$product->cart_id}},'{{route('product_delete')}}'); return false;"><i class="fa fa-close"></i></a></td>
                     </tr>
                 @empty
                     <tr>
@@ -45,22 +45,22 @@
                 @isset($products)
                     <ul class="list-group">
                         @forelse($products as $product)
-                            <li class="list-group-item" id="li_product{{$product->id}}">
+                            <li class="list-group-item" id="li_product{{$product->product->id}}">
                                 <div class="media">
-                                    <div class="media-left"> <a href="{{route('product',$product->articles)}}"> <img class="img-responsive" src="{{asset('images/item-img-1-1.jpg')}}" alt="{{$product->name}}" > </a> </div>
+                                    <div class="media-left"> <a href="{{route('product',$product->product->articles)}}"> <img class="img-responsive" src="{{asset('images/item-img-1-1.jpg')}}" alt="{{$product->product->name}}" > </a> </div>
                                     <div class="media-body hidden-sm hidden-xs">
-                                        <p>{{$product->short_description}}</p>
+                                        <p>{{$product->product->short_description}}</p>
                                     </div>
                                 </div>
-                                <div>{{$product->price}} грн <span class="show-480">{{__('  - за 1 единицу')}}</span></div>
+                                <div>{{$product->product->price}} грн <span class="show-480">{{__('  - за 1 единицу')}}</span></div>
                                 <div class="quinty">
-                                    <input id="count-mob{{$product->id}}" type="number" value="{{$product->count}}" oninput="changeCount({{$product->id}},{{$product->cart_id}},'{{route('product_count')}}')">
+                                    <input id="count-mob{{$product->product->id}}" type="number" value="{{$product->product->count}}" oninput="changeCount({{$product->product->id}},{{$product->cart_id}},'{{route('product_count')}}')">
                                 </div>
                                 <div id="price-mob{{$product->id}}">
                                     {{((double)$product->price * (integer)$product->count)}} грн <span class="show-480">{{__(' - общяя стоимость')}}</span>
                                 </div>
                                 <div>
-                                    <a href="#." class="remove" onclick="deleteProduct({{$product->id}},{{$product['pivot']['cart_id']}},'{{route('product_delete')}}'); return false;"><i class="fa fa-close"></i></a>
+                                    <a href="#." class="remove" onclick="deleteProduct({{$product->product->id}},{{$product->cart_id}},'{{route('product_delete')}}'); return false;"><i class="fa fa-close"></i></a>
                                 </div>
                             </li>
                         @empty
@@ -79,7 +79,7 @@
             $sum = 0.00;
             if (isset($products)){
                 foreach ($products as $product){
-                    $sum += (double)$product->price * (integer)$product['pivot']['count'];
+                    $sum += (double)$product->product->price * (integer)$product->count;
                 }
             }
         @endphp

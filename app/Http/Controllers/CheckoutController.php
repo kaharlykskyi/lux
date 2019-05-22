@@ -3,7 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\AppTrait\GEO;
-use App\{Cart, DeliveryInfo, Http\Controllers\Auth\LoginController, MutualSettlement, OrderPay, User, UserBalance};
+use App\{Cart,
+    CartProduct,
+    DeliveryInfo,
+    Http\Controllers\Auth\LoginController,
+    MutualSettlement,
+    OrderPay,
+    User,
+    UserBalance};
 use Illuminate\Foundation\Auth\{RegistersUsers};
 use Illuminate\Http\Request;
 use Illuminate\Support\{Carbon, Facades\Auth, Facades\DB, Facades\Hash, Facades\Validator};
@@ -20,7 +27,7 @@ class CheckoutController extends Controller
         $cart = $this->getCart($request);
 
         if (isset($cart)){
-            $this->products = $cart->cartProduct()->get();
+            $this->products = CartProduct::with('product')->where('cart_id',$cart->id)->get();
         }
 
         if (Auth::check()){
