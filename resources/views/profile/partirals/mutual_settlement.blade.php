@@ -32,8 +32,8 @@
                                                 <tr>
                                                     <td>{{__('custom.type_operation_balance.' . $item->type_operation)}}</td>
                                                     <td>{{$item->description}}</td>
-                                                    <td>{{$item->change}}</td>
-                                                    <td>{{$item->balance}}</td>
+                                                    <td>{{(int)$item->change}}</td>
+                                                    <td>{{(int)$item->balance}}</td>
                                                 </tr>
                                                 </tbody>
                                             </table>
@@ -41,7 +41,7 @@
                                     </div>
                                 </td>
                                 <td>{{date_format($item->created_at, 'Y-m-d')}}</td>
-                                <td>{{$item->change}}</td>
+                                <td>{{(int)$item->change}}</td>
                             </tr>
                         @empty
                             <tr>

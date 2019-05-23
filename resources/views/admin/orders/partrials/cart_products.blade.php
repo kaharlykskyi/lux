@@ -24,7 +24,7 @@
                     </td>
                     <td>{{$item->articles}}</td>
                     <td>
-                        {{$item->price}}грн.<br>
+                        {{(int)$item->price}}грн.<br>
                         <span class="small">{{$item->provider_price}} {{$item->provider_currency}}</span>
                     </td>
                     <td>{{$item->pivot['count']}}</td>

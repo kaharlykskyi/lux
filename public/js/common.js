@@ -28,7 +28,7 @@ function changeCount(product,cart,link) {
         success: function (data) {
             $(`#price${product},#price-mob${product}`).text(`${data.response.product_cost} грн`);
             $('#cart .g-totel span').text(`${data.response.sum} грн`);
-            $('#total-price-checkout').text(`${data.response.sum} грн`);
+            $('#total-price-checkout').text(`${data.response.sum}`);
             $('#total-not-discount,#total-price-modal,#total-price').text(`${data.response.sum_not_disc} грн`);
             $('#count-product-mini-cart').text(data.response.count);
         }

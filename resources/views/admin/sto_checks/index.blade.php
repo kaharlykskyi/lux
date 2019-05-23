@@ -43,7 +43,7 @@
                                 <tr class="tr-shadow">
                                     <td>{{$check->id}}</td>
                                     <td>
-                                        <span class="block-email">{{$check->sum}}</span>
+                                        <span class="block-email">{{(int)$check->sum}}</span>
                                     </td>
                                     <td>{{$check->application_date}}</td>
                                     <td>

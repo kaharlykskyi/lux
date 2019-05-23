@@ -47,9 +47,9 @@ class CartController extends Controller
 
         return response()->json([
             'response' => [
-                'product_cost' => $product_cost,
-                'sum' => round($sum,2),
-                'sum_not_disc' => round($sum_not_discount,2)
+                'product_cost' => (int)$product_cost,
+                'sum' => (int)$sum,
+                'sum_not_disc' => (int)$sum_not_discount
             ]
         ]);
     }
@@ -78,9 +78,9 @@ class CartController extends Controller
         return response()->json([
             'response' => [
                 'id_product' => $id_product,
-                'sum' => round((float)$sum,2),
+                'sum' => (int)$sum,
                 'count' => count($cart->cartProduct),
-                'sum_not_disc' => round($sum_not_discount,2)
+                'sum_not_disc' => (int)$sum_not_discount
             ]
         ]);
     }

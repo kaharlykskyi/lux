@@ -83,7 +83,7 @@
             <div class="col-sm-12 m-t-15">
                 <ul class="list-group">
                     <li class="list-group-item">
-                        <p class="h5">Баланс: <strong>@if(isset($balance)){{floatval($balance->balance)}}@else{{__('0.00')}}@endif</strong> грн</p>
+                        <p class="h5">Баланс: <strong>@if(isset($balance)){{(int)$balance->balance}}@else{{__('0.00')}}@endif</strong> грн</p>
                     </li>
                 </ul>
             </div>
@@ -102,7 +102,7 @@
                         <tr>
                             <td>{{$item->id}}</td>
                             <td>{{$item->created_at}}</td>
-                            <td>{{$item->balance_refill}}</td>
+                            <td>{{(int)$item->balance_refill}}</td>
                             <td>{{($item->status === 1)?__('успешно'):__('отказ')}}</td>
                         </tr>
                     @empty
@@ -134,8 +134,8 @@
                         <tr>
                             <td>{{$item->id}}</td>
                             <td>{{$item->created_at}}</td>
-                            <td>{{$item->change}}</td>
-                            <td>{{$item->balance}}</td>
+                            <td>{{(int)$item->change}}</td>
+                            <td>{{(int)$item->balance}}</td>
                         </tr>
                     @empty
                         <tr>

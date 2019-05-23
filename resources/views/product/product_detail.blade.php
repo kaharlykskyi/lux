@@ -39,13 +39,13 @@
                                         <div class="row">
                                             @if(isset($product->old_price) && $product->old_price > 0)
                                                 <div class="col-sm-6">
-                                                    <span class="tags" style="text-decoration: line-through;">{{$product->old_price}} грн</span>
+                                                    <span class="tags" style="text-decoration: line-through;">{{(int)$product->old_price}} грн</span>
                                                     <br>
-                                                    <span class="price">{{$product->price}} грн</span>
+                                                    <span class="price">{{(int)$product->price}} грн</span>
                                                 </div>
                                             @else
                                                 <div class="col-sm-6">
-                                                    <span class="price">{{$product->price}} грн</span>
+                                                    <span class="price">{{(int)$product->price}} грн</span>
                                                 </div>
                                             @endif
                                             <div class="col-sm-6">

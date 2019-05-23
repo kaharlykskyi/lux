@@ -60,7 +60,7 @@ class Product
 
         return [
             'response' => [
-                'sum' => round($sum,2),
+                'sum' => (int)$sum,
                 'save' => $save,
                 'count' => count($added_products)
             ]

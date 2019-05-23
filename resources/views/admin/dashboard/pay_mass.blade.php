@@ -100,7 +100,7 @@
                                     <td>
                                         {{$item->user->name}}
                                     </td>
-                                    <td>{{$item->price_pay}}грн.</td>
+                                    <td>{{(int)$item->price_pay}} грн.</td>
                                 </tr>
                             @empty
                                 <tr class="tr-shadow">

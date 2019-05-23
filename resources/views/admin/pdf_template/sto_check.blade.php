@@ -122,9 +122,9 @@
                         <td>{{$work->article_operation}}</td>
                         <td>{{$work->name}}</td>
                         <td>{{$work->count}}</td>
-                        <td>{{$work->price}}грн.</td>
-                        <td>{{$work->price_discount}}грн.</td>
-                        <td>{{(isset($work->price_discount) && $work->price_discount > 0)?$work->price_discount * $work->count:$work->price * $work->count}}грн.</td>
+                        <td>{{(int)$work->price}}грн.</td>
+                        <td>{{(int)$work->price_discount}}грн.</td>
+                        <td>{{(isset($work->price_discount) && $work->price_discount > 0)?(int)$work->price_discount * $work->count:(int)$work->price * $work->count}}грн.</td>
                     </tr>
                 @endforeach
                 </tbody>
@@ -134,12 +134,12 @@
    <div class="row">
         <div class="col-xs-12 text-right" style="margin-top: 15px;">
             @if($action_price > 0)
-                <p style="margin-bottom: 0;font-size: 14px" class="text-right">Вартість виконаних робіт: {{$action_price}}грн.</p>
+                <p style="margin-bottom: 0;font-size: 14px" class="text-right">Вартість виконаних робіт: {{(int)$action_price}}грн.</p>
             @endif
             @if($material_price > 0)
-                <p style="margin-bottom: 0;font-size: 14px"  class="text-right">Вартість встановлених запчастин: {{$material_price}}грн.</p>
+                <p style="margin-bottom: 0;font-size: 14px"  class="text-right">Вартість встановлених запчастин: {{(int)$material_price}}грн.</p>
             @endif
-            <p style="margin-bottom: 0;font-size: 14px"  class="text-right"><strong>Всього до сплати:</strong> {{$sum}}грн.</p>
+            <p style="margin-bottom: 0;font-size: 14px"  class="text-right"><strong>Всього до сплати:</strong> {{(int)$sum}}грн.</p>
         </div>
     </div>
      @isset($check->price_abc)

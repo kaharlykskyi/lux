@@ -47,7 +47,7 @@
                                 }
                             }
                         @endphp
-                        {{$sum}} грн
+                        {{(int)$sum}} грн
                     </span>
                 </a>
             </li>

@@ -98,7 +98,7 @@
                                     @endphp
                                     <li class="list-group-item">
                                         <span class="badge" title="Количество товаров">{{count($order->cartProduct)}}</span>
-                                        <strong>ID заказа:{{$order->id}}</strong>; Дата формирования: {{$order->oder_dt}}; Сумма: {{$sum}}грн.
+                                        <strong>ID заказа:{{$order->id}}</strong>; Дата формирования: {{$order->oder_dt}}; Сумма: {{(int)$sum}}грн.
                                     </li>
                                 @empty
                                     <li class="list-group-item">

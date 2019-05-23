@@ -68,7 +68,7 @@
                                     <td>{{$product->articles}}</td>
                                     <td>{{$product->name}}</td>
                                     <td>{{$product->brand}}</td>
-                                    <td class="text-right">{{$product->price}}</td>
+                                    <td class="text-right">{{(int)$product->price}}грн.</td>
                                     <td class="text-right">
                                         <div class="table-data-feature">
                                             <button onclick="location.href = '{{route('admin.product.edit',$product->id)}}'" class="item" data-toggle="tooltip" data-placement="top" title="Отредактировать">

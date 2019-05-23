@@ -79,9 +79,9 @@
                         <td>{{$article}}</td>
                         <td>{{$data['product_name'][$k]}}</td>
                         <td>{{$data['product_col'][$k]}}</td>
-                        <td>{{$data['product_price'][$k]}}грн.</td>
-                        <td>{{$data['product_price_discount'][$k]}}грн.</td>
-                        <td>{{$data['product_sum'][$k]}}грн.</td>
+                        <td>{{(int)$data['product_price'][$k]}}грн.</td>
+                        <td>{{(int)$data['product_price_discount'][$k]}}грн.</td>
+                        <td>{{(int)$data['product_sum'][$k]}}грн.</td>
                     </tr>
                 @endforeach
                 </tbody>
@@ -90,7 +90,7 @@
     </div>
     <div class="row">
         <div class="col-xs-12 text-right" style="margin-top: 15px;">
-            <p class="text-right"><strong>Всього до оплати:</strong>{{$data['sum']}}грн.</p>
+            <p class="text-right"><strong>Всього до оплати:</strong>{{(int)$data['sum']}}грн.</p>
         </div>
     </div>
     @isset($data['price_abc'])

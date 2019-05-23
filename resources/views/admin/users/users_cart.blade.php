@@ -149,7 +149,7 @@
                                         @endif
                                     </td>
                                     <td>{{$product->count}}</td>
-                                    <td>{{$product->product->price}}грн.</td>
+                                    <td>{{(int)$product->product->price}}грн.</td>
                                     <td>{{$product->created_at}}</td>
                                     <td class="font-size-12-440">
                                         <form onsubmit="if(confirm('DELETE?')){return true}else{return false}"

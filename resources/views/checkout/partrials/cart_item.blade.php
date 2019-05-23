@@ -18,13 +18,13 @@
                         <td><div class="media">
                                 <div class="media-left"> <a href="{{route('product',$product->product->articles)}}"> <img class="img-responsive" src="{{asset('images/item-img-1-1.jpg')}}" alt="{{$product->product->name}}" > </a> </div>
                             </div></td>
-                        <td class="text-center padding-top-60">{{$product->product->price}} грн</td>
+                        <td class="text-center padding-top-60">{{(int)$product->product->price}} грн</td>
                         <td class="text-center"><!-- Quinty -->
 
                             <div class="quinty padding-top-20">
                                 <input id="count{{$product->product->id}}" type="number" value="{{$product->count}}" oninput="changeCount({{$product->product->id}},{{$product->cart_id}},'{{route('product_count')}}')">
                             </div></td>
-                        <td class="text-center padding-top-60" id="price{{$product->product->id}}">{{((double)$product->product->price * (integer)$product->count)}} грн</td>
+                        <td class="text-center padding-top-60" id="price{{$product->product->id}}">{{((int)$product->product->price * (integer)$product->count)}} грн</td>
                         <td class="text-center padding-top-60"><a href="#." class="remove" onclick="deleteProduct({{$product->product->id}},{{$product->cart_id}},'{{route('product_delete')}}'); return false;"><i class="fa fa-close"></i></a></td>
                     </tr>
                 @empty
@@ -52,12 +52,12 @@
                                         <p>{{$product->product->short_description}}</p>
                                     </div>
                                 </div>
-                                <div>{{$product->product->price}} грн <span class="show-480">{{__('  - за 1 единицу')}}</span></div>
+                                <div>{{(int)$product->product->price}} грн <span class="show-480">{{__('  - за 1 единицу')}}</span></div>
                                 <div class="quinty">
                                     <input id="count-mob{{$product->product->id}}" type="number" value="{{$product->count}}" oninput="changeCount({{$product->product->id}},{{$product->cart_id}},'{{route('product_count')}}')">
                                 </div>
                                 <div id="price-mob{{$product->id}}">
-                                    {{((double)$product->product->price * (integer)$product->count)}} грн <span class="show-480">{{__(' - общяя стоимость')}}</span>
+                                    {{((int)$product->product->price * (integer)$product->count)}} грн <span class="show-480">{{__(' - общяя стоимость')}}</span>
                                 </div>
                                 <div>
                                     <a href="#." class="remove" onclick="deleteProduct({{$product->product->id}},{{$product->cart_id}},'{{route('product_delete')}}'); return false;"><i class="fa fa-close"></i></a>
@@ -86,14 +86,14 @@
         <h6 class="text-right text-black text-uppercase">{{__('Общая сумма: ')}}
             @if(isset($user->discount))
                 <span id="total-price-checkout">
-                    {{round($sum - ($sum * (int)$user->discount->percent / 100),2)}}
+                    {{(int)$sum - (int)($sum * (int)$user->discount->percent / 100)}}
                 </span>грн
                 <span class="margin-left-10 small text-line-through" id="total-not-discount">
-                    {{$sum}}грн <i class="fa fa-question" aria-hidden="true" title="{{$user->discount->description}}"></i>
+                    {{(int)$sum}}грн <i class="fa fa-question" aria-hidden="true" title="{{$user->discount->description}}"></i>
                 </span>
             @else
                 <span id="total-price-checkout">
-                    {{$sum}}
+                    {{(int)$sum}}
                 </span>грн
             @endif
         </h6>

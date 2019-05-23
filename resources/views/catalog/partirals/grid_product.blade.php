@@ -31,7 +31,7 @@
                         {{mb_strimwidth($product->name,0,30,' ...')}}
                     </a>
                     <p class="rev"></p>
-                    @isset($product->price)<div class="price">{{$product->price . __(' грн')}} </div>@endisset
+                    @isset($product->price)<div class="price">{{(int)$product->price . __(' грн')}} </div>@endisset
                     @if($product->count > 0)
                         <a href="#." onclick="addCart('{{route('add_cart',$product->id)}}')" class="cart-btn"><i class="icon-basket-loaded"></i></a>
                     @else

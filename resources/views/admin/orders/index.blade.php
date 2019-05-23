@@ -186,7 +186,7 @@
                                                     $sum -= round($sum*$item->client->discount->percent/100,2);
                                                 }
                                             @endphp
-                                                {{$sum}}
+                                                {{(int)$sum}}
                                             </td>
                                             <td style="padding: 12px 0;">
                                                 @if($item->oder_status !== 5)

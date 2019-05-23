@@ -20,7 +20,7 @@
                         <tr>
                             <td>{{$order->id}}</td>
                             <td>{{$order->updated_at}}</td>
-                            <td>{{$order->total_price . __(' грн.')}}</td>
+                            <td>{{(int)$order->total_price . __(' грн.')}}</td>
                             <td>
                                 {{$order->status}}
                                 <span class="margin-left-5">
