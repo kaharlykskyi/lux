@@ -1517,6 +1517,10 @@ html .oe-list a {
         display: flex !important;
         justify-content: center;
     }
+    .selectric .label{
+
+        min-height: 30px !important;
+    }
 }
 
 @media (max-width: 768px) {
