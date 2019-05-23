@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\{AppTrait\GEO, Services\Profile, User, UserCar};
+use App\{AppTrait\GEO, Cart, Services\Profile, User, UserCar};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Auth,DB,Hash};
 
@@ -27,6 +27,9 @@ class ProfileController extends Controller
         $orders = $this->service->getOrders(Auth::id());
         $user_phones = $user->userPhones;
         $mutual_settelement = $user->mutualSettlements;
+        $back_order = Cart::with('cartProduct')
+            ->where('user_id',Auth::id())
+            ->where('oder_status',5)->get();
 
         foreach ($user_cars as $k => $data){
             $user_cars[$k] = $this->service->getCarInfo($data);
@@ -40,7 +43,8 @@ class ProfileController extends Controller
             'balance',
             'balance_history',
             'user_phones',
-            'mutual_settelement'
+            'mutual_settelement',
+            'back_order'
         ));
     }
 

@@ -26,10 +26,10 @@ function changeCount(product,cart,link) {
         url: link,
         data: `product_id=${product}&cart_id=${cart}&count=${count}`,
         success: function (data) {
-            $('#price'+product).text(`${data.response.product_cost} грн`);
+            $(`#price${product},#price-mob${product}`).text(`${data.response.product_cost} грн`);
             $('#cart .g-totel span').text(`${data.response.sum} грн`);
-            $('#total-price,#total-price-checkout').text(`${data.response.sum} грн`);
-            $('#total-not-discount').text(`${data.response.sum_not_disc} грн`);
+            $('#total-price-checkout').text(`${data.response.sum} грн`);
+            $('#total-not-discount,#total-price-modal,#total-price').text(`${data.response.sum_not_disc} грн`);
             $('#count-product-mini-cart').text(data.response.count);
         }
     });

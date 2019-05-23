@@ -88,9 +88,26 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">{{__('Мои возвраты')}}</div>
                         <div class="panel-body panel-profile">
-                            <div class="alert alert-info margin-15" role="alert">
-                                Возвратов нету
-                            </div>
+                            <ul class="list-group">
+                                @forelse($back_order as $order)
+                                    @php
+                                        $sum = 0;
+                                        foreach ($order->cartProduct as $product){
+                                            $sum += (int)$product->price * (int)$product->pivot['count'];
+                                        }
+                                    @endphp
+                                    <li class="list-group-item">
+                                        <span class="badge" title="Количество товаров">{{count($order->cartProduct)}}</span>
+                                        <strong>ID заказа:{{$order->id}}</strong>; Дата формирования: {{$order->oder_dt}}; Сумма: {{$sum}}грн.
+                                    </li>
+                                @empty
+                                    <li class="list-group-item">
+                                        <div class="alert alert-info margin-15" role="alert">
+                                            Возвратов нету
+                                        </div>
+                                    </li>
+                                @endforelse
+                            </ul>
                         </div>
                     </div>
                 </div>

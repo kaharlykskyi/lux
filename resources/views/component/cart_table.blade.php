@@ -26,7 +26,7 @@
                         <div class="quinty padding-top-20">
                             <input id="count{{$product->product->id}}" type="number" value="{{$product->count}}" oninput="changeCount({{$product->product->id}},{{$product->cart_id}},'{{route('product_count')}}')">
                         </div></td>
-                    <td class="text-center padding-top-60" id="price{{$product->id}}">{{((double)$product->product->price * (integer)$product->count)}} грн</td>
+                    <td class="text-center padding-top-60" id="price{{$product->product->id}}">{{((double)$product->product->price * (integer)$product->count)}} грн</td>
                     <td class="text-center padding-top-60"><a href="#." class="remove" onclick="deleteProduct({{$product->product->id}},{{$product->cart_id}},'{{route('product_delete')}}'); return false;"><i class="fa fa-close"></i></a></td>
                 </tr>
             @empty
