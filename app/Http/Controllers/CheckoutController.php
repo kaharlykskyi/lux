@@ -54,6 +54,7 @@ class CheckoutController extends Controller
             'phone' => 'required|regex:/^[0-9\-\(\)\/\+\s]*$/i',
             'country' => 'required',
             'city' => 'required',
+            'order_id' => 'required'
         ]);
 
         if ($validate->fails()) {
@@ -130,6 +131,7 @@ class CheckoutController extends Controller
             'phone' => 'required|regex:/^[0-9\-\(\)\/\+\s]*$/i',
             'country' => 'required',
             'city' => 'required',
+            'order_id' => 'required'
         ]);
 
         if ($validate->fails()) {

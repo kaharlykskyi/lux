@@ -1629,12 +1629,6 @@ html .oe-list a {
         margin-bottom: 10px;
     }
 
-    .mob-cart .list-group-item > div:last-child{
-        position: absolute;
-        top: 5px;
-        right: 15px;
-    }
-
     body header .logo {
         position: absolute;
         left: 15px;

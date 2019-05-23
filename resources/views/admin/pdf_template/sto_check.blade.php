@@ -53,6 +53,7 @@
                     Дата зверненя {{$check->application_date}}<br>
                     Дата складання {{$check->date_compilation}}<br>
                     Приймальник {{$check->acceptor}}<br>
+                    Дата печати {{date('Y-m-d')}}<br>
                 </p>
             </div>
         </div>

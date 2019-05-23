@@ -16,7 +16,7 @@
 <div class="login-sec padding-top-30 tab-content">
     <div role="tabpanel" class="tab-pane active" id="new_user">
         <form type="POST" action="{{route('checkout.new_user')}}">
-            <input type="hidden" name="order_id" value="{{$cart->id}}">
+            <input type="hidden" name="order_id" value="{{isset($cart->id)?$cart->id:''}}">
             @csrf
             <ul class="row">
                 <li class="col-sm-12">

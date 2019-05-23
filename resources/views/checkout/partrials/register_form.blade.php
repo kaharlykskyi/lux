@@ -1,6 +1,6 @@
 <div class="login-sec">
     <form method="POST" action="{{ route('checkout.create_oder') }}">
-        <input type="hidden" name="order_id" value="{{$cart->id}}">
+        <input type="hidden" name="order_id" value="{{isset($cart->id)?$cart->id:''}}">
         @csrf
 
         <ul class="row">
