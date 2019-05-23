@@ -138,7 +138,7 @@
                                                 <p><strong>ФИО: </strong>{{$product->cart->client->sername . ' '. $product->cart->client->name . ' ' . $product->cart->client->last_name}}</p>
                                                 <p><strong>Email: </strong>{{$product->cart->client->email}}</p>
                                                 <p><strong>Тип пользователя: </strong>{{$product->cart->client->type_user->name}}</p>
-                                                <p><strong>Город: </strong>{{$product->cart->client->userCity->name}}</p>
+                                                <p><strong>Город: </strong>{{isset($product->cart->client->userCity)?$product->cart->client->userCity->name:''}}</p>
                                                 <p><strong>Адрес: </strong>{{$product->cart->client->deliveryInfo->street . '/' . $product->cart->client->deliveryInfo->house}}</p>
                                                 <p><strong>Телефон: </strong>{{$product->cart->client->phone}}</p>
                                             </div>
