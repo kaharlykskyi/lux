@@ -306,6 +306,13 @@ function dataFilter(level,link) {
 function getDataFilterModification(link) {
     $.get(link, function(data) {
         let html = '';
+        let current_id = 0;
+        let interval = '';
+        let EngineType = '';
+        let Power = '';
+        let Capacity = '';
+        let DriveType = '';
+        let EngineCode = '';
         if (window.innerWidth > 768){
             html = `<table class="table table-hover">
                        <thead>
@@ -320,13 +327,6 @@ function getDataFilterModification(link) {
                           </tr>
                        </thead><tbody>`;
 
-            let current_id = 0;
-            let interval = '';
-            let EngineType = '';
-            let Power = '';
-            let Capacity = '';
-            let DriveType = '';
-            let EngineCode = '';
             data.response.forEach(function (item,key) {
                 if ((current_id !== parseInt(item.id) && current_id !== 0) || key + 1 === data.response.length){
                     html += `   <td>${EngineType}</td>
@@ -369,6 +369,44 @@ function getDataFilterModification(link) {
 
             html += '</tbody></table>';
         } else{
+            html += '<ul class="list-group">';
+
+            data.response.forEach(function (item,key) {
+
+                if (current_id !== parseInt(item.id)){
+                    html += `<li class="list-group-item" style="cursor: pointer;" onclick="$('#modification_auto').val('${item.name}').attr('data-id',${item.id});$('#modification_auto_block_result').hide();dataFilter(4);">`;
+                    current_id = item.id;
+                }
+
+                if (current_id === item.id){
+                    if (item.attributegroup === 'General' && item.attributetype === 'ConstructionInterval'){
+                        interval = item.displayvalue;
+                        html += `<span><strong>${item.name}</strong>,`
+                    }
+                    if (item.attributegroup === 'TechnicalData' && item.attributetype === 'EngineType'){
+                        EngineType = item.displayvalue;
+                    }
+                    if (item.attributegroup === 'TechnicalData' && item.attributetype === 'Power'){
+                        Power = item.displayvalue;
+                    }
+                    if (item.attributegroup === 'TechnicalData' && item.attributetype === 'Capacity'){
+                        Capacity = item.displayvalue;
+                    }
+                    if (item.attributegroup === 'Body' && item.attributetype === 'DriveType'){
+                        DriveType = item.displayvalue;
+                    }
+                    if (item.attributegroup === 'Engine' && item.attributetype === 'EngineCode'){
+                        EngineCode += item.displayvalue + ',';
+                    }
+                }
+
+                if ((current_id !== parseInt(item.id) && current_id !== 0) || key + 1 === data.response.length){
+                    html += `${EngineType}, ${EngineCode}, ${Capacity}, ${Power}, ${DriveType}, ${interval}</span></li>`;
+                    EngineCode = '';
+                }
+            });
+
+            html += '</ul>';
             console.log(window.innerWidth);
         }
 

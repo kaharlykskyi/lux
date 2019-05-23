@@ -554,11 +554,11 @@ header .logo img {
     background: #fff;
     z-index: 1000;
     border: 1px solid #ccc;
-    top: 45px;
     padding: 5px;
     border-radius: 10px;
     max-height: 310px;
     overflow: auto;
+    top: 100%;
 }
 
 .filter-section .search-car__list li span{
@@ -657,7 +657,7 @@ header .logo img {
     color: #fff;
 }
 
-.fancyTab a:hover{
+.fancyTab:hover a{
     color: #0088cc;
 }
 
