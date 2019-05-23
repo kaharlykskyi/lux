@@ -65,7 +65,7 @@ class UserController extends Controller
         DB::transaction(function () use ($data,$balance) {
             $mutual_settelement = new MutualSettlement();
             $mutual_settelement->fill($data);
-            $balance_val = isset($balance->balance)?round((float)$balance->balance,2):0 + ($mutual_settelement->change);
+            $balance_val = isset($balance->balance)?round((float)$balance->balance,2) + ((float)$mutual_settelement->change):0 + ((float)$mutual_settelement->change);
             $mutual_settelement->balance = $balance_val;
             $mutual_settelement->save();
             UserBalance::updateOrInsert(
