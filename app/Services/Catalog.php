@@ -28,6 +28,37 @@ class Catalog
                     ->get();
                 return $price[0];
                 break;
+            case 'modification':
+                if ($param['type'] === 'passenger'){
+                    $price = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
+                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                        ->where(DB::raw('al.productid'),DB::raw('pds.productid'))
+                        ->where(DB::raw('al.linkageid'),DB::raw('pds.passangercarid'))
+                        ->where(DB::raw("al.linkageid"),(int)$param['linkageid'])
+                        ->where(DB::raw("pds.nodeid"),(int)$param['nodeid'])
+                        ->where(DB::raw('al.linkagetypeid'),2)
+                        ->select(DB::raw('MIN(p.price) AS min, MAX(p.price) AS max'))
+                        ->get();
+                } else {
+                    $price = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
+                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                        ->where(DB::raw('al.productid'),DB::raw('pds.productid'))
+                        ->where(DB::raw('al.linkageid'),DB::raw('pds.passangercarid'))
+                        ->where(DB::raw("al.linkageid"),(int)$param['linkageid'])
+                        ->where(DB::raw("pds.nodeid"),(int)$param['nodeid'])
+                        ->where(DB::raw('al.linkagetypeid'),16)
+                        ->select(DB::raw('MIN(p.price) AS min, MAX(p.price) AS max'))
+                        ->get();
+                }
+
+                return $price[0];
+                break;
             case 'pcode':
                 $price = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_cross AS ac'))
                     ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('ac.SupplierId'),DB::raw('sp.id'))
@@ -63,6 +94,39 @@ class Catalog
                     ->select(DB::raw('s.id AS supplierId, s.description'))
                     ->distinct()
                     ->get();
+                break;
+            case 'modification':
+                if ($param['type'] === 'passenger'){
+                    $brands = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
+                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                        ->where(DB::raw('al.productid'),DB::raw('pds.productid'))
+                        ->where(DB::raw('al.linkageid'),DB::raw('pds.passangercarid'))
+                        ->where(DB::raw("al.linkageid"),(int)$param['linkageid'])
+                        ->where(DB::raw("pds.nodeid"),(int)$param['nodeid'])
+                        ->where(DB::raw('al.linkagetypeid'),2)
+                        ->select(DB::raw('s.id AS supplierId, s.description'))
+                        ->distinct()
+                        ->get();
+                } else {
+                    $brands = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
+                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                        ->where(DB::raw('al.productid'),DB::raw('pds.productid'))
+                        ->where(DB::raw('al.linkageid'),DB::raw('pds.passangercarid'))
+                        ->where(DB::raw("al.linkageid"),(int)$param['linkageid'])
+                        ->where(DB::raw("pds.nodeid"),(int)$param['nodeid'])
+                        ->where(DB::raw('al.linkagetypeid'),16)
+                        ->select(DB::raw('s.id AS supplierId, s.description'))
+                        ->distinct()
+                        ->get();
+                }
+
+                return $brands;
                 break;
             case 'pcode':
                 return DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_cross AS ac'))

@@ -387,11 +387,12 @@ class Tecdoc
      *
      * @param $modification_id
      * @param $section_id
-     * @param $pre
+     * @param int $pre
+     * @param array $filter
      * @param string $sort
      * @return mixed
      */
-    public function getSectionParts($modification_id, $section_id,$pre = 15,$sort = 'ASC')
+    public function getSectionParts($modification_id, $section_id,$pre = 15,array $filter,$sort = 'ASC')
     {
         switch ($this->type) {
             case 'passenger':
@@ -406,6 +407,11 @@ class Tecdoc
                     ->where(DB::raw("al.linkageid"),(int)$modification_id)
                     ->where(DB::raw("pds.nodeid"),(int)$section_id)
                     ->where(DB::raw('al.linkagetypeid'),2)
+                    ->where([
+                        [DB::raw('p.price'),'>=',$filter['price']['min']],
+                        [DB::raw('p.price'),'<=',$filter['price']['max']]
+                    ])
+                    ->whereRaw(isset($filter['supplier'])? " s.id IN (".implode(',',$filter['supplier']).")":'s.id > 0')
                     ->select(DB::raw('al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid supplierId, prd.description NormalizedDescription,p.id,p.name,p.price,p.count'))
                     ->orderBy(DB::raw('p.price'),$sort)
                     ->distinct()
@@ -423,6 +429,11 @@ class Tecdoc
                     ->where(DB::raw('al.linkageid'),(int)$modification_id)
                     ->where(DB::raw('pds.nodeid'),(int)$section_id)
                     ->where(DB::raw('al.linkagetypeid'),16)
+                    ->where([
+                        [DB::raw('p.price'),'>=',$filter['price']['min']],
+                        [DB::raw('p.price'),'<=',$filter['price']['max']]
+                    ])
+                    ->whereRaw(isset($filter['supplier'])? " s.id IN (".implode(',',$filter['supplier']).")":'s.id > 0')
                     ->select(DB::raw('al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid supplierId, prd.description NormalizedDescription,p.id,p.name,p.price,p.count'))
                     ->orderBy(DB::raw('p.price'),$sort)
                     ->distinct()

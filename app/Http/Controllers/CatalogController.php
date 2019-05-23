@@ -74,7 +74,21 @@ class CatalogController extends Controller
                 $this->tecdoc->setType($type);
                 switch ($request){
                     case isset($request->modification_auto):
-                        $this->catalog_products = $this->tecdoc->getSectionParts($request->modification_auto,$request->category,$this->pre_products);
+
+                        $this->brands = $this->service->getBrands('modification',['nodeid' => $request->category,'linkageid' => $request->modification_auto,'type' => $type]);
+
+                        $price = $this->service->getMinMaxPrice('modification',['nodeid' => $request->category,'linkageid' => $request->modification_auto,'type' => $type]);
+                        $this->min_price->start_price = round($price->min,2);
+                        $this->max_price->start_price = round($price->max,2);
+
+                        $this->catalog_products = $this->tecdoc->getSectionParts($request->modification_auto,$request->category,$this->pre_products,[
+                            'price' => [
+                                'min' => ($this->min_price->filter_price > 0)?$this->min_price->filter_price:$this->min_price->start_price,
+                                'max' => ($this->max_price->filter_price > 0)?$this->max_price->filter_price:$this->max_price->start_price
+                            ],
+                            'supplier' => isset($request->supplier)?$this->filter_supplier:null
+                        ]);
+
                         break;
                     default:
 
