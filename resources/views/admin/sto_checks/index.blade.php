@@ -48,6 +48,9 @@
                                     <td>{{$check->application_date}}</td>
                                     <td>
                                         <div class="table-data-feature">
+                                            <button onclick="location.href = '{{route('admin.sto_check_manager.show',$check->id)}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Просмотреть чек')}}">
+                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                            </button>
                                             <button onclick="location.href = '{{route('admin.sto_check_manager.pdf',$check->id)}}'" class="item" data-toggle="tooltip" data-placement="bottom" title="{{__('Сформировать товарный чек')}}">
                                                 <i class="fa fa-print" aria-hidden="true"></i>
                                             </button>

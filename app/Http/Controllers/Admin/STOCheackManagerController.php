@@ -76,7 +76,10 @@ class STOCheackManagerController extends Controller
      */
     public function show($id)
     {
-        //
+        $check = STOСheck::with('work')->findOrFail($id);
+        $settings = StoreSettings::where('type','company')->first();
+        $decode_company_data = json_decode($settings->settings);
+        return view('admin.sto_checks.show',compact('check','decode_company_data'));
     }
 
     /**
