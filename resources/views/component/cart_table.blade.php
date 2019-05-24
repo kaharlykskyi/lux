@@ -15,7 +15,7 @@
             @forelse($products as $product)
                 <tr id="tr_product{{$product->product->id}}">
                     <td>
-                        <a href="{{route('product',$product->product->articles)}}">
+                        <a href="{{route('product',['alias' => $product->product->articles,'product_id' => $product->product->id])}}">
                             <img class="cart-img" src="{{asset('images/item-img-1-1.jpg')}}" alt="{{$product->product->name}}" >
                             <p class="text-center">{{$product->product->name}}</p>
                         </a>
@@ -50,7 +50,7 @@
                 @forelse($products as $product)
                     <li class="list-group-item" id="li_product{{$product->product->id}}">
                         <div class="media">
-                            <div class="media-left"> <a href="{{route('product',$product->product->articles)}}"> <img class="img-responsive" src="{{asset('images/item-img-1-1.jpg')}}" alt="{{$product->product->name}}" > </a> </div>
+                            <div class="media-left"> <a href="{{route('product',['alias' => $product->product->articles,'product_id' => $product->product->id])}}"> <img class="img-responsive" src="{{asset('images/item-img-1-1.jpg')}}" alt="{{$product->product->name}}" > </a> </div>
                             <div class="media-body hidden-sm hidden-xs">
                                 <p>{{$product->product->short_description}}</p>
                             </div>
