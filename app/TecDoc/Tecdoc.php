@@ -431,10 +431,10 @@ class Tecdoc
                         }
                     })
                     ->whereRaw(isset($filter['supplier'])? " s.id IN (".implode(',',$filter['supplier']).")":'s.id > 0')
-                    ->select(DB::raw('al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid supplierId, prd.description NormalizedDescription,p.id,p.name,p.price,p.count'))
+                    ->select(DB::raw('al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid supplierId,p.id,p.name,p.price,p.count'))
                     ->orderBy(DB::raw('p.price'),$sort)
                     ->distinct()
-                    ->paginate($pre);
+                    ->paginate($pre,['p.id']);
                 break;
             case 'commercial':
                 return DB::connection($this->connection)
@@ -468,10 +468,10 @@ class Tecdoc
                         }
                     })
                     ->whereRaw(isset($filter['supplier'])? " s.id IN (".implode(',',$filter['supplier']).")":'s.id > 0')
-                    ->select(DB::raw('al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid supplierId, prd.description NormalizedDescription,p.id,p.name,p.price,p.count'))
+                    ->select(DB::raw('al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid supplierId,p.id,p.name,p.price,p.count'))
                     ->orderBy(DB::raw('p.price'),$sort)
                     ->distinct()
-                    ->paginate($pre);
+                    ->paginate($pre,['p.id']);
                 break;
             case 'motorbike':
                 return DB::connection($this->connection)->select(" SELECT al.datasupplierarticlenumber part_number, s.description supplier_name, prd.description product_name
@@ -808,7 +808,7 @@ class Tecdoc
             ->select(DB::raw('al.SupplierId AS supplierId, al.DataSupplierArticleNumber, s.matchcode, p.id, p.name, p.price,p.count,attr.*'))
             ->orderBy(DB::raw('p.price'),$sort)
             ->distinct()
-            ->paginate((int)$pre);
+            ->paginate((int)$pre,['p.id']);
     }
 
     public function getProductForArticleOE($OENbr,$manufacturer_id,$pre,array $filter,$sort = 'ASC'){
@@ -833,7 +833,7 @@ class Tecdoc
             ->select(DB::raw('sp.id AS supplierId, ac.PartsDataSupplierArticleNumber as DataSupplierArticleNumber, sp.matchcode, p.id, p.name, p.price,p.count'))
             ->orderBy(DB::raw('p.price'),$sort)
             ->distinct()
-            ->paginate((int)$pre);
+            ->paginate((int)$pre,['p.id']);
     }
 
     public function getProductForName($str,$pre,array $filter,$save_attr,$query_attr,$sort = 'ASC'){
@@ -874,7 +874,7 @@ class Tecdoc
             ->orderBy(DB::raw('p.price'),$sort)
             ->groupBy(DB::raw('p.articles,p.count,p.name,p.id,sp.matchcode,sp.id'))
             ->havingRaw('MIN(p.price)')
-            ->paginate((int)$pre);
+            ->paginate((int)$pre,['p.id']);
     }
 
     public function getProductByArticle($article, $supplier_id){
