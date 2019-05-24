@@ -314,7 +314,7 @@ class Catalog
 
     public function getQueryFilters($data){
         $resorv_word = [
-            'max','min','supplier','type','modification_auto','type_auto','search_str'
+            'max','min','supplier','type','modification_auto','type_auto','search_str','page'
         ];
 
         $query_attr = [];

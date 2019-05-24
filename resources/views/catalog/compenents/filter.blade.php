@@ -170,7 +170,7 @@
                     if (data_checkbox[0].checked && $.inArray(data_checkbox[0].value,attr_item) === -1){
                         attr_item.push(data_checkbox[0].value);
                     }else {
-                        if(data_checkbox[0].value === val){
+                        if(data_checkbox[0].value === decodeURI(val)){
                             attr_item.splice(key,1);
                         }
                     }
