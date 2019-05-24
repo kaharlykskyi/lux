@@ -6,6 +6,8 @@ use App\AllCategoryTree;
 use App\Services\Catalog;
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class CatalogController extends Controller
 {
@@ -32,6 +34,8 @@ class CatalogController extends Controller
     protected $list_catalog = null;
 
     protected $replace_product = null;
+
+    protected $query_filters = [];
 
     public function __construct()
     {
@@ -63,11 +67,15 @@ class CatalogController extends Controller
             $this->max_price->filter_price = round($request->max,2);
         }
 
-        //$save_filetrs = DB::table('filter_settings')->where('use','=',1)->get();
+        $save_filters = Cache::remember('save_filters', 60, function(){
+            return  DB::table('filter_settings')->where('use','=',1)->get();
+        });
+
+        $this->query_filters = $this->service->getQueryFilters($request->query());
 
         switch ($request){
             case isset($request->search_str):
-                $this->getSearchResult($request);
+                $this->getSearchResult($request,$save_filters);
                 break;
             case isset($request->category):
                 $type = (isset($request->type_auto)?$request->type_auto:'passenger');
@@ -81,13 +89,15 @@ class CatalogController extends Controller
                         $this->min_price->start_price = round($price->min,2);
                         $this->max_price->start_price = round($price->max,2);
 
+                        $this->attribute = $this->service->getAttributes('modification',['nodeid' => $request->category,'linkageid' => $request->modification_auto,'type' => $type],$save_filters);
+
                         $this->catalog_products = $this->tecdoc->getSectionParts($request->modification_auto,$request->category,$this->pre_products,[
                             'price' => [
                                 'min' => ($this->min_price->filter_price > 0)?$this->min_price->filter_price:$this->min_price->start_price,
                                 'max' => ($this->max_price->filter_price > 0)?$this->max_price->filter_price:$this->max_price->start_price
                             ],
                             'supplier' => isset($request->supplier)?$this->filter_supplier:null
-                        ]);
+                        ],$save_filters,$this->query_filters);
 
                         break;
                     default:
@@ -106,13 +116,15 @@ class CatalogController extends Controller
                         $this->min_price->start_price = round($price->min,2);
                         $this->max_price->start_price = round($price->max,2);
 
+                        $this->attribute = $this->service->getAttributes('category',['id' => $request->category,'type' => $type],$save_filters);
+
                         $this->catalog_products = $this->tecdoc->getCategoryProduct($request->category,$this->pre_products,[
                             'price' => [
                                 'min' => ($this->min_price->filter_price > 0)?$this->min_price->filter_price:$this->min_price->start_price,
                                 'max' => ($this->max_price->filter_price > 0)?$this->max_price->filter_price:$this->max_price->start_price
                             ],
                             'supplier' => isset($request->supplier)?$this->filter_supplier:null
-                        ]);
+                        ],$save_filters,$this->query_filters);
                 }
                 break;
             case isset($request->pcode) || !empty($request->query('query')):
@@ -165,7 +177,7 @@ class CatalogController extends Controller
         }
     }
 
-    private function getSearchResult($request){
+    private function getSearchResult($request,$save_filters){
         if ($request->type === 'articles'){
 
             if ($request->has('supplier')){
@@ -185,7 +197,7 @@ class CatalogController extends Controller
             $this->min_price->start_price = round($price->min,2);
             $this->max_price->start_price = round($price->max,2);
 
-            //$this->attribute = $this->service->getAttributes('search_str',['str' => $request->search_str],$save_filetrs);
+            $this->attribute = $this->service->getAttributes('search_str',['str' => $request->search_str],$save_filters);
 
             $this->catalog_products = $this->tecdoc->getProductForName(trim(strip_tags($request->search_str)),$this->pre_products,[
                 'price' => [
@@ -193,7 +205,7 @@ class CatalogController extends Controller
                     'max' => ($this->max_price->filter_price > 0)?$this->max_price->filter_price:$this->max_price->start_price
                 ],
                 'supplier' => isset($request->supplier)?$this->filter_supplier:null
-            ]);
+            ],$save_filters,$this->query_filters);
         }
     }
 

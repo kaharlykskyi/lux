@@ -155,14 +155,67 @@ class Catalog
                 case 'search_str':
                     $filters_data = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_attributes AS attr'))
                         ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('attr.DataSupplierArticleNumber'),'=',DB::raw('p.articles'))
-                        ->where([
-                            [DB::raw('p.articles'),'LIKE',"%{$param['str']}%",'OR'],
-                            [DB::raw('p.name'),'LIKE',"%{$param['str']}%",'OR']
-                        ])
+                        ->where(DB::raw('p.name'),'LIKE',"%{$param['str']}%")
                         ->whereIn('attr.id',$attr_ids)
                         ->select(DB::raw('attr.id, attr.description, attr.displaytitle, attr.displayvalue'))
                         ->distinct()
                         ->get();
+                    break;
+
+                case 'category':
+                    $filters_data = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_attributes AS attr'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links as al'),function ($query){
+                            $query->on('al.DataSupplierArticleNumber','=','attr.DataSupplierArticleNumber');
+                            $query->on('al.SupplierId','=','attr.supplierId');
+                        })
+                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                        ->where(DB::raw('al.linkageid'),(int)$param['id'])
+                        ->where(DB::raw('al.linkagetypeid'),$param['type'] === 'passenger'?2:16)
+                        ->whereIn('attr.id',$attr_ids)
+                        ->select(DB::raw('attr.id, attr.description, attr.displaytitle, attr.displayvalue'))
+                        ->distinct()
+                        ->get();
+                    break;
+
+                case 'modification':
+                    if ($param['type'] === 'passenger'){
+                        $filters_data = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_attributes AS attr'))
+                            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links as al'),function ($query){
+                                $query->on('al.DataSupplierArticleNumber','=','attr.DataSupplierArticleNumber');
+                                $query->on('al.SupplierId','=','attr.supplierId');
+                            })
+                            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
+                            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
+                            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
+                            ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                            ->where(DB::raw('al.productid'),DB::raw('pds.productid'))
+                            ->where(DB::raw('al.linkageid'),DB::raw('pds.passangercarid'))
+                            ->where(DB::raw("al.linkageid"),(int)$param['linkageid'])
+                            ->where(DB::raw("pds.nodeid"),(int)$param['nodeid'])
+                            ->where(DB::raw('al.linkagetypeid'),2)
+                            ->select(DB::raw('attr.id, attr.description, attr.displaytitle, attr.displayvalue'))
+                            ->distinct()
+                            ->get();
+                    } else {
+                        $filters_data = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_attributes AS attr'))
+                            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links as al'),function ($query){
+                                $query->on('al.DataSupplierArticleNumber','=','attr.DataSupplierArticleNumber');
+                                $query->on('al.SupplierId','=','attr.supplierId');
+                            })
+                            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
+                            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
+                            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
+                            ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                            ->where(DB::raw('al.productid'),DB::raw('pds.productid'))
+                            ->where(DB::raw('al.linkageid'),DB::raw('pds.passangercarid'))
+                            ->where(DB::raw("al.linkageid"),(int)$param['linkageid'])
+                            ->where(DB::raw("pds.nodeid"),(int)$param['nodeid'])
+                            ->where(DB::raw('al.linkagetypeid'),16)
+                            ->select(DB::raw('attr.id, attr.description, attr.displaytitle, attr.displayvalue'))
+                            ->distinct()
+                            ->get();
+                    }
+
                     break;
             }
         }
@@ -257,5 +310,20 @@ class Catalog
         }
 
         return $replace_product_loc_sort;
+    }
+
+    public function getQueryFilters($data){
+        $resorv_word = [
+            'max','min','supplier','type','modification_auto','type_auto','search_str'
+        ];
+
+        $query_attr = [];
+        foreach ($data as $k => $val){
+            if (!in_array($k,$resorv_word) && !empty($val)){
+                $query_attr[$k] = $val;
+            }
+        }
+
+        return $query_attr;
     }
 }

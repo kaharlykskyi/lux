@@ -389,11 +389,15 @@ class Tecdoc
      * @param $section_id
      * @param int $pre
      * @param array $filter
+     * @param $save_attr
+     * @param $query_attr
      * @param string $sort
      * @return mixed
      */
-    public function getSectionParts($modification_id, $section_id,$pre = 15,array $filter,$sort = 'ASC')
+    public function getSectionParts($modification_id, $section_id,$pre,array $filter,$save_attr, $query_attr,$sort = 'ASC')
     {
+        $attr_filter = $this->getSortAttr($save_attr,$query_attr);
+
         switch ($this->type) {
             case 'passenger':
                 return DB::connection($this->connection)
@@ -402,6 +406,10 @@ class Tecdoc
                     ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
                     ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
                     ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                    ->leftJoin('article_attributes as attr',function ($query){
+                        $query->on('attr.DataSupplierArticleNumber','=','al.DataSupplierArticleNumber');
+                        $query->on('attr.supplierId','=','al.SupplierId');
+                    })
                     ->where(DB::raw('al.productid'),DB::raw('pds.productid'))
                     ->where(DB::raw('al.linkageid'),DB::raw('pds.passangercarid'))
                     ->where(DB::raw("al.linkageid"),(int)$modification_id)
@@ -411,6 +419,17 @@ class Tecdoc
                         [DB::raw('p.price'),'>=',$filter['price']['min']],
                         [DB::raw('p.price'),'<=',$filter['price']['max']]
                     ])
+                    ->where(function ($query) use ($attr_filter) {
+                        foreach ($attr_filter as $item){
+                            $group_attr = [];
+
+                            foreach ($item as  $data){
+                                $group_attr[] = $data;
+                            }
+
+                            $query->where($group_attr,null,null,'OR');
+                        }
+                    })
                     ->whereRaw(isset($filter['supplier'])? " s.id IN (".implode(',',$filter['supplier']).")":'s.id > 0')
                     ->select(DB::raw('al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid supplierId, prd.description NormalizedDescription,p.id,p.name,p.price,p.count'))
                     ->orderBy(DB::raw('p.price'),$sort)
@@ -424,6 +443,10 @@ class Tecdoc
                     ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
                     ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
                     ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                    ->leftJoin('article_attributes as attr',function ($query){
+                        $query->on('attr.DataSupplierArticleNumber','=','al.DataSupplierArticleNumber');
+                        $query->on('attr.supplierId','=','al.SupplierId');
+                    })
                     ->where(DB::raw('al.productid'),DB::raw('pds.productid'))
                     ->where(DB::raw('al.linkageid'),DB::raw('pds.commertialvehicleid'))
                     ->where(DB::raw('al.linkageid'),(int)$modification_id)
@@ -433,6 +456,17 @@ class Tecdoc
                         [DB::raw('p.price'),'>=',$filter['price']['min']],
                         [DB::raw('p.price'),'<=',$filter['price']['max']]
                     ])
+                    ->where(function ($query) use ($attr_filter) {
+                        foreach ($attr_filter as $item){
+                            $group_attr = [];
+
+                            foreach ($item as  $data){
+                                $group_attr[] = $data;
+                            }
+
+                            $query->where($group_attr,null,null,'OR');
+                        }
+                    })
                     ->whereRaw(isset($filter['supplier'])? " s.id IN (".implode(',',$filter['supplier']).")":'s.id > 0')
                     ->select(DB::raw('al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid supplierId, prd.description NormalizedDescription,p.id,p.name,p.price,p.count'))
                     ->orderBy(DB::raw('p.price'),$sort)
@@ -736,24 +770,42 @@ class Tecdoc
         }
     }
 
-    public function getCategoryProduct($id,$pre,array $filter,$sort = 'ASC'){
+    public function getCategoryProduct($id,$pre,array $filter,$save_attr, $query_attr,$sort = 'ASC'){
         if (isset($filter['supplier'])){
             foreach ($filter['supplier'] as $k => $item){
                 $filter['supplier'][$k] = (int)$item;
             }
         }
+
+        $attr_filter = $this->getSortAttr($save_attr,$query_attr);
+
         return DB::connection($this->connection)
-            ->table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links as al'))
-            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers as s'),DB::raw('s.id'),DB::raw('al.supplierid'))
+            ->table(DB::raw('article_links as al'))
+            ->join(DB::raw('suppliers as s'),DB::raw('s.id'),DB::raw('al.supplierid'))
             ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+            ->leftJoin('article_attributes as attr',function ($query){
+                $query->on('attr.DataSupplierArticleNumber','=','al.DataSupplierArticleNumber');
+                $query->on('attr.supplierId','=','al.SupplierId');
+            })
             ->where(DB::raw('al.linkageid'),(int)$id)
             ->where(DB::raw('al.linkagetypeid'),($this->type) === 'passenger'?2:16)
             ->where([
                 [DB::raw('p.price'),'>=',$filter['price']['min']],
                 [DB::raw('p.price'),'<=',$filter['price']['max']]
             ])
+            ->where(function ($query) use ($attr_filter) {
+                foreach ($attr_filter as $item){
+                    $group_attr = [];
+
+                    foreach ($item as  $data){
+                        $group_attr[] = $data;
+                    }
+
+                    $query->where($group_attr,null,null,'OR');
+                }
+            })
             ->whereRaw(isset($filter['supplier'])? " s.id IN (".implode(',',$filter['supplier']).")":'s.id > 0')
-            ->select(DB::raw('al.SupplierId AS supplierId, al.DataSupplierArticleNumber, s.matchcode, p.id, p.name, p.price,p.count'))
+            ->select(DB::raw('al.SupplierId AS supplierId, al.DataSupplierArticleNumber, s.matchcode, p.id, p.name, p.price,p.count,attr.*'))
             ->orderBy(DB::raw('p.price'),$sort)
             ->distinct()
             ->paginate((int)$pre);
@@ -784,13 +836,16 @@ class Tecdoc
             ->paginate((int)$pre);
     }
 
-    public function getProductForName($str,$pre,array $filter,$sort = 'ASC'){
+    public function getProductForName($str,$pre,array $filter,$save_attr,$query_attr,$sort = 'ASC'){
 
         if (isset($filter['supplier'])){
             foreach ($filter['supplier'] as $k => $item){
                 $filter['supplier'][$k] = (int)$item;
             }
         }
+
+        $attr_filter = $this->getSortAttr($save_attr,$query_attr);
+
         return DB::connection($this->connection)
             ->table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
             ->where(DB::raw('p.name'),'LIKE',"%{$str}%")
@@ -799,6 +854,21 @@ class Tecdoc
                 [DB::raw('p.price'),'<=',$filter['price']['max']]
             ])
             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('sp.matchcode'),DB::raw('p.brand'))
+            ->leftJoin('article_attributes as attr',function ($query){
+                $query->on('attr.DataSupplierArticleNumber','=','p.articles');
+                $query->on('attr.supplierId','=','sp.id');
+            })
+            ->where(function ($query) use ($attr_filter) {
+                foreach ($attr_filter as $item){
+                    $group_attr = [];
+
+                    foreach ($item as  $data){
+                        $group_attr[] = $data;
+                    }
+
+                    $query->where($group_attr,null,null,'OR');
+                }
+            })
             ->whereRaw(isset($filter['supplier'])? " sp.id IN (".implode(',',$filter['supplier']).")":'sp.id > 0')
             ->select(DB::raw('sp.id AS supplierId, sp.matchcode, p.id, p.name, p.price, p.articles,p.count'))
             ->orderBy(DB::raw('p.price'),$sort)
@@ -848,5 +918,27 @@ class Tecdoc
 
         return DB::connection($this->connection)
             ->select("SELECT DISTINCT {$select} FROM prd {$where}");
+    }
+
+    private function getSortAttr($save_attr,$query_attr){
+        $attr_filter = [];
+        if (!empty($save_attr) && !empty($query_attr)){
+            foreach ($query_attr as $k => $val){
+                foreach ($save_attr as $item){
+                    if ($item->hurl . '_' . $item->filter_id === $k){
+                        $buff = explode(',',$val);
+                        foreach ($buff as $data){
+                            $attr_filter[] = [
+                                ['attr.id','=',$item->filter_id],
+                                ['attr.description','=',$item->description],
+                                ['attr.displayvalue','=',$data],
+                            ];
+                        }
+                    }
+                }
+            }
+        }
+
+        return $attr_filter;
     }
 }
