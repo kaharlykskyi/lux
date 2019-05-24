@@ -33,13 +33,13 @@
                             <a href="{{route('admin.show_brand')}}">{{__('Бренды')}}</a>
                         </li>
                         <li>
-                            <a href="{{route('admin.filter','use')}}">{{__('Настрайки фильтра')}}</a>
+                            <a href="{{route('admin.filter','use')}}">{{__('Настройки фильтра')}}</a>
                         </li>
                         <li>
-                            <a href="{{route('admin.all_category.index')}}">{{__('Общяя структура категорий')}}</a>
+                            <a href="{{route('admin.all_category.index')}}">{{__('Общая структура категорий')}}</a>
                         </li>
                         <li>
-                            <a href="{{route('admin.home_category.index')}}">{{__('Групировка категорий для главной страници')}}</a>
+                            <a href="{{route('admin.home_category.index')}}">{{__('Групировка категорий для главной страницы')}}</a>
                         </li>
                     </ul>
                 </li>
@@ -127,7 +127,7 @@
                         <i class="fas fa-copy"></i>{{__('Управление контентом')}}</a>
                     <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
                         <li>
-                            <a href="{{route('admin.page.index')}}">{{__('Страници')}}</a>
+                            <a href="{{route('admin.page.index')}}">{{__('Страницы')}}</a>
                         </li>
                         <li>
                             <a href="{{route('admin.banner.index')}}">{{__('Слайды баннера')}}</a>
@@ -136,7 +136,7 @@
                             <a href="{{route('admin.menu.index')}}">{{__('Меню')}}</a>
                         </li>
                         <li>
-                            <a href="{{route('admin.comment')}}">{{__('Коментарии')}}</a>
+                            <a href="{{route('admin.comment')}}">{{__('Комментарии')}}</a>
                         </li>
                         <li>
                             <a href="{{route('admin.shipping_payment')}}">{{__('Доставка и оплата')}}</a>

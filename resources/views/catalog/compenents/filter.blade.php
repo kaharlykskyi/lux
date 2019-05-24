@@ -9,8 +9,8 @@
     <!-- PRICE -->
     <div class="cost-price-content">
         <div id="price-range" class="price-range"></div>
-        <span id="price-min" class="price-min">20</span>
-        <span id="price-max" class="price-max">80</span>
+        <input type="text" id="price-min" class="price-min" value="20">
+        <input type="text" id="price-max" class="price-max" value="80">
         <a href="#." onclick="setPrice()" class="btn-round" >{{__('Фильтровать')}}</a>
     </div>
 
@@ -77,11 +77,7 @@
                         target: $("#price-max")
                     })
                 ],
-                format: {
-                    // Set formatting
-                    decimals: 2,
-                    prefix: '₴'
-                }
+                format: {decimals: 0}
             }
         })
     });
@@ -97,22 +93,22 @@
         search_str.forEach(function (item, i, search_str) {
             let data = item.split('=');
             if (data[0] === 'min') {
-                search_str[i] = `min=${$('#price-min').text().substring(1, $('#price-min').text().length)}`;
+                search_str[i] = `min=${$('#price-min').val()}`;
                 min = false;
             }
             if (data[0] === 'max') {
-                search_str[i] = `max=${$('#price-max').text().substring(1, $('#price-max').text().length)}`;
+                search_str[i] = `max=${$('#price-max').val()}`;
                 max = false;
             }
 
         });
 
         if (max) {
-            search_str.push(`max=${$('#price-max').text().substring(1, $('#price-max').text().length)}`);
+            search_str.push(`max=${$('#price-max').val()}`);
         }
 
         if (min) {
-            search_str.push(`min=${$('#price-min').text().substring(1, $('#price-min').text().length)}`);
+            search_str.push(`min=${$('#price-min').val()}`);
         }
 
         location.href = `${parser.protocol}//${parser.host}${parser.pathname}?${search_str.join('&')}`;
