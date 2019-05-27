@@ -75,7 +75,7 @@ class CatalogController extends Controller
 
         switch ($request){
             case isset($request->search_str):
-                $this->getSearchResult($request,$save_filters);
+                $this->getSearchResult($request);
                 break;
             case isset($request->category):
                 $type = (isset($request->type_auto)?$request->type_auto:'passenger');
@@ -177,7 +177,7 @@ class CatalogController extends Controller
         }
     }
 
-    private function getSearchResult($request,$save_filters){
+    private function getSearchResult($request){
         if ($request->type === 'articles'){
 
             if ($request->has('supplier')){
@@ -197,15 +197,13 @@ class CatalogController extends Controller
             $this->min_price->start_price = round($price->min,2);
             $this->max_price->start_price = round($price->max,2);
 
-            $this->attribute = $this->service->getAttributes('search_str',['str' => $request->search_str],$save_filters);
-
             $this->catalog_products = $this->tecdoc->getProductForName(trim(strip_tags($request->search_str)),$this->pre_products,[
                 'price' => [
                     'min' => ($this->min_price->filter_price > 0)?$this->min_price->filter_price:$this->min_price->start_price,
                     'max' => ($this->max_price->filter_price > 0)?$this->max_price->filter_price:$this->max_price->start_price
                 ],
                 'supplier' => isset($request->supplier)?$this->filter_supplier:null
-            ],$save_filters,$this->query_filters);
+            ]);
         }
     }
 

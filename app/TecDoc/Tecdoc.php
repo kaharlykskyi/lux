@@ -836,15 +836,13 @@ class Tecdoc
             ->paginate((int)$pre,['p.id']);
     }
 
-    public function getProductForName($str,$pre,array $filter,$save_attr,$query_attr,$sort = 'ASC'){
+    public function getProductForName($str,$pre,array $filter,$sort = 'ASC'){
 
         if (isset($filter['supplier'])){
             foreach ($filter['supplier'] as $k => $item){
                 $filter['supplier'][$k] = (int)$item;
             }
         }
-
-        $attr_filter = $this->getSortAttr($save_attr,$query_attr);
 
         return DB::connection($this->connection)
             ->table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
@@ -854,21 +852,6 @@ class Tecdoc
                 [DB::raw('p.price'),'<=',$filter['price']['max']]
             ])
             ->join(DB::raw('suppliers AS sp'),DB::raw('sp.matchcode'),DB::raw('p.brand'))
-            ->leftJoin('article_attributes as attr',function ($query){
-                $query->on('attr.DataSupplierArticleNumber','=','p.articles');
-                $query->on('attr.supplierId','=','sp.id');
-            })
-            ->where(function ($query) use ($attr_filter) {
-                foreach ($attr_filter as $item){
-                    $group_attr = [];
-
-                    foreach ($item as  $data){
-                        $group_attr[] = $data;
-                    }
-
-                    $query->where($group_attr);
-                }
-            })
             ->whereRaw(isset($filter['supplier'])? " sp.id IN (".implode(',',$filter['supplier']).")":'sp.id > 0')
             ->select(DB::raw('sp.id AS supplierId, sp.matchcode, p.id, p.name, p.price, p.articles,p.count'))
             ->orderBy(DB::raw('p.price'),$sort)
