@@ -12,8 +12,7 @@ class Catalog
         switch ($level){
             case 'search_str':
                 $price = DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
-                    ->where(DB::raw('p.articles'),'LIKE',"%{$param['str']}%")
-                    ->orWhere(DB::raw('p.name'),'LIKE',"%{$param['str']}%")
+                    ->where(DB::raw('p.name'),'LIKE',"{$param['str']}%")
                     ->select(DB::raw(' MIN(p.price) AS min, MAX(p.price) AS max'))
                     ->get();
                 return $price[0];
@@ -76,10 +75,7 @@ class Catalog
         switch ($level){
             case 'search_str':
                 return DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
-                    ->orWhere([
-                        [DB::raw('p.articles'),'LIKE',"%{$param['str']}%",'OR'],
-                        [DB::raw('p.name'),'LIKE',"%{$param['str']}%",'OR']
-                    ])
+                    ->where(DB::raw('p.name'),'LIKE',"{$param['str']}%")
                     ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('sp.matchcode'),DB::raw('p.brand'))
                     ->select(DB::raw('sp.id AS supplierId, sp.description'))
                     ->distinct()
@@ -153,9 +149,13 @@ class Catalog
         if (isset($attr_ids)){
             switch ($level){
                 case 'search_str':
-                    $filters_data = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_attributes AS attr'))
-                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('attr.DataSupplierArticleNumber'),'=',DB::raw('p.articles'))
-                        ->where(DB::raw('p.name'),'LIKE',"%{$param['str']}%")
+                    $filters_data = DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('sp.matchcode'),DB::raw('p.brand'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_attributes AS attr'),function ($query){
+                            $query->on(DB::raw('attr.DataSupplierArticleNumber'),'=',DB::raw('p.articles'));
+                            $query->on('attr.supplierId','=','sp.id');
+                        })
+                        ->where(DB::raw('p.name'),'LIKE',"{$param['str']}%")
                         ->whereIn('attr.id',$attr_ids)
                         ->select(DB::raw('attr.id, attr.description, attr.displaytitle, attr.displayvalue'))
                         ->distinct()

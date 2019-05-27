@@ -18,7 +18,7 @@
 
                     <!-- Shop Side Bar -->
                     <div class="col-md-3">
-                        @if(!empty($catalog_products) && $catalog_products->total() > 0)
+                        @if(!empty($brands) || (int)$max_price->start_price > 0)
                             @component('catalog.compenents.filter',[
                                 'brands' => $brands,
                                 'min_price' => $min_price,
