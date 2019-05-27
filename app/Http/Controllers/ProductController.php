@@ -27,7 +27,7 @@ class ProductController extends Controller
         }
 
         if (isset($request->supplierid)){
-            $art_replace = $this->tecdoc->getArtReplace($request->alias,$request->supplierid);
+            $art_replace = $this->tecdoc->getArtCross($request->alias,$request->supplierid);
             $accessories = $this->tecdoc->getAccessories($request->alias);
             $product_vehicles = $this->tecdoc->getArtVehicles($request->alias,$request->supplierid);
             $product_attr = $this->tecdoc->getArtAttributes($request->alias,$request->supplierid);

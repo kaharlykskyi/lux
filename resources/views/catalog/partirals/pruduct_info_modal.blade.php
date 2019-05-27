@@ -41,7 +41,7 @@
             `;
 
             if (data.attr !== null){
-                html += '<div role="tabpanel" class="tab-pane active" id="attribute"><table class="table"><tbody>';
+                html += '<div role="tabpanel" class="table-responsive tab-pane active" id="attribute"><table class="table"><tbody>';
                 data.attr.forEach(function (item) {
                     html += `<tr>
                                 <td>${item.description}</td>
@@ -51,9 +51,23 @@
                 html += '</tbody></table></div>';
             }
 
+            if (data.vehicles !== null){
+                html += '<div role="tabpanel" class="table-responsive tab-pane" id="vehicles"><table class="table table-striped"><tbody>';
+                for (let item in data.vehicles){
+                    for(let val in data.vehicles[item]){
+                        html += `<tr>
+                                <td>${data.vehicles[item][val].make}</td>
+                                <td>${data.vehicles[item][val].model}</td>
+                                <td>${data.vehicles[item][val].description}</td>
+                                <td>${data.vehicles[item][val].constructioninterval}</td>
+                            </tr>`;
+                    }
+                }
+                html += '</tbody></table></div>';
+            }
+
 
             $('#productInfoModal .modal-body').html(html + '</div></div>');
-            console.log(data)
         });
     }
 </script>

@@ -25,7 +25,7 @@
 @if(isset($art_replace) && count($art_replace) > 0)
     <section class="padding-top-30 padding-bottom-0">
         <div class="heading">
-            <h2>{{__('Сопутсвующие товары')}}</h2>
+            <h2>{{__('Товары аналоги')}}</h2>
             <hr>
         </div>
         <div class="item-slide-4 with-nav">
@@ -36,7 +36,7 @@
                         @if(isset($item->old_price) && $item->old_price > 0)
                             <span class="sale-tag">-{{(int)(100 - (100 *$item->price /$item->old_price))}}%</span>
                         @endif
-                        <span class="tag">{{$item->matchcode}}</span> <a href="{{route('product',str_replace(' ','',str_replace('/','@',($item->DataSupplierArticleNumber))))}}?supplierid={{$item->supplierId}}" class="tittle">{{$item->name}}</a><br>
+                        <span class="tag">{{$item->matchcode}}</span> <a href="{{route('product',str_replace('/','@',($item->articles)))}}?supplierid={{$item->supplierId}}&product_id={{$item->id}}" class="tittle">{{$item->name}}</a><br>
                         <div class="price">{{(int)$item->price}}грн. </div>
                         <a href="#." onclick="{{(int)$item->count > 0?'addCartRelate(\''.route('add_cart',$item->id).'\');return false;':'alert(\'Извините, данный товар отсутсвует на складе\')'}}" class="cart-btn"><i class="icon-basket-loaded"></i></a>
                     </article>

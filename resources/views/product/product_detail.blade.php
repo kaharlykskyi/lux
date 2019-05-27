@@ -142,6 +142,7 @@
                                 <!-- Nav tabs -->
                                 <ul class="nav" role="tablist">
                                     <li role="presentation" class="active"><a href="#pro-detil"  role="tab" data-toggle="tab">{{__('Описание продукта')}}</a></li>
+                                    <li role="presentation"><a href="#product_vehicles"  role="tab" data-toggle="tab">{{__('Применимость детали')}}</a></li>
                                     <li role="presentation"><a href="#cus-rev"  role="tab" data-toggle="tab">{{__('Отзывы(' . count($product->comment) . ')')}}</a></li>
                                     <li role="presentation"><a href="#ship" role="tab" data-toggle="tab">{{__('Доставка и оплата')}}</a></li>
                                 </ul>
@@ -166,6 +167,24 @@
                                                 @endisset
                                             </div>
                                         </div>
+                                    </div>
+                                    <div role="tabpanel" class="table-responsive tab-pane fade" id="product_vehicles">
+                                        <table class="table table-striped">
+                                            <tbody>
+                                                @isset($product_vehicles)
+                                                    @foreach($product_vehicles as $data)
+                                                        @foreach($data as $item)
+                                                            <tr>
+                                                                <td>{{$item->make}}</td>
+                                                                <td>{{$item->model}}</td>
+                                                                <td>{{$item->description}}</td>
+                                                                <td>{{$item->constructioninterval}}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    @endforeach
+                                                @endisset
+                                            </tbody>
+                                        </table>
                                     </div>
                                     <div role="tabpanel" class="tab-pane fade" id="cus-rev">
                                         @include('product.partirals.comments')

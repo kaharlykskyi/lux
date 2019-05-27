@@ -613,39 +613,73 @@ class Tecdoc
     public function getArtVehicles($number, $brand_id)
     {
         $result = [];
-        $rows = DB::connection($this->connection)->select("
-            SELECT linkageTypeId, linkageId FROM article_li WHERE DataSupplierArticleNumber='" . $number . "' AND supplierId=" . (int)$brand_id . "
-        ");
-        foreach ($rows as $row) {
-            switch ($row) {
+        $model_id = [];
+        $rows = DB::connection($this->connection)
+            ->table('article_li')
+            ->where('DataSupplierArticleNumber',$number)
+            ->where('supplierId',(int)$brand_id)
+            ->select('linkageTypeId','linkageId')->get();
+
+        foreach ($rows as $row){
+            if ($row->linkageTypeId === 'PassengerCar'){
+                $model_id['PassengerCar'][] = $row->linkageId;
+            }
+            if ($row->linkageTypeId === 'CommercialVehicle'){
+                $model_id['CommercialVehicle'][] = $row->linkageId;
+            }
+        }
+
+        foreach ($model_id as $k => $row) {
+            switch ($k) {
                 case 'PassengerCar':
-                    $result[$row['linkageTypeId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, mm.description make, m.description model, p.constructioninterval, p.description FROM passanger_cars p 
-                        JOIN models m ON m.id=p.modelid
-                        JOIN manufacturers mm ON mm.id=m.manufacturerid
-                        WHERE p.id=" . $row['linkageId']);
+                    $result['PassengerCar'] = DB::connection($this->connection)
+                        ->table('passanger_cars AS p')
+                        ->join('models AS m','m.id','=','p.modelid')
+                        ->join('manufacturers AS mm','mm.id','=','m.manufacturerid')
+                        ->whereIn('p.id',$row)
+                        ->select('p.id','mm.description AS make','m.description AS model','p.constructioninterval','p.description')
+                        ->distinct()
+                        ->get();
                     break;
                 case 'CommercialVehicle':
-                    $result[$row['linkageTypeId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, mm.description make, m.description model, p.constructioninterval, p.description FROM commercial_vehicles p 
-                        JOIN models m ON m.id=p.modelid
-                        JOIN manufacturers mm ON mm.id=m.manufacturerid
-                        WHERE p.id=" . $row['linkageId']);
+                    $result['CommercialVehicle'] = DB::connection($this->connection)
+                        ->table('commercial_vehicles AS p')
+                        ->join('models AS m','m.id','=','p.modelid')
+                        ->join('manufacturers AS mm','mm.id','=','m.manufacturerid')
+                        ->whereIn('p.id',$row)
+                        ->select('p.id','mm.description AS make','m.description AS model','p.constructioninterval','p.description')
+                        ->distinct()
+                        ->get();
                     break;
                 case 'Motorbike':
-                    $result[$row['linkageTypeId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, mm.description make, m.description model, p.constructioninterval, p.description FROM motorbikes p 
-                        JOIN models m ON m.id=p.modelid
-                        JOIN manufacturers mm ON mm.id=m.manufacturerid
-                        WHERE p.id=" . $row['linkageId']);
+                    $result['Motorbike'] = DB::connection($this->connection)
+                        ->table('motorbikes AS p')
+                        ->join('models AS m','m.id','=','p.modelid')
+                        ->join('manufacturers AS mm','mm.id','=','m.manufacturerid')
+                        ->whereIn('p.id',$row)
+                        ->select('p.id','mm.description AS make','m.description AS model','p.constructioninterval','p.description')
+                        ->distinct()
+                        ->get();
                     break;
                 case 'Engine':
-                    $result[$row['linkageTypeId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, m.description make, '' model, p.constructioninterval, p.description FROM `engines` p 
-                        JOIN manufacturers m ON m.id=p.manufacturerid
-                        WHERE p.id=" . $row['linkageId']);
+                    $result['Engine'] = DB::connection($this->connection)
+                        ->table('engines AS p')
+                        ->join('models AS m','m.id','=','p.modelid')
+                        ->join('manufacturers AS mm','mm.id','=','m.manufacturerid')
+                        ->whereIn('p.id',$row)
+                        ->select('p.id','mm.description AS make','m.description AS model','p.constructioninterval','p.description')
+                        ->distinct()
+                        ->get();
                     break;
                 case 'Axle':
-                    $result[$row['linkageTypeId']][] = DB::connection($this->connection)->select("SELECT DISTINCT p.id, mm.description make, m.description model, p.constructioninterval, p.description FROM axles p 
-                        JOIN models m ON m.id=p.modelid
-                        JOIN manufacturers mm ON mm.id=m.manufacturerid
-                        WHERE p.id=" . $row['linkageId']);
+                    $result['Axle'] = DB::connection($this->connection)
+                        ->table('axles AS p')
+                        ->join('models AS m','m.id','=','p.modelid')
+                        ->join('manufacturers AS mm','mm.id','=','m.manufacturerid')
+                        ->whereIn('p.id',$row)
+                        ->select('p.id','mm.description AS make','m.description AS model','p.constructioninterval','p.description')
+                        ->distinct()
+                        ->get();
                     break;
             }
         }
@@ -681,13 +715,20 @@ class Tecdoc
      */
     public function getArtCross($number, $brand_id)
     {
-        return DB::connection($this->connection)->select("
-            SELECT DISTINCT s.description, c.PartsDataSupplierArticleNumber FROM article_oe a
-            JOIN manufacturers m ON m.id=a.manufacturerId 
-            JOIN article_cross c ON c.OENbr=a.OENbr
-            JOIN suppliers s ON s.id=c.SupplierId
-            WHERE a.datasupplierarticlenumber='" . $number . "' AND a.manufacturerId='" . $brand_id . "'
-        ");
+        return DB::connection($this->connection)
+            ->table('article_oe AS a')
+            ->join('article_cross as c',function ($query){
+                $query->on('c.OENbr','=','a.OENbr');
+                $query->on('c.manufacturerId','=','a.manufacturerId');
+            })
+            ->join('suppliers as s','s.id','=','c.SupplierId')
+            ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),'p.articles','=','c.PartsDataSupplierArticleNumber')
+            ->where('a.datasupplierarticlenumber',$number)
+            ->where('a.SupplierId',(int)$brand_id)
+            ->where('p.articles','<>',$number)
+            ->select('p.*','s.id as supplierId','s.matchcode')
+            ->distinct()
+            ->get();
     }
 
     public function getAccessories($number)
