@@ -12,6 +12,8 @@
     </div>
 </div>
 
+<script src="https://pagination.js.org/dist/2.1.4/pagination.min.js"></script>
+<link rel="stylesheet" href="http://pagination.js.org/dist/2.1.4/pagination.css">
 <script>
     function productInfo(article,supplier) {
         $('#productInfoModalLabel').text(`Детальная информация по товару - ${article}`);
@@ -52,22 +54,42 @@
             }
 
             if (data.vehicles !== null){
-                html += '<div role="tabpanel" class="table-responsive tab-pane" id="vehicles"><table class="table table-striped"><tbody>';
-                for (let item in data.vehicles){
-                    for(let val in data.vehicles[item]){
-                        html += `<tr>
-                                <td>${data.vehicles[item][val].make}</td>
-                                <td>${data.vehicles[item][val].model}</td>
-                                <td>${data.vehicles[item][val].description}</td>
-                                <td>${data.vehicles[item][val].constructioninterval}</td>
-                            </tr>`;
-                    }
-                }
-                html += '</tbody></table></div>';
+                html += '<div role="tabpanel" class="table-responsive tab-pane" id="vehicles"><table class="table table-striped"><tbody id="data-container"></tbody></table><div id="pagination-container"></div></div>';
             }
 
-
             $('#productInfoModal .modal-body').html(html + '</div></div>');
+
+            if(data.attr !== null){
+                var dataAtt = [];
+                for (let item in data.vehicles){
+                    for(let val in data.vehicles[item]){
+                        dataAtt.push(data.vehicles[item][val]);
+                    }
+                }
+                $('#pagination-container').pagination({
+                    dataSource: dataAtt,
+                    pageSize: 20,
+                    className: 'paginationjs-theme-blue',
+                    callback: function(dataAtt, pagination) {
+                        var html = simpleTemplating(dataAtt);
+                        $('#data-container').html(html);
+                    }
+                });
+            }
         });
+
+        function simpleTemplating(data){
+            var html = '';
+            $.each(data, function(index, item){
+                html += `<tr>
+                                <td>${item.make}</td>
+                                <td>${item.model}</td>
+                                <td>${item.description}</td>
+                                <td>${item.constructioninterval}</td>
+                            </tr>`;
+            });
+            console.log(data);
+            return html;
+        }
     }
 </script>

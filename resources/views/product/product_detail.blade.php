@@ -169,22 +169,12 @@
                                         </div>
                                     </div>
                                     <div role="tabpanel" class="table-responsive tab-pane fade" id="product_vehicles">
+                                        <script src="https://pagination.js.org/dist/2.1.4/pagination.min.js"></script>
+                                        <link rel="stylesheet" href="http://pagination.js.org/dist/2.1.4/pagination.css">
                                         <table class="table table-striped">
-                                            <tbody>
-                                                @isset($product_vehicles)
-                                                    @foreach($product_vehicles as $data)
-                                                        @foreach($data as $item)
-                                                            <tr>
-                                                                <td>{{$item->make}}</td>
-                                                                <td>{{$item->model}}</td>
-                                                                <td>{{$item->description}}</td>
-                                                                <td>{{$item->constructioninterval}}</td>
-                                                            </tr>
-                                                        @endforeach
-                                                    @endforeach
-                                                @endisset
-                                            </tbody>
+                                            <tbody id="data-container"></tbody>
                                         </table>
+                                        <div id="pagination-container"></div>
                                     </div>
                                     <div role="tabpanel" class="tab-pane fade" id="cus-rev">
                                         @include('product.partirals.comments')
@@ -211,6 +201,36 @@
     </div>
     @isset($product)
     <script>
+        @if(isset($product_vehicles))
+        $('#pagination-container').pagination({
+            dataSource: [
+                @foreach($product_vehicles as $data)
+                    @foreach($data as $item)
+                        ['{{$item->make}}','{{$item->model}}','{{$item->description}}','{{$item->constructioninterval}}'],
+                    @endforeach
+                @endforeach
+            ],
+            pageSize: 20,
+            className: 'paginationjs-theme-blue',
+            callback: function(data, pagination) {
+                var html = simpleTemplating(data);
+                $('#data-container').html(html);
+            }
+        });
+        @endif
+
+        function simpleTemplating(data){
+            var html = '';
+            $.each(data, function(index, item){
+                html += `<tr>
+                            <td>${item[0]}</td>
+                            <td>${item[1]}</td>
+                            <td>${item[2]}</td>
+                            <td>${item[3]}</td>
+                        </tr>`;
+            });
+            return html;
+        }
 
         $('#product-comment-form').submit(function (e) {
             e.preventDefault();
