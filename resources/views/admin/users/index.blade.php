@@ -68,6 +68,12 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-12 text-right p-r-30">
+                            <button onclick="location.href = '{{route('admin.user.create')}}'" class="au-btn au-btn-icon au-btn--green au-btn--small">
+                                <i class="zmdi zmdi-plus"></i>{{__('Создать пользователя')}}</button>
+                        </div>
+                    </div>
                     <div class="table-responsive table-data">
                         <table class="table">
                             <thead>

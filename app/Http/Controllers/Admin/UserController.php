@@ -5,13 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\CartProduct;
 use App\Discount;
 use App\MutualSettlement;
+use App\Role;
 use App\TecDoc\Tecdoc;
 use App\User;
 use App\UserBalance;
 use App\UserCar;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -151,5 +155,50 @@ class UserController extends Controller
             ->paginate(50);
         $clients = User::all();
         return view('admin.users.users_cart',compact('users_cart_product','clients'));
+    }
+
+    public function createUser(Request $request){
+        if (Auth::user()->permission !== 'admin'){
+            return back()->with('status','Недостаточно прав для даного действия');
+        }
+
+        if ($request->isMethod('post')){
+
+            $data = $request->except('_token');
+
+            $validate = Validator::make($data, [
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:6',
+                'sername' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'phone' => 'required|regex:/^[0-9\-\(\)\/\+\s]*$/i',
+                'country' => 'required',
+                'city' => 'required',
+                'role' => 'required'
+            ]);
+
+            if ($validate->fails()) {
+                return redirect()->back()
+                    ->withErrors($validate)
+                    ->withInput();
+            }
+
+            $data['password'] = Hash::make($data['password']);
+            $data['permission'] = 'user';
+
+
+            $user = new User();
+            $user->fill($data);
+
+            if ($user->save()){
+                return redirect()->route('admin.users')->with('status','Пользователь добавлен');
+            } else{
+                return back()->withInput();
+            }
+        }
+
+        $roles = Role::all();
+        return view('admin.users.create',compact('roles'));
     }
 }

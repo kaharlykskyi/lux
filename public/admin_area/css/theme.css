@@ -4335,11 +4335,6 @@ section {
     vertical-align: middle;
 }
 
-.table-data {
-    height: 472px;
-    overflow-y: auto;
-}
-
 .table-data thead tr td {
     font-size: 12px;
     font-weight: 600;

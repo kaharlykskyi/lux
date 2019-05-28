@@ -101,6 +101,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
         Route::match(['get', 'post'],'/{user}/garage','UserController@garageShow')->name('admin.user.garage');
         Route::post('/change-balance','UserController@userBalance')->name('admin.user.change_balance');
     });
+    Route::match(['get', 'post'],'/create-user','UserController@createUser')->name('admin.user.create');
 
     //CROSS NUMBER MANEGE
     Route::group(['prefix' => 'cross'],function (){
