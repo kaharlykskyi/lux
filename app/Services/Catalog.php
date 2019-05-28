@@ -231,7 +231,10 @@ class Catalog
             })
             ->where('articles.DataSupplierArticleNumber',$article)
             ->orWhere('articles.FoundString',$article)
-            ->select('p.articles','suppliers.id AS supplierId','p.brand','p.name')
+            ->select('p.articles','suppliers.id AS supplierId','p.brand'
+                ,DB::raw('(SELECT p2.name FROM '
+                    .config('database.connections.mysql.database').
+                    '.products AS p2 WHERE p2.articles=p.articles AND p2.count > 0 GROUP BY p2.name HAVING MIN(p2.price) LIMIT 1) AS name'))
             ->distinct()
             ->get();
     }
