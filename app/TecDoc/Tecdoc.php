@@ -427,7 +427,7 @@ class Tecdoc
                                 $group_attr[] = $data;
                             }
 
-                            $query->where($group_attr);
+                            $query->where($group_attr,null,null,'OR');
                         }
                     })
                     ->whereRaw(isset($filter['supplier'])? " s.id IN (".implode(',',$filter['supplier']).")":'s.id > 0')
@@ -842,7 +842,7 @@ class Tecdoc
                         $group_attr[] = $data;
                     }
 
-                    $query->where($group_attr);
+                    $query->where($group_attr,null,null,'OR');
                 }
             })
             ->whereRaw(isset($filter['supplier'])? " s.id IN (".implode(',',$filter['supplier']).")":'s.id > 0')
