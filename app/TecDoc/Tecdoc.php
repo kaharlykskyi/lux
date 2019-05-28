@@ -846,7 +846,7 @@ class Tecdoc
                 }
             })
             ->whereRaw(isset($filter['supplier'])? " s.id IN (".implode(',',$filter['supplier']).")":'s.id > 0')
-            ->select(DB::raw('al.SupplierId AS supplierId, al.DataSupplierArticleNumber, s.matchcode, p.id, p.name, p.price,p.count,attr.*'))
+            ->select(DB::raw('al.SupplierId AS supplierId, al.DataSupplierArticleNumber, s.matchcode, p.id, p.name, p.price,p.count'))
             ->orderBy(DB::raw('p.price'),$sort)
             ->distinct()
             ->paginate((int)$pre,['p.id']);
