@@ -64,7 +64,7 @@ class ImportPriceList
         }
 
         foreach ($profiles as $config){
-            if (isset($data->company) && (int)$data->company > 0 && $config->id === (int)$data->company){
+            if (isset($data->company) && (int)$data->company > 0 && $config->provider->id === (int)$data->company){
                 $this->startImport($config,$data->file);
             } elseif (stristr($data->file,$config->static_name)){
                 $this->startImport($config,$data->file);
@@ -237,6 +237,8 @@ class ImportPriceList
                     } elseif((float)$productInfo['price'] > 5000){
                         $productInfo['price'] = (float)$productInfo['price'] + (float)($productInfo['price'] * 0.1);
                     }
+
+                    $productInfo['price'] = $productInfo['price'] < 1?1:$productInfo['price'];
 
                     $array_import = [
                         'name' => $productInfo['product_name'],
