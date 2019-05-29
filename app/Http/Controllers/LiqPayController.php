@@ -56,7 +56,6 @@ class LiqPayController extends Controller
             'description'    => 'Пополнение баланса на LuxAuto',
             'order_id'       => "{$balanceHistory->id}",
             'version'        => '3',
-            'sandbox'        => '1', //TODO:delete on production
             'server_url'     => route('liqpay.response'),
             'result_url'     => route('liqpay.result_pay')
         ));
@@ -77,7 +76,7 @@ class LiqPayController extends Controller
             if ($signature === $signature_decode){
                 $params = $liqpay->decode_params($data);
 
-                if ($params['status'] === 'sandbox'){ //TODO:change 'success' on production
+                if ($params['status'] === 'success'){
                     $amount = $params['amount'] - $params['sender_commission'] - $params['receiver_commission'] - $params['commission_credit'] - $params['commission_debit'];
                     UserBalanceHistory::where('id',$params['order_id'])->update([
                         'balance_refill' => $amount,
