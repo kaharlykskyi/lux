@@ -7,6 +7,7 @@ use App\{Product, ProFile};
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\{Carbon, Facades\DB, Facades\Log};
+use PHPExcel_Cell;
 use PHPExcel_IOFactory;
 use PHPExcel_Reader_CSV;
 use PHPExcel_Reader_Exception;
@@ -170,19 +171,49 @@ class ImportPriceList
                                 $str = $cell->getCalculatedValue();
                                 $data_array = explode("\t",$str);
 
-                                $this->product_data[$row->getRowIndex()]['articles'] = $data_array[(int)$this->config->articles - 1];
-                                $this->product_data[$row->getRowIndex()]['product_name'] = $data_array[(int)$this->config->product_name - 1];
-                                $this->product_data[$row->getRowIndex()]['brand'] = $data_array[(int)$this->config->brand - 1];
-                                $this->product_data[$row->getRowIndex()]['price'] = $data_array[(int)$this->config->price - 1];
-                                $this->product_data[$row->getRowIndex()]['delivery_time'] = isset($this->config->delivery_time)?$data_array[(int)$this->config->delivery_time - 1]:0;
+                                if (isset($data_array[2])){
+                                    $this->product_data[$row->getRowIndex()]['articles'] = $data_array[(int)$this->config->articles - 1];
+                                    $this->product_data[$row->getRowIndex()]['product_name'] = $data_array[(int)$this->config->product_name - 1];
+                                    $this->product_data[$row->getRowIndex()]['brand'] = $data_array[(int)$this->config->brand - 1];
+                                    $this->product_data[$row->getRowIndex()]['price'] = $data_array[(int)$this->config->price - 1];
+                                    $this->product_data[$row->getRowIndex()]['delivery_time'] = isset($this->config->delivery_time)?$data_array[(int)$this->config->delivery_time - 1]:0;
 
-                                foreach ($stock_cells as $stock_cell){
-                                    if (isset($this->product_data[$row->getRowIndex()]['count'])){
-                                        $this->product_data[$row->getRowIndex()]['count'] += (int)preg_replace("/[^0-9,.]/", "", $data_array[$stock_cell - 1]);
-                                    } else {
-                                        $this->product_data[$row->getRowIndex()]['count'] = (int)preg_replace("/[^0-9,.]/", "", $data_array[$stock_cell - 1]);
+                                    foreach ($stock_cells as $stock_cell){
+                                        if (isset($this->product_data[$row->getRowIndex()]['count'])){
+                                            $this->product_data[$row->getRowIndex()]['count'] += (int)preg_replace("/[^0-9,.]/", "", $data_array[$stock_cell - 1]);
+                                        } else {
+                                            $this->product_data[$row->getRowIndex()]['count'] = (int)preg_replace("/[^0-9,.]/", "", $data_array[$stock_cell - 1]);
+                                        }
+                                    }
+                                }else{
+                                    $cellPath = PHPExcel_Cell::columnIndexFromString($cell->getColumn());
+                                    if ($cellPath === (int)$this->config->articles){
+                                        $this->product_data[$row->getRowIndex()]['articles'] = $cell->getCalculatedValue();
+                                    }
+                                    if ($cellPath === (int)$this->config->product_name){
+                                        $this->product_data[$row->getRowIndex()]['product_name'] = $cell->getCalculatedValue();
+                                    }
+                                    if ($cellPath === (int)$this->config->brand){
+                                        $this->product_data[$row->getRowIndex()]['brand'] = $cell->getCalculatedValue();
+                                    }
+                                    if ($cellPath === (int)$this->config->price){
+                                        $this->product_data[$row->getRowIndex()]['price'] = $cell->getCalculatedValue();
+                                    }
+                                    if ($cellPath === (int)$this->config->delivery_time){
+                                        $this->product_data[$row->getRowIndex()]['delivery_time'] = $cell->getCalculatedValue();
+                                    }
+
+                                    foreach ($stock_cells as $stock_cell){
+                                        if ($cellPath === (int)$stock_cell){
+                                            if (isset($this->product_data[$row->getRowIndex()]['count'])){
+                                                $this->product_data[$row->getRowIndex()]['count'] += (int)preg_replace("/[^0-9,.]/", "", $cell->getCalculatedValue());
+                                            } else {
+                                                $this->product_data[$row->getRowIndex()]['count'] = (int)preg_replace("/[^0-9,.]/", "", $cell->getCalculatedValue());
+                                            }
+                                        }
                                     }
                                 }
+
                             }
                         }else{
                             $cellPath = $cell->getColumn();
@@ -240,7 +271,6 @@ class ImportPriceList
     protected function productQuery(){
         if (!empty($this->product_data)){
             foreach ($this->product_data as $k => $productInfo){
-
                 $productInfo['price'] = floatval($productInfo['price']);
                 $productInfo['provider_price'] = $productInfo['price'];
 
