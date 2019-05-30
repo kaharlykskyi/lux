@@ -334,11 +334,7 @@ class ImportPriceList
                     }
 
                 }catch (Exception $e){
-                    if (config('app.debug')){
-                        dd("Error import : $e");
-                    } else {
-                        Log::error("Error import : $e");
-                    }
+                    Log::error("Error import : $e");
                     $this->count_fail++;
                 }
             }
