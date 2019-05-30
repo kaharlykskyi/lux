@@ -68,9 +68,18 @@ class ProductController extends Controller
             $files = $this->tecdoc->getArtFiles($request->article,$request->supplier);
         }
 
+        if (isset($files[0])){
+            $file = $files[0];
+            $brand_folder = explode('_',$file->PictureName);
+            $file->PictureName = str_ireplace(['.BMP','.JPG'],'.jpg',$file->PictureName);
+            $file->brand_folder = $brand_folder[0];
+        }else{
+            $file = null;
+        }
+
         return response()->json([
             'product' => $product,
-            'file' => isset($files[0])?$files[0]:null,
+            'file' => $file,
             'sup' => $request->supplier,
             'attr' => !empty($product_attr)?$product_attr:null,
             'vehicles' => !empty($product_vehicles)?$product_vehicles:null

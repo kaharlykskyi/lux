@@ -203,7 +203,7 @@ class CatalogController extends Controller
                     'max' => ($this->max_price->filter_price > 0)?$this->max_price->filter_price:$this->max_price->start_price
                 ],
                 'supplier' => isset($request->supplier)?$this->filter_supplier:null
-            ]);
+            ]);dd($this->catalog_products);
         }
     }
 

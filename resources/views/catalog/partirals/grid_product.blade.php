@@ -25,7 +25,12 @@
         <!-- Product -->
             <div class="product" @isset($product->id)id="product-{{$product->id}}"@endisset>
                 <article>
-                    <img class="img-responsive" src="{{asset('/images/item-img-1-2.jpg')}}" alt="" >
+                    @if(!empty($product->file))
+                        @php $brand_folder = explode('_',$product->file) @endphp
+                        <img class="img-responsive" src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$product->file))}}" alt="" >
+                    @else
+                        <img  class="img-responsive" src="{{asset('images/default-no-image_2.png')}}" alt="" >
+                    @endif
                     <!-- Content -->
                     <span class="tag">{{$product->matchcode}}</span> <a href="{{route('product',str_replace('/','@',(isset($product->articles)?$product->articles:$product->DataSupplierArticleNumber)))}}?supplierid={{$product->supplierId}}&product_id={{$product->id}}" class="tittle">
                         {{mb_strimwidth($product->name,0,30,' ...')}}

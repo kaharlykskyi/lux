@@ -432,7 +432,10 @@ class Tecdoc
                     })
                     ->where('p.count','>',0)
                     ->whereRaw(isset($filter['supplier'])? " s.id IN (".implode(',',$filter['supplier']).")":'s.id > 0')
-                    ->select(DB::raw('p.articles, s.description matchcode,al.supplierid supplierId,p.id,p.name,p.price,p.count'))
+                    ->select(DB::raw('p.articles, s.description matchcode,al.supplierid supplierId,p.id,p.name,p.price,p.count,
+                            (SELECT a_img.PictureName 
+                            FROM article_images AS a_img 
+                            WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=al.supplierid LIMIT 1) AS file'))
                     ->orderBy(DB::raw('p.price'),$sort)
                     ->groupBy('p.articles')
                     ->havingRaw('MIN(p.price)')
@@ -472,7 +475,10 @@ class Tecdoc
                     })
                     ->where('p.count','>',0)
                     ->whereRaw(isset($filter['supplier'])? " s.id IN (".implode(',',$filter['supplier']).")":'s.id > 0')
-                    ->select(DB::raw('p.articles, s.description matchcode,al.supplierid supplierId,p.id,p.name,p.price,p.count'))
+                    ->select(DB::raw('p.articles, s.description matchcode,al.supplierid supplierId,p.id,p.name,p.price,p.count,
+                            (SELECT a_img.PictureName 
+                            FROM article_images AS a_img 
+                            WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=al.supplierid LIMIT 1) AS file'))
                     ->orderBy(DB::raw('p.price'),$sort)
                     ->groupBy('p.articles')
                     ->havingRaw('MIN(p.price)')
@@ -855,7 +861,10 @@ class Tecdoc
             })
             ->where('p.count','>',0)
             ->whereRaw(isset($filter['supplier'])? " s.id IN (".implode(',',$filter['supplier']).")":'s.id > 0')
-            ->select(DB::raw('al.SupplierId AS supplierId, al.DataSupplierArticleNumber, s.matchcode, p.id, p.name, p.price,p.count'))
+            ->select(DB::raw('al.SupplierId AS supplierId, al.DataSupplierArticleNumber, s.matchcode, p.id, p.name, p.price,p.count,
+                    (SELECT a_img.PictureName 
+                            FROM article_images AS a_img 
+                            WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=al.SupplierId LIMIT 1) AS file'))
             ->orderBy(DB::raw('p.price'),$sort)
             ->groupBy('p.articles')
             ->havingRaw('MIN(p.price)')
@@ -883,7 +892,10 @@ class Tecdoc
             ])
             ->where('p.count','>',0)
             ->whereRaw(isset($filter['supplier'])? " sp.id IN (".implode(',',$filter['supplier']).")":'sp.id > 0')
-            ->select(DB::raw('sp.id AS supplierId, p.articles, sp.matchcode, p.id, p.name,p.price AS price,p.count'))
+            ->select(DB::raw('sp.id AS supplierId, p.articles, sp.matchcode, p.id, p.name,p.price AS price,p.count,
+                (SELECT a_img.PictureName 
+                            FROM article_images AS a_img 
+                            WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=sp.id LIMIT 1) AS file'))
             ->orderBy(DB::raw('p.price'),$sort)
             ->groupBy('p.articles')
             ->havingRaw('MIN(p.price)')
@@ -909,7 +921,10 @@ class Tecdoc
             ->join(DB::raw('suppliers AS sp'),DB::raw('sp.matchcode'),DB::raw('p.brand'))
             ->where('p.count','>',0)
             ->whereRaw(isset($filter['supplier'])? " sp.id IN (".implode(',',$filter['supplier']).")":'sp.id > 0')
-            ->select(DB::raw('sp.id AS supplierId, sp.matchcode, p.id, p.name, p.price, p.articles,p.count'))
+            ->select(DB::raw('sp.id AS supplierId, sp.matchcode, p.id, p.name, p.price, p.articles,p.count,
+                    (SELECT a_img.PictureName 
+                    FROM article_images AS a_img 
+                    WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=sp.id LIMIT 1) AS file'))
             ->orderBy(DB::raw('p.price'),$sort)
             ->groupBy('p.articles')
             ->havingRaw('MIN(p.price)')

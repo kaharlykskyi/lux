@@ -10,7 +10,7 @@
                     <article>
                         @if(!empty($item->file))
                             @php $brand_folder = explode('_',$item->file) @endphp
-                            <img class="img-responsive" src="http://carmakers.com.ua/product_imags/{{$brand_folder[0]}}/{{str_ireplace(['.BMP','.JPG'],'.jpg',$item->file)}}" alt="" >
+                            <img class="img-responsive" src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$item->file))}}" alt="" >
                         @else
                             <img  class="img-responsive" src="{{asset('images/default-no-image_2.png')}}" alt="" >
                         @endif
