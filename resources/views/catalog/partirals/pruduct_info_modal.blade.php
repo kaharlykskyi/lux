@@ -24,7 +24,7 @@
                 <div class="row">
                   <div class="col-sm-6 col-md-3">
                     <div class="thumbnail">
-                      <img src="${data.file !== null?"{{asset('product_imags/')}}"+data.file.brand_folder+'/'+data.file.PictureName:'{{asset('images/default-no-image_2.png')}}'}" alt="${data.product.name}">
+                      <img src="${data.file !== null?"{{asset('product_imags')}}/"+data.file.brand_folder+'/'+data.file.PictureName:'{{asset('images/default-no-image_2.png')}}'}" alt="${data.product.name}">
                       <div class="caption">
                         <h5>${data.product.name}</h5>
                         <p>${data.product.short_description !== null?data.product.short_description:''}</p>
