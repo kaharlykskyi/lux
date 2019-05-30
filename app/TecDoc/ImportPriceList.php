@@ -321,7 +321,7 @@ class ImportPriceList
                         'provider_price' => $productInfo['provider_price'],
                         'provider_currency' => isset($this->config->provider->currency)?$this->config->provider->currency:'UAH',
                         'created_at' => Carbon::now(),
-                        'updated' => Carbon::now()
+                        'updated_at' => Carbon::now()
                     ];
 
                     $insert_data = DB::table('products')->updateOrInsert(
