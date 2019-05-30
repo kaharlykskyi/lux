@@ -307,7 +307,7 @@
 @section('script')
     <script>
         $('.owl-carousel').owlCarousel({
-            loop:true,
+            loop:$(".owl-carousel > .item").length <= 1 ? false : true,
             margin:10,
             responsive:{
                 0:{
