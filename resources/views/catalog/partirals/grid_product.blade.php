@@ -18,7 +18,7 @@
 </div>
 
 <!-- Items -->
-<div class="item-col-4">
+<div class="item-col-4 catalog">
 
 @isset($catalog_products)
     @forelse($catalog_products as $product)
