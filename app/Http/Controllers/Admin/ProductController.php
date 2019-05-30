@@ -36,6 +36,7 @@ class ProductController extends Controller
         $products = Product::where($this->filterProduct($request))
             ->paginate(80);
         $providers = Provider::all();
+        $products->withPath($request->fullUrl());
         return view('admin.product.index',compact('products','providers'));
     }
 

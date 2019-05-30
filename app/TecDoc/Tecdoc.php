@@ -430,9 +430,11 @@ class Tecdoc
                             $query->where($group_attr,null,null,'OR');
                         }
                     })
+                    ->where('p.count','>',0)
                     ->whereRaw(isset($filter['supplier'])? " s.id IN (".implode(',',$filter['supplier']).")":'s.id > 0')
-                    ->select(DB::raw('al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid supplierId,p.id,p.name,p.price,p.count'))
+                    ->select(DB::raw('p.articles, s.description matchcode,al.supplierid supplierId,p.id,p.name,MIN(p.price),p.count'))
                     ->orderBy(DB::raw('p.price'),$sort)
+                    ->groupBy('p.articles')
                     ->distinct()
                     ->paginate($pre,['p.id']);
                 break;
@@ -467,9 +469,11 @@ class Tecdoc
                             $query->where($group_attr,null,null,'OR');
                         }
                     })
+                    ->where('p.count','>',0)
                     ->whereRaw(isset($filter['supplier'])? " s.id IN (".implode(',',$filter['supplier']).")":'s.id > 0')
-                    ->select(DB::raw('al.datasupplierarticlenumber DataSupplierArticleNumber, s.description matchcode,al.supplierid supplierId,p.id,p.name,p.price,p.count'))
+                    ->select(DB::raw('p.articles, s.description matchcode,al.supplierid supplierId,p.id,p.name,MIN(p.price),p.count'))
                     ->orderBy(DB::raw('p.price'),$sort)
+                    ->groupBy('p.articles')
                     ->distinct()
                     ->paginate($pre,['p.id']);
                 break;
@@ -845,9 +849,11 @@ class Tecdoc
                     $query->where($group_attr,null,null,'OR');
                 }
             })
+            ->where('p.count','>',0)
             ->whereRaw(isset($filter['supplier'])? " s.id IN (".implode(',',$filter['supplier']).")":'s.id > 0')
             ->select(DB::raw('al.SupplierId AS supplierId, al.DataSupplierArticleNumber, s.matchcode, p.id, p.name, p.price,p.count'))
             ->orderBy(DB::raw('p.price'),$sort)
+            ->groupBy('p.articles')
             ->distinct()
             ->paginate((int)$pre,['p.id']);
     }
@@ -870,9 +876,11 @@ class Tecdoc
                 [DB::raw('p.price'),'>=',$filter['price']['min']],
                 [DB::raw('p.price'),'<=',$filter['price']['max']]
             ])
+            ->where('p.count','>',0)
             ->whereRaw(isset($filter['supplier'])? " sp.id IN (".implode(',',$filter['supplier']).")":'sp.id > 0')
-            ->select(DB::raw('sp.id AS supplierId, ac.PartsDataSupplierArticleNumber as DataSupplierArticleNumber, sp.matchcode, p.id, p.name, p.price,p.count'))
+            ->select(DB::raw('sp.id AS supplierId, p.articles, sp.matchcode, p.id, p.name,MIN(p.price) AS price,p.count'))
             ->orderBy(DB::raw('p.price'),$sort)
+            ->groupBy('p.articles')
             ->distinct()
             ->paginate((int)$pre,['p.id']);
     }
@@ -893,10 +901,11 @@ class Tecdoc
                 [DB::raw('p.price'),'<=',$filter['price']['max']]
             ])
             ->join(DB::raw('suppliers AS sp'),DB::raw('sp.matchcode'),DB::raw('p.brand'))
+            ->where('p.count','>',0)
             ->whereRaw(isset($filter['supplier'])? " sp.id IN (".implode(',',$filter['supplier']).")":'sp.id > 0')
-            ->select(DB::raw('sp.id AS supplierId, sp.matchcode, p.id, p.name, p.price, p.articles,p.count'))
+            ->select(DB::raw('sp.id AS supplierId, sp.matchcode, p.id, p.name, MIN(p.price), p.articles,p.count'))
             ->orderBy(DB::raw('p.price'),$sort)
-            ->groupBy(DB::raw('p.id,sp.id'))
+            ->groupBy('p.articles')
             ->paginate((int)$pre,['p.id']);
     }
 
