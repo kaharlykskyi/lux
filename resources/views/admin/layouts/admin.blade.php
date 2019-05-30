@@ -39,7 +39,7 @@
     @yield('style')
 </head>
 
-<body class="animsition">
+<body>
 <div class="page-wrapper">
     <!-- HEADER MOBILE-->
     @component('admin.component.header_mob')@endcomponent

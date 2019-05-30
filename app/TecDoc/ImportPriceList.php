@@ -319,10 +319,12 @@ class ImportPriceList
                         'count' => isset($productInfo['count'])? $productInfo['count']: 0,
                         'delivery_time' => isset($productInfo['delivery_time'])?(int)preg_replace("/[^0-9,.]/", "", $productInfo['delivery_time']):0,
                         'provider_price' => $productInfo['provider_price'],
-                        'provider_currency' => isset($this->config->provider->currency)?$this->config->provider->currency:'UAH'
+                        'provider_currency' => isset($this->config->provider->currency)?$this->config->provider->currency:'UAH',
+                        'created_at' => Carbon::now(),
+                        'updated' => Carbon::now()
                     ];
 
-                    $insert_data = Product::updateOrInsert(
+                    $insert_data = DB::table('products')->updateOrInsert(
                         ['articles' => $array_import['articles'], 'provider_id' => $array_import['provider_id']],
                         $array_import
                     );

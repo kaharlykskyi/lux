@@ -21,21 +21,21 @@ class ProductController extends Controller
     }
 
     public function index(Request $request){
-        $request->alias = str_replace('@','/',$request->alias);
+
+        $product = Product::with('comment')->findOrFail($request->product_id);
+        $accessories = $this->tecdoc->getAccessories($product->articles);
+
         if(!isset($request->supplierid)){
-            $request->supplierid = $this->getSupplier($request->alias);
+            $request->supplierid = $this->getSupplier($product->articles);
         }
 
         if (isset($request->supplierid)){
-            $art_replace = $this->tecdoc->getArtCross($request->alias,$request->supplierid);
-            $accessories = $this->tecdoc->getAccessories($request->alias);
-            $product_vehicles = $this->tecdoc->getArtVehicles($request->alias,$request->supplierid);
-            $product_attr = $this->tecdoc->getArtAttributes($request->alias,$request->supplierid);
-            $files = $this->tecdoc->getArtFiles($request->alias,$request->supplierid);
+            $art_replace = $this->tecdoc->getArtCross($product->articles,$request->supplierid);
+            $product_vehicles = $this->tecdoc->getArtVehicles($product->articles,$request->supplierid);
+            $product_attr = $this->tecdoc->getArtAttributes($product->articles,$request->supplierid);
+            $files = $this->tecdoc->getArtFiles($product->articles,$request->supplierid);
             $supplier_details = $this->tecdoc->getSupplieInfo($request->supplierid);
         }
-
-        $product = Product::with('comment')->findOrFail($request->product_id);
 
         return view('product.product_detail',compact('product','product_attr','product_vehicles','files','accessories','art_replace','supplier_details'));
     }
