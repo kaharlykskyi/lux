@@ -8,7 +8,12 @@
             @foreach($accessories as $accessory)
                 <div class="product">
                     <article>
-                        <img class="img-responsive" src="images/item-img-1-1.jpg" alt="" >
+                        @if(!empty($item->file))
+                            @php $brand_folder = explode('_',$item->file) @endphp
+                            <img class="img-responsive" src="http://carmakers.com.ua/product_imags/{{$brand_folder[0]}}/{{str_ireplace(['.BMP','.JPG'],'.jpg',$item->file)}}" alt="" >
+                        @else
+                            <img  class="img-responsive" src="{{asset('images/default-no-image_2.png')}}" alt="" >
+                        @endif
                         @if(isset($accessory->old_price) && $accessory->old_price > 0)
                             <span class="sale-tag">-{{(int)(100 - (100 *$accessory->price /$accessory->old_price))}}%</span>
                         @endif
@@ -32,7 +37,12 @@
             @foreach($art_replace as $item)
                 <div class="product">
                     <article>
-                        <img class="img-responsive" src="images/item-img-1-1.jpg" alt="" >
+                        @if(!empty($item->file))
+                            @php $brand_folder = explode('_',$item->file) @endphp
+                            <img class="img-responsive" src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$item->file))}}" alt="" >
+                        @else
+                            <img  class="img-responsive" src="{{asset('images/default-no-image_2.png')}}" alt="" >
+                        @endif
                         @if(isset($item->old_price) && $item->old_price > 0)
                             <span class="sale-tag">-{{(int)(100 - (100 *$item->price /$item->old_price))}}%</span>
                         @endif

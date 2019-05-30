@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
     <div id="content">
 
         <!-- Linking -->
@@ -25,13 +26,26 @@
                                 <div class="row">
                                     <!-- Slider Thumb -->
                                     <div class="col-xs-5">
-                                        <article class="slider-item on-nav">
-                                            <div class="thumb-slider">
-                                                <ul class="slides">
-                                                    <li data-thumb="{{asset('images/item-img-1-1.jpg')}}"> <img src="{{asset('images/item-img-1-1.jpg')}}" alt="" > </li>
-                                                </ul>
-                                            </div>
-                                        </article>
+                                        <div class="owl-carousel owl-theme">
+                                            @if(isset($files))
+                                                @forelse($files as $file)
+                                                    @if(!empty($file->PictureName))
+                                                        @php $brand_folder = explode('_',$file->PictureName) @endphp
+                                                        <div class="item">
+                                                            <img src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$file->PictureName))}}" alt="" >
+                                                        </div>
+                                                    @endif
+                                                @empty
+                                                    <div class="item">
+                                                        <img src="{{asset('images/default-no-image_2.png')}}" alt="" >
+                                                    </div>
+                                                @endforelse
+                                            @else
+                                                <div class="item">
+                                                    <img src="{{asset('images/default-no-image_2.png')}}" alt="" >
+                                                </div>
+                                            @endif
+                                        </div>
                                     </div>
                                     <!-- Item Content -->
                                     <div class="col-xs-7">
@@ -288,4 +302,19 @@
         }
     </script>
     @endisset
+@endsection
+
+@section('script')
+    <script>
+        $('.owl-carousel').owlCarousel({
+            loop:true,
+            margin:10,
+            responsive:{
+                0:{
+                    items:1
+                }
+            },
+            autoHeight: true
+        });
+    </script>
 @endsection

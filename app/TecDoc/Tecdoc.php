@@ -732,7 +732,10 @@ class Tecdoc
             ->where('a.datasupplierarticlenumber',$number)
             ->where('a.SupplierId',(int)$brand_id)
             ->where('p.articles','<>',$number)
-            ->select('p.*','s.id as supplierId','s.matchcode')
+            ->select('p.*','s.id as supplierId','s.matchcode',
+                DB::raw("(SELECT a_img.PictureName 
+                    FROM article_images AS a_img 
+                    WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=s.id LIMIT 1) AS file"))
             ->distinct()
             ->get();
     }
@@ -742,12 +745,11 @@ class Tecdoc
         return DB::connection($this->connection)
             ->table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_acc as acc'))
             ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('acc.AccDataSupplierArticleNumber'))
-            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_images as img'),function ($join){
-                $join->on(DB::raw('img.DataSupplierArticleNumber'),'=',DB::raw('acc.AccDataSupplierArticleNumber'));
-                $join->on(DB::raw('img.SupplierId'),'=',DB::raw('acc.AccSupplierId'));
-            })
             ->where(DB::raw('acc.DataSupplierArticleNumber'),$number)
-            ->select(DB::raw('acc.AccSupplierId AS supplierId, acc.AccDataSupplierArticleNumber DataSupplierArticleNumber,img.PictureName, p.brand matchcode, p.id, p.name, p.price,p.old_price,p.count'))
+            ->select(DB::raw('acc.AccSupplierId AS supplierId, acc.AccDataSupplierArticleNumber DataSupplierArticleNumber, p.brand matchcode, p.id, p.name, p.price,p.old_price,p.count,
+                    (SELECT a_img.PictureName 
+                    FROM article_images AS a_img 
+                    WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=acc.AccSupplierId LIMIT 1) AS file'))
             ->get();
     }
 

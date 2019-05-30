@@ -108,7 +108,7 @@
     <script src="{{asset('js/main.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/common.js')}}"></script>
     <script type="text/javascript" src="{{asset('js/maskedinput.min.js')}}"></script>
-
+    @yield('script')
     <script>
         $(".phone_mask").mask("(999) 999-99-99");
 
