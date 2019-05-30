@@ -114,19 +114,21 @@ class ImportPriceList
                     if($mail->fromAddress === $config->static_email1 || $mail->fromAddress === $config->static_email2 || $mail->fromAddress === $config->provider->email){
 
                         foreach ($mail->getAttachments() as $mailAttachment){
-                            $this->export($mailAttachment->filePath);
+                            if (stristr($mailAttachment->filePath,$config->static_name)){
+                                $this->export($mailAttachment->filePath);
 
-                            DB::table('history_imports')->insert([
-                                'company' => isset($config->provider)?$config->provider->name:$config->name,
-                                'success' => $this->count_success,
-                                'fail' => $this->count_fail,
-                                'created_at' => Carbon::now()
-                            ]);
+                                DB::table('history_imports')->insert([
+                                    'company' => isset($config->provider)?$config->provider->name:$config->name,
+                                    'success' => $this->count_success,
+                                    'fail' => $this->count_fail,
+                                    'created_at' => Carbon::now()
+                                ]);
 
-                            unlink($mailAttachment->filePath);
-                            $this->count_success = 0;
-                            $this->count_fail = 0;
-                            $this->product_data = [];
+                                unlink($mailAttachment->filePath);
+                                $this->count_success = 0;
+                                $this->count_fail = 0;
+                                $this->product_data = [];
+                            }
                         }
 
                         $mailbox->deleteMail($mailsId);
