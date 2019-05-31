@@ -738,10 +738,13 @@ class Tecdoc
             ->where('a.datasupplierarticlenumber',$number)
             ->where('a.SupplierId',(int)$brand_id)
             ->where('p.articles','<>',$number)
+            ->where('p.count','>',0)
             ->select('p.*','s.id as supplierId','s.matchcode',
                 DB::raw("(SELECT a_img.PictureName 
                     FROM article_images AS a_img 
                     WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=s.id LIMIT 1) AS file"))
+            ->groupBy('p.articles')
+            ->havingRaw('MIN(p.price)')
             ->distinct()
             ->get();
     }
