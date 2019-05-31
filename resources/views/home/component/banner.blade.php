@@ -10,7 +10,7 @@
                             @foreach($slides as $slide)
                                 <li data-transition="random" data-slotamount="7" data-masterspeed="300"  data-saveperformance="off" >
                                     <!-- MAIN IMAGE -->
-                                    <img src="{{asset('images/banner_img/' . $slide->img)}}"  alt="slider"  data-bgposition="center bottom" data-bgfit="cover" data-bgrepeat="no-repeat">
+                                    <img src="{{asset('images/banner_img/' . $slide->img)}}"  alt="slider"  data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat">
                                     @if(isset($slide->text) && !empty($slide->text))
                                         <div class="tp-caption sfr tp-resizeme"
                                              data-x="left" data-hoffset="50"

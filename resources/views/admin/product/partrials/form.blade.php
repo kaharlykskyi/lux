@@ -107,6 +107,30 @@
     </div>
 </div>
 
+<div class="row form-group">
+    <div class="col col-md-3">
+        <label for="provider_price" class=" form-control-label">{{__('Цена поставщика')}}</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <input type="number" onblur="toFloat($(this))" id="provider_price" name="provider_price" value="@if(isset($product->id)){{$product->provider_price}}@else{{old('provider_price')}}@endif" placeholder="0.00" class="form-control">
+        @if ($errors->has('provider_price'))
+            <small class="form-text text-danger">{{ $errors->first('provider_price') }}</small>
+        @endif
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col col-md-3">
+        <label for="count" class=" form-control-label">{{__('Валюта поставщика')}}</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <input type="text" id="provider_currency" name="provider_currency" value="@if(isset($product->id)){{$product->provider_currency}}@else{{old('provider_currency')}}@endif" class="form-control">
+        @if ($errors->has('provider_currency'))
+            <small class="form-text text-danger">{{ $errors->first('provider_currency') }}</small>
+        @endif
+    </div>
+</div>
+
 <script>
     const toFloat = (obj) => {
         let val = $(obj).val();
