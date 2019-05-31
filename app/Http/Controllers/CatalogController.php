@@ -101,7 +101,7 @@ class CatalogController extends Controller
 
                         break;
                     default:
-
+                        $select_field = isset($request->type_auto)?'al.linkageid':'al.productid';
                         $rubric_category = AllCategoryTree::where('hurl',$request->category)->first();
                         if (isset($rubric_category)){
                             $request->category = $rubric_category->tecdoc_id;
@@ -109,14 +109,15 @@ class CatalogController extends Controller
 
                         $this->brands = $this->service->getBrands('category',[
                             'id' => $request->category,
-                            'type' => $type
+                            'type' => $type,
+                            'where' => $select_field
                         ]);
 
-                        $price = $this->service->getMinMaxPrice('category',['id' => $request->category,'type' => $type]);
+                        $price = $this->service->getMinMaxPrice('category',['id' => $request->category,'type' => $type,'where' => $select_field]);
                         $this->min_price->start_price = round($price->min,2);
                         $this->max_price->start_price = round($price->max,2);
 
-                        $this->attribute = $this->service->getAttributes('category',['id' => $request->category,'type' => $type],$save_filters);
+                        $this->attribute = $this->service->getAttributes('category',['id' => $request->category,'type' => $type,'where' => $select_field],$save_filters);
 
                         $this->catalog_products = $this->tecdoc->getCategoryProduct($request->category,$this->pre_products,[
                             'price' => [
@@ -124,7 +125,7 @@ class CatalogController extends Controller
                                 'max' => ($this->max_price->filter_price > 0)?$this->max_price->filter_price:$this->max_price->start_price
                             ],
                             'supplier' => isset($request->supplier)?$this->filter_supplier:null
-                        ],$save_filters,$this->query_filters);
+                        ],$save_filters,$this->query_filters,$select_field);
                 }
                 break;
             case isset($request->pcode) || !empty($request->query('query')):
