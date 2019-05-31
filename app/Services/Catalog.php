@@ -21,7 +21,7 @@ class Catalog
                 $price = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links as al'))
                     ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers as s'),DB::raw('s.id'),DB::raw('al.supplierid'))
                     ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
-                    ->where(DB::raw('al.linkageid'),(int)$param['id'])
+                    ->where(DB::raw('al.productid'),(int)$param['id'])
                     ->where(DB::raw('al.linkagetypeid'),$param['type'] === 'passenger'?2:16)
                     ->select(DB::raw('MIN(p.price) AS min, MAX(p.price) AS max'))
                     ->get();
@@ -85,7 +85,7 @@ class Catalog
                 return DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links as al'))
                     ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers as s'),DB::raw('s.id'),DB::raw('al.supplierid'))
                     ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
-                    ->where(DB::raw('al.linkageid'),(int)$param['id'])
+                    ->where(DB::raw('al.productid'),(int)$param['id'])
                     ->where(DB::raw('al.linkagetypeid'),$param['type'] === 'passenger'?2:16)
                     ->select(DB::raw('s.id AS supplierId, s.description'))
                     ->distinct()
@@ -155,7 +155,7 @@ class Catalog
                             $query->on('al.SupplierId','=','attr.supplierId');
                         })
                         ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
-                        ->where(DB::raw('al.linkageid'),(int)$param['id'])
+                        ->where(DB::raw('al.productid'),(int)$param['id'])
                         ->where(DB::raw('al.linkagetypeid'),$param['type'] === 'passenger'?2:16)
                         ->whereIn('attr.id',$attr_ids)
                         ->select(DB::raw('attr.id, attr.description, attr.displaytitle, attr.displayvalue'))

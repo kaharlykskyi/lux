@@ -845,8 +845,8 @@ class Tecdoc
                 $query->on('attr.DataSupplierArticleNumber','=','al.DataSupplierArticleNumber');
                 $query->on('attr.supplierId','=','al.SupplierId');
             })
-            ->where(DB::raw('al.linkageid'),(int)$id)
-            ->where(DB::raw('al.linkagetypeid'),($this->type) === 'passenger'?2:16)
+            ->where('al.productid',(int)$id)
+            ->where('al.linkagetypeid',($this->type) === 'passenger'?2:16)
             ->where([
                 [DB::raw('p.price'),'>=',$filter['price']['min']],
                 [DB::raw('p.price'),'<=',$filter['price']['max']]
@@ -868,7 +868,7 @@ class Tecdoc
                     (SELECT a_img.PictureName 
                             FROM article_images AS a_img 
                             WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=al.SupplierId LIMIT 1) AS file'))
-            ->orderBy(DB::raw('p.price'),$sort)
+            ->orderBy('p.price',$sort)
             ->groupBy('p.articles')
             ->havingRaw('MIN(p.price)')
             ->distinct()
