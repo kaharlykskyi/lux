@@ -619,6 +619,10 @@ header .logo img {
     height: 140px;
 }
 
+.brand_auto .selectric-items li{
+    text-align: center !important;
+}
+
 .top-bar .right-sec .dropdown-menu li{
     border: none;
     flex-basis: 100%;
