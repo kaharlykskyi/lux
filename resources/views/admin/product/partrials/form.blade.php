@@ -131,6 +131,20 @@
     </div>
 </div>
 
+@isset($product->stocks)
+    <hr>
+    <p class="h5">Запасы по складам</p>
+    @php $stocks_decode = json_decode($product->stocks);@endphp
+    <ul class="list-group m-b-15">
+        @foreach($stocks_decode as $k => $stocks)
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{$k}}
+                <span class="badge badge-primary badge-pill">{{$stocks}}</span>
+            </li>
+        @endforeach
+    </ul>
+@endisset
+
 <script>
     const toFloat = (obj) => {
         let val = $(obj).val();

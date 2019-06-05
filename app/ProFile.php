@@ -22,7 +22,8 @@ class ProFile extends Model
         'stocks',
         'static_name',
         'static_email1',
-        'static_email2'
+        'static_email2',
+        'active_sheet'
     ];
 
     public function provider(){

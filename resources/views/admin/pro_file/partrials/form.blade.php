@@ -111,6 +111,7 @@
 <div class="row form-group">
     <div class="col col-md-3">
         <label for="data_row" class=" form-control-label">{{__('№ Колонки доступного кол-ва, через запятую')}}</label>
+        <span class="small">Название складов писать после номера колонки через /</span>
     </div>
     <div class="col-12 col-md-9">
         <input type="text" id="stocks" name="stocks" value="@if(isset($proFile->id)){{$proFile->stocks}}@else{{old('stocks')}}@endif" class="form-control" required>
@@ -128,6 +129,18 @@
         <input type="text" id="delivery_time" name="delivery_time" value="@if(isset($proFile->id)){{$proFile->delivery_time}}@else{{old('delivery_time')}}@endif" class="form-control">
         @if ($errors->has('delivery_time'))
             <small class="form-text text-danger">{{ $errors->first('delivery_time') }}</small>
+        @endif
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col col-md-3">
+        <label for="active_sheet" class=" form-control-label">{{__('№ Листа с данными')}}</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <input type="number" id="active_sheet" name="active_sheet" value="@if(isset($proFile->id)){{$proFile->active_sheet}}@else{{1}}@endif" class="form-control">
+        @if ($errors->has('active_sheet'))
+            <small class="form-text text-danger">{{ $errors->first('active_sheet') }}</small>
         @endif
     </div>
 </div>

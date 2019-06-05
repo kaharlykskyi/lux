@@ -160,10 +160,19 @@ class ImportPriceList
                     $this->xls = PHPExcel_IOFactory::load($file);
                 }
 
-                $this->xls->setActiveSheetIndex(0);
+                $this->xls->setActiveSheetIndex((int)$this->config->active_sheet - 1);
                 $sheet = $this->xls->getActiveSheet();
                 $rowIterator = $sheet->getRowIterator();
                 $stock_cells = explode(',',$this->config->stocks);
+
+                $stock_cells_sort = [];
+                foreach ($stock_cells as $stock_cell){
+                    $buff = explode('/',$stock_cell);
+                    $stock_cells_sort[] = [
+                        'count' => $buff[0],
+                        'stock' => isset($buff[1])?$buff[1]:null
+                    ];
+                }
 
                 foreach ($rowIterator as $row){
                     $cellIterator = $row->getCellIterator();
@@ -180,12 +189,13 @@ class ImportPriceList
                                     $this->product_data[$row->getRowIndex()]['price'] = $data_array[(int)$this->config->price - 1];
                                     $this->product_data[$row->getRowIndex()]['delivery_time'] = isset($this->config->delivery_time)?$data_array[(int)$this->config->delivery_time - 1]:0;
 
-                                    foreach ($stock_cells as $stock_cell){
+                                    foreach ($stock_cells_sort as $stock_cell){
                                         if (isset($this->product_data[$row->getRowIndex()]['count'])){
-                                            $this->product_data[$row->getRowIndex()]['count'] += (int)preg_replace("/[^0-9,.]/", "", $data_array[$stock_cell - 1]);
+                                            $this->product_data[$row->getRowIndex()]['count'] += (int)preg_replace("/[^0-9,.]/", "", $data_array[(int)$stock_cell['count'] - 1]);
                                         } else {
-                                            $this->product_data[$row->getRowIndex()]['count'] = (int)preg_replace("/[^0-9,.]/", "", $data_array[$stock_cell - 1]);
+                                            $this->product_data[$row->getRowIndex()]['count'] = (int)preg_replace("/[^0-9,.]/", "", $data_array[(int)$stock_cell['count'] - 1]);
                                         }
+                                        $this->product_data[$row->getRowIndex()]['stocks'][$stock_cell['stock']] = (int)preg_replace("/[^0-9,.]/", "", $data_array[(int)$stock_cell['count'] - 1]);
                                     }
                                 }else{
                                     $cellPath = PHPExcel_Cell::columnIndexFromString($cell->getColumn());
@@ -205,12 +215,15 @@ class ImportPriceList
                                         $this->product_data[$row->getRowIndex()]['delivery_time'] = $cell->getCalculatedValue();
                                     }
 
-                                    foreach ($stock_cells as $stock_cell){
-                                        if ($cellPath === (int)$stock_cell){
+                                    foreach ($stock_cells_sort as $stock_cell){
+                                        if ($cellPath === $stock_cell['count']){
                                             if (isset($this->product_data[$row->getRowIndex()]['count'])){
                                                 $this->product_data[$row->getRowIndex()]['count'] += (int)preg_replace("/[^0-9,.]/", "", $cell->getCalculatedValue());
                                             } else {
                                                 $this->product_data[$row->getRowIndex()]['count'] = (int)preg_replace("/[^0-9,.]/", "", $cell->getCalculatedValue());
+                                            }
+                                            if (isset($stock_cell['stock'])){
+                                                $this->product_data[$row->getRowIndex()]['stocks'][$stock_cell['stock']] = (int)preg_replace("/[^0-9,.]/", "", $cell->getCalculatedValue());
                                             }
                                         }
                                     }
@@ -237,12 +250,15 @@ class ImportPriceList
                                     $this->product_data[$row->getRowIndex()]['delivery_time'] = $cell->getCalculatedValue();
                                 }
 
-                                foreach ($stock_cells as $stock_cell){
-                                    if ($cellPath === $stock_cell){
+                                foreach ($stock_cells_sort as $stock_cell){
+                                    if ($cellPath === $stock_cell['count']){
                                         if (isset($this->product_data[$row->getRowIndex()]['count'])){
                                             $this->product_data[$row->getRowIndex()]['count'] += (int)preg_replace("/[^0-9,.]/", "", $cell->getCalculatedValue());
                                         } else {
                                             $this->product_data[$row->getRowIndex()]['count'] = (int)preg_replace("/[^0-9,.]/", "", $cell->getCalculatedValue());
+                                        }
+                                        if (isset($stock_cell['stock'])){
+                                            $this->product_data[$row->getRowIndex()]['stocks'][$stock_cell['stock']] = (int)preg_replace("/[^0-9,.]/", "", $cell->getCalculatedValue());
                                         }
                                     }
                                 }
@@ -323,7 +339,8 @@ class ImportPriceList
                         'provider_price' => $productInfo['provider_price'],
                         'provider_currency' => isset($this->config->provider->currency)?$this->config->provider->currency:'UAH',
                         'created_at' => Carbon::now(),
-                        'updated_at' => Carbon::now()
+                        'updated_at' => Carbon::now(),
+                        'stocks' => isset($productInfo['stocks'])?json_encode($productInfo['stocks']):null
                     ];
 
                     $insert_data = DB::table('products')->updateOrInsert(

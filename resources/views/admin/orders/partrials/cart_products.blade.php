@@ -17,10 +17,14 @@
             @foreach($order->cartProduct as $item)
                 <tr>
                     <td>
-                        {{--<span class="m-r-10">
-                            <i onclick="" class="fa fa-info" style="cursor: pointer" title="Показать аналогичные товары"></i>
-                        </span>--}}
                         {{$item->name}}
+                        @isset($item->stocks)
+                            <br>
+                            @php $stocks_decode = json_decode($item->stocks);@endphp
+                            @foreach($stocks_decode as $k => $stocks)
+                                <span class="small">{{$k}} - {{$stocks}};</span>
+                            @endforeach
+                        @endisset
                     </td>
                     <td>{{$item->articles}}</td>
                     <td>

@@ -20,7 +20,8 @@ class Product extends Model
         'count',
         'delivery_time',
         'provider_price',
-        'provider_currency'
+        'provider_currency',
+        'stocks'
     ];
 
     public function cart(){
