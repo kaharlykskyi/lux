@@ -16,7 +16,26 @@
                 @forelse($products as $product)
                     <tr id="tr_product{{$product->product->id}}">
                         <td><div class="media">
-                                <div class="media-left"> <a href="{{route('product',['alias' => $product->product->articles,'product_id' => $product->product->id])}}"> <img class="img-responsive" src="{{asset('images/item-img-1-1.jpg')}}" alt="{{$product->product->name}}" > </a> </div>
+                                <div class="media-left">
+                                    <a href="{{route('product',['alias' => $product->product->articles,'product_id' => $product->product->id])}}">
+                                        @php $file =DB::table('products')
+                                            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),'s.matchcode','products.brand')
+                                            ->select(DB::raw('
+                                                (SELECT a_img.PictureName
+                                                    FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img
+                                                    WHERE a_img.DataSupplierArticleNumber=products.articles AND a_img.SupplierId=s.id LIMIT 1) AS file
+                                            '))
+                                            ->where('products.articles',$product->product->articles)
+                                            ->get();
+                                        @endphp
+                                        @if(!empty($file))
+                                            @php $brand_folder = explode('_',$file[0]->file) @endphp
+                                            <img class="img-responsive" src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$file[0]->file))}}" alt="{{$product->product->name}}" >
+                                        @else
+                                            <img  class="img-responsive" src="{{asset('images/default-no-image_2.png')}}" alt="{{$product->product->name}}" >
+                                        @endif
+                                    </a>
+                                </div>
                             </div></td>
                         <td class="text-center padding-top-60">{{(int)$product->product->price}} грн</td>
                         <td class="text-center"><!-- Quinty -->
@@ -47,7 +66,24 @@
                         @forelse($products as $product)
                             <li class="list-group-item" id="li_product{{$product->product->id}}">
                                 <div class="media">
-                                    <div class="media-left"> <a href="{{route('product',['alias' => $product->product->articles,'product_id' => $product->product->id])}}"> <img class="img-responsive" src="{{asset('images/item-img-1-1.jpg')}}" alt="{{$product->product->name}}" > </a> </div>
+                                    <div class="media-left"> <a href="{{route('product',['alias' => $product->product->articles,'product_id' => $product->product->id])}}">
+                                            @php $file =DB::table('products')
+                                                ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),'s.matchcode','products.brand')
+                                                ->select(DB::raw('
+                                                    (SELECT a_img.PictureName
+                                                        FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img
+                                                        WHERE a_img.DataSupplierArticleNumber=products.articles AND a_img.SupplierId=s.id LIMIT 1) AS file
+                                                '))
+                                                ->where('products.articles',$product->product->articles)
+                                                ->get();
+                                            @endphp
+                                            @if(!empty($file))
+                                                @php $brand_folder = explode('_',$file[0]->file) @endphp
+                                                <img class="img-responsive" src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$file[0]->file))}}" alt="{{$product->product->name}}" >
+                                            @else
+                                                <img  class="img-responsive" src="{{asset('images/default-no-image_2.png')}}" alt="{{$product->product->name}}" >
+                                            @endif
+                                        </a> </div>
                                     <div class="media-body hidden-sm hidden-xs">
                                         <p>{{$product->product->short_description}}</p>
                                     </div>
