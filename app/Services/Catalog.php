@@ -4,6 +4,7 @@ namespace App\Services;
 
 
 use App\Product;
+use App\TecDoc\Tecdoc;
 use Illuminate\Support\Facades\DB;
 
 class Catalog
@@ -223,16 +224,17 @@ class Catalog
 
     public function brandCatalog($article,$connection = 'mysql'){
         return DB::connection($connection)
-            ->table('article_oe')
+            ->table('articles')
+            ->join('suppliers','suppliers.id','=','articles.supplierId')
             ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),function ($query){
-                $query->on('p.articles','=','article_oe.DataSupplierArticleNumber');
+                $query->on('p.articles','=','articles.DataSupplierArticleNumber');
             })
-            ->where('article_oe.DataSupplierArticleNumber',$article)
-            ->orWhere('article_oe.OENbr',$article)
-            ->select('p.articles','article_oe.SupplierId as supplierId','p.brand'
+            ->where('articles.DataSupplierArticleNumber',$article)
+            ->orWhere('articles.FoundString',$article)
+            ->select('p.articles','suppliers.id AS supplierId','p.brand'
                 ,DB::raw('(SELECT p2.name FROM '
                     .config('database.connections.mysql.database').
-                    '.products AS p2 WHERE p2.articles=p.articles AND p2.count > 0 GROUP BY p2.name ORDER BY p2.price DESC LIMIT 1) AS name'))
+                    '.products AS p2 WHERE p2.articles=p.articles AND p2.count > 0 GROUP BY p2.name HAVING MIN(p2.price) LIMIT 1) AS name'))
             ->distinct()
             ->get();
     }
@@ -242,7 +244,10 @@ class Catalog
             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_numbers'),'article_numbers.DataSupplierArticleNumber','=','products.articles')
             ->where('article_numbers.SupplierId',(int)$supplerId)
             ->where('article_numbers.DataSupplierArticleNumber',$article)
-            ->select('products.*','article_numbers.SupplierId')
+            ->select('products.*','article_numbers.SupplierId',
+                DB::raw('(SELECT a_img.PictureName 
+                            FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 
+                            WHERE a_img.DataSupplierArticleNumber=products.articles AND a_img.SupplierId=article_numbers.SupplierId LIMIT 1) AS file'))
             ->orderBy('products.price')
             ->get();
 
@@ -272,15 +277,14 @@ class Catalog
                 $query->on('article_cross.OENbr','=','article_oe.OENbr');
                 $query->on('article_cross.manufacturerId','=','article_oe.manufacturerId');
             })
-            ->join('article_links',function ($query){
-                $query->on('article_links.SupplierId','=','article_cross.SupplierId');
-                $query->on('article_links.DataSupplierArticleNumber','=','article_cross.PartsDataSupplierArticleNumber');
-            })
             ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),'p.articles','=','article_cross.PartsDataSupplierArticleNumber')
             ->join(DB::raw(config('database.connections.mysql.database') . '.providers'),'providers.id','=','p.provider_id')
             ->where($filter)
             ->where('p.articles','<>',$article)
-            ->select('p.*','article_cross.SupplierId','providers.name AS provider_name')
+            ->select('p.*','article_cross.SupplierId','providers.name AS provider_name',
+                DB::raw('(SELECT a_img.PictureName 
+                            FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 
+                            WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=article_cross.SupplierId LIMIT 1) AS file'))
             ->orderBy('p.price')
             ->distinct()
             ->get();
