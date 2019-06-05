@@ -223,18 +223,16 @@ class Catalog
 
     public function brandCatalog($article,$connection = 'mysql'){
         return DB::connection($connection)
-            ->table('articles')
-            ->join('suppliers','suppliers.id','=','articles.supplierId')
+            ->table('article_oe')
             ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),function ($query){
-                $query->on('p.articles','=','articles.DataSupplierArticleNumber');
-                $query->on('p.brand','=','suppliers.matchcode');
+                $query->on('p.articles','=','article_oe.DataSupplierArticleNumber');
             })
-            ->where('articles.DataSupplierArticleNumber',$article)
-            ->orWhere('articles.FoundString',$article)
-            ->select('p.articles','suppliers.id AS supplierId','p.brand'
+            ->where('article_oe.DataSupplierArticleNumber',$article)
+            ->orWhere('article_oe.OENbr',$article)
+            ->select('p.articles','article_oe.SupplierId as supplierId','p.brand'
                 ,DB::raw('(SELECT p2.name FROM '
                     .config('database.connections.mysql.database').
-                    '.products AS p2 WHERE p2.articles=p.articles AND p2.count > 0 GROUP BY p2.name HAVING MIN(p2.price) LIMIT 1) AS name'))
+                    '.products AS p2 WHERE p2.articles=p.articles AND p2.count > 0 GROUP BY p2.name ORDER BY p2.price DESC LIMIT 1) AS name'))
             ->distinct()
             ->get();
     }
