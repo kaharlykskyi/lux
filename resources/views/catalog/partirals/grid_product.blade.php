@@ -25,11 +25,25 @@
         <!-- Product -->
             <div class="product" @isset($product->id)id="product-{{$product->id}}"@endisset>
                 <article>
-                    @if(!empty($product->file))
-                        @php $brand_folder = explode('_',$product->file) @endphp
-                        <img class="img-responsive" src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$product->file))}}" alt="" >
+                    @if(isset($files))
+                        @php $not_img = true @endphp
+                        @foreach($files as $file)
+                            @if($product->articles === $file->DataSupplierArticleNumber && $product->supplierId === $file->SupplierId)
+                                @php $brand_folder = explode('_',$file);$not_img = false; @endphp
+                                <img class="img-responsive" src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$file))}}" alt="" >
+                                @break
+                            @endif
+                        @endforeach
+                        @if($not_img)
+                            <img  class="img-responsive" src="{{asset('images/default-no-image_2.png')}}" alt="" >
+                        @endif
                     @else
-                        <img  class="img-responsive" src="{{asset('images/default-no-image_2.png')}}" alt="" >
+                        @if(!empty($product->file))
+                            @php $brand_folder = explode('_',$product->file) @endphp
+                            <img class="img-responsive" src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$product->file))}}" alt="" >
+                        @else
+                            <img  class="img-responsive" src="{{asset('images/default-no-image_2.png')}}" alt="" >
+                        @endif
                     @endif
                     <!-- Content -->
                     <span class="tag">{{$product->matchcode}}</span> <a href="{{route('product',str_replace('/','@',(isset($product->articles)?$product->articles:$product->DataSupplierArticleNumber)))}}?supplierid={{$product->supplierId}}&product_id={{$product->id}}" class="tittle">

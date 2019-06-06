@@ -29,13 +29,15 @@ class CatalogController extends Controller
 
     protected $catalog_products = [];
 
-    protected $list_product = null;
+    protected $list_product;
 
-    protected $list_catalog = null;
+    protected $list_catalog;
 
-    protected $replace_product = null;
+    protected $replace_product;
 
     protected $query_filters = [];
+
+    protected $art_file;
 
     public function __construct()
     {
@@ -126,6 +128,8 @@ class CatalogController extends Controller
                             ],
                             'supplier' => isset($request->supplier)?$this->filter_supplier:null
                         ],$save_filters,$this->query_filters,$select_field);
+
+                        $this->art_file = $this->service->getArtFile($this->catalog_products,$this->tecdoc->connection);
                 }
                 break;
             case isset($request->pcode) || !empty($request->query('query')):
@@ -167,7 +171,8 @@ class CatalogController extends Controller
             'attribute' => $this->attribute,
             'list_product' => $this->list_product,
             'list_catalog' => $this->list_catalog,
-            'replace_product' => $this->replace_product
+            'replace_product' => $this->replace_product,
+            'files' => $this->art_file
         ]);
     }
 

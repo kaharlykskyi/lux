@@ -337,4 +337,30 @@ class Catalog
 
         return $replace_product_loc_sort;
     }
+
+    public function getArtFile($data,$connection = 'mysql'){
+        $filters = null;
+        $files = null;
+
+        foreach ($data as $item){
+            if (isset($item->supplierId) && isset($item->DataSupplierArticleNumber)){
+                if (isset($filters)){
+                    $filters .= " OR (SupplierId={$item->supplierId} AND DataSupplierArticleNumber='{$item->DataSupplierArticleNumber}')";
+                }else{
+                    $filters = " (SupplierId={$item->supplierId} AND DataSupplierArticleNumber='{$item->DataSupplierArticleNumber}')";
+                }
+            }
+        }
+
+        if (isset($filters)){
+            $files = DB::connection($connection)
+                ->table('article_images')
+                ->whereRaw($filters)
+                ->select('SupplierId','DataSupplierArticleNumber','PictureName')
+                ->groupBy('DataSupplierArticleNumber')
+                ->get();
+        }
+
+        return $files;
+    }
 }
