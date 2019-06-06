@@ -4,7 +4,6 @@ namespace App\Services;
 
 
 use App\Product;
-use App\TecDoc\Tecdoc;
 use Illuminate\Support\Facades\DB;
 
 class Catalog
@@ -289,18 +288,24 @@ class Catalog
             ->distinct()
             ->get();
 
-        $buff_is = [];
-        $replace_product_loc_sort = [];
-        foreach ($replace_product_loc as $item){
-            foreach ($replace_product_loc as $val){
-                if ($item->articles === $val->articles && !in_array($val->id,$buff_is)){
-                    $buff_is[] = $val->id;
-                    $replace_product_loc_sort[$item->articles][] = $val;
-                }
-            }
-        }
+        return $this->sortReplaceProduct($replace_product_loc);
+    }
 
-        return $replace_product_loc_sort;
+    public function getReplaceProductForOENrb($OENrb,$connection = 'mysql'){
+        $replace_product_loc = DB::connection($connection)
+            ->table('article_oe')
+            ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),'p.articles','=','article_oe.datasupplierarticlenumber')
+            ->join(DB::raw(config('database.connections.mysql.database') . '.providers'),'providers.id','=','p.provider_id')
+            ->where('article_oe.OENbr',$OENrb)
+            ->select('p.*','article_oe.supplierid AS SupplierId','providers.name AS provider_name',
+                DB::raw('(SELECT a_img.PictureName 
+                            FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 
+                            WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=article_oe.supplierid LIMIT 1) AS file'))
+            ->orderBy('p.price')
+            ->distinct()
+            ->get();
+
+        return $this->sortReplaceProduct($replace_product_loc);
     }
 
     public function getQueryFilters($data){
@@ -316,5 +321,20 @@ class Catalog
         }
 
         return $query_attr;
+    }
+
+    private function sortReplaceProduct($data){
+        $buff_is = [];
+        $replace_product_loc_sort = [];
+        foreach ($data as $item){
+            foreach ($data as $val){
+                if ($item->articles === $val->articles && !in_array($val->id,$buff_is)){
+                    $buff_is[] = $val->id;
+                    $replace_product_loc_sort[$item->articles][] = $val;
+                }
+            }
+        }
+
+        return $replace_product_loc_sort;
     }
 }

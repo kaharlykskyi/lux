@@ -186,6 +186,10 @@ class CatalogController extends Controller
                 $this->replace_product = $this->service->replaceProducts($request->search_str,$request->supplier,$this->tecdoc->connection);
             }else{
                 $this->list_catalog = $this->service->brandCatalog($request->search_str,$this->tecdoc->connection);
+
+                if ($this->list_catalog->count() === 0){
+                    $this->replace_product = $this->service->getReplaceProductForOENrb($request->search_str,$this->tecdoc->connection);
+                }
             }
 
         } elseif ($request->type === 'name'){
