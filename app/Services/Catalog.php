@@ -343,11 +343,11 @@ class Catalog
         $files = null;
 
         foreach ($data as $item){
-            if (isset($item->supplierId) && isset($item->DataSupplierArticleNumber)){
+            if (isset($item->supplierId) && isset($item->articles)){
                 if (isset($filters)){
-                    $filters .= " OR (SupplierId={$item->supplierId} AND DataSupplierArticleNumber='{$item->DataSupplierArticleNumber}')";
+                    $filters .= " OR (SupplierId={$item->supplierId} AND DataSupplierArticleNumber='{$item->articles}')";
                 }else{
-                    $filters = " (SupplierId={$item->supplierId} AND DataSupplierArticleNumber='{$item->DataSupplierArticleNumber}')";
+                    $filters = " (SupplierId={$item->supplierId} AND DataSupplierArticleNumber='{$item->articles}')";
                 }
             }
         }

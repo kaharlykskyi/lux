@@ -26,11 +26,11 @@
             <div class="product" @isset($product->id)id="product-{{$product->id}}"@endisset>
                 <article>
                     @if(isset($files))
-                        @php $not_img = true @endphp
+                        @php $not_img = true; @endphp
                         @foreach($files as $file)
-                            @if($product->articles === $file->DataSupplierArticleNumber && $product->supplierId === $file->SupplierId)
-                                @php $brand_folder = explode('_',$file);$not_img = false; @endphp
-                                <img class="img-responsive" src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$file))}}" alt="" >
+                            @if($product->articles === $file->DataSupplierArticleNumber && (int)$product->supplierId === (int)$file->SupplierId)
+                                @php $brand_folder = explode('_',$file->PictureName);$not_img = false; @endphp
+                                <img class="img-responsive" src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$file->PictureName))}}" alt="" >
                                 @break
                             @endif
                         @endforeach

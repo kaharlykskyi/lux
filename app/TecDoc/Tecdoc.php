@@ -839,7 +839,6 @@ class Tecdoc
 
         return DB::connection($this->connection)
             ->table(DB::raw('article_links as al'))
-            ->join(DB::raw('suppliers as s'),DB::raw('s.id'),DB::raw('al.supplierid'))
             ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
             ->leftJoin('article_attributes as attr',function ($query){
                 $query->on('attr.DataSupplierArticleNumber','=','al.DataSupplierArticleNumber');
@@ -863,8 +862,8 @@ class Tecdoc
                 }
             })
             ->where('p.count','>',0)
-            ->whereRaw(isset($filter['supplier'])? " s.id IN (".implode(',',$filter['supplier']).")":'s.id > 0')
-            ->select(DB::raw('al.SupplierId AS supplierId, p.articles, s.matchcode, p.id, p.name, p.price,p.count'))
+            ->whereRaw(isset($filter['supplier'])? " al.SupplierId IN (".implode(',',$filter['supplier']).")":'al.SupplierId > 0')
+            ->select(DB::raw('al.SupplierId AS supplierId, p.articles,p.brand AS matchcode, p.id, p.name, p.price,p.count'))
             ->orderBy('p.price',$sort)
             ->groupBy('p.articles')
             ->havingRaw('MIN(p.price)')
