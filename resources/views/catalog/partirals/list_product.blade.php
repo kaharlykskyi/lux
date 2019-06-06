@@ -1,4 +1,4 @@
-@if(isset($list_catalog))
+@if(isset($list_catalog) && empty($list_product))
     <h4>{{__('Выбор производителя:')}}</h4>
     <ul class="list-group">
         @forelse($list_catalog as $item)

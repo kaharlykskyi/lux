@@ -282,12 +282,8 @@ class Catalog
 
     public function getProductForOENbr($OENrb){
         $list_product_loc = Product::with('provider')
-            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_oe'),'article_oe.OENbr','=','products.articles')
             ->where('products.articles',$OENrb)
-            ->select('products.*','article_oe.SupplierId',
-                DB::raw('(SELECT a_img.PictureName 
-                            FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 
-                            WHERE a_img.DataSupplierArticleNumber=products.articles AND a_img.SupplierId=article_oe.SupplierId LIMIT 1) AS file'))
+            ->select('products.*')
             ->orderBy('products.price')
             ->get();
 

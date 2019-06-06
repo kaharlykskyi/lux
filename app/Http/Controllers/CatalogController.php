@@ -198,6 +198,10 @@ class CatalogController extends Controller
                 if ($this->list_catalog->count() === 0){
                     $this->list_catalog = $this->service->getManufacturerForOENbr($request->search_str,$this->tecdoc->connection);
                 }
+
+                if ($this->list_catalog->count() === 0){
+                    $this->list_product = $this->service->getProductForOENbr($request->search_str);
+                }
             }
 
         } elseif ($request->type === 'name'){
