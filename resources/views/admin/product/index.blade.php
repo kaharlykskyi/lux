@@ -65,15 +65,7 @@
                         @isset($products)
                             @forelse($products as $product)
                                 <tr>
-                                    <td>
-                                        <div class="media">
-                                            <img src="..." class="mr-3" alt="...">
-                                            <div class="media-body">
-                                                <h5 class="mt-0">{{$product->articles}}</h5>
-                                            </div>
-                                        </div>
-
-                                    </td>
+                                    <td>{{$product->articles}}</td>
                                     <td>{{$product->name}}</td>
                                     <td>{{$product->brand}}</td>
                                     <td class="text-right">{{(int)$product->price}}грн.</td>

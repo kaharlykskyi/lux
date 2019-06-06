@@ -250,18 +250,7 @@ class Catalog
             ->orderBy('products.price')
             ->get();
 
-        $buff_is = [];
-        $list_product_loc_sort = [];
-        foreach ($list_product_loc as $item){
-            foreach ($list_product_loc as $val){
-                if ($item->articles === $val->articles && !in_array($val->id,$buff_is)){
-                    $buff_is[] = $val->id;
-                    $list_product_loc_sort[$item->articles][] = $val;
-                }
-            }
-        }
-
-        return $list_product_loc_sort;
+        return $this->sortProduct($list_product_loc);
     }
 
     public function replaceProducts($article,$supplerId,$connection = 'mysql'){
@@ -288,15 +277,30 @@ class Catalog
             ->distinct()
             ->get();
 
-        return $this->sortReplaceProduct($replace_product_loc);
+        return $this->sortProduct($replace_product_loc);
     }
 
-    public function getReplaceProductForOENrb($OENrb,$connection = 'mysql'){
+    public function getProductForOENbr($OENrb){
+        $list_product_loc = Product::with('provider')
+            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_oe'),'article_oe.OENbr','=','products.articles')
+            ->where('products.articles',$OENrb)
+            ->select('products.*','article_oe.SupplierId',
+                DB::raw('(SELECT a_img.PictureName 
+                            FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 
+                            WHERE a_img.DataSupplierArticleNumber=products.articles AND a_img.SupplierId=article_oe.SupplierId LIMIT 1) AS file'))
+            ->orderBy('products.price')
+            ->get();
+
+        return $this->sortProduct($list_product_loc);
+    }
+
+    public function getReplaceProductForOENrb($OENrb,$manufacturerId,$connection = 'mysql'){
         $replace_product_loc = DB::connection($connection)
             ->table('article_oe')
-            ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),'p.articles','=','article_oe.datasupplierarticlenumber')
+            ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),'p.articles','=','article_oe.DataSupplierArticleNumber')
             ->join(DB::raw(config('database.connections.mysql.database') . '.providers'),'providers.id','=','p.provider_id')
             ->where('article_oe.OENbr',$OENrb)
+            ->where('article_oe.manufacturerId',(int)$manufacturerId)
             ->select('p.*','article_oe.supplierid AS SupplierId','providers.name AS provider_name',
                 DB::raw('(SELECT a_img.PictureName 
                             FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 
@@ -305,7 +309,19 @@ class Catalog
             ->distinct()
             ->get();
 
-        return $this->sortReplaceProduct($replace_product_loc);
+        return $this->sortProduct($replace_product_loc);
+    }
+
+    public function getManufacturerForOENbr($OENrb,$connection = 'mysql'){
+        $manufacturers = DB::connection($connection)
+            ->table('article_oe')
+            ->join('manufacturers','manufacturers.id','=','article_oe.manufacturerId')
+            ->where('article_oe.OENbr',$OENrb)
+            ->select('manufacturers.id AS supplierId','manufacturers.matchcode','article_oe.OENbr AS articles')
+            ->distinct()
+            ->get();
+
+        return $manufacturers;
     }
 
     public function getQueryFilters($data){
@@ -323,7 +339,7 @@ class Catalog
         return $query_attr;
     }
 
-    private function sortReplaceProduct($data){
+    private function sortProduct($data){
         $buff_is = [];
         $replace_product_loc_sort = [];
         foreach ($data as $item){

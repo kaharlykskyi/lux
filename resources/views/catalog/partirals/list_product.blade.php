@@ -2,16 +2,18 @@
     <h4>{{__('Выбор производителя:')}}</h4>
     <ul class="list-group">
         @forelse($list_catalog as $item)
-            <a href="{{route('catalog')}}?search_str={{$item->articles}}&type={{request('type')}}&supplier={{$item->supplierId}}" class="list-group-item">
+            <a href="{{route('catalog')}}?search_str={{$item->articles}}&type={{request('type')}}@if(isset($item->matchcode)){{'&manufacturer=' . $item->supplierId}}@else{{ '&supplier=' . $item->supplierId}}@endif" class="list-group-item">
                 <div style="display: flex;">
-                    <span style="flex-basis: 25%;"><strong>{{$item->brand}}</strong> - <span class="text-info">{{$item->articles}}</span></span>
+                    <span style="flex-basis: 25%;"><strong>{{isset($item->matchcode)?$item->matchcode:$item->brand}}</strong> - <span class="text-info">{{$item->articles}}</span></span>
 
-                    <span style="flex-basis: 85%;">{{$item->name}}</span>
+                    @isset($item->name)
+                        <span style="flex-basis: 85%;">{{$item->name}}</span>
+                    @endisset
                 </div>
             </a>
         @empty
             <li class="list-group-item">
-                {{__('По артикулу "' . request('search_str') . '" товара в наличии, но можете просмотреть предложение по заменителям')}}
+                {{__('Ничего не найдено')}}
             </li>
         @endforelse
     </ul>
