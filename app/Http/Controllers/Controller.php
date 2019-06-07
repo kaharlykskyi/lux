@@ -9,13 +9,13 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\{Auth, Cache, Cookie, DB, Input, View};
+use Illuminate\Support\Facades\{Auth, Cache, Cookie, Crypt, DB, Input, View};
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function __construct(Request $request)
+    public function __construct()
     {
         if (!Cookie::has('cart_session_id')){
             Cookie::queue(Cookie::make('cart_session_id',session()->getId(),60*24));
@@ -24,7 +24,7 @@ class Controller extends BaseController
             Cookie::queue('vin_catalog', 'quickGroup');
         }
 
-        if (Auth::check() && (Auth::user()->permission === 'admin' || Auth::user()->permission === 'manager') ){
+        if (!empty(\request()->getUser()) && (\request()->user()->permission === 'admin' || \request()->user()->permission === 'manager') ){
             $count_new_orders = Cart::where([['seen',0],['oder_status','<>',1]])->count();
             $count_new_call_orders = CallOrder::where('status',0)->count();
             $count_new_pay_mass = OrderPay::where('seen',0)->where('success_pay','true')->count();
@@ -33,9 +33,9 @@ class Controller extends BaseController
             return Page::all();
         });
         $cart = Cart::where([
-            Auth::check()
-                ?['user_id',Auth::id()]
-                :['session_id',$request->cookie('cart_session_id')],
+            !empty(\request()->getUser())
+                ?['user_id',\request()->user()->id]
+                :['session_id',Crypt::decrypt(\request()->cookie('cart_session_id'),false)],
             ['oder_status', 1]
         ])->first();
         if (isset($cart)){

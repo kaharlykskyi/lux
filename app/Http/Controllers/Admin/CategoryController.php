@@ -13,9 +13,9 @@ class CategoryController extends Controller
 {
     protected $tecdoc;
 
-    public function __construct(Request $request)
+    public function __construct()
     {
-        parent::__construct($request);
+        parent::__construct();
         $this->tecdoc = new Tecdoc('mysql_tecdoc');
     }
 

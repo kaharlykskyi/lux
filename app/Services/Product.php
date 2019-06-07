@@ -3,16 +3,15 @@
 namespace App\Services;
 
 use App\{CartProduct, FastBuy, Http\Controllers\Controller, Product as ProductModel, Cart as CartModel, ProductComment};
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class Product
 {
     protected $base_controller;
 
-    public function __construct(Request $request)
+    public function __construct()
     {
-        $this->base_controller = new Controller($request);
+        $this->base_controller = new Controller();
     }
 
     public function addToCart($request,$iser_id){
