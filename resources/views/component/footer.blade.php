@@ -17,7 +17,7 @@
                 <p>
                     {{__('Адресс')}}:
                     {{config('app.company_location')}}<br>
-                    <a href="https://goo.gl/maps/m8LwKwkbNf7MpBPFA">(посмотреть на карте)</a>
+                    <a href="https://goo.gl/maps/m8LwKwkbNf7MpBPFA" target="_blank">(посмотреть на карте)</a>
                 </p>
                 <p>{{__('E-mail')}}: {{config('app.work_mail')}}</p>
                 <div class="social-links"> <a href="#."><i class="fa fa-facebook"></i></a> <a href="#."><i class="fa fa-twitter"></i></a> <a href="#."><i class="fa fa-linkedin"></i></a> <a href="#."><i class="fa fa-pinterest"></i></a> <a href="#."><i class="fa fa-instagram"></i></a> <a href="#."><i class="fa fa-google"></i></a> </div>

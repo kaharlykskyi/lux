@@ -8,16 +8,16 @@
             @foreach($accessories as $accessory)
                 <div class="product">
                     <article>
-                        @if(!empty($item->file))
-                            @php $brand_folder = explode('_',$item->file) @endphp
-                            <img class="img-responsive" src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$item->file))}}" alt="" >
+                        @if(!empty($accessory->file))
+                            @php $brand_folder = explode('_',$accessory->file) @endphp
+                            <img class="img-responsive" src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$accessory->file))}}" alt="" >
                         @else
                             <img  class="img-responsive" src="{{asset('images/default-no-image_2.png')}}" alt="" >
                         @endif
                         @if(isset($accessory->old_price) && $accessory->old_price > 0)
                             <span class="sale-tag">-{{(int)(100 - (100 *$accessory->price /$accessory->old_price))}}%</span>
                         @endif
-                        <span class="tag">{{$accessory->matchcode}}</span> <a href="{{route('product',str_replace(' ','',str_replace('/','@',($accessory->DataSupplierArticleNumber))))}}?supplierid={{$accessory->supplierId}}" class="tittle">{{$accessory->name}}</a><br>
+                        <span class="tag">{{$accessory->matchcode}}</span> <a href="{{route('product',str_replace(' ','',str_replace('/','@',($accessory->DataSupplierArticleNumber))))}}?supplierid={{$accessory->supplierId}}&product_id={{$accessory->id}}" class="tittle">{{$accessory->name}}</a><br>
                         <div class="price">{{(int)$accessory->price}}грн. </div>
                         <a href="#." onclick="{{(int)$accessory->count > 0?'addCartRelate(\''.route('add_cart',$accessory->id).'\');return false;':'alert(\'Извините, данный товар отсутсвует на складе\')'}}" class="cart-btn"><i class="icon-basket-loaded"></i></a>
                     </article>
