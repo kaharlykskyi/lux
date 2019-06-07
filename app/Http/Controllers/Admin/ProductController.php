@@ -18,8 +18,9 @@ class ProductController extends Controller
 
     protected $service;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
+        parent::__construct($request);
         $this->tecdoc = new Tecdoc('mysql_tecdoc');
         $this->service = new AdminProduct();
     }

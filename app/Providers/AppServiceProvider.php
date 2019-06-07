@@ -2,10 +2,6 @@
 
 namespace App\Providers;
 
-use App\{CallOrder, Cart, CartProduct, OrderPay, Page};
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

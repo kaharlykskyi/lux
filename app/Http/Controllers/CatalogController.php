@@ -39,9 +39,9 @@ class CatalogController extends Controller
 
     protected $art_file;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
-        parent::__construct();
+        parent::__construct($request);
         $this->tecdoc = new Tecdoc('mysql_tecdoc');
         $this->tecdoc->setType('passenger');
         $this->service = new Catalog();

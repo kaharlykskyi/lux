@@ -11,9 +11,9 @@ class CrossController extends Controller
 {
     protected $tecdoc;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
-        parent::__construct();
+        parent::__construct($request);
         $this->tecdoc = new Tecdoc('mysql_tecdoc');
         $this->tecdoc->setType('passenger');
     }

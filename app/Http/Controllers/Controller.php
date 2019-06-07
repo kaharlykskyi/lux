@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\CallOrder;
-use App\Cart;
-use App\CartProduct;
-use App\OrderPay;
-use App\Page;
+use App\{CallOrder, Cart, CartProduct, OrderPay, Page};
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -19,7 +15,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
         if (!Cookie::has('cart_session_id')){
             Cookie::queue(Cookie::make('cart_session_id',session()->getId(),60*24));
@@ -39,7 +35,7 @@ class Controller extends BaseController
         $cart = Cart::where([
             Auth::check()
                 ?['user_id',Auth::id()]
-                :['session_id',Cookie::get('cart_session_id')],
+                :['session_id',$request->cookie('cart_session_id')],
             ['oder_status', 1]
         ])->first();
         if (isset($cart)){
