@@ -9,8 +9,16 @@
             <!-- Contact -->
             <div class="col-md-4">
                 <h4>Контакты {{config('app.name')}}!</h4>
-                <p>{{__('Адресс')}}: {{config('app.company_location')}}</p>
-                <p>{{__('Телефон')}}: {{config('app.company_phone')}}</p>
+                <p>
+                    {{__('Телефон')}}:<span style="display: flex;flex-direction: column;margin-left: 60px;"><a href="tel:{{config('app.company_phone')}}">{{config('app.company_phone')}}</a>
+                    <a href="tel:380933401041">{{__('(+380) 933 401 041')}}</a>
+                    <a href="tel:380687081515">{{__('(+380) 687 081 515')}}</a></span>
+                </p>
+                <p>
+                    {{__('Адресс')}}:
+                    {{config('app.company_location')}}<br>
+                    <a href="https://goo.gl/maps/acLu1ABjjkTbktVf8">(посмотреть на карте)</a>
+                </p>
                 <p>{{__('E-mail')}}: {{config('app.work_mail')}}</p>
                 <div class="social-links"> <a href="#."><i class="fa fa-facebook"></i></a> <a href="#."><i class="fa fa-twitter"></i></a> <a href="#."><i class="fa fa-linkedin"></i></a> <a href="#."><i class="fa fa-pinterest"></i></a> <a href="#."><i class="fa fa-instagram"></i></a> <a href="#."><i class="fa fa-google"></i></a> </div>
             </div>
