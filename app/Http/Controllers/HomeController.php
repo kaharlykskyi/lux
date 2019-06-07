@@ -17,6 +17,7 @@ class HomeController extends Controller
 
     public function __construct()
     {
+        parent::__construct();
         $this->tecdoc = new Tecdoc('mysql_tecdoc');
         $this->service = new Home();
     }

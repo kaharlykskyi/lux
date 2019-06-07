@@ -658,6 +658,10 @@ header .logo img {
     z-index:1;
 }
 
+.cate-bar-in {
+    z-index: 1000;
+}
+
 .fancyTab a {
     font-size:1.65em;
     font-weight:300;

@@ -18,6 +18,7 @@ class LiqPayController extends Controller
 
     public function __construct()
     {
+        parent::__construct();
         $this->private_key = config('liqpay.private_key');
         $this->public_key = config('liqpay.public_key');
     }

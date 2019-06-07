@@ -23,6 +23,7 @@ class UserController extends Controller
 
     public function __construct()
     {
+        parent::__construct();
         $this->tecdoc = new Tecdoc('mysql_tecdoc');
     }
 

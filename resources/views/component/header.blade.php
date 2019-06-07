@@ -108,13 +108,15 @@
                     @isset($top_menu)
                         @foreach($top_menu as $category)
                             @php
-                                $sub = DB::connection('mysql_tecdoc')
-                                    ->table('passanger_car_prd')
-                                    ->where('assemblygroupdescription',$category->tecdoc_title)
-                                    ->select('id','description')
-                                    ->distinct()
-                                    ->limit(10)
-                                    ->get();
+                                $sub = Cache::remember('sub_header_category_'.$category->id, 60, function ()use($category) {
+                                    return DB::connection('mysql_tecdoc')
+                                                    ->table('passanger_car_prd')
+                                                    ->where('assemblygroupdescription',$category->tecdoc_title)
+                                                    ->select('id','description')
+                                                    ->distinct()
+                                                    ->limit(10)
+                                                    ->get();
+                                });
                             @endphp
                             <li @isset($sub)class="dropdown"@endisset>
                                 <a @isset($sub)class="dropdown-toggle" data-toggle="dropdown" @endisset href="{{route('rubric',$category->tecdoc_title)}}">{{$category->title}} </a>

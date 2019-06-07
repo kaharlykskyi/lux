@@ -13,6 +13,7 @@ class CartController extends Controller
 
     public function __construct()
     {
+        parent::__construct();
         $this->service = new CartService();
     }
 

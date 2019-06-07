@@ -15,6 +15,7 @@ class ProductController extends Controller
 
     public function __construct()
     {
+        parent::__construct();
         $this->tecdoc = new Tecdoc('mysql_tecdoc');
         $this->tecdoc->setType('passenger');
         $this->service = new ProductService();
