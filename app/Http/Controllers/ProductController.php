@@ -18,7 +18,7 @@ class ProductController extends Controller
         parent::__construct($request);
         $this->tecdoc = new Tecdoc('mysql_tecdoc');
         $this->tecdoc->setType('passenger');
-        $this->service = new ProductService();
+        $this->service = new ProductService($request);
     }
 
     public function index(Request $request){
