@@ -23,7 +23,7 @@
                             @method('PUT')
                             @csrf
 
-                            @include('admin.pages.partrials.form')
+                            @include('admin.menu.partrials.form')
                         </form>
                     </div>
                 </div>

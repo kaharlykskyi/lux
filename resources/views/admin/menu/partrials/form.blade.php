@@ -27,7 +27,17 @@
     <div class="col-6">
         <label for="search_category" class=" form-control-label">{{__('Добавленые категории')}}</label>
         <input type="hidden" id="tecdoc_category_input" name="tecdoc_category" value="@if(isset($top_menu->id)){{$top_menu->tecdoc_category}}@endif">
-        <ul class="list-group m-t-10" id="save_category"></ul>
+        <ul class="list-group m-t-10" id="save_category">
+            @isset($top_menu->id)
+                @php $save_category = json_decode($top_menu->tecdoc_category) @endphp
+                @foreach($save_category as $category)
+                    <li id="category_{{$category->id}}" data-id="{{$category->id}}" class="list-group-item">
+                        {{$category->name}}
+                        <span style="cursor: pointer;" onclick="deleteItem({{$category->id}})" class="badge badge-primary badge-pill"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                    </li>
+                @endforeach
+            @endisset
+        </ul>
     </div>
     <div class="col-2">
 
@@ -54,14 +64,15 @@
 
     function add(id,name) {
         $('#save_category').append(`
-                            <li data-id="${id}" class="list-group-item">
+                            <li id="category_${item.id}" data-id="${id}" class="list-group-item">
                                 ${name}
+                                <span style="cursor: pointer;" onclick="deleteItem(${id})" class="badge badge-primary badge-pill"><i class="fa fa-trash" aria-hidden="true"></i></span>
                             </li>
                         `);
     }
 
     function deleteItem(id) {
-
+        $('#category_' + id).remove();
     }
 
     function submitForm() {

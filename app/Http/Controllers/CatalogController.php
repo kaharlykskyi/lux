@@ -130,8 +130,6 @@ class CatalogController extends Controller
                             'supplier' => isset($request->supplier)?$this->filter_supplier:null
                         ],$save_filters,$this->query_filters,$select_field);
 
-                        //dd(DB::connection($this->tecdoc->connection)->select('EXPLAIN select distinct al.SupplierId AS supplierId, p.articles,p.brand AS matchcode, p.id, p.name, p.price,p.count from article_links as al inner join lux.products AS p on p.articles = al.DataSupplierArticleNumber left join `article_attributes` as `attr` on `attr`.`DataSupplierArticleNumber` = `al`.`DataSupplierArticleNumber` and `attr`.`supplierId` = `al`.`SupplierId` where `al`.`productid` = 20 and `al`.`linkagetypeid` = 2 and `p`.`count` > 0 and al.SupplierId > 0 group by `p`.`articles` having MIN(p.price) order by `p`.`price` asc'));
-
                         $this->art_file = $this->service->getArtFile($this->catalog_products,$this->tecdoc->connection);
                 }
                 break;

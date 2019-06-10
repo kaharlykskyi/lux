@@ -102,34 +102,23 @@
 
             <div class="collapse navbar-collapse" id="nav-open-btn">
                 <ul class="nav">
-                    {{--@php
-                        $top_menu = \App\TopMenu::where('show_menu','1')->get();
-                    @endphp
-                    @isset($top_menu)
-                        @foreach($top_menu as $category)
+                    @isset($top_menu_global)
+                        @foreach($top_menu_global as $category)
                             @php
-                                $sub = Cache::remember('sub_header_category_'.$category->id, 60, function ()use($category) {
-                                    return DB::connection('mysql_tecdoc')
-                                                    ->table('passanger_car_prd')
-                                                    ->where('assemblygroupdescription',$category->tecdoc_title)
-                                                    ->select('id','description')
-                                                    ->distinct()
-                                                    ->limit(10)
-                                                    ->get();
-                                });
+                                $sub = json_decode($category->tecdoc_category)
                             @endphp
                             <li @isset($sub)class="dropdown"@endisset>
-                                <a @isset($sub)class="dropdown-toggle" data-toggle="dropdown" @endisset href="{{route('rubric',$category->tecdoc_title)}}">{{$category->title}} </a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href=".#">{{$category->title}} </a>
                                 @isset($sub)
                                     <ul class="dropdown-menu multi-level animated-2s fadeInUpHalf">
                                         @foreach($sub as $item)
-                                            <li><a href="{{route('catalog',$item->id)}}"> {{$item->description}} </a></li>
+                                            <li><a href="{{route('catalog',$item->id)}}"> {{$item->name}} </a></li>
                                         @endforeach
                                     </ul>
                                 @endisset
                             </li>
                         @endforeach
-                    @endisset--}}
+                    @endisset
                 </ul>
             </div>
         </div>

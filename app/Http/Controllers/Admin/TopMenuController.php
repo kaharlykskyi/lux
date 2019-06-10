@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\TopMenu;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class TopMenuController extends Controller
@@ -42,11 +43,14 @@ class TopMenuController extends Controller
 
         if (isset($data['show_menu'])){
             $data['show_menu'] = (int)$data['show_menu'];
+        }else{
+            $data['show_menu'] = 0;
         }
 
         $top_menu = new TopMenu();
         $top_menu->fill($data);
         if ($top_menu->save()){
+            Cache::forget('top_menu');
             return redirect()->route('admin.top_menu.index')->with('status','Данные сохранены');
         } else{
             return redirect()->back()->with('status','Проверте форму на коректность данных');
@@ -72,7 +76,8 @@ class TopMenuController extends Controller
      */
     public function edit($id)
     {
-        //
+        $top_menu = TopMenu::findOrFail($id);
+        return view('admin.menu.edit',compact('top_menu'));
     }
 
     /**
@@ -84,7 +89,21 @@ class TopMenuController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->except(['_token','search_category']);
+
+        if (isset($data['show_menu'])){
+            $data['show_menu'] = (int)$data['show_menu'];
+        }else{
+            $data['show_menu'] = 0;
+        }
+        $top_menu = TopMenu::findOrFail($id);
+        $top_menu->fill($data);
+        if ($top_menu->update()){
+            Cache::forget('top_menu');
+            return redirect()->back()->with('status','Данные сохранены');
+        }else{
+            return redirect()->back()->with('status','Ошибка');
+        }
     }
 
     /**
@@ -95,7 +114,9 @@ class TopMenuController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Cache::forget('top_menu');
+        TopMenu::destroy($id);
+        return back()->with('status','Удаление успешно');
     }
 
     public function tecdocCategory(Request $request){

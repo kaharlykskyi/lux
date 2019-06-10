@@ -7,6 +7,7 @@ use App\Cart;
 use App\CartProduct;
 use App\OrderPay;
 use App\Page;
+use App\TopMenu;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\{Facades\Auth, Facades\Cache, Facades\Cookie, Facades\View};
@@ -34,9 +35,14 @@ class InitApp
             $count_new_call_orders = CallOrder::where('status',0)->count();
             $count_new_pay_mass = OrderPay::where('seen',0)->where('success_pay','true')->count();
         }
-        $pages = Cache::remember('pages_all', 60, function () {
+        $pages = Cache::remember('pages_all', 60*24, function () {
             return Page::all();
         });
+
+        $top_menu = Cache::remember('top_menu', 60*24, function () {
+            return TopMenu::all();
+        });
+
         $cart = Cart::where([
             Auth::check()
                 ?['user_id',Auth::id()]
@@ -54,6 +60,7 @@ class InitApp
         View::share([
             'products_cart_global' => $products,
             'pages_global' => $pages,
+            'top_menu_global' => $top_menu,
             'count_new_orders_global' => isset($count_new_orders)?$count_new_orders:0,
             'count_new_call_orders_global' => isset($count_new_call_orders)?$count_new_call_orders:0,
             'count_new_pay_mass_global' => isset($count_new_pay_mass)?$count_new_pay_mass:0
