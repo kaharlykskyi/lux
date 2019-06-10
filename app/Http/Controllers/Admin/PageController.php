@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Page;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\{Auth, Cache, Validator};
 
 class PageController extends Controller
 {
@@ -58,6 +57,7 @@ class PageController extends Controller
         $page = new Page();
         $page->fill($data);
         if ($page->save()){
+            Cache::forget('pages_all');
             return redirect()->route('admin.page.index')->with('status','Данные сохранены');
         } else {
             return redirect()->back()->with('status','Данные не сохранены')->withInput();
@@ -114,6 +114,7 @@ class PageController extends Controller
 
         $page->update($data);
         if ($page->save()){
+            Cache::forget('pages_all');
             return redirect()->back()->with('status','Данные сохранены');
         } else {
             return redirect()->back()->with('status','Данные не сохранены');
