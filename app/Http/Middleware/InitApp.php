@@ -40,7 +40,7 @@ class InitApp
         });
 
         $top_menu = Cache::remember('top_menu', 60*24, function () {
-            return TopMenu::all();
+            return TopMenu::where('show_menu',1)->get();
         });
 
         $cart = Cart::where([
