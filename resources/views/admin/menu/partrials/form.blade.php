@@ -64,7 +64,7 @@
 
     function add(id,name) {
         $('#save_category').append(`
-                            <li id="category_${item.id}" data-id="${id}" class="list-group-item">
+                            <li id="category_${id}" data-id="${id}" class="list-group-item">
                                 ${name}
                                 <span style="cursor: pointer;" onclick="deleteItem(${id})" class="badge badge-primary badge-pill"><i class="fa fa-trash" aria-hidden="true"></i></span>
                             </li>
