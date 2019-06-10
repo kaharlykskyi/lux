@@ -9,11 +9,7 @@ use App\OrderPay;
 use App\Page;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\View;
+use Illuminate\Support\{Facades\Auth, Facades\Cache, Facades\Cookie, Facades\View};
 
 class InitApp
 {
@@ -44,7 +40,7 @@ class InitApp
         $cart = Cart::where([
             Auth::check()
                 ?['user_id',Auth::id()]
-                :['session_id',Crypt::decrypt(\request()->cookie('cart_session_id'),false)],
+                :['session_id',Cookie::get('cart_session_id')],
             ['oder_status', 1]
         ])->first();
         if (isset($cart)){
