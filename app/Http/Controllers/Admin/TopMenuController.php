@@ -9,45 +9,102 @@ use Illuminate\Support\Facades\DB;
 
 class TopMenuController extends Controller
 {
-    public function index(Request $request){
-        DB::statement('DELETE FROM `top_menu`
-                         WHERE id NOT IN (SELECT * 
-                                            FROM (SELECT MIN(n.id)
-                                                    FROM `top_menu` n
-                                                GROUP BY n.tecdoc_title) x)');
-
-        $tecdoc_category = cache()->remember('menu_tecdoc_category', 60*24*7, function () {
-            return DB::connection('mysql_tecdoc')
-                ->table('passanger_car_prd')
-                ->select('assemblygroupdescription')
-                ->distinct()->get();
-        });
-        $tecdoc_category = $this->arrayPaginator($tecdoc_category->toArray(),$request,20);
-        return view('admin.menu.index',compact('tecdoc_category'));
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $top_menu = TopMenu::paginate(30);
+        return view('admin.menu.index',compact('top_menu'));
     }
 
-    public function edit(Request $request){
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('admin.menu.create');
+    }
 
-        if ($request->isMethod('post')){
-            $data = $request->except('_token');
-            if (isset($data['show_menu'])){
-                $data['show_menu'] = 1;
-            }else{
-                $data['show_menu'] = 0;
-            }
-            $save_category = TopMenu::where('tecdoc_title',$data['tecdoc_title'])->first();
-            if (isset($save_category)){
-                TopMenu::where('tecdoc_title',$save_category->tecdoc_title)->update($data);
-            }else{
-                $top_menu = new TopMenu();
-                $top_menu->fill($data);
-                $top_menu->save();
-            }
-            return back()->with('status','Изменено');
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $data = $request->except(['_token','search_category']);
+
+        if (isset($data['show_menu'])){
+            $data['show_menu'] = (int)$data['show_menu'];
         }
 
-        $tecdoc_name = $request->id;
-        $save_category = TopMenu::where('tecdoc_title',$tecdoc_name)->first();
-        return view('admin.menu.edit',compact('tecdoc_name','save_category'));
+        $top_menu = new TopMenu();
+        $top_menu->fill($data);
+        if ($top_menu->save()){
+            return redirect()->route('admin.top_menu.index')->with('status','Данные сохранены');
+        } else{
+            return redirect()->back()->with('status','Проверте форму на коректность данных');
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+
+    public function tecdocCategory(Request $request){
+        $data = DB::connection('mysql_tecdoc')
+            ->table('prd')
+            ->where('normalizeddescription','LIKE',"{$request->category}%")
+            ->select('id','normalizeddescription','usagedescription')
+            ->distinct()
+            ->get();
+        return response()->json($data);
     }
 }

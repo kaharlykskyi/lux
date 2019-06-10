@@ -15,10 +15,9 @@ class CreateTopMenuTable extends Migration
     {
         Schema::create('top_menu', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('tecdoc_id');
-            $table->string('tecdoc_title');
             $table->string('title');
             $table->unsignedTinyInteger('show_menu');
+            $table->json('tecdoc_category')->nullable();
         });
     }
 

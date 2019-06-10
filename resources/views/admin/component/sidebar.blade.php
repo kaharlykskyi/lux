@@ -112,7 +112,7 @@
                             <a href="{{route('admin.banner.index')}}">{{__('Слайды баннера')}}</a>
                         </li>
                         <li>
-                            <a href="{{route('admin.menu.index')}}">{{__('Меню')}}</a>
+                            <a href="{{route('admin.top_menu.index')}}">{{__('Меню')}}</a>
                         </li>
                         <li>
                             <a href="{{route('admin.comment')}}">{{__('Комментарии')}}</a>

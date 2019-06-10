@@ -16,14 +16,13 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <strong>{{__('Редактирование ')}}</strong> {{__('пункта меню')}}
+                        <strong>{{__('Создание ')}}</strong> {{__('пункта меню')}}
                     </div>
                     <div class="card-body card-block">
-                        <form action="{{route('admin.top_menu.update',$top_menu->id)}}" method="post" class="form-horizontal" id="top_menu_form">
-                            @method('PUT')
+                        <form action="{{route('admin.top_menu.store')}}" method="post" class="form-horizontal" id="top_menu_form">
                             @csrf
 
-                            @include('admin.pages.partrials.form')
+                            @include('admin.menu.partrials.form')
                         </form>
                     </div>
                 </div>

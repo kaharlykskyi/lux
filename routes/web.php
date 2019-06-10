@@ -140,7 +140,8 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
         'pro_file' => 'ProFileController',
         'home_category' => 'HomeCategoryGroupController',
         'sto_manager' => 'STOManagerController',
-        'sto_check_manager' => 'STOCheackManagerController'
+        'sto_check_manager' => 'STOCheackManagerController',
+        'top_menu' => 'TopMenuController'
     ],['as' => 'admin']);
     Route::get('/start-import','ProductController@startImport')->name('admin.start_import');
 
@@ -151,8 +152,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     });
     Route::match(['get', 'post'], '/brands','ShowBrandController@index')->name('admin.show_brand');
 
-    Route::get('/menu','TopMenuController@index')->name('admin.menu.index');
-    Route::match(['get', 'post'], '/menu/edit','TopMenuController@edit')->name('admin.menu.edit');
+    Route::get('/search-tecdoc-category','TopMenuController@tecdocCategory')->name('admin.top_menu.tecdoc_category');
     Route::match(['get', 'post'], '/comment','DashboardController@productComment')->name('admin.comment');
     Route::match(['get', 'post'], '/shipping-payment','DashboardController@shippingPayment')->name('admin.shipping_payment');
     Route::get('/popular-product','ProductController@popularProduct')->name('admin.product.popular');

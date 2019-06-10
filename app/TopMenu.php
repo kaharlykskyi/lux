@@ -9,16 +9,16 @@ class TopMenu extends Model
     protected $table = 'top_menu';
 
     protected $fillable = [
-        'tecdoc_id',
-        'tecdoc_title',
+        'tecdoc_category',
         'show_menu',
         'title'
     ];
 
     protected $attributes = [
-        'show_menu' => 0,
-        'tecdoc_id' => 0
+        'show_menu' => 0
     ];
+
+
 
     public $timestamps = false;
 }

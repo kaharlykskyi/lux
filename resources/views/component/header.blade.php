@@ -102,7 +102,7 @@
 
             <div class="collapse navbar-collapse" id="nav-open-btn">
                 <ul class="nav">
-                    @php
+                    {{--@php
                         $top_menu = \App\TopMenu::where('show_menu','1')->get();
                     @endphp
                     @isset($top_menu)
@@ -129,7 +129,7 @@
                                 @endisset
                             </li>
                         @endforeach
-                    @endisset
+                    @endisset--}}
                 </ul>
             </div>
         </div>
