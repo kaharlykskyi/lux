@@ -19,8 +19,15 @@
                 <div class="user-data">
                     <h3 class="title-3 m-b-30">
                         <i class="fa fa-car" aria-hidden="true"></i>{{__('Гараж пользователя - ' . $user->name)}}</h3>
-                    <div class="col-12 m-b-15">
-                        <a href="{{route('admin.users')}}" class="btn btn-success">{{__('Назад')}}</a>
+                    <div class="row m-15">
+                        <div class="col-6">
+                            @include('admin.component.back')
+                        </div>
+                        <div class="col-6 text-right">
+                            <div class="col-12 m-b-15 m-t-15">
+                                <a href="{{route('admin.user.garage.add',$user->id)}}" class="btn btn-primary">{{__('Добавить авто')}}</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

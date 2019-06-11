@@ -828,7 +828,7 @@ class Tecdoc
         }
     }
 
-    public function getCategoryProduct($id,$pre,array $filter,$save_attr, $query_attr,$select_filed,$sort = 'ASC'){
+    public function getCategoryProduct($id,$pre,array $filter,$save_attr, $query_attr,$sort = 'ASC'){
         if (isset($filter['supplier'])){
             foreach ($filter['supplier'] as $k => $item){
                 $filter['supplier'][$k] = (int)$item;
@@ -844,8 +844,8 @@ class Tecdoc
                 $query->on('attr.DataSupplierArticleNumber','=','al.DataSupplierArticleNumber');
                 $query->on('attr.supplierId','=','al.SupplierId');
             })
-            ->where($select_filed,(int)$id)
-            ->where('al.linkagetypeid',($this->type) === 'passenger'?2:16)
+            ->where('al.productid',(int)$id)
+            ->where('al.linkagetypeid','=',2)
             ->where([
                 [DB::raw('p.price'),'>=',$filter['price']['min']],
                 [DB::raw('p.price'),'<=',$filter['price']['max']]

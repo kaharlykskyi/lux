@@ -57,44 +57,6 @@
     <!-- Nav -->
     <nav class="navbar ownmenu">
         <div class="container">
-            <!-- Categories -->
-            <div class="cate-lst"> <a  data-toggle="collapse" class="cate-style" href="#cater"><i class="fa fa-list-ul"></i> {{__('Каталог')}} </a>
-                <div class="cate-bar-in">
-                    <div id="cater" class="collapse">
-                        <ul class="list-group root-list">
-                            <li class="list-group-item">
-                                <a class="root-link" onclick="getSub('passenger',null,this,'{{route('get_subcategory')}}')" href="#.">{{__('Легковой')}}</a>
-                                <ul class="list-group" style="display: none">
-                                    <li style="text-align: center;">
-                                        <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-                                        <span class="sr-only">Loading...</span>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li  class="list-group-item">
-                                <a class="root-link" onclick="getSub('commercial',null,this,'{{route('get_subcategory')}}')" href="#.">{{__('Грузовой')}}</a>
-                                <ul class="list-group" style="display: none">
-                                    <li style="text-align: center;">
-                                        <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
-                                        <span class="sr-only">Loading...</span>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-
-                        <script>
-                            $(document).ready(function () {
-                                $('#cater').click(function (e) {
-                                    if (e.target.nodeName === 'A' && e.target.className === 'root-link'){
-                                        $($(e.target).siblings("ul")).toggle();
-                                    }
-                                });
-                            });
-                        </script>
-                    </div>
-                </div>
-            </div>
-
             <!-- Navbar Header -->
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-open-btn" aria-expanded="false"> <span><i class="fa fa-navicon"></i></span> </button>

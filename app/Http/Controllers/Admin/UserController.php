@@ -131,6 +131,30 @@ class UserController extends Controller
         return view('admin.users.garage',compact('user','cars'));
     }
 
+    public function garageAdd(Request $request,User $user){
+        if ($request->isMethod('post')){
+            $data = $request->except('_token');
+            $user_car = new UserCar();
+            $user_car->fill($data);
+            if ($user_car->save()){
+                return redirect()->route('admin.user.garage',$user->id);
+            }else{
+                return redirect()->back()->withInput();
+            }
+
+        }
+
+        return view('admin.users.add_car',compact('user'));
+    }
+
+    public function updateCar(Request $request,User $user){
+        $data = $request->except('_token');
+        $car = UserCar::findOrFail($data['id']);
+        $car->fill($data);
+        $car->update();
+        return redirect()->back();
+    }
+
     public function userCart(Request $request){
         if ($request->has('delete_product')){
             CartProduct::destroy((int)$request->delete_product);
