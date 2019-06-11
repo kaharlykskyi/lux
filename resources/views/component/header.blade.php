@@ -57,6 +57,8 @@
     <!-- Nav -->
     <nav class="navbar ownmenu">
         <div class="container">
+            <div class="cate-lst visible-xs" style="height: 55px;"></div>
+
             <!-- Navbar Header -->
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-open-btn" aria-expanded="false"> <span><i class="fa fa-navicon"></i></span> </button>

@@ -145,6 +145,13 @@
                                                 <a href="{{route('admin.user.show',$user->id)}}">
                                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                                     Редактировать
+                                                </a><br>
+                                                @php $cart_count = \App\Cart::where('user_id',$user->id)->count(); @endphp
+                                                <a href="{{route('admin.orders',['client_id' => $user->id])}}">
+                                                    <i class="fa fa-cart-arrow-down" aria-hidden="true"></i>
+                                                    Заказы @if($cart_count > 0)
+                                                        [<span class="text-danger">{{$cart_count}}</span>]
+                                                    @endif
                                                 </a>
                                             </td>
                                         </tr>
