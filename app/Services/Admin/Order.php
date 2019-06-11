@@ -16,7 +16,7 @@ class Order
 
         if (isset($request->oder_id) && !empty($request->oder_id)) $filters[] = ['carts.id','=',(int)$request->oder_id];
         if (isset($request->status_oder) && !empty($request->status_oder)) $filters[] = ['carts.oder_status','=',(int)$request->status_oder];
-        if (isset($request->seen) && !empty($request->seen)) $filters[] = ['carts.seen','=',(int)$request->seen];
+        if (isset($request->new_oder) && !empty($request->new_oder)) $filters[] = ['carts.seen','=',0];
         if (isset($request->date_oder_start) && !empty($request->date_oder_start)) $filters[] = ['carts.oder_dt','>=',$request->date_oder_start];
         if (isset($request->date_oder_end) && !empty($request->date_oder_end)) $filters[] = ['carts.oder_dt','>=',$request->date_oder_end];
         if (isset($request->client_id) && !empty($request->client_id)) $filters[] = ['carts.user_id','=',(int)$request->client_id];
