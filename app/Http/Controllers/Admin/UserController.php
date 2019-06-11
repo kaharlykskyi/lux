@@ -46,7 +46,14 @@ class UserController extends Controller
         return view('admin.users.index',compact('users','roles','discount'));
     }
 
-    public function show(User $user){
+    public function show(Request $request,User $user){
+        if ($request->isMethod('post')){
+            $data = $request->except('_token');
+            $user->fill($data);
+            $user->update();
+            return redirect()->back();
+        }
+
         $dop_phone = $user->userPhones;
         $balance = $user->balance;
         $balance_history = $user->historyBalance;
