@@ -1,6 +1,6 @@
 @isset($home_category)
     <section class="light-gry-bg padding-top-60 padding-bottom-30 hidden-xs">
-        <div class="container">
+        <div class="container home-catalog">
 
             <!-- heading -->
             <div class="heading">
@@ -47,11 +47,11 @@
                                            </div>
                                         @endisset
 
-                                    @if($count === 5 || $key + 1 === count($category_tree))
+                                    @php $count++; @endphp
+                                    @if($count === 6 || $key + 1 === count($category_tree))
                                         </div>
                                         @php $count = 0; @endphp
                                     @endif
-                                    @php $count++; @endphp
                                 @endforeach
                             @endisset
                         </div>

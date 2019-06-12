@@ -368,6 +368,11 @@ body header .logo{
     max-width: 225px;
 }
 
+.home-catalog .product article{
+    height: 225px;
+    margin-bottom: 20px;
+}
+
 header .logo img {
     width: 100%;
 }
