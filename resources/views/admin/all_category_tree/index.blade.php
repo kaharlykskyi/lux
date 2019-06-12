@@ -34,7 +34,7 @@
                                 @if(!empty($category->name))
                                     <tr>
                                         <th>
-                                            @php $img = DB::table('all_category_trees')->where('tecdoc_name',$category->name)->where('level',request()->has('level')?(int)request('level'):0)->first(); @endphp
+                                            @php $img = DB::table('all_category_trees')->where('tecdoc_name',!empty($category->usagedescription)?$category->usagedescription:$category->name)->where('level',request()->has('level')?(int)request('level'):0)->first(); @endphp
                                             <img style="width: 35px;height: auto;" src="@if(isset($img->image)) {{asset('images/catalog/' . $img->image)}} @else {{asset('images/map-locator.png')}} @endif" alt="">
                                         </th>
                                         <th>
