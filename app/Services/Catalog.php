@@ -22,9 +22,12 @@ class Catalog
                 break;
             case 'category':
                 $price = Cache::remember('min_max_category_'.$param['id'], 60*24, function () use ($param) {
-                    return DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links as al'))
-                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers as s'),DB::raw('s.id'),DB::raw('al.supplierid'))
-                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                    return DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('p.brand'),DB::raw('sp.matchcode'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links as al'),function ($query){
+                            $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
+                            $query->on('sp.id','=','al.SupplierId');
+                        })
                         ->where('al.productid',(int)$param['id'])
                         ->where(DB::raw('al.linkagetypeid'),'=',2)
                         ->select(DB::raw('MIN(p.price) AS min, MAX(p.price) AS max'))
@@ -90,12 +93,15 @@ class Catalog
                 break;
             case 'category':
                 return Cache::remember('brands_category_'.$param['id'], 60*24, function () use ($param) {
-                    return DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links as al'))
-                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers as s'),DB::raw('s.id'),DB::raw('al.supplierid'))
-                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                    return DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('p.brand'),DB::raw('sp.matchcode'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links as al'),function ($query){
+                            $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
+                            $query->on('sp.id','=','al.SupplierId');
+                        })
                         ->where('al.productid',(int)$param['id'])
                         ->where(DB::raw('al.linkagetypeid'),'=',2)
-                        ->select(DB::raw('s.id AS supplierId, s.description'))
+                        ->select(DB::raw('sp.id AS supplierId, sp.description'))
                         ->distinct()
                         ->get();
                 });

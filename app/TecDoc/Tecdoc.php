@@ -839,8 +839,12 @@ class Tecdoc
 
         if (!isset($attr_filter[1])){
             return DB::connection($this->connection)
-                ->table(DB::raw('article_links as al'))
-                ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                ->table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
+                ->join('suppliers AS sp',DB::raw('p.brand'),DB::raw('sp.matchcode'))
+                ->join(DB::raw('article_links as al'),function ($query){
+                    $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
+                    $query->on('sp.id','=','al.SupplierId');
+                })
                 ->where('al.productid',(int)$id)
                 ->where('al.linkagetypeid','=',2)
                 ->where([
@@ -857,8 +861,12 @@ class Tecdoc
                 ->paginate((int)$pre,['p.id']);
         } else{
             return DB::connection($this->connection)
-                ->table(DB::raw('article_links as al'))
-                ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                ->table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
+                ->join('suppliers',DB::raw('p.brand'),DB::raw('sp.matchcode'))
+                ->join(DB::raw('article_links as al'),function ($query){
+                    $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
+                    $query->on('sp.id','=','al.SupplierId');
+                })
                 ->leftJoin('article_attributes as attr',function ($query){
                     $query->on('attr.DataSupplierArticleNumber','=','al.DataSupplierArticleNumber');
                     $query->on('attr.supplierId','=','al.SupplierId');
