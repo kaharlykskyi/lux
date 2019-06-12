@@ -39,7 +39,8 @@
 
         @component('home.component.main_page_links',[
                 'brands' => $brands,
-                'popular_products' => $popular_products
+                'popular_products' => $popular_products,
+                'search_cars' => $search_cars
             ])
         @endcomponent
 

@@ -256,7 +256,7 @@ function makeTemplateCategoryCar(data,modification_auto,type_auto) {
                 str_data += `<a href="/catalog/${sub.id}?modification_auto=${modification_auto}&type_auto=${type_auto}" class="list-group-item text-primary border-0" target="_blank">${sub.description}</a>`
             }
             if(i === 5){
-                str_data += `<a class="list-group-item border-0" target="_blank" href="/brands?modification_auto=${modification_auto}&type_auto=${type_auto}"><small>показать все</small></a>`
+                str_data += `<a class="list-group-item border-0" target="_blank" href="/brands?modification_auto=${modification_auto}&type_auto=${type_auto}&parent_id=${item.id}"><small>показать все</small></a>`
             }
         });
         str_data += '</div></div></div></div>';

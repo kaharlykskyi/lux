@@ -26,12 +26,17 @@ class HomeController extends Controller
     {
         $search_cars = $this->service->getSearchCars($request);
 
-        $this->tecdoc->setType('passenger');
-        $brands = DB::table('show_brand')
-            ->where('ispassengercar','=','true')
-            ->select('brand_id AS id','description')->limit(20)->get();
+        if (empty($search_cars)){
+            $this->tecdoc->setType('passenger');
+            $brands = DB::table('show_brand')
+                ->where('ispassengercar','=','true')
+                ->select('brand_id AS id','description')->limit(20)->get();
 
-        $popular_products = $this->service->getPopularProduct();
+            $popular_products = $this->service->getPopularProduct();
+        }else{
+            $brands = [];
+            $popular_products = [];
+        }
 
         $slides = Banner::all();
         $home_category = HomeCategoryGroup::all();
@@ -51,10 +56,16 @@ class HomeController extends Controller
         }
 
         if (isset($request->modification_auto)){
-            $this->tecdoc->setType(isset($request->type_auto)?$request->type_auto:'passenger');
-            $categories = $this->tecdoc->getSections($request->modification_auto);
-            foreach ($categories as $category){
-                $category->subCategories = $this->tecdoc->getSections($request->modification_auto,$category->id);
+            $type = isset($request->type_auto)?$request->type_auto:'passenger';
+            $this->tecdoc->setType($type);
+            if ($request->has('parent_id')){
+                $categories = $this->tecdoc->getSectionName((int)$request->parent_id);
+                $categories[0]->subCategories = $this->tecdoc->getSections($request->modification_auto,(int)$request->parent_id);
+            }else{
+                $categories = $this->tecdoc->getSections($request->modification_auto);
+                foreach ($categories as $category){
+                    $category->subCategories = $this->tecdoc->getSections($request->modification_auto,$category->id);
+                }
             }
             return view('home.modif_category',['categories' => $categories,'modification' => $this->tecdoc->getModificationById($request->modification_auto)]);
         }
