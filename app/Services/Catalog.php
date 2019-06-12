@@ -109,8 +109,8 @@ class Catalog
                 break;
             case 'modification':
                 if ($param['type'] === 'passenger'){
-                    $brands = Cache::remember('brands_modification_'.$param['linkageid'], 60*24, function () use ($param) {
-                        DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'))
+                    $brands = Cache::remember('brands_modification_'.$param['linkageid'].$param['nodeid'], 60*24, function () use ($param) {
+                        return DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'))
                             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
                             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
                             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
