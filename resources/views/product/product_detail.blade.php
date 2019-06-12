@@ -65,7 +65,7 @@
                                             <div class="col-sm-6">
                                                 <p class="font-size-12-440">{{__('Доступность')}}:
                                                     @if((int)$product->count > 0)
-                                                        <span class="in-stock">{{__('В наличии')}}</span>
+                                                        <span class="in-stock">{{$product->articles}}</span>
                                                     @else
                                                         <span class="text-danger">{{__('Нет на складе')}}</span>
                                                     @endif
