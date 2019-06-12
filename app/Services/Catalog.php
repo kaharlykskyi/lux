@@ -98,6 +98,7 @@ class Catalog
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links as al'),function ($query){
                             $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
                             $query->on('sp.id','=','al.SupplierId');
+                            $query->on('sp.description','=','p.brand');
                         })
                         ->where('al.productid',(int)$param['id'])
                         ->where(DB::raw('al.linkagetypeid'),'=',2)
