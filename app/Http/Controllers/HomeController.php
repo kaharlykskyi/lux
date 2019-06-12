@@ -33,13 +33,14 @@ class HomeController extends Controller
                 ->select('brand_id AS id','description')->limit(20)->get();
 
             $popular_products = $this->service->getPopularProduct();
+            $home_category = HomeCategoryGroup::all();
         }else{
             $brands = [];
             $popular_products = [];
+            $home_category = [];
         }
 
         $slides = Banner::all();
-        $home_category = HomeCategoryGroup::all();
 
         return view('home.index',compact('search_cars','brands','popular_products','slides','home_category'));
     }
@@ -60,7 +61,7 @@ class HomeController extends Controller
             $this->tecdoc->setType($type);
             if ($request->has('parent_id')){
                 $categories = $this->tecdoc->getSectionName((int)$request->parent_id);
-                $categories[0]->subCategories = $this->tecdoc->getSections($request->modification_auto,(int)$request->parent_id);
+                $categories[0]->subCategories = $this->tecdoc->getSections($request->modification_auto,(int)$request->parent_id,null,true);
             }else{
                 $categories = $this->tecdoc->getSections($request->modification_auto);
                 foreach ($categories as $category){
@@ -147,7 +148,7 @@ class HomeController extends Controller
         $category = $this->tecdoc->getSections($data['modification_auto']);
 
         foreach ($category as $k => $item){
-            $category[$k]->sub_category = $this->tecdoc->getSections($data['modification_auto'],$item->id,7);
+            $category[$k]->sub_category = $this->tecdoc->getSections($data['modification_auto'],$item->id,7,true);
             $category[$k]->image_data = Category::where([
                 ['tecdoc_id',(int)$item->id],
                 ['type',($data['type_auto'] === 'passenger')?'passanger':'commercial']

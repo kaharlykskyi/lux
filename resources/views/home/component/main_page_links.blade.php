@@ -1,4 +1,4 @@
-@if(!isset($search_cars) || empty($search_cars))
+
     <div class="container">
         <div class="row padding-bottom-15">
             <div class="col-sm-12">
@@ -36,4 +36,4 @@
             </div>
         </div>
     </div>
-@endif
+

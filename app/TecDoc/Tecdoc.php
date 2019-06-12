@@ -311,16 +311,30 @@ class Tecdoc
      * @param $modification_id
      * @param int $parent
      * @param null $limit
+     * @param bool $count_product
      * @return mixed
      */
-    public function getSections($modification_id, $parent = 0,$limit = null)
+    public function getSections($modification_id, $parent = 0,$limit = null,$count_product = false)
     {
         $limit_select = isset($limit)?" LIMIT {$limit}":'';
+        $select_count_product = '';
+
+        if ($count_product){
+            $select_count_product = ",(select COUNT(DISTINCT p.articles) 
+                    from td1q2018.article_links AS al inner 
+                    join td1q2018.passanger_car_pds AS pds on al.supplierid = pds.supplierid 
+                    inner join td1q2018.suppliers AS s on s.id = al.supplierid 
+                    inner join td1q2018.passanger_car_prd AS prd on prd.id = al.productid 
+                    inner join lux.products AS p on p.articles = al.DataSupplierArticleNumber 
+                    where al.productid = pds.productid and al.linkageid = pds.passangercarid and al.linkageid = ".(int)$modification_id." and pds.nodeid = passanger_car_trees.id and al.linkagetypeid = 2 AND p.count > 0) AS count_product ";
+        }
+
+
         switch ($this->type) {
             case 'passenger':
                 return DB::connection($this->connection)->select("
-						SELECT id, description,parentid
-						FROM passanger_car_trees WHERE passangercarid=" . (int)$modification_id . " AND parentId=" . (int)$parent . "
+						SELECT id, description,parentid {$select_count_product}
+						FROM passanger_car_trees  WHERE passangercarid=" . (int)$modification_id . " AND parentId=" . (int)$parent . "
 						ORDER BY description {$limit_select}
 					");
                 break;

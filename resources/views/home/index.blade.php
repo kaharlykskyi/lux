@@ -31,18 +31,19 @@
             </div>
         @endif
 
-        @component('home.component.category',[
-            'home_category' => $home_category
-        ])
-
-        @endcomponent
-
-        @component('home.component.main_page_links',[
-                'brands' => $brands,
-                'popular_products' => $popular_products,
-                'search_cars' => $search_cars
+        @if(!isset($search_cars) || empty($search_cars))
+            @component('home.component.category',[
+                'home_category' => $home_category
             ])
-        @endcomponent
+
+            @endcomponent
+
+            @component('home.component.main_page_links',[
+                    'brands' => $brands,
+                    'popular_products' => $popular_products,
+                ])
+            @endcomponent
+        @endif
 
     </div>
     <!-- End Content -->
