@@ -837,38 +837,58 @@ class Tecdoc
 
         $attr_filter = $this->getSortAttr($save_attr,$query_attr);
 
-        return DB::connection($this->connection)
-            ->table(DB::raw('article_links as al'))
-            ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
-            ->leftJoin('article_attributes as attr',function ($query){
-                $query->on('attr.DataSupplierArticleNumber','=','al.DataSupplierArticleNumber');
-                $query->on('attr.supplierId','=','al.SupplierId');
-            })
-            ->where('al.productid',(int)$id)
-            ->where('al.linkagetypeid','=',2)
-            ->where([
-                [DB::raw('p.price'),'>=',$filter['price']['min']],
-                [DB::raw('p.price'),'<=',$filter['price']['max']]
-            ])
-            ->where(function ($query) use ($attr_filter) {
-                foreach ($attr_filter as $item){
-                    $group_attr = [];
+        if (empty($attr_filter)){
+            return DB::connection($this->connection)
+                ->table(DB::raw('article_links as al'))
+                ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                ->where('al.productid',(int)$id)
+                ->where('al.linkagetypeid','=',2)
+                ->where([
+                    [DB::raw('p.price'),'>=',$filter['price']['min']],
+                    [DB::raw('p.price'),'<=',$filter['price']['max']]
+                ])
+                ->where('p.count','>',0)
+                ->whereRaw(isset($filter['supplier'])? " al.SupplierId IN (".implode(',',$filter['supplier']).")":'al.SupplierId > 0')
+                ->select(DB::raw('al.SupplierId AS supplierId, p.articles,p.brand AS matchcode, p.id, p.name, p.price,p.count'))
+                ->orderBy('p.price',$sort)
+                ->groupBy('p.articles')
+                ->havingRaw('MIN(p.price)')
+                ->distinct()
+                ->paginate((int)$pre,['p.id']);
+        } else{
+            return DB::connection($this->connection)
+                ->table(DB::raw('article_links as al'))
+                ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                ->leftJoin('article_attributes as attr',function ($query){
+                    $query->on('attr.DataSupplierArticleNumber','=','al.DataSupplierArticleNumber');
+                    $query->on('attr.supplierId','=','al.SupplierId');
+                })
+                ->where('al.productid',(int)$id)
+                ->where('al.linkagetypeid','=',2)
+                ->where([
+                    [DB::raw('p.price'),'>=',$filter['price']['min']],
+                    [DB::raw('p.price'),'<=',$filter['price']['max']]
+                ])
+                ->where(function ($query) use ($attr_filter) {
+                    foreach ($attr_filter as $item){
+                        $group_attr = [];
 
-                    foreach ($item as  $data){
-                        $group_attr[] = $data;
+                        foreach ($item as  $data){
+                            $group_attr[] = $data;
+                        }
+
+                        $query->where($group_attr,null,null,'OR');
                     }
-
-                    $query->where($group_attr,null,null,'OR');
-                }
-            })
-            ->where('p.count','>',0)
-            ->whereRaw(isset($filter['supplier'])? " al.SupplierId IN (".implode(',',$filter['supplier']).")":'al.SupplierId > 0')
-            ->select(DB::raw('al.SupplierId AS supplierId, p.articles,p.brand AS matchcode, p.id, p.name, p.price,p.count'))
-            ->orderBy('p.price',$sort)
-            ->groupBy('p.articles')
-            ->havingRaw('MIN(p.price)')
-            ->distinct()
-            ->paginate((int)$pre,['p.id']);
+                })
+                ->where('p.count','>',0)
+                ->whereRaw(isset($filter['supplier'])? " al.SupplierId IN (".implode(',',$filter['supplier']).")":'al.SupplierId > 0')
+                ->select(DB::raw('al.SupplierId AS supplierId, p.articles,p.brand AS matchcode, p.id, p.name, p.price,p.count'))
+                ->orderBy('p.price',$sort)
+                ->groupBy('p.articles')
+                ->havingRaw('MIN(p.price)')
+                ->distinct()
+                ->paginate((int)$pre,['p.id']);
+        }
     }
 
     public function getProductForArticleOE($OENbr,$manufacturer_id,$pre,array $filter,$sort = 'ASC'){

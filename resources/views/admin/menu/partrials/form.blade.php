@@ -52,8 +52,8 @@
             $.get('{{route('admin.top_menu.tecdoc_category')}}?category=' + str, function (data) {
                 let html = '';
                 data.forEach(function (item) {
-                    html += `<li onclick="add('${item.id}','${item.usagedescription.length > 0?item.usagedescription:item.normalizeddescription}')" class="list-group-item" style="cursor: pointer;">
-                                ${item.usagedescription.length > 0?item.usagedescription:item.normalizeddescription}
+                    html += `<li onclick="add('${item.id}','${item.usagedescription.length > 0?item.normalizeddescription + ' - ' + item.usagedescription:item.normalizeddescription}')" class="list-group-item" style="cursor: pointer;">
+                                ${item.usagedescription.length > 0?item.normalizeddescription + ' - ' + item.usagedescription:item.normalizeddescription}
                              </li>`;
                 });
 
