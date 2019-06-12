@@ -37,10 +37,16 @@
                                             @php $img = DB::table('all_category_trees')->where('tecdoc_name',$category->name)->where('level',request()->has('level')?(int)request('level'):0)->first(); @endphp
                                             <img style="width: 35px;height: auto;" src="@if(isset($img->image)) {{asset('images/catalog/' . $img->image)}} @else {{asset('images/map-locator.png')}} @endif" alt="">
                                         </th>
-                                        <th>{{$category->name}}</th>
+                                        <th>
+                                            @if(isset($category->usagedescription))
+                                                {{$category->usagedescription}}
+                                            @else
+                                                {{$category->name}}
+                                            @endif
+                                        </th>
                                         <th>
                                             <div class="table-data-feature">
-                                                <button onclick="location.href = '{{route('admin.all_category.edit')}}?category={{$category->name}}&level={{request()->query('level')}}&parent={{$parent}}{{isset($category->id)?'&id='.$category->id:''}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Редактирвать')}}">
+                                                <button onclick="location.href = '{{route('admin.all_category.edit')}}?category={{isset($category->usagedescription)?$category->usagedescription:$category->name}}&level={{request()->query('level')}}&parent={{$parent}}{{isset($category->id)?'&id='.$category->id:''}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Редактирвать')}}">
                                                     <i class="zmdi zmdi-edit"></i>
                                                 </button>
                                                 @if((int)request()->query('level') === 0)
