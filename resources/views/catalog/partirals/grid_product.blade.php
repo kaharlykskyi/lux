@@ -3,9 +3,11 @@
 <div class="short-lst">
     <ul>
         <!-- Short List -->
-        <li>
-            <p>{{(isset($catalog_products)?$catalog_products->total():'0') . __(' найдено товаров')}}</p>
-        </li>
+        @if(method_exists($catalog_products,'total'))
+            <li>
+                <p>{{(isset($catalog_products)?$catalog_products->total():'0') . __(' найдено товаров')}}</p>
+            </li>
+        @endif
         <!-- Short  -->
         <li >
             <select class="selectpicker" onchange="$.get(`{{route('filter')}}?pre_show=${$(this).val()}`,()=>{location.reload()});">

@@ -858,7 +858,7 @@ class Tecdoc
                 ->groupBy('p.articles')
                 ->havingRaw('MIN(p.price)')
                 ->distinct()
-                ->paginate((int)$pre,['p.id']);
+                ->simplePaginate((int)$pre,['p.id']);
         } else{
             return DB::connection($this->connection)
                 ->table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
@@ -895,7 +895,7 @@ class Tecdoc
                 ->groupBy('p.articles')
                 ->havingRaw('MIN(p.price)')
                 ->distinct()
-                ->paginate((int)$pre,['p.id']);
+                ->simplePaginate((int)$pre,['p.id']);
         }
     }
 
@@ -955,7 +955,7 @@ class Tecdoc
             ->orderBy(DB::raw('p.price'),$sort)
             ->groupBy('p.articles')
             ->havingRaw('MIN(p.price)')
-            ->paginate((int)$pre,['p.id']);
+            ->simplePaginate((int)$pre,['p.id']);
     }
 
     public function getProductByArticle($article, $supplier_id){
