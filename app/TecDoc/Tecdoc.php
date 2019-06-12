@@ -837,7 +837,7 @@ class Tecdoc
 
         $attr_filter = $this->getSortAttr($save_attr,$query_attr);
 
-        if (empty($attr_filter)){
+        if (isset($attr_filter[0])){
             return DB::connection($this->connection)
                 ->table(DB::raw('article_links as al'))
                 ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
