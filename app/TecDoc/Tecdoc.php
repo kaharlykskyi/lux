@@ -841,7 +841,7 @@ class Tecdoc
             return DB::connection($this->connection)
                 ->table(DB::raw('article_links as al'))
                 ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
-                ->where('al.productid',(int)$id)
+                ->where('al.linkageid',(int)$id)
                 ->where('al.linkagetypeid','=',2)
                 ->where([
                     [DB::raw('p.price'),'>=',$filter['price']['min']],
@@ -863,7 +863,7 @@ class Tecdoc
                     $query->on('attr.DataSupplierArticleNumber','=','al.DataSupplierArticleNumber');
                     $query->on('attr.supplierId','=','al.SupplierId');
                 })
-                ->where('al.productid',(int)$id)
+                ->where('al.linkageid',(int)$id)
                 ->where('al.linkagetypeid','=',2)
                 ->where([
                     [DB::raw('p.price'),'>=',$filter['price']['min']],

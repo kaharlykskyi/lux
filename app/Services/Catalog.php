@@ -25,7 +25,7 @@ class Catalog
                     return DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links as al'))
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers as s'),DB::raw('s.id'),DB::raw('al.supplierid'))
                         ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
-                        ->where('al.productid',(int)$param['id'])
+                        ->where('al.linkageid',(int)$param['id'])
                         ->where(DB::raw('al.linkagetypeid'),'=',2)
                         ->select(DB::raw('MIN(p.price) AS min, MAX(p.price) AS max'))
                         ->get();
@@ -93,7 +93,7 @@ class Catalog
                     return DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links as al'))
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers as s'),DB::raw('s.id'),DB::raw('al.supplierid'))
                         ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
-                        ->where('al.productid',(int)$param['id'])
+                        ->where('al.linkageid',(int)$param['id'])
                         ->where(DB::raw('al.linkagetypeid'),'=',2)
                         ->select(DB::raw('s.id AS supplierId, s.description'))
                         ->distinct()
