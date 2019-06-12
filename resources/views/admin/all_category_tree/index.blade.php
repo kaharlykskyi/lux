@@ -38,7 +38,7 @@
                                             <img style="width: 35px;height: auto;" src="@if(isset($img->image)) {{asset('images/catalog/' . $img->image)}} @else {{asset('images/map-locator.png')}} @endif" alt="">
                                         </th>
                                         <th>
-                                            @if(isset($category->usagedescription))
+                                            @if(!empty($category->usagedescription))
                                                 {{$category->usagedescription}}
                                             @else
                                                 {{$category->name}}
@@ -46,7 +46,7 @@
                                         </th>
                                         <th>
                                             <div class="table-data-feature">
-                                                <button onclick="location.href = '{{route('admin.all_category.edit')}}?category={{isset($category->usagedescription)?$category->usagedescription:$category->name}}&level={{request()->query('level')}}&parent={{$parent}}{{isset($category->id)?'&id='.$category->id:''}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Редактирвать')}}">
+                                                <button onclick="location.href = '{{route('admin.all_category.edit')}}?category={{!empty($category->usagedescription)?$category->usagedescription:$category->name}}&level={{request()->query('level')}}&parent={{$parent}}{{isset($category->id)?'&id='.$category->id:''}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Редактирвать')}}">
                                                     <i class="zmdi zmdi-edit"></i>
                                                 </button>
                                                 @if((int)request()->query('level') === 0)
