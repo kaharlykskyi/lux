@@ -6,21 +6,21 @@ namespace App\Services\Admin;
 use Illuminate\Support\Facades\DB;
 use PHPExcel;
 use PHPExcel_IOFactory;
-use PHPExcel_Style_Border;
 use PHPExcel_Style_NumberFormat;
 use PHPExcel_Worksheet_PageSetup;
 
 class Product
 {
-    public function getExportData($limit = 1000){
+    public function getExportData($limit = 10){
         return DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'),DB::raw('al.DataSupplierArticleNumber'),DB::raw('p.articles'))
-            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_images AS img'),function ($join){
-                $join->on(DB::raw('img.DataSupplierArticleNumber'), '=', DB::raw('p.articles'));
-                $join->on(DB::raw('img.SupplierId'), '=', DB::raw('al.SupplierId'));
-            })
+            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),'sp.matchcode','=','p.brand')
             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.prd AS prd'),DB::raw('prd.id'),DB::raw('al.linkageid'))
-            ->select(DB::raw('p.name, p.articles, p.price, p.brand, p.count, img.PictureName, prd.normalizeddescription, al.SupplierId'))
+            ->select(DB::raw('p.name, p.articles, p.price, p.brand, p.count, prd.normalizeddescription, al.SupplierId,
+                        (SELECT a_img.PictureName 
+                            FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 
+                            WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=sp.id LIMIT 1) AS PictureName
+                    '))
             ->limit($limit)
             ->get();
     }
@@ -33,6 +33,7 @@ class Product
     }
 
     public function createXlsFile($data){
+
         $objPHPExcel = new PHPExcel();
         try {
             $objPHPExcel->setActiveSheetIndex(0);
@@ -80,9 +81,16 @@ class Product
             foreach ($data as $item){
                 $row_next = $row_start + $i;
 
+                if (isset($item->PictureName)){
+                    $file_brand = explode('_',$item->PictureName);
+                    $file = asset('product_imags/'.$file_brand[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$item->PictureName));
+                }else{
+                    $file = asset('images/default-no-image_2.png');
+                }
+
                 $active_sheet->setCellValue('A' .$row_next,$item->articles);
                 $active_sheet->setCellValue('B' .$row_next,$item->name);
-                $active_sheet->setCellValue('C' .$row_next,$item->PictureName);
+                $active_sheet->setCellValue('C' .$row_next,$file);
                 $active_sheet->setCellValue('D' .$row_next,$item->price);
                 $active_sheet->setCellValue('E' .$row_next,$item->count);
                 $active_sheet->setCellValue('F' .$row_next,$item->brand);
