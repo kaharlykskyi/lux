@@ -170,13 +170,13 @@
         <div id="markup-block">
             @if(isset($proFile->id))
                 @php $markup_val = json_decode($proFile->markup) @endphp
-                @forelse($markup_val as $item)
-                    @include('admin.pro_file.partrials.markup_input')
+                @forelse($markup_val as $k => $item)
+                    @component('admin.pro_file.partrials.markup_input',['data' => $item,'k' => $k])@endcomponent
                 @empty
-                    @include('admin.pro_file.partrials.markup_input')
+                    @component('admin.pro_file.partrials.markup_input')@endcomponent
                 @endforelse
             @else
-                @include('admin.pro_file.partrials.markup_input')
+                @component('admin.pro_file.partrials.markup_input')@endcomponent
             @endif
         </div>
         <button onclick="addMarkup()" type="button" class="btn btn-success btn-sm">
@@ -229,6 +229,10 @@
     <i class="fa fa-dot-circle-o"></i> {{__('Сохранить')}}
 </button>
 <script>
+    function deleteMarkupRow(id) {
+        $('#markup_row_'+id).remove();
+    }
+
     function submitProfileForm() {
         const markup_rows = $('#markup-block .form-row');
         let markup = [];
@@ -251,7 +255,7 @@
 
     function addMarkup() {
         $('#markup-block').append(`
-            @include('admin.pro_file.partrials.markup_input')
+            @component('admin.pro_file.partrials.markup_input')@endcomponent
         `);
     }
 </script>
