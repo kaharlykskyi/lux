@@ -81,7 +81,7 @@ body .panel-primary>.panel-heading{
 
 .relative{
     position: relative;
-    z-index: 100000;
+    z-index: 1000;
 }
 
 .show-480{

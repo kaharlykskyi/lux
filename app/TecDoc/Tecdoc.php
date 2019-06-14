@@ -854,7 +854,7 @@ class Tecdoc
         if (!isset($attr_filter[1])){
             return DB::connection($this->connection)
                 ->table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
-                ->join('suppliers AS sp',DB::raw('p.brand'),DB::raw('sp.matchcode'))
+                ->join('suppliers AS sp',DB::raw('p.brand'),DB::raw('sp.description'))
                 ->join(DB::raw('article_links as al'),function ($query){
                     $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
                     $query->on('sp.id','=','al.SupplierId');
@@ -876,7 +876,7 @@ class Tecdoc
         } else{
             return DB::connection($this->connection)
                 ->table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
-                ->join('suppliers',DB::raw('p.brand'),DB::raw('sp.matchcode'))
+                ->join('suppliers',DB::raw('p.brand'),DB::raw('sp.description'))
                 ->join(DB::raw('article_links as al'),function ($query){
                     $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
                     $query->on('sp.id','=','al.SupplierId');
@@ -959,7 +959,7 @@ class Tecdoc
                 [DB::raw('p.price'),'>=',$filter['price']['min']],
                 [DB::raw('p.price'),'<=',$filter['price']['max']]
             ])
-            ->join(DB::raw('suppliers AS sp'),DB::raw('sp.matchcode'),DB::raw('p.brand'))
+            ->join(DB::raw('suppliers AS sp'),DB::raw('sp.description'),DB::raw('p.brand'))
             ->where('p.count','>',0)
             ->whereRaw(isset($filter['supplier'])? " sp.id IN (".implode(',',$filter['supplier']).")":'sp.id > 0')
             ->select(DB::raw('sp.id AS supplierId, sp.matchcode, p.id, p.name, p.price, p.articles,p.count,
