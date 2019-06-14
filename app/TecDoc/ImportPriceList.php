@@ -296,6 +296,7 @@ class ImportPriceList
                     if (isset($this->config->currency) && $this->config->currency !== 'UAH'){
                         foreach ($this->currency as $item){
                             if ($this->config->currency === $item->ccy){
+                                $item->sale = isset($this->config->exchange_range)?$this->config->exchange_range:$item->sale;
                                 $productInfo['price'] = $productInfo['price'] * (float)$item->sale;
                                 if (isset($productInfo['old_price'])){
                                     $productInfo['old_price'] = floatval($productInfo['old_price']) * (float)$item->sale;
@@ -305,6 +306,7 @@ class ImportPriceList
                     } elseif (isset($this->config->provider->currency) && $this->config->provider->currency !== 'UAH'){
                         foreach ($this->currency as $item){
                             if ($this->config->provider->currency === $item->ccy){
+                                $item->sale = isset($this->config->exchange_range)?$this->config->exchange_range:$item->sale;
                                 $productInfo['price'] = (float)$productInfo['price'] * (float)$item->sale;
                                 if (isset($productInfo['old_price'])){
                                     $productInfo['old_price'] = floatval($productInfo['old_price']) * (float)$item->sale;
@@ -315,12 +317,21 @@ class ImportPriceList
                 }
                 try{
 
-                    if ($productInfo['price'] < 2000){
-                        $productInfo['price'] = $productInfo['price'] + ($productInfo['price'] * 0.2);
-                    } elseif ($productInfo['price'] >= 2000 && $productInfo['price'] <= 5000){
-                        $productInfo['price'] = $productInfo['price'] + ($productInfo['price'] * 0.15);
-                    } elseif($productInfo['price'] > 5000){
-                        $productInfo['price'] = $productInfo['price'] + ($productInfo['price'] * 0.1);
+                    $markup_data = isset($this->config->markup)?json_decode($this->config->markup):null;
+                    if (isset($markup_data) && !empty($markup_data)){
+                        foreach ($markup_data as $val){
+                            if ($val->min < $productInfo['price'] && $productInfo['price'] < $val->max){
+                                $productInfo['price'] = $productInfo['price'] + ($productInfo['price'] * $val->markup / 100);
+                            }
+                        }
+                    }else{
+                        if ($productInfo['price'] < 2000){
+                            $productInfo['price'] = $productInfo['price'] + ($productInfo['price'] * 0.2);
+                        } elseif ($productInfo['price'] >= 2000 && $productInfo['price'] <= 5000){
+                            $productInfo['price'] = $productInfo['price'] + ($productInfo['price'] * 0.15);
+                        } elseif($productInfo['price'] > 5000){
+                            $productInfo['price'] = $productInfo['price'] + ($productInfo['price'] * 0.1);
+                        }
                     }
 
                     $productInfo['price'] = $productInfo['price'] < 1?1:$productInfo['price'];

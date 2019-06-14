@@ -19,7 +19,7 @@
                         <strong>{{__('Редактирование ')}}</strong> {{__('профайла ' . $proFile->name)}}
                     </div>
                     <div class="card-body card-block">
-                        <form action="{{route('admin.pro_file.update',$proFile->id)}}" method="post" class="form-horizontal">
+                        <form action="{{route('admin.pro_file.update',$proFile->id)}}" method="post" class="form-horizontal" id="pro_file_form">
                             @method('PUT')
                             @csrf
 

@@ -23,7 +23,9 @@ class ProFile extends Model
         'static_name',
         'static_email1',
         'static_email2',
-        'active_sheet'
+        'active_sheet',
+        'exchange_range',
+        'markup'
     ];
 
     public function provider(){

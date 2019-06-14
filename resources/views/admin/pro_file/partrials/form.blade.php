@@ -146,6 +146,46 @@
 </div>
 
 <hr>
+<div class="row form-group">
+    <div class="col col-md-3">
+        <label for="exchange_range" class=" form-control-label">{{__('Курс валюты')}}</label><br>
+        <span class="small text-info">По дефолту курс Привата</span>
+    </div>
+    <div class="col-12 col-md-9">
+        <input type="text" id="exchange_range" name="exchange_range" value="@if(isset($proFile->id)){{$proFile->exchange_range}}@else{{old('exchange_range')}}@endif" class="form-control">
+        @if ($errors->has('exchange_range'))
+            <small class="form-text text-danger">{{ $errors->first('exchange_range') }}</small>
+        @endif
+    </div>
+</div>
+
+
+<div class="row form-group">
+    <div class="col col-md-3">
+        <label for="exchange_range" class=" form-control-label">{{__('Наценка товара')}}</label><br>
+        <span class="small text-info">По дефолту:<2000:20%,<5000:15%,>5000:10%</span>
+    </div>
+    <div class="col-12 col-md-9">
+        <input type="hidden" name="markup" id="markup_input">
+        <div id="markup-block">
+            @if(isset($proFile->id))
+                @php $markup_val = json_decode($proFile->markup) @endphp
+                @forelse($markup_val as $item)
+                    @include('admin.pro_file.partrials.markup_input')
+                @empty
+                    @include('admin.pro_file.partrials.markup_input')
+                @endforelse
+            @else
+                @include('admin.pro_file.partrials.markup_input')
+            @endif
+        </div>
+        <button onclick="addMarkup()" type="button" class="btn btn-success btn-sm">
+            {{__('Добавить')}}
+        </button>
+    </div>
+</div>
+
+<hr>
 <p class="h5">Настройки для сбора прайсов из почтового ящика </p>
 
 <div class="row form-group">
@@ -185,6 +225,33 @@
 </div>
 
 
-<button type="submit" class="btn btn-primary btn-sm">
+<button onclick="submitProfileForm()" type="button" class="btn btn-primary btn-sm">
     <i class="fa fa-dot-circle-o"></i> {{__('Сохранить')}}
 </button>
+<script>
+    function submitProfileForm() {
+        const markup_rows = $('#markup-block .form-row');
+        let markup = [];
+
+        for (let i = 0;i < markup_rows.length;i++){
+            let inputs = $(markup_rows[i]).find('input');
+
+            if (parseInt($(inputs[1]).val().trim()) > 0){
+                markup.push({
+                    'min': parseInt($(inputs[0]).val().trim()),
+                    'max': parseInt($(inputs[1]).val().trim()),
+                    'markup': parseInt($(inputs[2]).val().trim())
+                });
+            }
+        }
+
+        $('#markup_input').val(JSON.stringify(markup));
+        $('#pro_file_form').submit()
+    }
+
+    function addMarkup() {
+        $('#markup-block').append(`
+            @include('admin.pro_file.partrials.markup_input')
+        `);
+    }
+</script>

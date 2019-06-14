@@ -19,7 +19,7 @@
                         <strong>{{__('Создание ')}}</strong> {{__('профайла')}}
                     </div>
                     <div class="card-body card-block">
-                        <form action="{{route('admin.pro_file.store')}}" method="post" class="form-horizontal">
+                        <form action="{{route('admin.pro_file.store')}}" method="post" class="form-horizontal" id="pro_file_form">
                             @csrf
 
                             @include('admin.pro_file.partrials.form')
