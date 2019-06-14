@@ -219,7 +219,6 @@ function getCarsDetail(type_auto,year_auto,brand_auto,model_auto,modification_au
                         </div>`;
             }
         });
-        console.log(data);
         $('#mod_info').html(mod_info);
     });
 
@@ -407,7 +406,6 @@ function getDataFilterModification(link) {
             });
 
             html += '</ul>';
-            console.log(window.innerWidth);
         }
 
         $('#modification_auto_block_result').html(html).show();
@@ -517,7 +515,6 @@ $(document).ready(function () {
                         title: function() {
                             var title = $(this).attr('title');
                             var url = $(this).data('url');
-                            console.log($(this));
                             return '<a href="' + url + '" target="_blank">' + title + '</a>'
                         }
                     });
@@ -603,7 +600,6 @@ $(document).ready(function () {
                         $('#result_track_order .panel-body').html(`<div class="alert alert-warning" role="alert"><p class="text-center">Упсс, данных по такому номеру заказа нету =(</p></div>`);
                 }
             }
-            console.log(data);
         });
     });
 });

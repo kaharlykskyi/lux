@@ -10,18 +10,28 @@
                         @endif
                     @endforeach
                 @endisset
-                <li id="mob-phone" class="margin-right-15">
+                <li id="mob-phone" class="margin-right-15 relative">
                     <i class="fa fa-phone"></i>
-                    {{config('app.company_phone')}}
+                    <div class="phone-block">
+                        <span style="line-height: 1;font-size: 16px">Заказ и подбор запчастей с 09:00 до 20:00</span><br>
+                        <span style="line-height: 1;" class="text-primary text-left">{{config('app.company_phone')}}</span><br>
+                        <span style="line-height: 1;" class="text-primary text-left">{{__('(+380) 933 401 041')}}</span><br>
+                        <span style="line-height: 1;" class="text-primary text-left">{{__('(+380) 687 081 515')}}</span>
+                    </div>
                 </li>
             </ul>
         </div>
         <div class="col-lg-4 text-right">
             <ul class="reg-link">
                 <!-- Authentication Links -->
-                <li id="desc-phone" class="margin-right-15">
+                <li id="desc-phone" class="margin-right-15 relative">
                     <i class="fa fa-phone"></i>
-                    {{config('app.company_phone')}}
+                    <div class="phone-block">
+                        <p style="line-height: 1;font-size: 16px">Заказ и подбор запчастей с 09:00 до 20:00</p>
+                        <p style="line-height: 1;" class="text-primary text-left">{{config('app.company_phone')}}</p>
+                        <p style="line-height: 1;" class="text-primary text-left">{{__('(+380) 933 401 041')}}</p>
+                        <p style="line-height: 1;" class="text-primary text-left">{{__('(+380) 687 081 515')}}</p>
+                    </div>
                 </li>
                 @guest
                     <li class="margin-right-15">

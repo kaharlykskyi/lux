@@ -81,7 +81,7 @@ body .panel-primary>.panel-heading{
 
 .relative{
     position: relative;
-    z-index: 10;
+    z-index: 100000;
 }
 
 .show-480{
@@ -1096,6 +1096,29 @@ body .modal-content{
     padding: 0 5px;
     border-radius: 8px;
     border: none;
+}
+
+.phone-block{
+    position: absolute;
+    width: 225px;
+    right: 0;
+    z-index: 1000;
+    background: #fff;
+    padding: 10px;
+    box-shadow: 2px 2px 2px #ccc;
+    border-radius: 10px;
+    top: -1000%;
+    transition: opacity .5s;
+    opacity: 0;
+}
+
+#desc-phone:hover .phone-block,#mob-phone:hover .phone-block{
+    top: 100%;
+    opacity: 1;
+}
+
+.top-bar .nav-pills, .top-bar .reg-link {
+    flex-wrap: wrap;
 }
 
 .product-info-icon{

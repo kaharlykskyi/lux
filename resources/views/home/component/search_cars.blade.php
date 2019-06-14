@@ -32,4 +32,10 @@
             $(`#list-group${id}`).remove();
         });
     }
+
+    @if(isset($search_cars) && !empty($search_cars))
+        $(document).ready(function () {
+        getCarsDetail('{{$search_cars[0]['cookie']['type_auto']}}','{{$search_cars[0]['cookie']['year_auto']}}','{{$search_cars[0]['cookie']['brand_auto']}}','{{$search_cars[0]['cookie']['model_auto']}}','{{$search_cars[0]['cookie']['modification_auto']}}','{{csrf_token()}}','{{$search_cars[0]['data'][0]->name}}','{{$search_cars[0]['data'][0]->displayvalue}}','{{route('modification_info')}}')
+        });
+    @endif
 </script>
