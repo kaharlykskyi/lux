@@ -24,7 +24,10 @@ class InitApp
     public function handle($request, Closure $next)
     {
         if (!Cookie::has('cart_session_id')){
-            Cookie::queue(Cookie::make('cart_session_id',session()->getId(),60*24));
+            $cart_session_id = session()->getId() . time();
+            Cookie::queue(Cookie::make('cart_session_id',$cart_session_id,60*24));
+        } else{
+            $cart_session_id = Cookie::get('cart_session_id');
         }
         if (!Cookie::has('vin_catalog')){
             Cookie::queue('vin_catalog', 'quickGroup');
@@ -46,7 +49,7 @@ class InitApp
         $cart = Cart::where([
             Auth::check()
                 ?['user_id',Auth::id()]
-                :['session_id',Cookie::get('cart_session_id')],
+                :['session_id',$cart_session_id],
             ['oder_status', 1]
         ])->first();
         if (isset($cart)){
