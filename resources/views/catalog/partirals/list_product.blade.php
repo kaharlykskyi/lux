@@ -33,9 +33,9 @@
                         <div style="flex-basis: 80%;display: flex">
                             <div style="flex-basis: 20%;display: flex">
                                 <div>
-                                    @if(!empty($item->file))
-                                        @php $brand_folder = explode('_',$item->file) @endphp
-                                        <img style="margin: 10px 0;width: 100px;" class="img-responsive" src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$item->file))}}" alt="" >
+                                    @if(!empty($data->file))
+                                        @php $brand_folder = explode('_',$data->file) @endphp
+                                        <img style="margin: 10px 0;width: 100px;" class="img-responsive" src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$data->file))}}" alt="" >
                                     @else
                                         <img style="margin: 10px 0;width: 100px;" class="img-responsive" src="{{asset('images/default-no-image_2.png')}}" alt="" >
                                     @endif
