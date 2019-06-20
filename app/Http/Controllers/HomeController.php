@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\{Banner, CallOrder, Category, HomeCategoryGroup, Services\Home, TecDoc\Tecdoc, UserCar};
+use App\{Banner, CallOrder, CategoresGroupForCar, Category, HomeCategoryGroup, Services\Home, TecDoc\Tecdoc, UserCar};
 use Illuminate\Http\Request;
 use Illuminate\Support\{Facades\Auth, Facades\Cookie, Facades\DB, Facades\Validator};
 
@@ -144,15 +144,11 @@ class HomeController extends Controller
             $cookies =  Cookie::forever('search_cars',json_encode($cars));
         }
 
-        $this->tecdoc->setType($data['type_auto']);
-        $category = $this->tecdoc->getSections($data['modification_auto']);
+        $category = CategoresGroupForCar::all();
 
         foreach ($category as $k => $item){
-            $category[$k]->sub_category = $this->tecdoc->getSections($data['modification_auto'],$item->id,7,true);
-            $category[$k]->image_data = Category::where([
-                ['tecdoc_id',(int)$item->id],
-                ['type',($data['type_auto'] === 'passenger')?'passanger':'commercial']
-            ])->first();
+            $ids = json_decode($item->categories);
+            $category[$k]->sub_category = Category::whereIn('id',$ids)->get();
         }
 
 

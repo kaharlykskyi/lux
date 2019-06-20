@@ -872,7 +872,6 @@ class Tecdoc
                 ->groupBy('p.articles')
                 ->havingRaw('MIN(p.price)')
                 ->distinct()
-                ->limit(33)
                 ->simplePaginate((int)$pre,['p.id']);
         } else{
             return DB::connection($this->connection)
@@ -910,7 +909,6 @@ class Tecdoc
                 ->groupBy('p.articles')
                 ->havingRaw('MIN(p.price)')
                 ->distinct()
-                ->limit(33)
                 ->simplePaginate((int)$pre,['p.id']);
         }
     }
@@ -971,7 +969,6 @@ class Tecdoc
             ->orderBy(DB::raw('p.price'),$sort)
             ->groupBy('p.articles')
             ->havingRaw('MIN(p.price)')
-            ->limit(33)
             ->simplePaginate((int)$pre,['p.id']);
     }
 

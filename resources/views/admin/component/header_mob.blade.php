@@ -24,6 +24,9 @@
                             <a href="{{route('admin.product.index')}}">{{__('Товары')}}</a>
                         </li>
                         <li>
+                            <a href="{{route('admin.car_categories.index')}}">{{__('Групировка категорий для машин')}}</a>
+                        </li>
+                        <li>
                             <a href="{{route('admin.product.popular')}}">{{__('Популярные товары')}}</a>
                         </li>
                         <li>

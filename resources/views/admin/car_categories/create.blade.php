@@ -24,10 +24,10 @@
                         <strong>{{__('Создание ')}}</strong> {{__('категории')}}
                     </div>
                     <div class="card-body card-block">
-                        <form action="{{route('admin.home_category.store')}}" method="post" enctype="multipart/form-data" class="form-horizontal">
+                        <form action="{{route('admin.car_categories.store')}}" method="post" enctype="multipart/form-data" class="form-horizontal">
                             @csrf
 
-                            @include('admin.home_category.partrials.form')
+                            @include('admin.car_categories.partrials.form')
                         </form>
                     </div>
                 </div>

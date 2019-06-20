@@ -2,12 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\CallOrder;
-use App\Cart;
-use App\CartProduct;
-use App\OrderPay;
-use App\Page;
-use App\TopMenu;
+use App\{CallOrder, Cart, CartProduct, OrderPay, Page, TopMenu};
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\{Facades\Auth, Facades\Cache, Facades\Cookie, Facades\View};

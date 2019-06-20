@@ -13,6 +13,7 @@
                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                         <li>
                             <a href="{{route('admin.category.index')}}">{{__('Категории для типов машин')}}</a>
+                            <a href="{{route('admin.car_categories.index')}}">{{__('Групировка категорий для машин')}}</a>
                             <a href="{{route('admin.product.index')}}">{{__('Товары')}}</a>
                             <a href="{{route('admin.product.popular')}}">{{__('Популярные товары')}}</a>
                             <a href="{{route('admin.show_brand')}}">{{__('Бренды')}}</a>

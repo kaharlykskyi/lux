@@ -13,8 +13,8 @@
             </div>
         @endif
         <div class="row">
-            <div class="col-12 m-b-15 m-t-15">
-                <a href="{{route('admin.home_category.index')}}" class="btn btn-success">{{__('Назад')}}</a>
+            <div class="row">
+                @include('admin.component.back')
             </div>
         </div>
         <div class="row p-t-10">
