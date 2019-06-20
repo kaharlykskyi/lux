@@ -85,7 +85,7 @@ class Catalog
                 return Cache::remember('brands_search_str_'.(new Controller())->transliterateRU($param['str'],true), 60*24, function () use ($param) {
                     return DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
                         ->where(DB::raw('p.name'),'LIKE',"{$param['str']}%")
-                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('sp.matchcode'),DB::raw('p.brand'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('sp.description'),DB::raw('p.brand'))
                         ->select(DB::raw('sp.id AS supplierId, sp.description'))
                         ->distinct()
                         ->get();
@@ -94,7 +94,7 @@ class Catalog
             case 'category':
                 return Cache::remember('brands_category_'.$param['id'], 60*24, function () use ($param) {
                     return DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
-                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('p.brand'),DB::raw('sp.matchcode'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('p.brand'),DB::raw('sp.description'))
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links as al'),function ($query){
                             $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
                             $query->on('sp.id','=','al.SupplierId');
@@ -245,26 +245,27 @@ class Catalog
             ->join('suppliers','suppliers.id','=','articles.supplierId')
             ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),function ($query){
                 $query->on('p.articles','=','articles.DataSupplierArticleNumber');
+                $query->on('p.brand','=','suppliers.description');
             })
             ->where('articles.DataSupplierArticleNumber',$article)
             ->orWhere('articles.FoundString',$article)
             ->select('p.articles','suppliers.id AS supplierId','p.brand'
                 ,DB::raw('(SELECT p2.name FROM '
                     .config('database.connections.mysql.database').
-                    '.products AS p2 WHERE p2.articles=p.articles AND p2.count > 0 GROUP BY p2.name HAVING MIN(p2.price) LIMIT 1) AS name'))
+                    '.products AS p2 WHERE p2.articles=p.articles AND p2.brand=suppliers.description AND p2.count > 0 GROUP BY p2.name HAVING MIN(p2.price) LIMIT 1) AS name'))
             ->distinct()
             ->get();
     }
 
     public function getCatalogProduct($article,$supplerId){
         $list_product_loc = Product::with('provider')
-            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_numbers'),'article_numbers.DataSupplierArticleNumber','=','products.articles')
-            ->where('article_numbers.SupplierId',(int)$supplerId)
-            ->where('article_numbers.DataSupplierArticleNumber',$article)
-            ->select('products.*','article_numbers.SupplierId',
+            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers sp'),'sp.description','=','products.brand')
+            ->where('sp.id',(int)$supplerId)
+            ->where('products.articles',$article)
+            ->select('products.*','sp.id AS SupplierId',
                 DB::raw('(SELECT a_img.PictureName 
                             FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 
-                            WHERE a_img.DataSupplierArticleNumber=products.articles AND a_img.SupplierId=article_numbers.SupplierId LIMIT 1) AS file'))
+                            WHERE a_img.DataSupplierArticleNumber=products.articles AND a_img.SupplierId=sp.id LIMIT 1) AS file'))
             ->orderBy('products.price')
             ->get();
 

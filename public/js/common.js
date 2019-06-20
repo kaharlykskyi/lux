@@ -242,7 +242,6 @@ function makeTemplateCategoryCar(data,modification_auto,type_auto) {
         type_auto = data.type_auto;
     }
     let str_data = '';
-    console.log(data);
     data.response.forEach(function (item) {
         str_data += `<div class="col-xs-12 col-sm-6 col-lg-4 padding-0 margin-bottom-0">
                             <div class="panel panel-default">

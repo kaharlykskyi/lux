@@ -61,7 +61,14 @@ class ProductController extends Controller
             $request->supplier = $this->getSupplier($request->article);
         }
 
-        $product = Product::with('comment')->where('articles', $request->article)->first();
+        $filters[] = ['articles','=', $request->article];
+
+        if (isset($request->supplier)){
+            $supplier_name = DB::connection($this->tecdoc->connection)->table('suppliers')->find((int)$request->supplier);
+            $filters[] = ['brand','=',$supplier_name->description];
+        }
+
+        $product = Product::with('comment')->where($filters)->first();
 
         if (isset($request->supplier)){
             $product_vehicles = $this->tecdoc->getArtVehicles($request->article,$request->supplier);

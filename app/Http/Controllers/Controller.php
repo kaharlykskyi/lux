@@ -24,6 +24,10 @@ class Controller extends BaseController
         'VOLKSWAGEN' => 'VW'
     ];
 
+    public static $replace_brand = [
+
+    ];
+
     public function getCartProducts($cart){
         return DB::table('cart_products')
             ->where('cart_products.cart_id',$cart)
