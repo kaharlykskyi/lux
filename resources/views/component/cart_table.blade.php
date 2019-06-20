@@ -26,7 +26,7 @@
                                         ->where('products.articles',$product->product->articles)
                                         ->get();
                             @endphp
-                            @if(!empty($file))
+                            @if(isset($file[0]))
                                 @php $brand_folder = explode('_',$file[0]->file) @endphp
                                 <img class="cart-img" src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$file[0]->file))}}" alt="{{$product->product->name}}" >
                             @else
@@ -76,7 +76,7 @@
                                             ->where('products.articles',$product->product->articles)
                                             ->get();
                                     @endphp
-                                    @if(!empty($file))
+                                    @if(isset($file[0]))
                                         @php $brand_folder = explode('_',$file[0]->file) @endphp
                                         <img class="img-responsive" src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$file[0]->file))}}" alt="{{$product->product->name}}" >
                                     @else
