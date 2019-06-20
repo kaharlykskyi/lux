@@ -98,6 +98,8 @@ class DashboardController extends Controller
                     'hurl' => $hurl
                 ]);
 
+                Cache::forget('save_filters');
+
                 return response()->json([
                     'save' => true
                 ]);

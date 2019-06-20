@@ -33,7 +33,6 @@
                                             <li>
                                                 <select class="filter_select" name="type_auto" id="type_auto">
                                                     <option selected value="passenger">{{__('Легковой')}}</option>
-                                                    <option value="commercial">{{__('Грузовой')}}</option>
                                                 </select>
                                             </li>
                                             <li class="year_auto">
