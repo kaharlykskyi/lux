@@ -3,7 +3,7 @@
 namespace App\TecDoc;
 
 
-use App\{Product, ProFile};
+use App\{AliasBrand, NoBrandProduct, Product, ProFile};
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\{Carbon, Facades\DB, Facades\Log};
@@ -30,6 +30,14 @@ class ImportPriceList
 
     protected $profile = null;
 
+    protected $tecdoc;
+
+    protected $tectdoc_suppliers;
+
+    protected $tecdoc_manufacturers;
+
+    protected $alias_brands;
+
     public function __construct($data = null,$ease = false)
     {
         ini_set('memory_limit', '4090M');
@@ -48,7 +56,14 @@ class ImportPriceList
             }
         }
 
+        $this->tecdoc = new Tecdoc('mysql_tecdoc');
+        $this->tecdoc->setType('passenger');
+
+        $this->tecdoc_manufacturers = $this->tecdoc->getBrands();
+        $this->tectdoc_suppliers = $this->tecdoc->getAllSuppliers();
+
         $this->profile = ProFile::with('provider')->get();
+        $this->alias_brands = AliasBrand::all();
 
         if ($ease){
             $this->easeImport($data);
@@ -287,8 +302,34 @@ class ImportPriceList
     }
 
     protected function productQuery(){
+        $is_supplier = false;
+        $is_original = false;
+
         if (!empty($this->product_data)){
             foreach ($this->product_data as $k => $productInfo){
+
+                foreach ($this->alias_brands as $item){
+                    if ($productInfo['brand'] === $item->name){
+                        $productInfo['brand'] = $item->tecdoc_name;
+                    }
+                }
+
+                foreach ($this->tectdoc_suppliers as $item){
+                    if ($productInfo['brand'] === $item->matchcode){
+                        $productInfo['brand'] = $item->id;
+                        $is_supplier = true;
+                    }
+                }
+
+                if (!$is_supplier){
+                    foreach ($this->tecdoc_manufacturers as $item){
+                        if ($productInfo['brand'] === $item->description || $productInfo['brand'] === $item->matchcode){
+                            $productInfo['brand'] = $item->id;
+                            $is_original = true;
+                        }
+                    }
+                }
+
                 $productInfo['price'] = floatval($productInfo['price']);
                 $productInfo['provider_price'] = $productInfo['price'];
 
@@ -351,18 +392,30 @@ class ImportPriceList
                         'provider_currency' => isset($this->config->provider->currency)?$this->config->provider->currency:'UAH',
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now(),
-                        'stocks' => isset($productInfo['stocks'])?json_encode($productInfo['stocks']):null
+                        'stocks' => isset($productInfo['stocks'])?json_encode($productInfo['stocks']):null,
+                        'original' => $is_original?1:0
                     ];
 
-                    $insert_data = DB::table('products')->updateOrInsert(
-                        ['articles' => $array_import['articles'], 'provider_id' => $array_import['provider_id']],
-                        $array_import
-                    );
 
-                    if ($insert_data){
-                        $this->count_success++;
-                    } else {
-                        $this->count_fail++;
+
+                    if ($is_original && $is_supplier){
+                        $insert_data = DB::table('products')->updateOrInsert(
+                            ['articles' => $array_import['articles'], 'provider_id' => $array_import['provider_id']],
+                            $array_import
+                        );
+                        if ($insert_data){
+                            $this->count_success++;
+                        } else {
+                            $this->count_fail++;
+                        }
+                    }else{
+                        $no_brand_product = new NoBrandProduct();
+                        $no_brand_product->fill($array_import);
+                        if ($no_brand_product->save()){
+                            $this->count_success++;
+                        } else {
+                            $this->count_fail++;
+                        }
                     }
 
                 }catch (Exception $e){

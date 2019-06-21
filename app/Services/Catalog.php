@@ -23,7 +23,7 @@ class Catalog
             case 'category':
                 $price = Cache::remember('min_max_category_'.$param['id'], 60*24, function () use ($param) {
                     return DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
-                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('p.brand'),DB::raw('sp.matchcode'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('p.brand'),DB::raw('sp.description'))
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links as al'),function ($query){
                             $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
                             $query->on('sp.id','=','al.SupplierId');

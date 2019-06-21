@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddStooksToProductsTable extends Migration
+class CreateAliasBrandsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class AddStooksToProductsTable extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->json('stocks')->nullable();
+        Schema::create('alias_brands', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('tecdoc_name');
         });
     }
 
@@ -25,8 +27,6 @@ class AddStooksToProductsTable extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn(['stocks']);
-        });
+        Schema::dropIfExists('alias_brands');
     }
 }

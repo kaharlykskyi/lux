@@ -207,12 +207,8 @@ class Tecdoc
     }
 
     public function getAllSuppliers(){
-        return cache()->remember('all_suppliers', 60*24, function () {
-            return DB::connection($this->connection)->select("
-            SELECT id,matchcode
-            FROM suppliers
-            ORDER BY matchcode"
-            );
+        return cache()->remember('all_suppliers', 60*24*7, function () {
+            return DB::connection($this->connection)->select("SELECT DISTINCT id,description AS matchcode FROM suppliers");
         });
     }
 
@@ -866,8 +862,8 @@ class Tecdoc
                     [DB::raw('p.price'),'<=',$filter['price']['max']]
                 ])
                 ->where('p.count','>',0)
-                ->whereRaw(isset($filter['supplier'])? " al.SupplierId IN (".implode(',',$filter['supplier']).")":'al.SupplierId > 0')
-                ->select(DB::raw('al.SupplierId AS supplierId, p.articles,p.brand AS matchcode, p.id, p.name, p.price,p.count'))
+                ->whereRaw(isset($filter['supplier'])? " sp.id IN (".implode(',',$filter['supplier']).")":'sp.id > 0')
+                ->select(DB::raw('sp.id AS supplierId, p.articles,p.brand AS matchcode, p.id, p.name, p.price,p.count'))
                 ->orderBy('p.price',$sort)
                 ->groupBy('p.articles')
                 ->havingRaw('MIN(p.price)')
@@ -903,7 +899,7 @@ class Tecdoc
                     }
                 })
                 ->where('p.count','>',0)
-                ->whereRaw(isset($filter['supplier'])? " al.SupplierId IN (".implode(',',$filter['supplier']).")":'al.SupplierId > 0')
+                ->whereRaw(isset($filter['supplier'])? " sp.id IN (".implode(',',$filter['supplier']).")":'sp.id > 0')
                 ->select(DB::raw('al.SupplierId AS supplierId, p.articles,p.brand AS matchcode, p.id, p.name, p.price,p.count'))
                 ->orderBy('p.price',$sort)
                 ->groupBy('p.articles')

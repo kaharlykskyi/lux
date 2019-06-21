@@ -21,7 +21,8 @@ class Product extends Model
         'delivery_time',
         'provider_price',
         'provider_currency',
-        'stocks'
+        'stocks',
+        'original'
     ];
 
     public function cart(){
