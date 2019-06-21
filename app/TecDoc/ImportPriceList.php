@@ -302,20 +302,22 @@ class ImportPriceList
     }
 
     protected function productQuery(){
-        $is_supplier = false;
-        $is_original = false;
 
         if (!empty($this->product_data)){
             foreach ($this->product_data as $k => $productInfo){
+                $is_supplier = false;
+                $is_original = false;
+
+                $productInfo['brand'] = strtolower(trim($productInfo['brand']));
 
                 foreach ($this->alias_brands as $item){
-                    if ($productInfo['brand'] === $item->name){
+                    if ($productInfo['brand'] == strtolower($item->name)){
                         $productInfo['brand'] = $item->tecdoc_name;
                     }
                 }
 
                 foreach ($this->tectdoc_suppliers as $item){
-                    if ($productInfo['brand'] === $item->matchcode){
+                    if ($productInfo['brand'] == strtolower($item->matchcode) || $productInfo['brand'] == strtolower($item->description)){
                         $productInfo['brand'] = $item->id;
                         $is_supplier = true;
                     }
@@ -323,7 +325,7 @@ class ImportPriceList
 
                 if (!$is_supplier){
                     foreach ($this->tecdoc_manufacturers as $item){
-                        if ($productInfo['brand'] === $item->description || $productInfo['brand'] === $item->matchcode){
+                        if ($productInfo['brand'] == strtolower($item->description) || $productInfo['brand'] == strtolower($item->matchcode)){
                             $productInfo['brand'] = $item->id;
                             $is_original = true;
                         }

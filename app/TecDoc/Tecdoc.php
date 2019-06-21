@@ -208,7 +208,7 @@ class Tecdoc
 
     public function getAllSuppliers(){
         return cache()->remember('all_suppliers', 60*24*7, function () {
-            return DB::connection($this->connection)->select("SELECT DISTINCT id,description AS matchcode FROM suppliers");
+            return DB::connection($this->connection)->select("SELECT DISTINCT id,description,matchcode FROM suppliers");
         });
     }
 
