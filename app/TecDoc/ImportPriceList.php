@@ -400,7 +400,7 @@ class ImportPriceList
 
 
 
-                    if ($is_original && $is_supplier){
+                    if ($is_original || $is_supplier){
                         $insert_data = DB::table('products')->updateOrInsert(
                             ['articles' => $array_import['articles'], 'provider_id' => $array_import['provider_id']],
                             $array_import
