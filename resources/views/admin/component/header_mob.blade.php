@@ -24,6 +24,14 @@
                             <a href="{{route('admin.product.index')}}">{{__('Товары')}}</a>
                         </li>
                         <li>
+                            <a href="{{route('admin.no_brands.products')}}">
+                                {{__('Несоотвествия бренда')}}
+                                @if(isset($count_no_brands_global) && $count_no_brands_global > 0)
+                                    (<span class="text-danger">{{$count_no_brands_global}}</span>)
+                                @endif
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{route('admin.car_categories.index')}}">{{__('Групировка категорий для машин')}}</a>
                         </li>
                         <li>

@@ -22,14 +22,6 @@ class Home
 
         $popular_products = DB::select("SELECT DISTINCT p.articles,p.name,p.id FROM `cart_products` AS cp 
                                               JOIN `products` AS p ON p.id=cp.product_id LIMIT 32");
-                foreach ($popular_products as $product){
-                    $buff = DB::connection('mysql_tecdoc')->select("SELECT supplierId FROM articles 
-                                                                      WHERE FoundString='".preg_replace('/[^a-zA-Zа-яА-Я0-9]/ui', '',$product->articles )."'");
-                    if(isset($buff[0])){
-                        $product->supplierId = $buff[0]->supplierId;
-                    }
-                }
-
         return $popular_products ;
     }
 

@@ -88,7 +88,7 @@ class CatalogController extends Controller
 
                         $this->brands = $this->service->getBrands('modification',['nodeid' => $request->category,'linkageid' => $request->modification_auto,'type' => $type]);
 
-                        $price = $this->service->getMinMaxPrice('modification',['nodeid' => $request->category,'linkageid' => $request->modification_auto,'type' => $type]);
+                        $price = $this->service->getMinMaxPriceAndBrands('modification',['nodeid' => $request->category,'linkageid' => $request->modification_auto,'type' => $type]);
                         $this->min_price->start_price = round($price->min,2);
                         $this->max_price->start_price = round($price->max,2);
 
@@ -109,12 +109,15 @@ class CatalogController extends Controller
                             $request->category = $rubric_category->tecdoc_id;
                         }
 
-                        $this->brands = $this->service->getBrands('category',[
+
+
+                        /*$this->brands = $this->service->getBrands('category',[
                             'id' => $request->category,
                             'type' => $type
-                        ]);
+                        ]);*/
 
-                        $price = $this->service->getMinMaxPrice('category',['id' => $request->category,'type' => $type]);
+                        $price = $this->service->getMinMaxPriceAndBrands('category',['id' => $request->category,'type' => $type]);
+                        dd($price);
                         $this->min_price->start_price = round($price->min,2);
                         $this->max_price->start_price = round($price->max,2);
 
@@ -139,7 +142,7 @@ class CatalogController extends Controller
                 if (isset($manufacturer)){
                     $this->brands = $this->service->getBrands('pcode',['OENbr' =>$OENbr,'manufacturer' => $manufacturer->id]);
 
-                    $price = $this->service->getMinMaxPrice('pcode',['OENbr' =>$OENbr,'manufacturer' => $manufacturer->id]);
+                    $price = $this->service->getMinMaxPriceAndBrands('pcode',['OENbr' =>$OENbr,'manufacturer' => $manufacturer->id]);
                     $this->min_price->start_price = round($price->min,2);
                     $this->max_price->start_price = round($price->max,2);
 

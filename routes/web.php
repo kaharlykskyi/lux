@@ -176,4 +176,9 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
         Route::get('/','AllCategoryTreeController@index')->name('admin.all_category.index');
         Route::match(['get', 'post'], '/edit','AllCategoryTreeController@edit')->name('admin.all_category.edit');
     });
+
+    //MANAGE ALIAS PRODUCTS
+    Route::group(['prefix' => 'no-brands'],function (){
+        Route::match(['get', 'post'],'/products','NoBrandProductController@index')->name('admin.no_brands.products');
+    });
 });

@@ -168,7 +168,7 @@
     <div class="col-12 col-md-9">
         <input type="hidden" name="markup" id="markup_input">
         <div id="markup-block">
-            @if(isset($proFile->id))
+            @if(isset($proFile->id) && isset($proFile->markup))
                 @php $markup_val = json_decode($proFile->markup) @endphp
                 @forelse($markup_val as $k => $item)
                     @component('admin.pro_file.partrials.markup_input',['data' => $item,'k' => $k])@endcomponent

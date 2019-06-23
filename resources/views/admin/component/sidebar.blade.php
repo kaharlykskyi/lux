@@ -15,6 +15,12 @@
                             <a href="{{route('admin.category.index')}}">{{__('Категории для типов машин')}}</a>
                             <a href="{{route('admin.car_categories.index')}}">{{__('Групировка категорий для машин')}}</a>
                             <a href="{{route('admin.product.index')}}">{{__('Товары')}}</a>
+                            <a href="{{route('admin.no_brands.products')}}">
+                                {{__('Несоотвествия бренда')}}
+                                @if(isset($count_no_brands_global) && $count_no_brands_global > 0)
+                                    (<span class="text-danger">{{$count_no_brands_global}}</span>)
+                                @endif
+                            </a>
                             <a href="{{route('admin.product.popular')}}">{{__('Популярные товары')}}</a>
                             <a href="{{route('admin.show_brand')}}">{{__('Бренды')}}</a>
                             <a href="{{route('admin.filter','use')}}">{{__('Настройки фильтра')}}</a>

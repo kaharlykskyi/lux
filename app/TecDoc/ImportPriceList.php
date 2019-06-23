@@ -163,23 +163,8 @@ class ImportPriceList
     protected function export($file){
         if (file_exists($file)){
             try {
-                $csv_file = preg_match('/\.csv$/i',$file)?true:false;
-                if ($csv_file){
-                    $objReader = new PHPExcel_Reader_CSV();
-                    $objReader->setInputEncoding('CP1251');
-                    $objReader->setDelimiter(';');
-                    $objReader->setEnclosure('');
-                    $objReader->setSheetIndex(0);
-                    $this->xls = $objReader->load($file);
-                }else{
-                    $this->xls = PHPExcel_IOFactory::load($file);
-                }
 
-                $this->xls->setActiveSheetIndex((int)$this->config->active_sheet - 1);
-                $sheet = $this->xls->getActiveSheet();
-                $rowIterator = $sheet->getRowIterator();
                 $stock_cells = explode(',',$this->config->stocks);
-
                 $stock_cells_sort = [];
                 foreach ($stock_cells as $stock_cell){
                     $buff = explode('/',$stock_cell);
@@ -189,63 +174,42 @@ class ImportPriceList
                     ];
                 }
 
-                foreach ($rowIterator as $row){
-                    $cellIterator = $row->getCellIterator();
-                    foreach ($cellIterator as $cell){
-                        if ($csv_file){
-                            if ($row->getRowIndex() >= (int)$this->config->data_row ){
-                                $str = $cell->getCalculatedValue();
-                                $data_array = explode("\t",$str);
+                $csv_file = preg_match('/\.csv$/i',$file)?true:false;
+                if ($csv_file){
+                    $file_read = fopen($file,'r');
+                    $key = 0;
+                    while (($column = fgetcsv($file_read)) !== FALSE) {
+                        $str = mb_convert_encoding($column[0], "utf-8", "windows-1251");
+                        $data = explode("\t",$str);
+                        if (!isset($data[1])){
+                            $data = explode(",",$str);
+                        }
+                        if ((int)$this->config->data_row < $key + 1){
+                            $this->product_data[$key]['articles'] = $data[(int)$this->config->articles - 1];
+                            $this->product_data[$key]['product_name'] = $data[(int)$this->config->product_name - 1];
+                            $this->product_data[$key]['brand'] = $data[(int)$this->config->brand - 1];
+                            $this->product_data[$key]['price'] = $data[(int)$this->config->price - 1];
+                            $this->product_data[$key]['delivery_time'] = isset($this->config->delivery_time)?$data[(int)$this->config->delivery_time - 1]:0;
 
-                                if (isset($data_array[2])){
-                                    $this->product_data[$row->getRowIndex()]['articles'] = $data_array[(int)$this->config->articles - 1];
-                                    $this->product_data[$row->getRowIndex()]['product_name'] = $data_array[(int)$this->config->product_name - 1];
-                                    $this->product_data[$row->getRowIndex()]['brand'] = $data_array[(int)$this->config->brand - 1];
-                                    $this->product_data[$row->getRowIndex()]['price'] = $data_array[(int)$this->config->price - 1];
-                                    $this->product_data[$row->getRowIndex()]['delivery_time'] = isset($this->config->delivery_time)?$data_array[(int)$this->config->delivery_time - 1]:0;
-
-                                    foreach ($stock_cells_sort as $stock_cell){
-                                        if (isset($this->product_data[$row->getRowIndex()]['count'])){
-                                            $this->product_data[$row->getRowIndex()]['count'] += (int)preg_replace("/[^0-9,.]/", "", $data_array[(int)$stock_cell['count'] - 1]);
-                                        } else {
-                                            $this->product_data[$row->getRowIndex()]['count'] = (int)preg_replace("/[^0-9,.]/", "", $data_array[(int)$stock_cell['count'] - 1]);
-                                        }
-                                        $this->product_data[$row->getRowIndex()]['stocks'][$stock_cell['stock']] = (int)preg_replace("/[^0-9,.]/", "", $data_array[(int)$stock_cell['count'] - 1]);
-                                    }
-                                }else{
-                                    $cellPath = PHPExcel_Cell::columnIndexFromString($cell->getColumn());
-                                    if ($cellPath === (int)$this->config->articles){
-                                        $this->product_data[$row->getRowIndex()]['articles'] = $cell->getCalculatedValue();
-                                    }
-                                    if ($cellPath === (int)$this->config->product_name){
-                                        $this->product_data[$row->getRowIndex()]['product_name'] = $cell->getCalculatedValue();
-                                    }
-                                    if ($cellPath === (int)$this->config->brand){
-                                        $this->product_data[$row->getRowIndex()]['brand'] = $cell->getCalculatedValue();
-                                    }
-                                    if ($cellPath === (int)$this->config->price){
-                                        $this->product_data[$row->getRowIndex()]['price'] = $cell->getCalculatedValue();
-                                    }
-                                    if ($cellPath === (int)$this->config->delivery_time){
-                                        $this->product_data[$row->getRowIndex()]['delivery_time'] = $cell->getCalculatedValue();
-                                    }
-
-                                    foreach ($stock_cells_sort as $stock_cell){
-                                        if ($cellPath === $stock_cell['count']){
-                                            if (isset($this->product_data[$row->getRowIndex()]['count'])){
-                                                $this->product_data[$row->getRowIndex()]['count'] += (int)preg_replace("/[^0-9,.]/", "", $cell->getCalculatedValue());
-                                            } else {
-                                                $this->product_data[$row->getRowIndex()]['count'] = (int)preg_replace("/[^0-9,.]/", "", $cell->getCalculatedValue());
-                                            }
-                                            if (isset($stock_cell['stock'])){
-                                                $this->product_data[$row->getRowIndex()]['stocks'][$stock_cell['stock']] = (int)preg_replace("/[^0-9,.]/", "", $cell->getCalculatedValue());
-                                            }
-                                        }
-                                    }
+                            foreach ($stock_cells_sort as $stock_cell){
+                                if (isset($this->product_data[$key]['count'])){
+                                    $this->product_data[$key]['count'] += (int)preg_replace("/[^0-9,.]/", "", $data[(int)$stock_cell['count'] - 1]);
+                                } else {
+                                    $this->product_data[$key]['count'] = (int)preg_replace("/[^0-9,.]/", "", $data[(int)$stock_cell['count'] - 1]);
                                 }
-
+                                $this->product_data[$key]['stocks'][$stock_cell['stock']] = (int)preg_replace("/[^0-9,.]/", "", $data[(int)$stock_cell['count'] - 1]);
                             }
-                        }else{
+                        }
+                        $key++;
+                    }
+                }else{
+                    $this->xls = PHPExcel_IOFactory::load($file);
+                    $this->xls->setActiveSheetIndex((int)$this->config->active_sheet - 1);
+                    $sheet = $this->xls->getActiveSheet();
+                    $rowIterator = $sheet->getRowIterator();
+                    foreach ($rowIterator as $key => $row){
+                        $cellIterator = $row->getCellIterator();
+                        foreach ($cellIterator as $cell){
                             $cellPath = $cell->getColumn();
 
                             if ($row->getRowIndex() >= (int)$this->config->data_row ){
@@ -281,6 +245,7 @@ class ImportPriceList
                         }
                     }
                 }
+
                 $this->productQuery();
 
             } catch (PHPExcel_Reader_Exception $e) {
@@ -334,6 +299,7 @@ class ImportPriceList
 
                 $productInfo['price'] = floatval($productInfo['price']);
                 $productInfo['provider_price'] = $productInfo['price'];
+                dd($productInfo);
 
                 if((isset($this->config->currency) || isset($this->config->provider->currency)) && isset($this->currency)){
                     if (isset($this->config->currency) && $this->config->currency !== 'UAH'){
