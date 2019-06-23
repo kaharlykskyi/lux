@@ -299,7 +299,6 @@ class ImportPriceList
 
                 $productInfo['price'] = floatval($productInfo['price']);
                 $productInfo['provider_price'] = $productInfo['price'];
-                dd($productInfo);
 
                 if((isset($this->config->currency) || isset($this->config->provider->currency)) && isset($this->currency)){
                     if (isset($this->config->currency) && $this->config->currency !== 'UAH'){
