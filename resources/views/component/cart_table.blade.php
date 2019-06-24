@@ -15,14 +15,13 @@
             @forelse($products as $product)
                 <tr id="tr_product{{$product->product->id}}">
                     <td>
-                        <a href="{{route('product',['alias' => $product->product->articles,'product_id' => $product->product->id])}}">
+                        <a href="{{route('product',['alias' => $product->product->id])}}">
                             @php $file =DB::table('products')
-                                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),'s.matchcode','products.brand')
                                         ->select(DB::raw('
-                                            (SELECT a_img.PictureName
-                                                FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img
-                                                WHERE a_img.DataSupplierArticleNumber=products.articles AND a_img.SupplierId=s.id LIMIT 1) AS file
-                                        '))
+                                           (SELECT a_img.PictureName
+                                                        FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img
+                                                        WHERE a_img.DataSupplierArticleNumber=products.articles AND a_img.SupplierId=products.brand LIMIT 1) AS file
+                                            '))
                                         ->where('products.articles',$product->product->articles)
                                         ->get();
                             @endphp
@@ -65,16 +64,15 @@
                 @forelse($products as $product)
                     <li class="list-group-item" id="li_product{{$product->product->id}}">
                         <div class="media">
-                            <div class="media-left"> <a href="{{route('product',['alias' => $product->product->articles,'product_id' => $product->product->id])}}">
+                            <div class="media-left"> <a href="{{route('product',['alias' => $product->product->id])}}">
                                     @php $file =DB::table('products')
-                                            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),'s.matchcode','products.brand')
-                                            ->select(DB::raw('
-                                                (SELECT a_img.PictureName
-                                                    FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img
-                                                    WHERE a_img.DataSupplierArticleNumber=products.articles AND a_img.SupplierId=s.id LIMIT 1) AS file
-                                            '))
-                                            ->where('products.articles',$product->product->articles)
-                                            ->get();
+                                                ->select(DB::raw('
+                                                    (SELECT a_img.PictureName
+                                                        FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img
+                                                        WHERE a_img.DataSupplierArticleNumber=products.articles AND a_img.SupplierId=products.brand LIMIT 1) AS file
+                                                '))
+                                                ->where('products.articles',$product->product->articles)
+                                                ->get();
                                     @endphp
                                     @if(isset($file[0]))
                                         @php $brand_folder = explode('_',$file[0]->file) @endphp

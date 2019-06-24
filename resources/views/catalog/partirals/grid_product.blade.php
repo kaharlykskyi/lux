@@ -48,7 +48,7 @@
                         @endif
                     @endif
                     <!-- Content -->
-                    <span class="tag">{{$product->matchcode}}</span> <a href="{{route('product',str_replace('/','@',(isset($product->articles)?$product->articles:$product->DataSupplierArticleNumber)))}}?supplierid={{$product->supplierId}}&product_id={{$product->id}}" class="tittle">
+                    <span class="tag">{{$product->matchcode}}</span> <a href="{{route('product',$product->id)}}" class="tittle">
                         {{mb_strimwidth($product->name,0,30,' ...')}}
                     </a>
                     <p class="rev"></p>

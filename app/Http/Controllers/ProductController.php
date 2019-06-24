@@ -23,20 +23,14 @@ class ProductController extends Controller
 
     public function index(Request $request){
 
-        $product = Product::with('comment')->findOrFail($request->product_id);
+        $product = Product::with('comment')->findOrFail($request->alias);
         $accessories = $this->tecdoc->getAccessories($product->articles);
 
-        if(!isset($request->supplierid)){
-            $request->supplierid = $this->getSupplier($product->articles);
-        }
-
-        if (isset($request->supplierid)){
-            $art_replace = $this->tecdoc->getArtCross($product->articles,$request->supplierid);
-            $product_vehicles = $this->tecdoc->getArtVehicles($product->articles,$request->supplierid);
-            $product_attr = $this->tecdoc->getArtAttributes($product->articles,$request->supplierid);
-            $files = $this->tecdoc->getArtFiles($product->articles,$request->supplierid);
-            $supplier_details = $this->tecdoc->getSupplieInfo($request->supplierid);
-        }
+        $art_replace = $this->tecdoc->getArtCross($product->articles,$product->brand);
+        $product_vehicles = $this->tecdoc->getArtVehicles($product->articles,$product->brand);
+        $product_attr = $this->tecdoc->getArtAttributes($product->articles,$product->brand);
+        $files = $this->tecdoc->getArtFiles($product->articles,$product->brand);
+        $supplier_details = $this->tecdoc->getSupplieInfo($product->brand);
 
         return view('product.product_detail',compact('product','product_attr','product_vehicles','files','accessories','art_replace','supplier_details'));
     }

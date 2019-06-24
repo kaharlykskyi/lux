@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\{Cache, DB};
 
 class Catalog
 {
-    public function getMinMaxPriceAndBrands($level,$param){
+    public function getMinMaxPrice($level,$param){
         switch ($level){
             case 'search_str':
                 $price = Cache::remember('min_max_search_str_'.(new Controller())->transliterateRU($param['str'],true), 60*24, function () use ($param) {
@@ -21,19 +21,19 @@ class Catalog
                 return $price[0];
                 break;
             case 'category':
-                $price = Cache::remember('min_max_brands_category_'.$param['id'], 60*24, function () use ($param) {
-                    return DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
-                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('p.brand'),DB::raw('sp.id'))
-                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links as al'),function ($query){
+                $price = Cache::remember('min_max_category_'.$param['id'], 60*24, function () use ($param) {
+                    return DB::connection('mysql_tecdoc')->table(DB::raw('article_links as al'))
+                        ->join('suppliers AS sp',DB::raw('al.SupplierId'),DB::raw('sp.id'))
+                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
                             $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
                             $query->on('p.brand','=','al.SupplierId');
                         })
                         ->where('al.productid',(int)$param['id'])
                         ->where(DB::raw('al.linkagetypeid'),'=',2)
-                        ->select(DB::raw('sp.id AS supplierId, sp.description,MIN(p.price) AS min, MAX(p.price) AS max'))
+                        ->select(DB::raw('MIN(p.price) AS min, MAX(p.price) AS max'))
                         ->get();
                 });
-                return $price;
+                return $price[0];
                 break;
             case 'modification':
                 if ($param['type'] === 'passenger'){
@@ -86,6 +86,21 @@ class Catalog
                     return DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
                         ->where(DB::raw('p.name'),'LIKE',"{$param['str']}%")
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('sp.description'),DB::raw('p.brand'))
+                        ->select(DB::raw('sp.id AS supplierId, sp.description'))
+                        ->distinct()
+                        ->get();
+                });
+                break;
+            case 'category':
+                return Cache::remember('brands_category_'.$param['id'], 60*24, function () use ($param) {
+                    return DB::connection('mysql_tecdoc')->table(DB::raw('article_links as al'))
+                        ->join('suppliers AS sp',DB::raw('al.SupplierId'),DB::raw('sp.id'))
+                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
+                            $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
+                            $query->on('p.brand','=','al.SupplierId');
+                        })
+                        ->where('al.productid',(int)$param['id'])
+                        ->where(DB::raw('al.linkagetypeid'),'=',2)
                         ->select(DB::raw('sp.id AS supplierId, sp.description'))
                         ->distinct()
                         ->get();
@@ -156,7 +171,6 @@ class Catalog
                             $query->on('al.DataSupplierArticleNumber','=','attr.DataSupplierArticleNumber');
                             $query->on('al.SupplierId','=','attr.supplierId');
                         })
-                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
                         ->where('al.productid',(int)$param['id'])
                         ->where(DB::raw('al.linkagetypeid'),2)
                         ->whereIn('attr.id',$attr_ids)
@@ -243,7 +257,7 @@ class Catalog
 
     public function getCatalogProduct($article,$supplerId){
         $list_product_loc = Product::with('provider')
-            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers sp'),'sp.description','=','products.brand')
+            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers sp'),'sp.id','=','products.brand')
             ->where('sp.id',(int)$supplerId)
             ->where('products.articles',$article)
             ->select('products.*','sp.id AS SupplierId',
