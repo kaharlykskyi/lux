@@ -17,16 +17,6 @@
                                         <div class="col col-sm-4">
                                             <div class="row form-group">
                                                 <div class="col col-md-3">
-                                                    <label for="supplier" class=" form-control-label">Производитель</label>
-                                                </div>
-                                                <div class="col-12 col-md-9">
-                                                    <input type="text" id="supplier" name="supplier" class="form-control">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col col-sm-4">
-                                            <div class="row form-group">
-                                                <div class="col col-md-3">
                                                     <label for="article"  class=" form-control-label">Код</label>
                                                 </div>
                                                 <div class="col-12 col-md-9">
@@ -109,7 +99,7 @@
                     <tr>
                         <td>${item.articles}</td>
                         <td>${item.name}</td>
-                        <td>${item.brand}</td>
+                        <td>${item.matchcode}</td>
                         <td>${item.price}</td>
                         <td>
                             <input style="border: 1px solid;width: 50px;text-align: center;" type="number" value="1" id="prod_${item.id}">

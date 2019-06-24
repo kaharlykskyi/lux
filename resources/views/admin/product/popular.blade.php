@@ -27,7 +27,21 @@
                                 <tr>
                                     <td>{{$product->articles}}</td>
                                     <td>{{$product->name}}</td>
-                                    <td>{{$product->brand}}</td>
+                                    <td>
+                                        @if($product->original === 1)
+                                            @foreach($manufacturers as $item)
+                                                @if($item->id === $product->brand)
+                                                    {{$item->matchcode}}
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            @foreach($suppliers as $item)
+                                                @if($item->id === $product->brand)
+                                                    {{$item->matchcode}}
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    </td>
                                     <td class="text-right">{{$product->count_bay}}</td>
                                 </tr>
                             @empty

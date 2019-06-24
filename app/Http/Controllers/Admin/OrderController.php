@@ -10,6 +10,7 @@ use App\{Cart,
     Product,
     Provider,
     Services\Admin\Order,
+    TecDoc\Tecdoc,
     User,
     UserBalance,
     Http\Controllers\Controller};
@@ -21,10 +22,13 @@ class OrderController extends Controller
 {
     protected $service;
 
+    protected $tecdoc;
+
     public function __construct()
     {
         parent::__construct();
         $this->service = new Order();
+        $this->tecdoc = new Tecdoc('mysql_tecdoc');
     }
 
     public function index(Request $request){
@@ -35,7 +39,9 @@ class OrderController extends Controller
         $orders = $this->service->getOrders($request);
         $order_code = OderStatus::all();
         $clients = User::all();
-        return view('admin.orders.index',compact('orders','order_code','clients'));
+        $suppliers = $this->tecdoc->getAllSuppliers();
+        $manufacturers = $this->tecdoc->getBrands();
+        return view('admin.orders.index',compact('orders','order_code','clients','suppliers','manufacturers'));
     }
 
     public function getOrderData(Request $request){
@@ -148,10 +154,20 @@ class OrderController extends Controller
         if (isset($request->provider) && !empty($request->provider)) $filter[] = ['provider_id','=',(int)$request->provider];
         if (isset($request->name) && !empty($request->name)) $filter[] = ['name','LIKE',"%{$request->name}%"];
         if (isset($request->article) && !empty($request->article)) $filter[] = ['articles','LIKE',"%{$request->article}%"];
-        if (isset($request->supplier) && !empty($request->supplier)) $filter[] = ['brand','LIKE',"%{$request->supplier}%"];
+        if (isset($request->supplier) && !empty($request->supplier)) $filter[] = ['brand','=',$request->supplier];
         if (isset($request->count) && !empty($request->count)) $filter[] = ['count','>=',(int)$request->count];
 
-        return response()->json(Product::where($filter)->get());
+        $original = Product::where($filter)->where('products.original','=',1)
+            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.manufacturers AS m'),'m.id','=','products.brand')
+            ->select('products.*','m.matchcode')->get();
+
+        $no_original = Product::where($filter)->where('products.original','=',0)
+            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),'sp.id','=','products.brand')
+            ->select('products.*','sp.matchcode')->get();
+
+        $full_products = $original->merge($no_original);
+
+        return response()->json($full_products);
     }
 
     public function stockProductDelivery(Request $request){

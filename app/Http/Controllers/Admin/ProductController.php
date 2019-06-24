@@ -38,7 +38,9 @@ class ProductController extends Controller
             ->paginate(80);
         $providers = Provider::all();
         $products->withPath($request->fullUrl());
-        return view('admin.product.index',compact('products','providers'));
+        $suppliers = $this->tecdoc->getAllSuppliers();
+        $manufacturers = $this->tecdoc->getBrands();
+        return view('admin.product.index',compact('products','providers','suppliers','manufacturers'));
     }
 
     /**
@@ -228,8 +230,10 @@ class ProductController extends Controller
             ->paginate(50);
 
         $providers = Provider::all();
+        $suppliers = $this->tecdoc->getAllSuppliers();
+        $manufacturers = $this->tecdoc->getBrands();
 
-        return view('admin.product.popular',compact('popular_products','providers'));
+        return view('admin.product.popular',compact('popular_products','providers','suppliers','manufacturers'));
     }
 
     protected function filterProduct($request){

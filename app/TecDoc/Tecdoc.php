@@ -26,6 +26,7 @@ class Tecdoc
     public function __construct($connection = 'mysql')
     {
         $this->connection = $connection;
+        $this->setType('passenger');
     }
 
     public function setType($type)

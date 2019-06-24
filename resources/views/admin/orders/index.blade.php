@@ -158,7 +158,20 @@
                                                 @foreach($item->cartProduct as $product)
                                                     <p style="font-size: 13px">
                                                         {{$product->articles}}
-                                                        <strong>{{$product->brand}}
+                                                        <strong>
+                                                            @if($product->original === 1)
+                                                                @foreach($manufacturers as $data)
+                                                                    @if($data->id === $product->brand)
+                                                                        {{$data->matchcode}}
+                                                                    @endif
+                                                                @endforeach
+                                                            @else
+                                                                @foreach($suppliers as $data)
+                                                                    @if($data->id === $product->brand)
+                                                                        {{$data->matchcode}}
+                                                                    @endif
+                                                                @endforeach
+                                                            @endif
                                                             [<span class="text-danger">{{$product->pivot->count}}</span>]
                                                         </strong>
                                                         <span class="text-success">{{$product->name}}</span>
