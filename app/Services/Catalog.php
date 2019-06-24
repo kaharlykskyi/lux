@@ -243,14 +243,14 @@ class Catalog
             ->join('suppliers','suppliers.id','=','articles.supplierId')
             ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),function ($query){
                 $query->on('p.articles','=','articles.DataSupplierArticleNumber');
-                $query->on('p.brand','=','suppliers.description');
+                $query->on('p.brand','=','suppliers.id');
             })
             ->where('articles.DataSupplierArticleNumber',$article)
             ->orWhere('articles.FoundString',$article)
-            ->select('p.articles','suppliers.id AS supplierId','p.brand'
+            ->select('p.articles','suppliers.id AS supplierId','suppliers.description AS brand'
                 ,DB::raw('(SELECT p2.name FROM '
                     .config('database.connections.mysql.database').
-                    '.products AS p2 WHERE p2.articles=p.articles AND p2.brand=suppliers.description AND p2.count > 0 GROUP BY p2.name HAVING MIN(p2.price) LIMIT 1) AS name'))
+                    '.products AS p2 WHERE p2.articles=p.articles AND p2.brand=suppliers.id AND p2.count > 0 GROUP BY p2.name HAVING MIN(p2.price) LIMIT 1) AS name'))
             ->distinct()
             ->get();
     }
@@ -260,7 +260,7 @@ class Catalog
             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers sp'),'sp.id','=','products.brand')
             ->where('sp.id',(int)$supplerId)
             ->where('products.articles',$article)
-            ->select('products.*','sp.id AS SupplierId',
+            ->select('products.*','sp.id AS SupplierId','sp.description AS brand',
                 DB::raw('(SELECT a_img.PictureName 
                             FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 
                             WHERE a_img.DataSupplierArticleNumber=products.articles AND a_img.SupplierId=sp.id LIMIT 1) AS file'))
@@ -284,9 +284,10 @@ class Catalog
             })
             ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),'p.articles','=','article_cross.PartsDataSupplierArticleNumber')
             ->join(DB::raw(config('database.connections.mysql.database') . '.providers'),'providers.id','=','p.provider_id')
+            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers sp'),'sp.id','=','p.brand')
             ->where($filter)
             ->where('p.articles','<>',$article)
-            ->select('p.*','article_cross.SupplierId','providers.name AS provider_name',
+            ->select('p.*','article_cross.SupplierId','providers.name AS provider_name','sp.description AS brand',
                 DB::raw('(SELECT a_img.PictureName 
                             FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 
                             WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=article_cross.SupplierId LIMIT 1) AS file'))
