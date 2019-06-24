@@ -35,10 +35,27 @@
                                         <span class="block-email">{{$no_brand->count_product}}</span>
                                     </td>
                                     <td>
-
+                                        <form action="{{route('admin.no_brands.create_replace')}}" method="post">
+                                            @csrf
+                                            <input style="border-bottom: 1px solid" type="text" value="{{$no_brand->brand}}" id="alias_brand" name="alias_brand" placeholder="синоним">
+                                            <select id="suppliers_tecdoc" name="suppliers_tecdoc">
+                                                @foreach($suppliers as $supplier)
+                                                    <option value="{{$supplier->description}}#{{$supplier->id}}">{{$supplier->description}}</option>
+                                                @endforeach
+                                            </select>
+                                            <button style="padding: 0 5px;font-size: 13px;" class="btn btn-success small">
+                                                создать
+                                            </button>
+                                        </form>
                                     </td>
                                     <td>
-
+                                        <form action="{{route('admin.no_brands.create_brand')}}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="brand_name" value="{{$no_brand->brand}}">
+                                            <button style="padding: 0 5px;font-size: 13px;" class="btn btn-primary small">
+                                                создать бренд
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                                 <tr class="spacer"></tr>

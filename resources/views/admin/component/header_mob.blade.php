@@ -32,6 +32,9 @@
                             </a>
                         </li>
                         <li>
+                            <a href="{{route('admin.no_brands.alis')}}">{{__('Сопоставления бренда')}}</a>
+                        </li>
+                        <li>
                             <a href="{{route('admin.car_categories.index')}}">{{__('Групировка категорий для машин')}}</a>
                         </li>
                         <li>

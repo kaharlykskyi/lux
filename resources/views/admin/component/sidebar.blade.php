@@ -21,6 +21,7 @@
                                     (<span class="text-danger">{{$count_no_brands_global}}</span>)
                                 @endif
                             </a>
+                            <a href="{{route('admin.no_brands.alis')}}">{{__('Сопоставления бренда')}}</a>
                             <a href="{{route('admin.product.popular')}}">{{__('Популярные товары')}}</a>
                             <a href="{{route('admin.show_brand')}}">{{__('Бренды')}}</a>
                             <a href="{{route('admin.filter','use')}}">{{__('Настройки фильтра')}}</a>

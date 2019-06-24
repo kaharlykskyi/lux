@@ -179,6 +179,10 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
 
     //MANAGE ALIAS PRODUCTS
     Route::group(['prefix' => 'no-brands'],function (){
-        Route::match(['get', 'post'],'/products','NoBrandProductController@index')->name('admin.no_brands.products');
+        Route::get('/products','NoBrandProductController@index')->name('admin.no_brands.products');
+        Route::post('/products','NoBrandProductController@createReplace')->name('admin.no_brands.create_replace');
+        Route::post('/products/create-brand','NoBrandProductController@createBrand')->name('admin.no_brands.create_brand');
+        Route::match(['get', 'post'], '/alias','NoBrandProductController@brandAlias')->name('admin.no_brands.alis');
+        Route::get('/alias/{id}','NoBrandProductController@brandAliasDelete')->name('admin.no_brands.delete');
     });
 });
