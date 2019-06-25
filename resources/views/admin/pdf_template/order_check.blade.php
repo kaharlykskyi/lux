@@ -50,7 +50,7 @@
             </ul>
         </div>
         <div class="col-xs-6 text-right">
-            <img style="width: 200px;height: auto;margin-right: 50px;margin-top: 30px;" src="{{asset('images/logo_pdf.png')}}" alt="{{ config('app.name', 'Laravel') }}">
+            <img style="width: 200px;height: auto;margin-right: 50px;margin-top: 30px;" src="{{asset('images/logo.png')}}" alt="{{ config('app.name', 'Laravel') }}">
         </div>
     </div>
     <div class="row">

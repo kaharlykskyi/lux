@@ -41,8 +41,8 @@
             </ul>
         </div>
         <div class="col-xs-6 text-right">
-            <img style="width: 200px;height: auto;margin-right: 100px;margin-top: 30px;" src="{{asset('images/logo_pdf.png')}}" alt="{{ config('app.name', 'Laravel') }}">
-            <div style="border: 1px solid;padding: 10px;margin-right: 60px;text-align: center">
+            <img style="width: 200px;height: auto;margin-right: 100px;margin-top: 30px;" src="{{asset('images/logo.png')}}" alt="{{ config('app.name', 'Laravel') }}">
+            <div style="border: 1px solid;padding: 10px;margin-right: 60px;text-align: center;margin-top: 30px">
                 <h4 style="margin-bottom: 0;line-height: 1;padding-bottom: 0"><strong>Акт виконаних робіт</strong></h4>
                 <p style="font-size: 11px;line-height: 1;margin-bottom: 15px">
                     Технічне обслуговування,ремонт<br>

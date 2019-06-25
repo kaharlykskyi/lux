@@ -163,7 +163,7 @@
     <input id="delete_work" type="hidden" name="delete_work" value="">
 @endisset
 
-<button type="submit" class="btn btn-primary btn-sm">
+<button type="submit" onclick="$(this).attr('disabled','disabled')" class="btn btn-primary btn-sm">
     <i class="fa fa-dot-circle-o"></i> {{__('Сохранить')}}
 </button>
 

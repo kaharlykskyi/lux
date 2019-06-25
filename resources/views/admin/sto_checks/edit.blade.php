@@ -13,7 +13,7 @@
             </div>
         @endif
         <div class="row p-t-10">
-            @include('admin.component.back')
+            @component('admin.component.back',['back_url' => route('admin.sto_check_manager.index',['client' => $check->sto_clint_id])])@endcomponent
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
