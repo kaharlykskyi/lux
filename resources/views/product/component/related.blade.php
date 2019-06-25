@@ -17,7 +17,7 @@
                         @if(isset($accessory->old_price) && $accessory->old_price > 0)
                             <span class="sale-tag">-{{(int)(100 - (100 *$accessory->price /$accessory->old_price))}}%</span>
                         @endif
-                        <span class="tag">{{$accessory->matchcode}}</span> <a href="{{route('product',str_replace(' ','',str_replace('/','@',($accessory->DataSupplierArticleNumber))))}}?supplierid={{$accessory->supplierId}}&product_id={{$accessory->id}}" class="tittle">{{$accessory->name}}</a><br>
+                        <span class="tag">{{$accessory->matchcode}}</span> <a href="{{route('product',$accessory->id)}}" class="tittle">{{$accessory->name}}</a><br>
                         <div class="price">{{(int)$accessory->price}}грн. </div>
                         <a href="#." onclick="{{(int)$accessory->count > 0?'addCartRelate(\''.route('add_cart',$accessory->id).'\');return false;':'alert(\'Извините, данный товар отсутсвует на складе\')'}}" class="cart-btn"><i class="icon-basket-loaded"></i></a>
                     </article>
@@ -46,7 +46,7 @@
                         @if(isset($item->old_price) && $item->old_price > 0)
                             <span class="sale-tag">-{{(int)(100 - (100 *$item->price /$item->old_price))}}%</span>
                         @endif
-                        <span class="tag">{{$item->matchcode}}</span> <a href="{{route('product',str_replace('/','@',($item->articles)))}}?supplierid={{$item->supplierId}}&product_id={{$item->id}}" class="tittle">{{$item->name}}</a><br>
+                        <span class="tag">{{$item->matchcode}}</span> <a href="{{route('product',$item->id)}}" class="tittle">{{$item->name}}</a><br>
                         <div class="price">{{(int)$item->price}}грн. </div>
                         <a href="#." onclick="{{(int)$item->count > 0?'addCartRelate(\''.route('add_cart',$item->id).'\');return false;':'alert(\'Извините, данный товар отсутсвует на складе\')'}}" class="cart-btn"><i class="icon-basket-loaded"></i></a>
                     </article>
