@@ -179,31 +179,36 @@ class ImportPriceList
                     $file_read = fopen($file,'r');
                     $key = 0;
                     while (($column = fgetcsv($file_read)) !== FALSE) {
-                        $str = mb_convert_encoding($column[0], "utf-8", "windows-1251");
-                        $data = explode("\t",$str);
-                        if (!isset($data[1])){
-                            $data = explode(",",$str);
-                        }
-                        if (!isset($data[1])){
-                            $data = explode(";",$str);
-                        }
-                        if ((int)$this->config->data_row < $key + 1){
-                            $this->product_data[$key]['articles'] = $data[(int)$this->config->articles - 1];
-                            $this->product_data[$key]['product_name'] = $data[(int)$this->config->product_name - 1];
-                            $this->product_data[$key]['brand'] = $data[(int)$this->config->brand - 1];
-                            $this->product_data[$key]['price'] = $data[(int)$this->config->price - 1];
-                            $this->product_data[$key]['delivery_time'] = isset($this->config->delivery_time)?$data[(int)$this->config->delivery_time - 1]:0;
-
-                            foreach ($stock_cells_sort as $stock_cell){
-                                if (isset($this->product_data[$key]['count'])){
-                                    $this->product_data[$key]['count'] += (int)preg_replace("/[^0-9,.]/", "", $data[(int)$stock_cell['count'] - 1]);
-                                } else {
-                                    $this->product_data[$key]['count'] = (int)preg_replace("/[^0-9,.]/", "", $data[(int)$stock_cell['count'] - 1]);
-                                }
-                                $this->product_data[$key]['stocks'][$stock_cell['stock']] = (int)preg_replace("/[^0-9,.]/", "", $data[(int)$stock_cell['count'] - 1]);
+                        try{
+                            $str = mb_convert_encoding($column[0], "utf-8", "windows-1251");
+                            $data = explode("\t",$str);
+                            if (!isset($data[1])){
+                                $data = explode(",",$str);
                             }
+                            if (!isset($data[1])){
+                                $data = explode(";",$str);
+                            }
+                            if ((int)$this->config->data_row < $key + 1){
+                                $this->product_data[$key]['articles'] = $data[(int)$this->config->articles - 1];
+                                $this->product_data[$key]['product_name'] = $data[(int)$this->config->product_name - 1];
+                                $this->product_data[$key]['brand'] = $data[(int)$this->config->brand - 1];
+                                $this->product_data[$key]['price'] = $data[(int)$this->config->price - 1];
+                                $this->product_data[$key]['delivery_time'] = isset($this->config->delivery_time)?$data[(int)$this->config->delivery_time - 1]:0;
+
+                                foreach ($stock_cells_sort as $stock_cell){
+                                    if (isset($this->product_data[$key]['count'])){
+                                        $this->product_data[$key]['count'] += (int)preg_replace("/[^0-9,.]/", "", $data[(int)$stock_cell['count'] - 1]);
+                                    } else {
+                                        $this->product_data[$key]['count'] = (int)preg_replace("/[^0-9,.]/", "", $data[(int)$stock_cell['count'] - 1]);
+                                    }
+                                    $this->product_data[$key]['stocks'][$stock_cell['stock']] = (int)preg_replace("/[^0-9,.]/", "", $data[(int)$stock_cell['count'] - 1]);
+                                }
+                            }
+                            $key++;
+                        }catch (Exception $exception){
+                            Log::error($exception);
+                            $this->count_fail++;
                         }
-                        $key++;
                     }
                 }else{
                     $this->xls = PHPExcel_IOFactory::load($file);
