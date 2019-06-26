@@ -190,9 +190,9 @@ class ImportPriceList
                             }
                             if ((int)$this->config->data_row < $key + 1){
                                 $this->product_data[$key]['articles'] = str_replace('"','',$data[(int)$this->config->articles - 1]);
-                                $this->product_data[$key]['product_name'] = $data[(int)$this->config->product_name - 1];
+                                $this->product_data[$key]['product_name'] = str_replace('"','',$data[(int)$this->config->product_name - 1]);
                                 $this->product_data[$key]['brand'] = str_replace('"','',$data[(int)$this->config->brand - 1]);
-                                $this->product_data[$key]['price'] = $data[(int)$this->config->price - 1];
+                                $this->product_data[$key]['price'] = str_replace('"','',$data[(int)$this->config->price - 1]);
                                 $this->product_data[$key]['delivery_time'] = isset($this->config->delivery_time)?$data[(int)$this->config->delivery_time - 1]:0;
 
                                 foreach ($stock_cells_sort as $stock_cell){
