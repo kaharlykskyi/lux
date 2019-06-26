@@ -282,7 +282,10 @@ class Catalog
                 $query->on('article_cross.OENbr','=','article_oe.OENbr');
                 $query->on('article_cross.manufacturerId','=','article_oe.manufacturerId');
             })
-            ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),'p.articles','=','article_cross.PartsDataSupplierArticleNumber')
+            ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),function($query){
+                $query->on('p.articles','=','article_cross.PartsDataSupplierArticleNumber');
+                $query->on('p.brand','=','article_cross.SupplierId');
+            })
             ->join(DB::raw(config('database.connections.mysql.database') . '.providers'),'providers.id','=','p.provider_id')
             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers sp'),'sp.id','=','p.brand')
             ->where($filter)
@@ -290,7 +293,7 @@ class Catalog
             ->select('p.*','article_cross.SupplierId','providers.name AS provider_name','sp.description AS brand',
                 DB::raw('(SELECT a_img.PictureName 
                             FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 
-                            WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=article_cross.SupplierId LIMIT 1) AS file'))
+                            WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=p.brand LIMIT 1) AS file'))
             ->orderBy('p.price')
             ->distinct()
             ->get();
@@ -312,14 +315,17 @@ class Catalog
     public function getReplaceProductForOENrb($OENrb,$manufacturerId,$connection = 'mysql'){
         $replace_product_loc = DB::connection($connection)
             ->table('article_oe')
-            ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),'p.articles','=','article_oe.DataSupplierArticleNumber')
+            ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),function($query){
+                $query->on('p.articles','=','article_oe.DataSupplierArticleNumber');
+                $query->on('p.brand','=','article_oe.SupplierId');
+            })
             ->join(DB::raw(config('database.connections.mysql.database') . '.providers'),'providers.id','=','p.provider_id')
             ->where('article_oe.OENbr',$OENrb)
             ->where('article_oe.manufacturerId',(int)$manufacturerId)
-            ->select('p.*','article_oe.supplierid AS SupplierId','providers.name AS provider_name',
+            ->select('p.*','article_oe.SupplierId','providers.name AS provider_name',
                 DB::raw('(SELECT a_img.PictureName 
                             FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 
-                            WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=article_oe.supplierid LIMIT 1) AS file'))
+                            WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=p.brand LIMIT 1) AS file'))
             ->orderBy('p.price')
             ->distinct()
             ->get();

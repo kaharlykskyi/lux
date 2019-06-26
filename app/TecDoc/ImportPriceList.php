@@ -184,6 +184,9 @@ class ImportPriceList
                         if (!isset($data[1])){
                             $data = explode(",",$str);
                         }
+                        if (!isset($data[1])){
+                            $data = explode(";",$str);
+                        }
                         if ((int)$this->config->data_row < $key + 1){
                             $this->product_data[$key]['articles'] = $data[(int)$this->config->articles - 1];
                             $this->product_data[$key]['product_name'] = $data[(int)$this->config->product_name - 1];
