@@ -20,6 +20,10 @@
         $('#productInfoModal .modal-body').html('<p class="text-center"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></p>');
 
         $.post('{{route('product.full_info')}}',{_token:'{{csrf_token()}}',article,supplier},function (data) {
+            if (data.product === null){
+                $('#productInfoModal .modal-body').html("<p>Дополнительных данных не обнаружено</p>");
+                return false;
+            }
             let html = `
                 <div class="row">
                   <div class="col-sm-6 col-md-3">
