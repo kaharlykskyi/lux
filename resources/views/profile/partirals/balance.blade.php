@@ -103,10 +103,18 @@
             $('#statusPayModal .modal-body').html(`
                                     <div class="panel-body table-responsive">
                                         <table class="table table-striped">
-                                            <caption>${data.liqpay_data.description}</caption>
-                                            <tbody>
-                                                <tr>
-                                                    <th class="">{{__('Id платежа в системе LiqPay')}}</th>
+                                            <caption>
+                                                ${data.liqpay_data.description}
+                                                ${data.liqpay_data.status === 'wait_accept'?`
+                                                    <div class="alert alert-warning" role="alert">Платёж в обработке</div>
+                                                `:''}
+                                                ${data.liqpay_data.status === 'failure' ?`
+                                                            <div class="alert alert-danger" role="alert">Неуспешный платеж</div>
+                                                        `:''}
+                                                    </caption>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th class="">{{__('Id платежа в системе LiqPay')}}</th>
                                                     <td>${data.liqpay_data.acq_id}</td>
                                                 </tr>
                                                 <tr>
