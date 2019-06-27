@@ -967,7 +967,7 @@ class Tecdoc
             ->select(DB::raw('sp.id AS supplierId, sp.matchcode, p.id, p.name, p.price, p.articles,p.count,
                     (SELECT a_img.PictureName 
                     FROM article_images AS a_img 
-                    WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=sp.id LIMIT 1) AS file'))
+                    WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=p.brand LIMIT 1) AS file'))
             ->orderBy(DB::raw('p.price'),$sort)
             ->groupBy('p.articles')
             ->havingRaw('MIN(p.price)')

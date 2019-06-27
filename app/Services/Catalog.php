@@ -86,7 +86,7 @@ class Catalog
                 return Cache::remember('brands_search_str_'.(new Controller())->transliterateRU($param['str'],true), 60*24, function () use ($param) {
                     return DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
                         ->where(DB::raw('p.name'),'LIKE',"{$param['str']}%")
-                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('sp.description'),DB::raw('p.brand'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('sp.id'),DB::raw('p.brand'))
                         ->select(DB::raw('sp.id AS supplierId, sp.description'))
                         ->distinct()
                         ->get();
