@@ -76,29 +76,7 @@ class LiqPayController extends Controller
             $signature_decode = $liqpay->str_to_sign($this->private_key . $data . $this->private_key);
             if ($signature === $signature_decode){
                 $params = $liqpay->decode_params($data);
-
-                if ($params['status'] === 'success'){
-                    $amount = $params['amount'] - $params['sender_commission'] - $params['receiver_commission'] - $params['commission_credit'] - $params['commission_debit'];
-                    UserBalanceHistory::where('id',$params['order_id'])->update([
-                        'balance_refill' => $amount,
-                        'status' => true
-                    ]);
-
-                    $balanseHistiry =  UserBalanceHistory::where('id',$params['order_id'])->first();
-                    if (DB::table('user_balance')->where('user_id',$balanseHistiry->user_id)->exists()){
-                        $oldBalance = UserBalance::where('user_id',$balanseHistiry->user_id)->first();
-                        UserBalance::where('user_id',$balanseHistiry->user_id)->update([
-                            'balance' => (float)$oldBalance->balance + $amount
-                        ]);
-                    } else {
-                        $userBalance = new UserBalance();
-                        $userBalance->fill([
-                            'user_id' => $balanseHistiry->user_id,
-                            'balance' => $amount
-                        ]);
-                        $userBalance->save();
-                    }
-                }
+                $this->changeStatusPay($params);
             }
         }
     }
@@ -127,9 +105,47 @@ class LiqPayController extends Controller
             'order_id'      => $pay_user->id
         ));
 
+        $this->changeStatusPay(json_decode(json_encode($status_pay), true));
+
         return response()->json([
             'pay' => $pay_user,
             'liqpay_data' => $status_pay
         ]);
+    }
+
+
+    private function changeStatusPay($params){
+        if ($params['status'] === 'success'){
+            $amount = $params['amount'] - $params['sender_commission'] - $params['receiver_commission'] - $params['commission_credit'] - $params['commission_debit'];
+            UserBalanceHistory::where('id',$params['order_id'])->update([
+                'balance_refill' => $amount,
+                'status' => true
+            ]);
+
+            $balanseHistiry =  UserBalanceHistory::where('id',$params['order_id'])->first();
+            DB::transaction(function () use ($amount, $balanseHistiry) {
+                if (DB::table('user_balance')->where('user_id',$balanseHistiry->user_id)->exists()){
+                    $oldBalance = UserBalance::where('user_id',$balanseHistiry->user_id)->first();
+                    UserBalance::where('user_id',$balanseHistiry->user_id)->update([
+                        'balance' => (float)$oldBalance->balance + $amount
+                    ]);
+                } else {
+                    $userBalance = new UserBalance();
+                    $userBalance->fill([
+                        'user_id' => $balanseHistiry->user_id,
+                        'balance' => $amount
+                    ]);
+                    $userBalance->save();
+                }
+            },2);
+        }else{
+            if (isset($params['order_id'])){
+                $amount = $params['amount'] - $params['sender_commission'] - $params['receiver_commission'] - $params['commission_credit'] - $params['commission_debit'];
+                UserBalanceHistory::where('id',$params['order_id'])->update([
+                    'balance_refill' => $amount,
+                    'liqpay_status' => $params['status']
+                ]);
+            }
+        }
     }
 }

@@ -28,7 +28,18 @@
                         <td>{{$item->id}}</td>
                         <td>{{$item->created_at}}</td>
                         <td>{{$item->balance_refill}}</td>
-                        <td>{{($item->status === 1)?__('успешно'):__('отказ')}}
+                        <td>
+                            @if($item->status === 1)
+                                {{__('успешно')}}
+                            @else
+                                @if($item->liqpay_status === 'wait_accept')
+                                    {{__('Обрабатываеться')}}
+                                @elseif($item->liqpay_status === 'failure' || $item->liqpay_status === 'error')
+                                    {{__('Неуспешный платеж')}}
+                                @elseif($item->liqpay_status === null)
+                                    {{__('Платеж не найден')}}
+                                @endif
+                            @endif
                             <span onclick="statusPay('{{$item->id}}')" title="{{__('Информация по оплате')}}"  style="cursor: pointer" class="margin-left-5"><i class="fa fa-info-circle" aria-hidden="true"></i></span>
                         </td>
                     </tr>
