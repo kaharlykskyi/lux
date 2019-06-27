@@ -76,7 +76,7 @@
                                 @isset($sub)
                                     <ul class="dropdown-menu multi-level animated-2s fadeInUpHalf">
                                         @foreach($sub as $item)
-                                            <li><a href="{{route('catalog',$item->id)}}"> {{$item->name}} </a></li>
+                                            <li><a href="{{route('rubric.choose_car',$item->id)}}"> {{isset($item->custom_name)?$item->custom_name:$item->name}} </a></li>
                                         @endforeach
                                     </ul>
                                 @endisset

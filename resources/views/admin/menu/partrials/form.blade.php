@@ -27,12 +27,13 @@
     <div class="col-6">
         <label for="search_category" class=" form-control-label">{{__('Добавленые категории')}}</label>
         <input type="hidden" id="tecdoc_category_input" name="tecdoc_category" value="@if(isset($top_menu->id)){{$top_menu->tecdoc_category}}@endif">
-        <ul class="list-group m-t-10" id="save_category">
+        <ul class="list-group m-t-10" id="save_category" style="font-size: 13px">
             @isset($top_menu->id)
                 @php $save_category = json_decode($top_menu->tecdoc_category) @endphp
                 @foreach($save_category as $category)
                     <li id="category_{{$category->id}}" data-id="{{$category->id}}" class="list-group-item">
                         {{$category->name}}
+                        <input style="border: 1px solid;padding: 0 5px;margin-left: 15px;" type="text" value="{{isset($category->custom_name)?$category->custom_name:$category->name}}">
                         <span style="cursor: pointer;" onclick="deleteItem({{$category->id}})" class="badge badge-primary badge-pill"><i class="fa fa-trash" aria-hidden="true"></i></span>
                     </li>
                 @endforeach
@@ -82,7 +83,8 @@
         for (let i = 0;i < items.length; i++){
             data.push({
                 'id': $(items[i]).attr('data-id'),
-                'name': $(items[i]).text().trim()
+                'name': $(items[i]).text().trim(),
+                'custom_name' : $(items[i]).find('input').val().trim()
             });
         }
 

@@ -30,6 +30,7 @@ class Catalog
                         })
                         ->where('al.productid',(int)$param['id'])
                         ->where(DB::raw('al.linkagetypeid'),'=',2)
+                        ->where('al.linkageid','=',(int)$param['car'])
                         ->select(DB::raw('MIN(p.price) AS min, MAX(p.price) AS max'))
                         ->get();
                 });
@@ -101,6 +102,7 @@ class Catalog
                         })
                         ->where('al.productid',(int)$param['id'])
                         ->where(DB::raw('al.linkagetypeid'),'=',2)
+                        ->where('al.linkageid','=',(int)$param['car'])
                         ->select(DB::raw('sp.id AS supplierId, sp.description'))
                         ->distinct()
                         ->get();
@@ -173,6 +175,7 @@ class Catalog
                         })
                         ->where('al.productid',(int)$param['id'])
                         ->where(DB::raw('al.linkagetypeid'),2)
+                        ->where('al.linkageid','=',(int)$param['car'])
                         ->whereIn('attr.id',$attr_ids)
                         ->select(DB::raw('attr.id, attr.description, attr.displaytitle, attr.displayvalue'))
                         ->distinct()

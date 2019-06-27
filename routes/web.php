@@ -71,7 +71,10 @@ Route::get('/page/{alias}','PageController@index')->name('page');
 /*------FEEDBACK------*/
 Route::post('/feedback','FeedBackController@index')->name('feedback');
 /*-------RUBRICS---------*/
-Route::get('/rubric/{category}','RubricaController@index')->name('rubric');
+Route::prefix('rubric')->group(function () {
+    Route::get('/{category}','RubricaController@index')->name('rubric');
+    Route::get('/choose-car/{category}','RubricaController@chooseCar')->name('rubric.choose_car');
+});
 /*-----VIN DECODE-----*/
 Route::match(['get', 'post'],'/vin-decode','VinDecodeController@index')->name('vin_decode');
 Route::post('/vin-decode/catalog','VinDecodeController@catalog')->name('vin_decode.catalog');

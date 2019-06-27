@@ -27,7 +27,7 @@
                                                 <article>
                                                     <img class="img-responsive category-img" src="{{asset('images/catalog/' . $item->image)}}" alt="{{$item->name}}" >
                                                     @if(isset($item->tecdoc_id) && (int)$item->level > 0)
-                                                        <a href="{{route('catalog',$item->hurl)}}" class="tittle text-center block category-title">{{$item->name}}</a>
+                                                        <a href="{{route('rubric.choose_car',$item->tecdoc_id)}}" class="tittle text-center block category-title">{{$item->name}}</a>
                                                     @else
                                                         <a href="{{route('rubric',$item->hurl)}}" class="tittle text-center block category-title">{{$item->name}}</a>
                                                     @endif

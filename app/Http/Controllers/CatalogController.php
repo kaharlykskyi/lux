@@ -113,16 +113,17 @@ class CatalogController extends Controller
 
                         $this->brands = $this->service->getBrands('category',[
                             'id' => $request->category,
-                            'type' => $type
+                            'type' => $type,
+                            'car' => $request->car
                         ]);
 
-                        $price = $this->service->getMinMaxPrice('category',['id' => $request->category,'type' => $type]);
+                        $price = $this->service->getMinMaxPrice('category',['id' => $request->category,'type' => $type,'car' => $request->car]);
                         $this->min_price->start_price = round($price->min,2);
                         $this->max_price->start_price = round($price->max,2);
 
-                        $this->attribute = $this->service->getAttributes('category',['id' => $request->category,'type' => $type],$save_filters);
+                        $this->attribute = $this->service->getAttributes('category',['id' => $request->category,'type' => $type,'car' => $request->car],$save_filters);
 
-                        $this->catalog_products = $this->tecdoc->getCategoryProduct($request->category,$this->pre_products,[
+                        $this->catalog_products = $this->tecdoc->getCategoryProduct($request->category,$request->car,$this->pre_products,[
                             'price' => [
                                 'min' => ($this->min_price->filter_price > 0)?$this->min_price->filter_price:$this->min_price->start_price,
                                 'max' => ($this->max_price->filter_price > 0)?$this->max_price->filter_price:$this->max_price->start_price

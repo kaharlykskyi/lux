@@ -839,7 +839,7 @@ class Tecdoc
         }
     }
 
-    public function getCategoryProduct($id,$pre,array $filter,$save_attr, $query_attr,$sort = 'ASC'){
+    public function getCategoryProduct($id,$linkageid,$pre,array $filter,$save_attr, $query_attr,$sort = 'ASC'){
         if (isset($filter['supplier'])){
             foreach ($filter['supplier'] as $k => $item){
                 $filter['supplier'][$k] = (int)$item;
@@ -858,6 +858,7 @@ class Tecdoc
                 })
                 ->where('al.productid',(int)$id)
                 ->where('al.linkagetypeid','=',2)
+                ->where('al.linkageid','=',$linkageid)
                 ->where([
                     [DB::raw('p.price'),'>=',$filter['price']['min']],
                     [DB::raw('p.price'),'<=',$filter['price']['max']]
@@ -884,6 +885,7 @@ class Tecdoc
                 })
                 ->where('al.linkageid',(int)$id)
                 ->where('al.linkagetypeid','=',2)
+                ->where('al.linkageid','=',$linkageid)
                 ->where([
                     [DB::raw('p.price'),'>=',$filter['price']['min']],
                     [DB::raw('p.price'),'<=',$filter['price']['max']]
@@ -1013,6 +1015,10 @@ class Tecdoc
 
         return DB::connection($this->connection)
             ->select("SELECT DISTINCT {$select} FROM prd {$where}");
+    }
+
+    public function getPdrForId($id){
+        return DB::connection($this->connection)->table('prd')->find((int)$id);
     }
 
     private function getSortAttr($save_attr,$query_attr){
