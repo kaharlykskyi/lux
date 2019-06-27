@@ -162,16 +162,15 @@ class HomeController extends Controller
     public function delGarageCar(Request $request){
         if (Auth::check()){
             UserCar::where([['modification_auto',$request->mod],['user_id',Auth::id()]])->delete();
-        } else{
-            if ($request->hasCookie('search_cars')){
-                $cookies = json_decode($request->cookie('search_cars'),true);
-                foreach ($cookies as $k => $cookie){
-                    if ($cookie['modification_auto'] === $request->mod){
-                        unset($cookies[$k]);
-                    }
+        }
+        if ($request->hasCookie('search_cars')){
+            $cookies = json_decode($request->cookie('search_cars'),true);
+            foreach ($cookies as $k => $cookie){
+                if ($cookie['modification_auto'] === $request->mod){
+                    unset($cookies[$k]);
                 }
-                Cookie::queue(Cookie::forever('search_cars',json_encode($cookies)));
             }
+            Cookie::queue(Cookie::forever('search_cars',json_encode($cookies)));
         }
     }
 

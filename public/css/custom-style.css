@@ -1463,6 +1463,13 @@ html .oe-list a {
     align-items: center;
 }
 
+.footer-city{
+    margin-top: -70px;
+}
+
+.selectric-items li.selected {
+    background: #F0F0F0;
+}
 
 @media (max-width: 1200px) {
 
@@ -1560,6 +1567,9 @@ html .oe-list a {
     .selectric .label{
 
         min-height: 30px !important;
+    }
+    .footer-city{
+        margin-top: 0;
     }
 }
 

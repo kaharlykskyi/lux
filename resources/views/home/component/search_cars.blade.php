@@ -9,7 +9,7 @@
                 @if(isset($search_cars))
                     @foreach($search_cars as $k => $item)
                         <div class="list-group relative" id="list-group{{$k}}">
-                            <button class="delete-car-btn" onclick="deleteCarModal('{{$item['cookie']['modification_auto']}}',{{$k}})" title="{{__('Удалить машину')}}">
+                            <button class="delete-car-btn" onclick="deleteCarModal('{{$item['cookie']['modification_auto']}}',{{$k}} @if($k === 0) ,true @endif )" title="{{__('Удалить машину')}}">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                             </button>
                             <button type="button" class="list-group-item" onclick="getCarsDetail('{{$item['cookie']['type_auto']}}','{{$item['cookie']['year_auto']}}','{{$item['cookie']['brand_auto']}}','{{$item['cookie']['model_auto']}}','{{$item['cookie']['modification_auto']}}','{{csrf_token()}}','{{$item['data'][0]->name}}','{{$item['data'][0]->displayvalue}}','{{route('modification_info')}}')">
@@ -27,9 +27,12 @@
     </div>
 </div>
 <script>
-    function deleteCarModal(modification,id) {
+    function deleteCarModal(modification,id,reload) {
         $.get(`{{route('del_garage_car')}}?mod=${modification}`,function () {
             $(`#list-group${id}`).remove();
+            if (reload){
+                location.reload()
+            }
         });
     }
 
