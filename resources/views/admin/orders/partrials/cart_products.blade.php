@@ -1,4 +1,4 @@
-@isset($order->cartProduct)
+
     <div class="table-responsive">
         <table class="table table-borderless table-data3">
             <thead>
@@ -14,6 +14,7 @@
             </tr>
             </thead>
             <tbody id="order-product-block">
+            @isset($order->cartProduct)
             @foreach($order->cartProduct as $item)
                 <tr>
                     <td>
@@ -41,7 +42,7 @@
                     </td>
                 </tr>
             @endforeach
+            @endisset
             </tbody>
         </table>
     </div>
-@endisset

@@ -97,10 +97,10 @@
             response.forEach(function (item) {
                 html += `
                     <tr>
-                        <td>${item.articles}</td>
-                        <td>${item.name}</td>
+                        <td id="product_article_${item.id}">${item.articles}</td>
+                        <td id="product_name_${item.id}">${item.name}</td>
                         <td>${item.matchcode}</td>
-                        <td>${item.price}</td>
+                        <td id="product_price_${item.id}">${item.price}</td>
                         <td>
                             <input style="border: 1px solid;width: 50px;text-align: center;" type="number" value="1" id="prod_${item.id}">
                             <button onclick="addProduct('${item.id}')" style="padding: 0 5px;font-size: 13px;" class="btn btn-success small">
@@ -115,6 +115,7 @@
         });
     }
 
+    @if(!empty(request('order')))
     function addProduct(id) {
         const count = $(`#prod_${id}`).val();
         $.post('{{route('admin.order_edit',request('order'))}}',{_token:'{{csrf_token()}}',id:id,count:count},function (data) {
@@ -122,4 +123,5 @@
             alert(data.mass);
         });
     }
+    @endif
 </script>

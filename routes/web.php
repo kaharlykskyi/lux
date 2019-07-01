@@ -124,6 +124,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
         Route::match(['get', 'post'], '/edit/{order}','OrderController@editOder')->name('admin.order_edit');
         Route::match(['get', 'post'],'/generate-order-pdf','OrderController@generatePdf')->name('admin.order.pdf');
         Route::get('/search-product','OrderController@searchProduct')->name('admin.order.search_product');
+        Route::match(['get', 'post'],'/create_order','OrderController@createOrder')->name('admin.order.create');
     });
 
     Route::get('/full-order-info','OrderController@getOrderData')->name('admin.product.full_order_info');

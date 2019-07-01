@@ -16,19 +16,19 @@
             </tr>
             <tr>
                 <th>{{__('Страна')}}</th>
-                <td>{{isset($order->client->deliveryInfo->delivery_country)?$order->client->deliveryInfo->delivery_country:''}}</td>
+                <td>{{isset($order->client->deliveryInfo)?$order->client->deliveryInfo->delivery_country:''}}</td>
             </tr>
             <tr>
                 <th>{{__('Город')}}</th>
-                <td>{{isset($order->client->deliveryInfo->delivery_city)?$order->client->deliveryInfo->delivery_city:''}}</td>
+                <td>{{isset($order->client->deliveryInfo)?$order->client->deliveryInfo->delivery_city:''}}</td>
             </tr>
             <tr>
                 <th>{{__('Служба доставки')}}</th>
-                <td>{{trans('custom.'.$order->client->deliveryInfo->delivery_service)}}</td>
+                <td>{{isset($order->client->deliveryInfo)?trans('custom.'.$order->client->deliveryInfo->delivery_service):''}}</td>
             </tr>
             <tr>
                 <th>{{__('Отделение почты')}}</th>
-                <td>{{$order->client->deliveryInfo->delivery_department}}</td>
+                <td>{{isset($order->client->deliveryInfo)?$order->client->deliveryInfo->delivery_department:''}}</td>
             </tr>
             <tr>
                 <th>{{__('Номер накладной')}}</th>

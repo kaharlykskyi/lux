@@ -15,7 +15,9 @@ use App\{Cart,
     UserBalance,
     Http\Controllers\Controller};
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
@@ -191,5 +193,53 @@ class OrderController extends Controller
         $oder_info = Cart::with(['cartProduct','client'=>function($query){$query->with(['deliveryInfo','discount']);}])->where('id',$request->id)->first();
 
         return response()->json($oder_info);
+    }
+
+    public function createOrder(Request $request){
+        if ($request->isMethod('post')){
+            $data = $request->except('_token');
+
+            if ((int)$data['client_id'] === 0 ){
+                $user = new User();
+                $user->fill([
+                    'fio' => $data['fio'],
+                    'phone' => $data['phone'],
+                    'role' => 3,
+                    'permission' => 'user'
+                ]);
+                $user->save();
+            } else{
+                $user = User::findOrFail((int)$data['client_id']);
+            }
+
+            $order = new Cart();
+            $order->fill([
+                'user_id' => $user->id,
+                'oder_status' => 2,
+                'manager_id' => Auth::id(),
+                'oder_dt' => Carbon::now()
+            ]);
+
+            if ($order->save()){
+                foreach ($data['product_id'] as $k => $product){
+                    CartProduct::insert([
+                        'cart_id' => $order->id,
+                        'product_id' => (int)$product,
+                        'count' => (int)$data['count_product'][$k]
+                    ]);
+                }
+            }
+
+            return redirect()->route('admin.orders')->with('status','Заказ добавлен');
+        }
+
+        $users = null;
+        $providers = Provider::all();
+
+        if (!isset($request->user)){
+            $users = User::all();
+        }
+
+        return view('admin.orders.create_order',compact('users','providers'));
     }
 }
