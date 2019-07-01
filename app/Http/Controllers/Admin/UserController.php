@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\CartProduct;
+use App\DeliveryInfo;
 use App\Discount;
 use App\MutualSettlement;
 use App\Role;
@@ -30,18 +31,12 @@ class UserController extends Controller
     public function index(Request $request){
         $roles = DB::table('roles')->get();
 
-        if (isset($request->user_fio)){
-            $user_fio = explode(' ',$request->user_fio);
-        }
+        $filter = [];
+        if (isset($request->user_fio) && !empty($request->user_fio)) $filter[] = ['fio','LIKE',"%{$request->user_fio}%"];
+        if (isset($request->user_phone) && !empty($request->user_phone)) $filter[] = ['phone','LIKE',"%{$request->user_phone}%"];
+        if (isset($request->user_email) && !empty($request->user_email)) $filter[] = ['email','LIKE',"%{$request->user_email}%"];
 
-        $users = User::with('cars')->where('email','LIKE',isset($request->user_email)?"%{$request->user_email}%":'%%')
-            ->where('phone','LIKE',isset($request->user_phone)?"%{$request->user_phone}%":'%%')
-            ->where([
-                ['sername','LIKE',isset($user_fio[0])?"%{$user_fio[0]}%":'%%'],
-                ['name','LIKE',isset($user_fio[1])?"%{$user_fio[1]}%":'%%'],
-                ['last_name','LIKE',isset($user_fio[2])?"%{$user_fio[2]}%":'%%'],
-            ])
-            ->paginate(50);
+        $users = User::with('cars')->where($filter)->paginate(50);
         $discount = Discount::get();
         return view('admin.users.index',compact('users','roles','discount'));
     }
@@ -49,6 +44,14 @@ class UserController extends Controller
     public function show(Request $request,User $user){
         if ($request->isMethod('post')){
             $data = $request->except('_token');
+            DeliveryInfo::updateOrInsert(
+                ['user_id' => $user->id],
+                [
+                    'delivery_country' => $data['delivery_country'],
+                    'delivery_city' => $data['delivery_city'],
+                    'delivery_department' => $data['delivery_department']
+                ]
+            );
             $user->fill($data);
             $user->update();
             return redirect()->back();
@@ -58,11 +61,7 @@ class UserController extends Controller
         $balance = $user->balance;
         $balance_history = $user->historyBalance;
         $mutual_settelement = $user->mutualSettlements;
-        $location = DB::table('city')
-            ->where('city.id',$user->city)
-            ->join('country','country.id','=','city.id_country')
-            ->select('city.name AS city','country.name AS country','country.flag')
-            ->first();
+        $location = $user->deliveryInfo;
         return view('admin.users.show',compact('user','dop_phone','balance','balance_history','mutual_settelement','location'));
     }
 
@@ -168,20 +167,23 @@ class UserController extends Controller
             return back()->with('status','Товар удалён');
         }
 
+        $filters = [];
+        if (isset($request->cart_id) && !empty($request->cart_id)) $filters[] = ['cart_products.cart_id','=',$request->cart_id];
+        if (isset($request->client_id) && !empty($request->client_id)) $filters[] = ['carts.user_id','=',(int)$request->client_id === 0?null:$request->client_id];
+        if (isset($request->name_product) && !empty($request->name_product)) $filters[] = ['products.name','LIKE',"%{$request->name_product}%"];
+        if (isset($request->date_add_start) && !empty($request->date_add_start)) $filters[] = ['cart_products.created_at','>=',$request->date_add_start];
+        if (isset($request->date_add_end) && !empty($request->date_add_end)) $filters[] = ['cart_products.created_at','<=',$request->date_add_end];
+
         $users_cart_product = CartProduct::with(['cart' => function($query){
             $query->with(['client' =>
                 function($query){
-                    $query->with(['type_user','deliveryInfo','userCity']);
+                    $query->with(['type_user','deliveryInfo']);
                 }]);
             },'product'])
             ->join('carts','carts.id','=','cart_products.cart_id')
             ->join('products','products.id','=','cart_products.product_id')
             ->where('carts.oder_status','=',1)
-            ->where('cart_products.cart_id',isset($request->cart_id)?'=':'<>',isset($request->cart_id)?$request->cart_id:null)
-            ->where('carts.user_id',isset($request->client_id)?'=':'<>',isset($request->client_id)?(int)$request->client_id !== 0?$request->client_id:null:null)
-            ->where('products.name','LIKE',isset($request->name_product)?"%{$request->name_product}%":'%%')
-            ->where('cart_products.created_at',isset($request->date_add_start)?'>=':'<>',isset($request->date_add_start)?$request->date_add_start:null)
-            ->where('cart_products.created_at',isset($request->date_add_end)?'<=':'<>',isset($request->date_add_end)?$request->date_add_end:null)
+            ->where($filters)
             ->select('cart_products.*')
             ->orderByDesc('cart_products.created_at')
             ->paginate(50);
@@ -199,14 +201,10 @@ class UserController extends Controller
             $data = $request->except('_token');
 
             $validate = Validator::make($data, [
-                'name' => 'required|string|max:255',
+                'fio' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:6',
-                'sername' => 'required|string|max:255',
-                'last_name' => 'required|string|max:255',
                 'phone' => 'required|regex:/^[0-9\-\(\)\/\+\s]*$/i',
-                'country' => 'required',
-                'city' => 'required',
                 'role' => 'required'
             ]);
 

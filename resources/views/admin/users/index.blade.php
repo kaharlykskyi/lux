@@ -79,7 +79,7 @@
                             <thead>
                             <tr>
                                 <td>{{__('id')}}</td>
-                                <td>{{__('Имя')}}</td>
+                                <td>{{__('ФИО')}}</td>
                                 <td>{{__('Роль')}}</td>
                                 <td>{{__('Доступ')}}</td>
                                 <td>{{__('Скидка')}}</td>
@@ -93,7 +93,7 @@
                                             <td>{{$user->id}}</td>
                                             <td>
                                                 <div class="table-data__info">
-                                                    <h6>{{$user->name}}</h6>
+                                                    <h6>{{$user->fio}}</h6>
                                                     <span>
                                                         <a href="#">{{$user->email}}</a>
                                                     </span><br>

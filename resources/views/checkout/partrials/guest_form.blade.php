@@ -20,32 +20,12 @@
             @csrf
             <ul class="row">
                 <li class="col-sm-12">
-                    <label>{{ __('Имя') }}
-                        <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus>
+                    <label>{{ __('ФИО') }}
+                        <input type="text" class="form-control {{ $errors->has('fio') ? ' is-invalid' : '' }}" name="fio" value="{{ $user->fio }}" required autofocus>
                     </label>
-                    @if ($errors->has('name'))
+                    @if ($errors->has('fio'))
                         <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('name') }}</strong>
-                                        </span>
-                    @endif
-                </li>
-                <li class="col-sm-12">
-                    <label>{{__('Фамилия')}}
-                        <input type="text" class="form-control {{ $errors->has('sername') ? ' is-invalid' : '' }}" name="sername" value="{{ old('sername') }}" required>
-                    </label>
-                    @if ($errors->has('sername'))
-                        <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('sername') }}</strong>
-                                        </span>
-                    @endif
-                </li>
-                <li class="col-sm-12">
-                    <label>{{__('Отчество')}}
-                        <input type="text" class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" value="{{ old('last_name') }}" required>
-                    </label>
-                    @if ($errors->has('last_name'))
-                        <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('last_name') }}</strong>
+                                            <strong>{{ $errors->first('fio') }}</strong>
                                         </span>
                     @endif
                 </li>

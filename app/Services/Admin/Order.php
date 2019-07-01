@@ -23,7 +23,7 @@ class Order
 
         return Cart::with(['cartProduct','status','client' =>
             function($query){
-                $query->with(['discount','type_user','deliveryInfo','userCity']);
+                $query->with(['discount','type_user','deliveryInfo']);
             }
             ,'payOder'])
             ->orderByDesc('carts.oder_dt')

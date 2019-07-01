@@ -68,7 +68,7 @@
                                             <select name="client_id" id="client_id" class="form-control">
                                                 <option value="0">{{__('Не залогиненые')}}</option>
                                                 @foreach($clients as $client)
-                                                    <option @if((int)request()->query('client_id') === $client->id) selected @endif value="{{$client->id}}">{{$client->name}}</option>
+                                                    <option @if((int)request()->query('client_id') === $client->id) selected @endif value="{{$client->id}}">{{$client->fio}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -132,13 +132,13 @@
                                     <td onmouseleave="$('.hover-show').hide()" onmouseenter="setPosition('loc_block_{{$product->id}}')"  class="hover-trigger position-relative">
                                         @if($product->cart->client)
                                             <div id="loc_block_{{$product->id}}" class="table-data__info">
-                                                <h6>{{$product->cart->client->name}}</h6>
+                                                <h6>{{$product->cart->client->fio}}</h6>
                                             </div>
                                             <div data-id="loc_block_{{$product->id}}" class="hidden hover-show">
-                                                <p><strong>ФИО: </strong>{{$product->cart->client->sername . ' '. $product->cart->client->name . ' ' . $product->cart->client->last_name}}</p>
+                                                <p><strong>ФИО: </strong>{{$product->cart->client->fio}}</p>
                                                 <p><strong>Email: </strong>{{$product->cart->client->email}}</p>
                                                 <p><strong>Тип пользователя: </strong>{{$product->cart->client->type_user->name}}</p>
-                                                <p><strong>Город: </strong>{{isset($product->cart->client->userCity)?$product->cart->client->userCity->name:''}}</p>
+                                                <p><strong>Город: </strong>{{isset($product->cart->client->deliveryInfo)?$product->cart->client->deliveryInfo->delivery_city:''}}</p>
                                                 <p><strong>Адрес: </strong>{{$product->cart->client->deliveryInfo->street . '/' . $product->cart->client->deliveryInfo->house}}</p>
                                                 <p><strong>Телефон: </strong>{{$product->cart->client->phone}}</p>
                                             </div>

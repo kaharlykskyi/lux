@@ -23,32 +23,12 @@
 
                             <ul class="row">
                                 <li class="col-sm-12">
-                                    <label>{{ __('Имя') }}
-                                        <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus>
+                                    <label>{{ __('ФИО') }}
+                                        <input type="text" class="form-control {{ $errors->has('fio') ? ' is-invalid' : '' }}" name="fio" value="{{ old('fio') }}" required autofocus>
                                     </label>
-                                    @if ($errors->has('name'))
+                                    @if ($errors->has('fio'))
                                         <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('name') }}</strong>
-                                        </span>
-                                    @endif
-                                </li>
-                                <li class="col-sm-12">
-                                    <label>{{__('Фамилия')}}
-                                        <input type="text" class="form-control {{ $errors->has('sername') ? ' is-invalid' : '' }}" name="sername" value="{{ old('sername') }}" required>
-                                    </label>
-                                    @if ($errors->has('sername'))
-                                        <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('sername') }}</strong>
-                                        </span>
-                                    @endif
-                                </li>
-                                <li class="col-sm-12">
-                                    <label>{{__('Отчество')}}
-                                        <input type="text" class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" value="{{ old('last_name') }}" required>
-                                    </label>
-                                    @if ($errors->has('last_name'))
-                                        <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('last_name') }}</strong>
+                                            <strong>{{ $errors->first('fio') }}</strong>
                                         </span>
                                     @endif
                                 </li>
@@ -69,28 +49,6 @@
                                     @if ($errors->has('phone'))
                                         <span class="invalid-feedback">
                                             <strong>{{ $errors->first('phone') }}</strong>
-                                        </span>
-                                    @endif
-                                </li>
-                                <li class="col-sm-12">
-                                    <label class="relative country">{{__('Страна')}}
-                                        <input id="country" oninput="getCountry($(this))" type="text" class="form-control{{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" value="{{ old('country') }}" required autocomplete="off">
-                                        <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
-                                    </label>
-                                    @if ($errors->has('country'))
-                                        <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('country') }}</strong>
-                                        </span>
-                                    @endif
-                                </li>
-                                <li class="col-sm-12">
-                                    <label class="relative city">{{__('Город')}}
-                                        <input id="city" oninput="getCity($(this))" type="text" class="form-control{{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" value="{{ old('city') }}" required autocomplete="off">
-                                        <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
-                                    </label>
-                                    @if ($errors->has('city'))
-                                        <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('city') }}</strong>
                                         </span>
                                     @endif
                                 </li>

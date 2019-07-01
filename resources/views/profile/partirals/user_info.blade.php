@@ -5,18 +5,8 @@
             @csrf
             <ul class="row login-sec">
                 <li class="col-sm-12">
-                    <label>{{ __('Имя') }}
-                        <input type="text" class="form-control" name="name" value="{{ Auth::user()->name }}" required>
-                    </label>
-                </li>
-                <li class="col-sm-12">
-                    <label>{{__('Фамилия')}}
-                        <input type="text" class="form-control" name="sername" value="{{ Auth::user()->sername }}" required>
-                    </label>
-                </li>
-                <li class="col-sm-12">
-                    <label>{{__('Отчество')}}
-                        <input type="text" class="form-control" name="last_name" value="{{ Auth::user()->last_name }}" required>
+                    <label>{{ __('ФИО') }}
+                        <input type="text" class="form-control" name="fio" value="{{ Auth::user()->fio }}" required>
                     </label>
                 </li>
                 <li class="col-sm-12">
@@ -50,18 +40,6 @@
                             @endforeach
                         </ul>
                     @endisset
-                </li>
-                <li class="col-sm-12">
-                    <label class="relative country">{{__('Страна')}}
-                        <input id="country" oninput="getCountry($(this))" type="text" class="form-control" name="country" value="{{ Auth::user()->country }}" required autocomplete="off">
-                        <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
-                    </label>
-                </li>
-                <li class="col-sm-12">
-                    <label class="relative city">{{__('Город')}}
-                        <input id="city" oninput="getCity($(this),'#country')" type="text" class="form-control" name="city" value="{{ Auth::user()->city }}" required autocomplete="off">
-                        <span class="loader"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
-                    </label>
                 </li>
                 <li class="col-sm-12">
                     <label>{{__('Тип клиента')}}

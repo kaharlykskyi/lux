@@ -45,7 +45,7 @@
                 @else
                     <li class="btn-group dropdown-list">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            {{ Auth::user()->name }} <span class="caret"></span>
+                            {{ str_limit(Auth::user()->fio,10,'...') }} <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li>

@@ -1,21 +1,9 @@
 <table class="table table-top-countries">
     <tbody>
     <tr>
-        <td>{{__('Фамилия')}}</td>
+        <td>{{__('ФИО')}}</td>
         <td class="text-right">
-            <input type="text" name="sername" value="{{$user->sername}}">
-        </td>
-    </tr>
-    <tr>
-        <td>{{__('Имя')}}</td>
-        <td class="text-right">
-            <input type="text" name="name" value="{{$user->name}}">
-        </td>
-    </tr>
-    <tr>
-        <td>{{__('Отчество')}}</td>
-        <td class="text-right">
-            <input type="text" name="last_name" value="{{$user->last_name}}">
+            <input type="text" name="fio" value="{{$user->fio}}">
         </td>
     </tr>
     <tr>
@@ -27,13 +15,20 @@
     <tr>
         <td>{{__('Страна')}}</td>
         <td class="text-right">
-            @isset($location->flag) <img style="width: 40px;" src="{{$location->flag}}" alt="{{$location->country}}"> @endisset
-            @isset($location->country){{$location->country}}@endisset
+            <input type="text" name="delivery_country" value="@isset($location->delivery_country){{$location->delivery_country}}@endisset">
         </td>
     </tr>
     <tr>
         <td>{{__('Город')}}</td>
-        <td class="text-right">@isset($location->city){{$location->city}}@endisset</td>
+        <td class="text-right">
+            <input type="text" name="delivery_city" value="@isset($location->delivery_city){{$location->delivery_city}}@endisset">
+        </td>
+    </tr>
+    <tr>
+        <td>{{__('Отделение почты')}}</td>
+        <td class="text-right">
+            <input type="text" name="delivery_department" value="@isset($location->delivery_department){{$location->delivery_department}}@endisset">
+        </td>
     </tr>
     <tr>
         <td>{{__('Телефон')}}</td>

@@ -3,8 +3,8 @@
         <table class="table">
             <tbody>
             <tr>
-                <th>{{__('Имя')}}</th>
-                <td>{{$order->client->name}}</td>
+                <th>{{__('ФИО')}}</th>
+                <td>{{$order->client->fio}}</td>
             </tr>
             <tr>
                 <th>{{__('E-mail')}}</th>
@@ -16,11 +16,11 @@
             </tr>
             <tr>
                 <th>{{__('Страна')}}</th>
-                <td>{{isset($order->client->deliveryInfo->delivery_country)?$order->client->deliveryInfo->delivery_country:$order->client->country}}</td>
+                <td>{{isset($order->client->deliveryInfo->delivery_country)?$order->client->deliveryInfo->delivery_country:''}}</td>
             </tr>
             <tr>
                 <th>{{__('Город')}}</th>
-                <td>{{isset($order->client->deliveryInfo->delivery_city)?$order->client->deliveryInfo->delivery_city:$order->client->city}}</td>
+                <td>{{isset($order->client->deliveryInfo->delivery_city)?$order->client->deliveryInfo->delivery_city:''}}</td>
             </tr>
             <tr>
                 <th>{{__('Служба доставки')}}</th>

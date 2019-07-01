@@ -18,7 +18,7 @@
                 <!-- USER DATA-->
                 <div class="user-data">
                     <h3 class="title-3 m-b-30">
-                        <i class="fa fa-car" aria-hidden="true"></i>{{__('Гараж пользователя - ' . $user->name)}}</h3>
+                        <i class="fa fa-car" aria-hidden="true"></i>{{__('Гараж пользователя - ' . $user->fio)}}</h3>
                     @include('admin.component.back')
                 </div>
             </div>

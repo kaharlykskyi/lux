@@ -23,30 +23,12 @@
                         <form action="{{route('admin.user.create')}}" method="post" novalidate="novalidate">
                             @csrf
                             <div class="form-group">
-                                <label for="name" class="control-label mb-1">Имя</label>
-                                <input id="name" type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus>
-                                @if ($errors->has('name'))
+                                <label for="name" class="control-label mb-1">ФИО</label>
+                                <input id="name" type="text" class="form-control {{ $errors->has('fio') ? ' is-invalid' : '' }}" name="fio" value="{{ old('fio') }}" required autofocus>
+                                @if ($errors->has('fio'))
                                     <span class="invalid-feedback">
-                                         <strong>{{ $errors->first('name') }}</strong>
+                                         <strong>{{ $errors->first('fio') }}</strong>
                                     </span>
-                                @endif
-                            </div>
-                            <div class="form-group has-success">
-                                <label for="sername" class="control-label mb-1">Фамилия</label>
-                                <input id="sername" type="text" class="form-control {{ $errors->has('sername') ? ' is-invalid' : '' }}" name="sername" value="{{ old('sername') }}" required>
-                                @if ($errors->has('sername'))
-                                    <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('sername') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                            <div class="form-group">
-                                <label for="last_name" class="control-label mb-1">Отчество</label>
-                                <input id="last_name" type="text" class="form-control{{ $errors->has('last_name') ? ' is-invalid' : '' }}" name="last_name" value="{{ old('last_name') }}" required>
-                                @if ($errors->has('last_name'))
-                                    <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('last_name') }}</strong>
-                                        </span>
                                 @endif
                             </div>
                             <div class="form-group">
@@ -64,24 +46,6 @@
                                 @if ($errors->has('phone'))
                                     <span class="invalid-feedback">
                                             <strong>{{ $errors->first('phone') }}</strong>
-                                        </span>
-                                @endif
-                            </div>
-                            <div class="form-group">
-                                <label for="country" class="control-label mb-1">Страна</label>
-                                <input id="country" type="text" class="form-control{{ $errors->has('country') ? ' is-invalid' : '' }}" name="country" value="{{ old('country') }}" required>
-                                @if ($errors->has('country'))
-                                    <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('country') }}</strong>
-                                        </span>
-                                @endif
-                            </div>
-                            <div class="form-group">
-                                <label for="city" class="control-label mb-1">Город</label>
-                                <input id="city" type="text" class="form-control{{ $errors->has('city') ? ' is-invalid' : '' }}" name="city" value="{{ old('city') }}" required>
-                                @if ($errors->has('city'))
-                                    <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('city') }}</strong>
                                         </span>
                                 @endif
                             </div>

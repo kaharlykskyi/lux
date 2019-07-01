@@ -56,7 +56,7 @@
                                                     <select name="client_id" id="client_id" class="form-control">
                                                         <option value="0"></option>
                                                         @foreach($clients as $client)
-                                                            <option @if((int)request()->query('client_id') === $client->id) selected @endif value="{{$client->id}}">{{$client->name}}</option>
+                                                            <option @if((int)request()->query('client_id') === $client->id) selected @endif value="{{$client->id}}">{{$client->fio}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -143,12 +143,12 @@
                                                 {{$item->id}}
                                             </td>
                                             <td onmouseleave="$('.hover-show').hide()" onmouseenter="setPosition('loc_block_{{$item->id}}')" class="hover-trigger position-relative">
-                                                <span id="loc_block_{{$item->id}}">{{$item->client->name}}</span>
+                                                <span id="loc_block_{{$item->id}}">{{$item->client->fio}}</span>
                                                 <div data-id="loc_block_{{$item->id}}" class="hover-show">
-                                                    <p><strong>ФИО: </strong>{{$item->client->sername . ' '. $item->client->name . ' ' . $item->client->last_name}}</p>
+                                                    <p><strong>ФИО: </strong>{{$item->client->fio}}</p>
                                                     <p><strong>Email: </strong>{{$item->client->email}}</p>
                                                     <p><strong>Тип пользователя: </strong>{{$item->client->type_user->name}}</p>
-                                                    <p><strong>Город: </strong>{{isset($item->client->userCity)?$item->client->userCity->name:''}}</p>
+                                                    <p><strong>Город: </strong>{{isset($item->client->deliveryInfo)?$item->client->deliveryInfo->delivery_city:''}}</p>
                                                     <p><strong>Адрес: </strong>{{$item->client->deliveryInfo->street . '/' . $item->client->deliveryInfo->house}}</p>
                                                     <p><strong>Телефон: </strong>{{$item->client->phone}}</p>
                                                 </div><br>
@@ -174,7 +174,7 @@
                                                             @endif
                                                             [<span class="text-danger">{{$product->pivot->count}}</span>]
                                                         </strong>
-                                                        <span class="text-success">{{$product->name}}</span>
+                                                        <span class="text-success">{{str_limit($product->name,30)}}</span>
                                                     </p>
                                                 @endforeach
                                                 <a style="font-size: 12px;" href="{{route('admin.orders',['delete_oder' => $item->id])}}">

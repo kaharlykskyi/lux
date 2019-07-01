@@ -130,34 +130,14 @@ class Profile
 
     public function setUserInfo($user,$data){
         $validate = Validator::make($data,[
-            'name' => 'required|string|max:255',
+            'fio' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|' . (($user->email !== $data['email']) ? 'unique:users':''),
-            'sername' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
             'phone' => 'required|regex:/^[0-9\-\(\)\/\+\s]*$/i',
-            'country' => 'required',
-            'city' => 'required',
             'role' => 'required'
         ]);
 
         if ($validate->fails()) {
             return ['errors' => $validate->errors()];
-        }
-
-        if ($user->country !== $data['country']){
-            $country = $this->parseCountry($data['country']);
-            $data['country'] = $country->name;
-
-            if ($user->city !== $data['city']){
-                $city = $this->parseCity($data['city'],$country->id);
-                $data['city'] = $city->name;
-            }
-        } else {
-            if ($user->city !== $data['city']){
-                $country = DB::table('country')->where('name','=',$user->country)->first();
-                $city = $this->parseCity($data['city'],$country->id);
-                $data['city'] = $city->name;
-            }
         }
 
         DB::table('users')->where('id',$user->id)->update($data);

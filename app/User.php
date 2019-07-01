@@ -17,7 +17,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'sername', 'last_name', 'phone', 'country', 'city', 'role', 'logo','permission','discount_id'
+        'fio', 'email', 'password', 'phone', 'role','permission','discount_id'
     ];
 
     /**
@@ -68,9 +68,5 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function type_user(){
         return $this->belongsTo(Role::class,'role');
-    }
-
-    public function userCity(){
-        return $this->belongsTo(City::class,'city');
     }
 }

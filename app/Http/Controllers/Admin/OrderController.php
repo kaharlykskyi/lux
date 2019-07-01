@@ -139,7 +139,7 @@ class OrderController extends Controller
         Cart::where('id',(int)$request->order)->update(['seen' => 1]);
         $order = Cart::with(['cartProduct','status','client' =>
             function($query){
-                $query->with(['type_user','deliveryInfo','userCity']);
+                $query->with(['type_user','deliveryInfo']);
             }
             ,'payOder'])->find((int)$request->order);
         $order_code = DB::table('oder_status_codes')->get();
