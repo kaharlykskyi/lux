@@ -21,7 +21,7 @@
                         <strong>{{__('Создание ')}}</strong> {{__('чека')}}
                     </div>
                     <div class="card-body card-block">
-                        <form action="{{route('admin.sto_check_manager.store')}}" method="post" class="form-horizontal">
+                        <form action="{{route('admin.sto_check_manager.store')}}" id="sto_check_form" method="post" class="form-horizontal">
                             @csrf
 
                             @include('admin.sto_checks.partrials.form')

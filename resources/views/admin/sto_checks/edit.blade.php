@@ -20,7 +20,7 @@
                         <strong>{{__('Редактирование ')}}</strong> <em>{{__('чека № - ' . $check->id)}}</em>
                     </div>
                     <div class="card-body card-block">
-                        <form action="{{route('admin.sto_check_manager.update',$check->id)}}" method="post" class="form-horizontal">
+                        <form action="{{route('admin.sto_check_manager.update',$check->id)}}" method="post" id="sto_check_form" class="form-horizontal">
                             @method('PUT')
                             @csrf
 

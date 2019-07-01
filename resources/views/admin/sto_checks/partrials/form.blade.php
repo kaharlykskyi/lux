@@ -163,11 +163,16 @@
     <input id="delete_work" type="hidden" name="delete_work" value="">
 @endisset
 
-<button type="submit" class="btn btn-primary btn-sm">
+<button type="button" onclick="submit_sto_check_form(this)" class="btn btn-primary btn-sm">
     <i class="fa fa-dot-circle-o"></i> {{__('Сохранить')}}
 </button>
 
 <script>
+    function submit_sto_check_form(obj){
+        $('#sto_check_form').submit();
+        $(obj).attr('disabled','disabled')
+    }
+
     CKEDITOR.replace( 'info_for_user' );
 
     @isset($check->id)
