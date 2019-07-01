@@ -139,7 +139,7 @@
                                                 <p><strong>Email: </strong>{{$product->cart->client->email}}</p>
                                                 <p><strong>Тип пользователя: </strong>{{$product->cart->client->type_user->name}}</p>
                                                 <p><strong>Город: </strong>{{isset($product->cart->client->deliveryInfo)?$product->cart->client->deliveryInfo->delivery_city:''}}</p>
-                                                <p><strong>Адрес: </strong>{{$product->cart->client->deliveryInfo->street . '/' . $product->cart->client->deliveryInfo->house}}</p>
+                                                <p><strong>Адрес: </strong>{{isset($product->cart->client->deliveryInfo)?$product->cart->client->deliveryInfo->street . '/' . $product->cart->client->deliveryInfo->house:''}}</p>
                                                 <p><strong>Телефон: </strong>{{$product->cart->client->phone}}</p>
                                             </div>
                                         @else

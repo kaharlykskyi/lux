@@ -98,7 +98,7 @@
                                     </td>
                                     <td>{{$item->created_at}}</td>
                                     <td>
-                                        {{$item->user->name}}
+                                        {{$item->user->fio}}
                                     </td>
                                     <td>{{(int)$item->price_pay}} грн.</td>
                                 </tr>
