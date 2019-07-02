@@ -18,7 +18,7 @@ class InitApp
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::user()->permission === 'block'){
+        if (Auth::check() && Auth::user()->permission === 'block'){
             return redirect()->back()->with('status','Данная учетная запись заблокирована');
         }
         if (!Cookie::has('cart_session_id')){
