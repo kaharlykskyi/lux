@@ -20,7 +20,7 @@
                         <strong>{{__('Редактирование ')}}</strong> <em>{{__('клиента СТО - ' . $sto_client->fio)}}</em>
                     </div>
                     <div class="card-body card-block">
-                        <form action="{{route('admin.sto_manager.update',$sto_client->id)}}" method="post" class="form-horizontal">
+                        <form action="{{route('admin.sto_manager.update',$sto_client->id)}}" id="sto_client_form" method="post" class="form-horizontal">
                             @method('PUT')
                             @csrf
 

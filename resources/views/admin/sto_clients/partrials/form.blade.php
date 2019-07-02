@@ -94,6 +94,13 @@
     </div>
 </div>
 
-<button type="submit" class="btn btn-primary btn-sm">
+<button type="button" onclick="submit_sto_client_form(this)" class="btn btn-primary btn-sm">
     <i class="fa fa-dot-circle-o"></i> {{__('Сохранить')}}
 </button>
+
+<script>
+    function submit_sto_client_form(obj){
+        $('#sto_client_form').submit();
+        $(obj).attr('disabled','disabled')
+    }
+</script>

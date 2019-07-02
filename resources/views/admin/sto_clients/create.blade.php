@@ -23,7 +23,7 @@
                         <strong>{{__('Создание ')}}</strong> {{__('клиента для СТО базы')}}
                     </div>
                     <div class="card-body card-block">
-                        <form action="{{route('admin.sto_manager.store')}}" method="post" class="form-horizontal">
+                        <form action="{{route('admin.sto_manager.store')}}" method="post" id="sto_client_form" class="form-horizontal">
                             @csrf
 
                             @include('admin.sto_clients.partrials.form')
