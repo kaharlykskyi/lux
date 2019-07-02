@@ -65,7 +65,7 @@ class HomeController extends Controller
             }else{
                 $categories = $this->tecdoc->getSections($request->modification_auto);
                 foreach ($categories as $category){
-                    $category->subCategories = $this->tecdoc->getSections($request->modification_auto,$category->id);
+                    $category->subCategories = $this->tecdoc->getSections($request->modification_auto,$category->id,null,true);
                 }
             }
             return view('home.modif_category',['categories' => $categories,'modification' => $this->tecdoc->getModificationById($request->modification_auto)]);
