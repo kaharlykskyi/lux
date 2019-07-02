@@ -41,6 +41,11 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
+        if ($user->permission === 'block'){
+            $this->logout($request);
+            return redirect()->back()->with('status','Данная учетная запись заблокирована');
+        }
+
         if($request->hasCookie('cart_session_id')){
             Cart::where([
                 ['session_id',$request->cookie('cart_session_id')]

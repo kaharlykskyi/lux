@@ -18,9 +18,6 @@ class InitApp
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->permission === 'block'){
-            return redirect()->back()->with('status','Данная учетная запись заблокирована');
-        }
         if (!Cookie::has('cart_session_id')){
             $cart_session_id = session()->getId() . time();
             Cookie::queue(Cookie::make('cart_session_id',$cart_session_id,60*24));
