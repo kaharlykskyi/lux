@@ -46,11 +46,9 @@ class CheckoutController extends Controller
 
         $validate = Validator::make($data,[
             'delivery_service' => 'required',
-            'name' => 'required|string|max:255',
+            'fio' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'sername' => 'string|max:255',
-            'last_name' => 'string|max:255',
             'phone' => 'required|regex:/^[0-9\-\(\)\/\+\s]*$/i',
             'country' => 'required',
             'city' => 'required',
@@ -124,10 +122,8 @@ class CheckoutController extends Controller
 
         $validate = Validator::make($data,[
             'delivery_service' => 'required',
-            'name' => 'required|string|max:255',
+            'fio' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
-            'sername' => 'string|max:255',
-            'last_name' => 'string|max:255',
             'phone' => 'required|regex:/^[0-9\-\(\)\/\+\s]*$/i',
             'country' => 'required',
             'city' => 'required',
@@ -139,9 +135,7 @@ class CheckoutController extends Controller
         }
 
         User::where('id',Auth::id())->update([
-            'sername' => $data['sername'],
-            'name' => $data['name'],
-            'last_name' => $data['last_name'],
+            'fio' => $data['fio'],
             'email' => $data['email'],
         ]);
 

@@ -13,6 +13,15 @@
 
         <section class="login-sec padding-top-30 padding-bottom-100">
             <div class="container">
+                @if (session('status'))
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="alert alert-danger" role="alert">
+                                {{ session('status') }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
                 <div class="row">
                     <div class="col-xs-12 col-sm-offset-2 col-sm-8">
                         <h5 class="text-center margin-bottom-20">{{ __('Войти в свой акаунт') }}</h5>
