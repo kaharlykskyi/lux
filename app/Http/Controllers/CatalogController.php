@@ -190,7 +190,7 @@ class CatalogController extends Controller
         }
         if (isset($request->price_sort)){
             session()->forget('price_sort');
-            session(['price_sort' => (int)$request->price_sort]);
+            session(['price_sort' => $request->price_sort]);
         }
     }
 
