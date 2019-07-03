@@ -28,12 +28,11 @@ class InitApp
             Cookie::queue('vin_catalog', 'quickGroup');
         }
 
-        if (\request()->isMethod('get')){
-            if (Auth::check() && (Auth::user()->permission === 'admin' || Auth::user()->permission === 'manager') ){
+        if ($request->isMethod('get')){
+            if (stristr('/admin',$request->getRequestUri())){
                 $count_new_orders = Cart::where([['seen',0],['oder_status','<>',1]])->count();
                 $count_new_call_orders = CallOrder::where('status',0)->count();
                 $count_new_pay_mass = OrderPay::where('seen',0)->where('success_pay','true')->count();
-                $count_no_brand = NoBrandProduct::distinct()->count('brand');
             }
             $pages = Cache::remember('pages_all', 60*24, function () {
                 return Page::all();
@@ -63,8 +62,7 @@ class InitApp
             'top_menu_global' => isset($top_menu)?$top_menu:[],
             'count_new_orders_global' => isset($count_new_orders)?$count_new_orders:0,
             'count_new_call_orders_global' => isset($count_new_call_orders)?$count_new_call_orders:0,
-            'count_new_pay_mass_global' => isset($count_new_pay_mass)?$count_new_pay_mass:0,
-            'count_no_brands_global' => isset($count_no_brand)?$count_no_brand:0
+            'count_new_pay_mass_global' => isset($count_new_pay_mass)?$count_new_pay_mass:0
         ]);
 
         return $next($request);
