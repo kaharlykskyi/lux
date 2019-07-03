@@ -17,6 +17,8 @@ class CatalogController extends Controller
 
     protected $pre_products = 12;
 
+    protected $sort_prise = 'ASC';
+
     protected $brands = [];
 
     protected $attribute = [];
@@ -57,6 +59,9 @@ class CatalogController extends Controller
 
     public function index(Request $request){
         $this->filter_supplier = isset($request->supplier)?explode(',',$request->supplier):[];
+        if (session()->has('price_sort')){
+            $this->sort_prise = session()->get('price_sort');
+        }
 
         if(session('pre_products')){
             $this->pre_products = session('pre_products');
@@ -100,7 +105,7 @@ class CatalogController extends Controller
                                 'max' => ($this->max_price->filter_price > 0)?$this->max_price->filter_price:$this->max_price->start_price
                             ],
                             'supplier' => isset($request->supplier)?$this->filter_supplier:null
-                        ],$save_filters,$this->query_filters);
+                        ],$save_filters,$this->query_filters,$this->sort_prise);
 
                         break;
                     default:
@@ -129,7 +134,7 @@ class CatalogController extends Controller
                                 'max' => ($this->max_price->filter_price > 0)?$this->max_price->filter_price:$this->max_price->start_price
                             ],
                             'supplier' => isset($request->supplier)?$this->filter_supplier:null
-                        ],$save_filters,$this->query_filters);
+                        ],$save_filters,$this->query_filters,$this->sort_prise);
 
                         $this->art_file = $this->service->getArtFile($this->catalog_products,$this->tecdoc->connection);
                 }
@@ -152,7 +157,7 @@ class CatalogController extends Controller
                             'max' => ($this->max_price->filter_price > 0)?$this->max_price->filter_price:$this->max_price->start_price
                         ],
                         'supplier' => isset($request->supplier)?$this->filter_supplier:null
-                    ]);
+                    ],$this->sort_prise);
                 } else {
                     $this->catalog_products = $this->arrayPaginator($this->catalog_products,$request,$this->pre_products);
                 }
@@ -182,6 +187,10 @@ class CatalogController extends Controller
         if (isset($request->pre_show)){
             session()->forget('pre_products');
             session(['pre_products' => (int)$request->pre_show]);
+        }
+        if (isset($request->price_sort)){
+            session()->forget('price_sort');
+            session(['price_sort' => (int)$request->price_sort]);
         }
     }
 
@@ -222,7 +231,7 @@ class CatalogController extends Controller
                     'max' => ($this->max_price->filter_price > 0)?$this->max_price->filter_price:$this->max_price->start_price
                 ],
                 'supplier' => isset($request->supplier)?$this->filter_supplier:null
-            ]);
+            ],$this->sort_prise);
         }
     }
 

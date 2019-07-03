@@ -16,6 +16,12 @@
                 <option @if(session('pre_products') === 32) selected @endif  value="32">Показывать 32 </option>
             </select>
         </li>
+        <li >
+            <select class="selectpicker" onchange="$.get(`{{route('filter')}}?price_sort=${$(this).val()}`,()=>{location.reload()});">
+                <option @if(session('price_sort') === 'ASC') selected @endif value="ASC">По возрастанию цены </option>
+                <option @if(session('price_sort') === 'DESC') selected @endif  value="DESC">По убыванию цены </option>
+            </select>
+        </li>
     </ul>
 </div>
 
