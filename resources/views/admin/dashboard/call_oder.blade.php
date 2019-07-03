@@ -33,7 +33,7 @@
                         @isset($call_orders)
                             @forelse($call_orders as $item)
                                 <tr>
-                                    <td>{{$item->fio}}</td>
+                                    <td>{{$item->name}}</td>
                                     <td>{{$item->phone}}</td>
                                     <td>{{$item->created_at}}</td>
                                     <td class="text-right">
