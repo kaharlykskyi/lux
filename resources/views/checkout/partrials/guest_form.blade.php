@@ -21,7 +21,7 @@
             <ul class="row">
                 <li class="col-sm-12">
                     <label>{{ __('ФИО') }}
-                        <input type="text" class="form-control {{ $errors->has('fio') ? ' is-invalid' : '' }}" name="fio" value="{{ $user->fio }}" required autofocus>
+                        <input type="text" class="form-control {{ $errors->has('fio') ? ' is-invalid' : '' }}" name="fio" value="{{ old('fio') }}" required autofocus>
                     </label>
                     @if ($errors->has('fio'))
                         <span class="invalid-feedback">

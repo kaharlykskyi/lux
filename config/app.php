@@ -10,6 +10,8 @@ return [
     'company_phone' => env('APP_PHONE'),
     'company_location' => env('APP_LOCATION'),
     'telegram_channel_id' => env('TELEGRAM_CHANNEL_ID'),
+    'pb_id' => env('PB_ID'),
+    'pb_pass' => env('PB_PASS'),
 
     /*
     |--------------------------------------------------------------------------

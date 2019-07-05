@@ -69,9 +69,9 @@ class UserController extends Controller
         $data = $request->post();
         $data['change'] = round((float)$data['change'],2);
         $data['type_operation'] = (int)$data['type_operation'];
-        $data['user_id'] = (int)$data['user_id'];
+        $data['user_id'] = (int)$request->user;
 
-        $user = User::find((int)$request->user_id);
+        $user = User::find((int)$request->user);
         $balance = $user->balance;
         DB::transaction(function () use ($data,$balance) {
             $mutual_settelement = new MutualSettlement();

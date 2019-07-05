@@ -3,21 +3,20 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="mediumModalLabel">{{__('Изменение баланса - ' . $user->name)}}</h5>
+                <h5 class="modal-title" id="mediumModalLabel">{{__('Изменение баланса - ' . $user->fio)}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{route('admin.user.change_balance')}}" method="post" id="balanceForm" class="form-horizontal">
+                <form action="{{route('admin.user.change_balance',$user->id)}}" method="post" id="balanceForm" class="form-horizontal">
                     @csrf
-                    <input type="hidden" name="user_id" value="{{$user->id}}">
                     <div class="row form-group">
                         <div class="col col-md-3">
                             <label class=" form-control-label">{{__('Имя')}}</label>
                         </div>
                         <div class="col-12 col-md-9">
-                            <p class="form-control-static">{{$user->name}}</p>
+                            <p class="form-control-static">{{$user->fio}}</p>
                         </div>
                     </div>
                     <div class="row form-group">

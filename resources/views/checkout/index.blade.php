@@ -118,16 +118,6 @@
                     getPostOfice('city');
                 }
             });
-
-            $('#pay_method').change(function () {
-                const balance = {{isset($user->balance)?$user->balance->balance:0}};
-                const total = $('#total-price-checkout').text();
-                if ($(this).val() === 'online'){
-                    if (parseFloat(total) > balance){
-                        alert('Сумма на вашем балансе меньше чем общая стоимость корзины. Пополните баланс или смените способ оплаты');
-                    }
-                }
-            });
         });
     </script>
 

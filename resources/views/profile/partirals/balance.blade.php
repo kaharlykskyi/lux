@@ -28,12 +28,14 @@
                         <td>{{$item->id}}</td>
                         <td>{{$item->created_at}}</td>
                         <td>{{$item->balance_refill}}</td>
-                        <td>
+                        <td style="font-size: 12px">
                             @if($item->status === 1)
                                 {{__('успешно')}}
                             @else
                                 @if($item->liqpay_status === 'wait_accept')
                                     {{__('Обрабатываеться')}}
+                                @elseif($item->liqpay_status === 'p24_verify')
+                                    {{__('Ожидается завершение платежа в Приват24')}}
                                 @elseif($item->liqpay_status === 'failure' || $item->liqpay_status === 'error')
                                     {{__('Неуспешный платеж')}}
                                 @elseif($item->liqpay_status === null)
@@ -108,6 +110,9 @@
                                                 ${data.liqpay_data.status === 'wait_accept'?`
                                                     <div class="alert alert-warning" role="alert">Платёж в обработке</div>
                                                 `:''}
+                                                ${data.liqpay_data.status === 'p24_verify' ?`
+                                                    <div class="alert alert-warning" role="alert">Ожидается завершение платежа в Приват24</div>
+                                                `:''}
                                                 ${data.liqpay_data.status === 'failure' ?`
                                                             <div class="alert alert-danger" role="alert">Неуспешный платеж</div>
                                                         `:''}
@@ -130,8 +135,8 @@
                                                     <td>${data.liqpay_data.commission_credit}</td>
                                                 </tr>
                                                 <tr>
-                                                    <th>{{__('Зачислено на баланс')}}</th>
-                                                    <td>${Number((data.liqpay_data.amount - data.liqpay_data.sender_commission - data.liqpay_data.receiver_commission - data.liqpay_data.commission_credit - data.liqpay_data.commission_debit).toFixed(2))}</td>
+                                                    <th>{{__('К зачислению на баланс')}}</th>
+                                                    <td>${Number((data.liqpay_data.amount - data.liqpay_data.sender_commission - data.liqpay_data.receiver_commission - data.liqpay_data.agent_commission).toFixed(2))}</td>
                                                 </tr>
                                             </tbody>
                                         </table>

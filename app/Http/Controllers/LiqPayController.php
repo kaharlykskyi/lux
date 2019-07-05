@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Cart;
+use App\CartProduct;
+use App\MutualSettlement;
+use App\OrderPay;
+use App\User;
 use App\UserBalance;
 use App\UserBalanceHistory;
 use Illuminate\Http\Request;
@@ -23,8 +28,15 @@ class LiqPayController extends Controller
         $this->public_key = config('liqpay.public_key');
     }
 
-    public function index(){
-        return view('liqpay.index');
+    public function index(Request $request){
+        $user = User::with('balance')->find(Auth::id());
+        $sum = 0;
+        if (isset($request->order)){
+            $cart_product = CartProduct::with('product')->where('cart_id',(int)$request->order)->get();
+            $sum = Controller::getSumOrder($cart_product);
+        }
+
+        return view('liqpay.index',compact('user','sum'));
     }
 
     public function sendPayRequest(Request $request){
@@ -44,7 +56,8 @@ class LiqPayController extends Controller
         $balanceHistory->fill([
             'user_id' => Auth::id(),
             'balance_refill' => $data['amount'],
-            'status' => false
+            'status' => false,
+            'order_pay' => isset($data['order_id'])?(int)$data['order_id']:null
         ]);
         $balanceHistory->save();
 
@@ -54,7 +67,9 @@ class LiqPayController extends Controller
             'action'         => 'pay',
             'amount'         => "{$data['amount']}",
             'currency'       => 'UAH',
-            'description'    => 'Пополнение баланса на LuxAuto',
+            'description'    => isset($data['order_id'])
+                                    ?"Оплата заказа №{$data['order_id']}"
+                                    :'Пополнение баланса на CarMakers',
             'order_id'       => "{$balanceHistory->id}",
             'version'        => '3',
             'server_url'     => route('liqpay.response'),
@@ -116,31 +131,53 @@ class LiqPayController extends Controller
 
     private function changeStatusPay($params){
         if ($params['status'] === 'success'){
-            $amount = $params['amount'] - $params['sender_commission'] - $params['receiver_commission'] - $params['commission_credit'] - $params['commission_debit'];
-            UserBalanceHistory::where('id',$params['order_id'])->update([
+            $amount = $params['amount'] - $params['sender_commission'] - $params['receiver_commission'] - $params['agent_commission'];
+
+            $balanseHistiry = UserBalanceHistory::find((int)$params['order_id']);
+            $balanseHistiry->update([
                 'balance_refill' => $amount,
                 'status' => true
             ]);
 
-            $balanseHistiry =  UserBalanceHistory::where('id',$params['order_id'])->first();
-            DB::transaction(function () use ($amount, $balanseHistiry) {
-                if (DB::table('user_balance')->where('user_id',$balanseHistiry->user_id)->exists()){
-                    $oldBalance = UserBalance::where('user_id',$balanseHistiry->user_id)->first();
-                    UserBalance::where('user_id',$balanseHistiry->user_id)->update([
-                        'balance' => (float)$oldBalance->balance + $amount
-                    ]);
-                } else {
-                    $userBalance = new UserBalance();
-                    $userBalance->fill([
-                        'user_id' => $balanseHistiry->user_id,
-                        'balance' => $amount
-                    ]);
-                    $userBalance->save();
+
+            if ($balanseHistiry->order_pay !== null){
+                $balanse = UserBalance::where('user_id',$balanseHistiry->user_id)->first();
+
+                OrderPay::insert([
+                    'cart_id' => $balanseHistiry->order_pay,
+                    'user_id' => $balanseHistiry->user_id,
+                    'success_pay' => 'true',
+                    'price_pay' => $amount,
+                ]);
+
+                MutualSettlement::insert([
+                    'description' => 'Оплата заказа №'.$balanseHistiry->order_pay,
+                    'type_operation' => 1,
+                    'user_id' => $balanseHistiry->user_id,
+                    'balance' => isset($balanse->balance)?$balanse->balance:0
+                ]);
+            }else{
+                if ($balanseHistiry->save()){
+                    DB::transaction(function () use ($amount, $balanseHistiry) {
+                        if (DB::table('user_balance')->where('user_id',$balanseHistiry->user_id)->exists()){
+                            $oldBalance = UserBalance::where('user_id',$balanseHistiry->user_id)->first();
+                            UserBalance::where('user_id',$balanseHistiry->user_id)->update([
+                                'balance' => (float)$oldBalance->balance + $amount
+                            ]);
+                        } else {
+                            $userBalance = new UserBalance();
+                            $userBalance->fill([
+                                'user_id' => $balanseHistiry->user_id,
+                                'balance' => $amount
+                            ]);
+                            $userBalance->save();
+                        }
+                    },2);
                 }
-            },2);
+            }
         }else{
             if (isset($params['order_id'])){
-                $amount = $params['amount'] - $params['sender_commission'] - $params['receiver_commission'] - $params['commission_credit'] - $params['commission_debit'];
+                $amount = $params['amount'] - $params['sender_commission'] - $params['receiver_commission'] - $params['agent_commission'];
                 UserBalanceHistory::where('id',$params['order_id'])->update([
                     'balance_refill' => $amount,
                     'liqpay_status' => $params['status']

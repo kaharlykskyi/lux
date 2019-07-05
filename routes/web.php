@@ -104,7 +104,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
         Route::match(['get', 'post'],'/{user}/garage','UserController@garageShow')->name('admin.user.garage');
         Route::match(['get', 'post'],'/{user}/garage/add','UserController@garageAdd')->name('admin.user.garage.add');
         Route::post('/update-garage-car/{user}','UserController@updateCar')->name('admin.user.garage.update');
-        Route::post('/change-balance','UserController@userBalance')->name('admin.user.change_balance');
+        Route::post('/change-balance/{user}','UserController@userBalance')->name('admin.user.change_balance');
     });
     Route::match(['get', 'post'],'/create-user','UserController@createUser')->name('admin.user.create');
 

@@ -89,15 +89,24 @@ class CheckoutController extends Controller
 
             $deliveryInf->save();
 
-            Cart::where('session_id',$request->cookie('cart_session_id'))->update([
+            $order = Cart::where('session_id',$request->cookie('cart_session_id'))->first();
+
+            $order->update([
                 'user_id' => $user->id,
                 'oder_status' => 2,
                 'session_id' => null,
                 'oder_dt' => Carbon::now()
             ]);
-        }
 
-        $this->guard()->login($user);
+            if ($order->save()){
+                $this->guard()->login($user);
+
+                if ($data['pay_method'] === 'online'){
+                    return redirect()->route('liqpay',['order' => $order->id]);
+                }
+            }
+
+        }
 
         return response()->json([
            'response' => $request->post()
@@ -205,16 +214,25 @@ class CheckoutController extends Controller
                 }
             }
 
-            Cart::where([
+            $order = Cart::where([
                 ['user_id',Auth::id()],
                 ['oder_status',1]
-            ])->update(['oder_status' => 2,'session_id' => null,'oder_dt' => Carbon::now()]);
+            ])->first();
 
-            try{
-                $this->sendTelegramNotification($products,$user,$sum,$data['order_id']);
-            }catch (\Exception $e){
-                report($e);
+            $order->update(['oder_status' => 2,'session_id' => null,'oder_dt' => Carbon::now()]);
+
+            if ($order->save()){
+                try{
+                    $this->sendTelegramNotification($products,$user,$sum,$data['order_id']);
+                }catch (\Exception $e){
+                    report($e);
+                }
+
+                if ($data['pay_method'] === 'online' && $user_balance < $sum){
+                    return redirect()->route('liqpay',['order' => $order->id]);
+                }
             }
+
         }
 
         return redirect()->route('profile');
@@ -229,7 +247,7 @@ class CheckoutController extends Controller
     }
 
     private function makeTemplateMassage($products, $user, $sum, $oder_id){
-        $template = "<b>Новый заказ:</b> {$oder_id} \n<b>Заказчик:</b> {$user->email}\n<b>ФИО:</b> {$user->sername} {$user->name} {$user->last_name}\n<b>Телефон:</b> {$user->phone}\n<b>Заказанные товары</b>:\n";
+        $template = "<b>Новый заказ:</b> {$oder_id} \n<b>Заказчик:</b> {$user->email}\n<b>ФИО:</b> {$user->fio}\n<b>Телефон:</b> {$user->phone}\n<b>Заказанные товары</b>:\n";
         foreach ($products as $k => $product){
             $template .= $k + 1 .") {$product->articles}| {$product->name} | {$product->price}грн.\n";
         }

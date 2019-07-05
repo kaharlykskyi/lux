@@ -24,11 +24,7 @@ class Controller extends BaseController
         'VOLKSWAGEN' => 'VW'
     ];
 
-    public static $replace_brand = [
-
-    ];
-
-    public function getCartProducts($cart){
+    public static function getCartProducts($cart){
         return DB::table('cart_products')
             ->where('cart_products.cart_id',$cart)
             ->join('products','products.id','=','cart_products.product_id')
@@ -66,5 +62,14 @@ class Controller extends BaseController
 
         return new LengthAwarePaginator(array_slice($array, $offset, $perPage, true), count($array), $perPage, $page,
             ['path' => $request->url(), 'query' => $request->query()]);
+    }
+
+    public static function getSumOrder($products){
+        $sum = 0;
+        foreach ($products as $item){
+            $sum += $item->count * floatval($item->product->price);
+        }
+
+        return $sum;
     }
 }

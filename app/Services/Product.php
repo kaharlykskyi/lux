@@ -7,12 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class Product
 {
-    protected $base_controller;
-
-    public function __construct()
-    {
-        $this->base_controller = new Controller();
-    }
 
     public function addToCart($request,$iser_id){
         $count = (integer)$request->post('product_count');
@@ -52,7 +46,7 @@ class Product
 
         }
 
-        $added_products = $this->base_controller->getCartProducts($cart->id);
+        $added_products = Controller::getCartProducts($cart->id);
         $sum = 0.00;
         foreach ($added_products as $added_product){
             $sum += (float)$added_product->price * (int)$added_product->count;
