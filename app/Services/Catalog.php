@@ -42,7 +42,10 @@ class Catalog
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
-                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
+                            $query->on('p.articles','=','al.DataSupplierArticleNumber');
+                            $query->on('p.brand','=','al.supplierid');
+                        })
                         ->where(DB::raw('al.productid'),DB::raw('pds.productid'))
                         ->where(DB::raw('al.linkageid'),DB::raw('pds.passangercarid'))
                         ->where(DB::raw("al.linkageid"),(int)$param['linkageid'])
@@ -55,7 +58,10 @@ class Catalog
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
-                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
+                            $query->on('p.articles','=','al.DataSupplierArticleNumber');
+                            $query->on('p.brand','=','al.supplierid');
+                        })
                         ->where(DB::raw('al.productid'),DB::raw('pds.productid'))
                         ->where(DB::raw('al.linkageid'),DB::raw('pds.passangercarid'))
                         ->where(DB::raw("al.linkageid"),(int)$param['linkageid'])
@@ -115,7 +121,10 @@ class Catalog
                             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
                             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
                             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
-                            ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                            ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
+                                $query->on('p.articles','=','al.DataSupplierArticleNumber');
+                                $query->on('p.brand','=','al.supplierid');
+                            })
                             ->where(DB::raw('al.productid'),DB::raw('pds.productid'))
                             ->where(DB::raw('al.linkageid'),DB::raw('pds.passangercarid'))
                             ->where(DB::raw("al.linkageid"),(int)$param['linkageid'])
@@ -130,7 +139,10 @@ class Catalog
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
-                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
+                            $query->on('p.articles','=','al.DataSupplierArticleNumber');
+                            $query->on('p.brand','=','al.supplierid');
+                        })
                         ->where(DB::raw('al.productid'),DB::raw('pds.productid'))
                         ->where(DB::raw('al.linkageid'),DB::raw('pds.passangercarid'))
                         ->where(DB::raw("al.linkageid"),(int)$param['linkageid'])
@@ -192,7 +204,10 @@ class Catalog
                             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
                             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
                             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
-                            ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                            ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
+                                $query->on('p.articles','=','al.DataSupplierArticleNumber');
+                                $query->on('p.brand','=','al.supplierid');
+                            })
                             ->where(DB::raw('al.productid'),DB::raw('pds.productid'))
                             ->where(DB::raw('al.linkageid'),DB::raw('pds.passangercarid'))
                             ->where(DB::raw("al.linkageid"),(int)$param['linkageid'])
@@ -210,7 +225,10 @@ class Catalog
                             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
                             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
                             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
-                            ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                            ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
+                                $query->on('p.articles','=','al.DataSupplierArticleNumber');
+                                $query->on('p.brand','=','al.supplierid');
+                            })
                             ->where(DB::raw('al.productid'),DB::raw('pds.productid'))
                             ->where(DB::raw('al.linkageid'),DB::raw('pds.passangercarid'))
                             ->where(DB::raw("al.linkageid"),(int)$param['linkageid'])
@@ -322,10 +340,11 @@ class Catalog
                 $query->on('p.articles','=','article_oe.DataSupplierArticleNumber');
                 $query->on('p.brand','=','article_oe.SupplierId');
             })
+            ->join('manufacturers','manufacturers.id','=','p.brand')
             ->join(DB::raw(config('database.connections.mysql.database') . '.providers'),'providers.id','=','p.provider_id')
             ->where('article_oe.OENbr',$OENrb)
             ->where('article_oe.manufacturerId',(int)$manufacturerId)
-            ->select('p.*','article_oe.SupplierId','providers.name AS provider_name',
+            ->select('p.*','article_oe.SupplierId','providers.name AS provider_name','manufacturers.description AS brand',
                 DB::raw('(SELECT a_img.PictureName 
                             FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 
                             WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=p.brand LIMIT 1) AS file'))

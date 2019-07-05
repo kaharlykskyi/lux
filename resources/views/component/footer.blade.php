@@ -11,8 +11,8 @@
                 <h4>Контакты {{config('app.name')}}!</h4>
                 <p>
                     {{__('Телефон')}}:<span style="display: flex;flex-direction: column;margin-left: 60px;"><a href="tel:{{config('app.company_phone')}}">{{config('app.company_phone')}}</a>
-                    <a href="tel:380933401041">{{__('(+380) 933 401 041')}}</a>
-                    <a href="tel:380687081515">{{__('(+380) 687 081 515')}}</a></span>
+                    <a href="tel:380933401041">{{__('+38(093)340-10-41')}}</a>
+                    <a href="tel:380687081515">{{__('+38(068)708-15-15')}}</a></span>
                 </p>
                 <p>
                     {{__('Адресс')}}:

@@ -322,7 +322,7 @@ class Tecdoc
                     join td1q2018.passanger_car_pds AS pds on al.supplierid = pds.supplierid 
                     inner join td1q2018.suppliers AS s on s.id = al.supplierid 
                     inner join td1q2018.passanger_car_prd AS prd on prd.id = al.productid 
-                    inner join lux.products AS p on p.articles = al.DataSupplierArticleNumber 
+                    inner join lux.products AS p on p.articles = al.DataSupplierArticleNumber  AND p.brand = al.supplierid
                     where al.productid = pds.productid and al.linkageid = pds.passangercarid and al.linkageid = ".(int)$modification_id." and pds.nodeid = passanger_car_trees.id and al.linkagetypeid = 2 AND p.count > 0) AS count_product ";
         }
 
@@ -416,7 +416,10 @@ class Tecdoc
                     ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
                     ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
                     ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
-                    ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                    ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
+                        $query->on('p.articles','=','al.DataSupplierArticleNumber');
+                        $query->on('p.brand','=','al.supplierid');
+                    })
                     ->leftJoin('article_attributes as attr',function ($query){
                         $query->on('attr.DataSupplierArticleNumber','=','al.DataSupplierArticleNumber');
                         $query->on('attr.supplierId','=','al.SupplierId');
@@ -459,7 +462,10 @@ class Tecdoc
                     ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
                     ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
                     ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
-                    ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'))
+                    ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
+                        $query->on('p.articles','=','al.DataSupplierArticleNumber');
+                        $query->on('p.brand','=','al.supplierid');
+                    })
                     ->leftJoin('article_attributes as attr',function ($query){
                         $query->on('attr.DataSupplierArticleNumber','=','al.DataSupplierArticleNumber');
                         $query->on('attr.supplierId','=','al.SupplierId');

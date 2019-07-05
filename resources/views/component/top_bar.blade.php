@@ -15,8 +15,8 @@
                     <div class="phone-block">
                         <span style="line-height: 1;font-size: 16px">Заказ и подбор запчастей с 09:00 до 20:00</span><br>
                         <span style="line-height: 1;" class="text-primary text-left">{{config('app.company_phone')}}</span><br>
-                        <span style="line-height: 1;" class="text-primary text-left">{{__('(+380) 933 401 041')}}</span><br>
-                        <span style="line-height: 1;" class="text-primary text-left">{{__('(+380) 687 081 515')}}</span>
+                        <span style="line-height: 1;" class="text-primary text-left">{{__('+38(093)340-10-41')}}</span><br>
+                        <span style="line-height: 1;" class="text-primary text-left">{{__('+38(068)708-15-15')}}</span>
                     </div>
                 </li>
             </ul>

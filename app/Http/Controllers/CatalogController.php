@@ -114,8 +114,6 @@ class CatalogController extends Controller
                             $request->category = $rubric_category->tecdoc_id;
                         }
 
-
-
                         $this->brands = $this->service->getBrands('category',[
                             'id' => $request->category,
                             'type' => $type,
