@@ -154,6 +154,7 @@ class LiqPayController extends Controller
                     'description' => 'Оплата заказа №'.$balanseHistiry->order_pay,
                     'type_operation' => 1,
                     'user_id' => $balanseHistiry->user_id,
+                    'change' => -$amount,
                     'balance' => isset($balanse->balance)?$balanse->balance:0
                 ]);
             }else{

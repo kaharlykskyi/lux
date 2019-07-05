@@ -155,16 +155,16 @@ class DashboardController extends Controller
     }
 
     public function payMass(Request $request){
+        $filter = [['success_pay','=','true']];
+        if (isset($request->oder_id) && !empty($request->oder_id)) $filter[] = ['cart_id','=',$request->oder_id];
+        if (isset($request->date_pay_start) && !empty($request->date_pay_start)) $filter[] = ['created_at','>=',$request->date_pay_start];
+        if (isset($request->date_pay_end) && !empty($request->date_pay_end)) $filter[] = ['created_at','<=',$request->date_pay_end];
+        if (isset($request->date_price_start) && !empty($request->date_price_start)) $filter[] = ['price_pay','>=',$request->date_price_start];
+        if (isset($request->date_price_end) && !empty($request->date_price_end)) $filter[] = ['price_pay','<=',$request->date_price_end];
+
         $pay_mass = OrderPay::with(['user' => function($query){
-            $query->with(['type_user','deliveryInfo','userCity']);
-        }])
-            ->where('success_pay','true')
-            ->where('cart_id',isset($request->oder_id)?'=':'<>',isset($request->oder_id)?$request->oder_id:null)
-            ->where('created_at',isset($request->date_pay_start)?'>=':'<>',isset($request->date_pay_start)?$request->date_pay_start:null)
-            ->where('created_at',isset($request->date_pay_end)?'<=':'<>',isset($request->date_pay_end)?$request->date_pay_end:null)
-            ->where('price_pay',isset($request->date_price_start)?'>=':'<>',isset($request->date_price_start)?$request->date_price_start:null)
-            ->where('price_pay',isset($request->date_price_end)?'<=':'<>',isset($request->date_price_end)?$request->date_price_end:null)
-            ->paginate(50);
+            $query->with(['type_user','deliveryInfo']);
+        }])->where($filter)->paginate(50);
 
         OrderPay::where('seen',0)->update(['seen' => 1]);
         return view('admin.dashboard.pay_mass',compact('pay_mass'));
