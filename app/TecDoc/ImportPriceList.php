@@ -384,9 +384,11 @@ class ImportPriceList
                             $this->count_fail++;
                         }
                     }else{
-                        $no_brand_product = new NoBrandProduct();
-                        $no_brand_product->fill($array_import);
-                        if ($no_brand_product->save()){
+                        $insert_data = DB::table('no_brand_products')->updateOrInsert(
+                            ['articles' => $array_import['articles'], 'provider_id' => $array_import['provider_id']],
+                            $array_import
+                        );
+                        if ($insert_data){
                             $this->count_success++;
                         } else {
                             $this->count_fail++;
