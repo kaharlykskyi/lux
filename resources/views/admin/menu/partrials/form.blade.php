@@ -45,6 +45,14 @@
     </div>
 </div>
 
+<div class="row form-group">
+    <div class="col col-md-12">
+        <button onclick="submitForm()" type="button" class="btn btn-primary btn-sm">
+            <i class="fa fa-dot-circle-o"></i> {{__('Сохранить')}}
+        </button>
+    </div>
+</div>
+
 <script>
     $('#search_category').on('input',function () {
         const str = $(this).val().trim();
@@ -67,6 +75,7 @@
         $('#save_category').append(`
                             <li id="category_${id}" data-id="${id}" class="list-group-item">
                                 ${name}
+                                <input style="border: 1px solid;padding: 0 5px;margin-left: 15px;" type="text" value="${name}">
                                 <span style="cursor: pointer;" onclick="deleteItem(${id})" class="badge badge-primary badge-pill"><i class="fa fa-trash" aria-hidden="true"></i></span>
                             </li>
                         `);
@@ -93,12 +102,3 @@
     }
 
 </script>
-
-
-<div class="row form-group">
-    <div class="col col-md-12">
-        <button onclick="submitForm()" type="button" class="btn btn-primary btn-sm">
-            <i class="fa fa-dot-circle-o"></i> {{__('Сохранить')}}
-        </button>
-    </div>
-</div>
