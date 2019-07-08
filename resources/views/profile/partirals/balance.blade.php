@@ -32,10 +32,8 @@
                             @if($item->status === 1)
                                 {{__('успешно')}}
                             @else
-                                @if($item->liqpay_status === 'wait_accept')
+                                @if($item->liqpay_status !== 'failure' && $item->liqpay_status !== 'error' && $item->liqpay_status !== null)
                                     {{__('Обрабатываеться')}}
-                                @elseif($item->liqpay_status === 'p24_verify')
-                                    {{__('Ожидается завершение платежа в Приват24')}}
                                 @elseif($item->liqpay_status === 'failure' || $item->liqpay_status === 'error')
                                     {{__('Неуспешный платеж')}}
                                 @elseif($item->liqpay_status === null)

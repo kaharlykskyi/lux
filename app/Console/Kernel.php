@@ -29,6 +29,8 @@ class Kernel extends ConsoleKernel
             ->dailyAt('23:00');
         $schedule->command('discount:auto')
             ->hourly();
+        $schedule->command('paystatus:run')
+            ->everyTenMinutes();
     }
 
     /**

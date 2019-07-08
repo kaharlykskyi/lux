@@ -91,7 +91,7 @@ class LiqPayController extends Controller
             $signature_decode = $liqpay->str_to_sign($this->private_key . $data . $this->private_key);
             if ($signature === $signature_decode){
                 $params = $liqpay->decode_params($data);
-                $this->changeStatusPay($params);
+                self::changeStatusPay($params);
             }
         }
     }
@@ -120,7 +120,7 @@ class LiqPayController extends Controller
             'order_id'      => $pay_user->id
         ));
 
-        $this->changeStatusPay(json_decode(json_encode($status_pay), true));
+        self::changeStatusPay(json_decode(json_encode($status_pay), true));
 
         return response()->json([
             'pay' => $pay_user,
@@ -129,7 +129,7 @@ class LiqPayController extends Controller
     }
 
 
-    private function changeStatusPay($params){
+    public static function changeStatusPay($params){
         if ($params['status'] === 'success'){
             $amount = $params['amount'] - $params['sender_commission'] - $params['receiver_commission'] - $params['agent_commission'];
 
