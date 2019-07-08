@@ -1033,9 +1033,17 @@ body .modal-content{
 }
 
 #root-category-modification .list-group-item{
-    background: transparent;
+    color: #348ccb;
+    font: 12px/20px Arial,regular;
+    text-decoration: underline !important;
     padding: 5px 15px;
-    text-decoration: underline;
+    background: transparent;
+}
+
+#root-category-modification .list-group-item:hover{
+    color: #FF7A00;
+    font: 12px/20px Arial,regular;
+    text-decoration: none;
 }
 
 #reviewStars-input input:checked ~ label, #reviewStars-input label, #reviewStars-input label:hover, #reviewStars-input label:hover ~ label {

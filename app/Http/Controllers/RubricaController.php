@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\{AllCategoryTree, HomeCategoryGroup, Services\Rubric, TecDoc\Tecdoc};
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RubricaController extends Controller
 {
@@ -44,7 +45,9 @@ class RubricaController extends Controller
             $links = [(object)['title' => $category->description]];
 
             if (!isset($request->model) && !isset($request->brand)){
-                $brands = $this->tecdoc->getBrands();
+                $brands = DB::table('show_brand')
+                    ->where('ispassengercar','=','true')
+                    ->select('brand_id AS id','description')->get();
             }
             if ($request->has('brand') && !isset($request->model)){
                 $models = $this->tecdoc->getModels($request->brand);
