@@ -13,7 +13,7 @@
 
     <div class="container margin-top-20">
         <div class="row">
-            @component('vin_decode.components.header_catalog',['vin' => $vin])
+            @component('vin_decode.components.header_catalog',['vin' => $vin,'show_nav' => $show_nav])
 
             @endcomponent
             <div class="col-xs-12 col-sm-4">

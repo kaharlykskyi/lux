@@ -96,9 +96,18 @@ class VinDecodeController extends Controller
             $category = $response_data['category'];
             return view('vin_decode.catalog_img', compact('catalog_data','vin','vin_title','category'));
         } else {
-            $response_data = $this->service->getCatalogForGroup($data);
-            $category = $response_data['category'];
-            return view('vin_decode.catalog_group',compact('vin','vin_title','category'));
+            try{
+                $response_data = $this->service->getCatalogForGroup($data);
+                $category = $response_data['category'];
+                return view('vin_decode.catalog_group',compact('vin','vin_title','category'));
+            }catch (\Exception $exception){
+                $response_data = $this->service->getCatalogForImage($data);
+                $catalog_data = $response_data['catalog_data'];
+                $category = $response_data['category'];
+                $show_nav = false;
+                return view('vin_decode.catalog_img', compact('catalog_data','vin','vin_title','category','show_nav'));
+            }
+
         }
 
 

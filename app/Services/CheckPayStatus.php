@@ -65,7 +65,11 @@ final class CheckPayStatus
             ])->get();
 
         foreach ($pay as $item){
-            LiqPayController::changeStatusPay(json_decode(json_encode($item), true));
+            try{
+                LiqPayController::changeStatusPay(json_decode(json_encode($item), true));
+            }catch (\Exception $exception){
+                report($exception);
+            }
         }
     }
 }

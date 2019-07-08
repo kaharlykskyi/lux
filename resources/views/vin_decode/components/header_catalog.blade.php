@@ -12,6 +12,7 @@
     </form>
 </div>
 
+@if(!isset($show_nav))
 <div class="col-xs-12 filter-section padding-10">
     <ul class="nav nav-pills">
         <li role="presentation" onclick="$.post(`{{route('vin_decode.catalog')}}`,{'vin_catalog_type':'quickGroup','_token':'{{csrf_token()}}'},function() {location.reload();});" id="quickGroup"><a href="#">{{__('Поиск по групам')}}</a></li>
@@ -28,6 +29,7 @@
         }
     });
 </script>
+@endif
 <div class="col-xs-12">
     @if (session('status'))
         <div class="row">
