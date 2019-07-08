@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\{CallOrder, Cart, CartProduct, NoBrandProduct, OrderPay, Page, TopMenu};
+use App\{CallOrder, Cart, CartProduct, NoBrandProduct, OrderPay, Page, Services\Home, TopMenu};
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\{Facades\Auth, Facades\Cache, Facades\Cookie, Facades\View};
@@ -27,6 +27,8 @@ class InitApp
         if (!Cookie::has('vin_catalog')){
             Cookie::queue('vin_catalog', 'quickGroup');
         }
+
+        $search_cars = (new Home())->getSearchCars($request);
 
         if ($request->isMethod('get')){
             if (stristr('/admin',$request->getRequestUri())){
@@ -62,7 +64,8 @@ class InitApp
             'top_menu_global' => isset($top_menu)?$top_menu:[],
             'count_new_orders_global' => isset($count_new_orders)?$count_new_orders:0,
             'count_new_call_orders_global' => isset($count_new_call_orders)?$count_new_call_orders:0,
-            'count_new_pay_mass_global' => isset($count_new_pay_mass)?$count_new_pay_mass:0
+            'count_new_pay_mass_global' => isset($count_new_pay_mass)?$count_new_pay_mass:0,
+            'search_cars' => $search_cars
         ]);
 
         return $next($request);

@@ -69,14 +69,18 @@
                     @isset($top_menu_global)
                         @foreach($top_menu_global as $category)
                             @php
-                                $sub = json_decode($category->tecdoc_category)
+                                $sub = json_decode($category->tecdoc_category);
                             @endphp
                             <li @isset($sub)class="dropdown"@endisset>
                                 <a class="dropdown-toggle" data-toggle="dropdown" href=".#">{{$category->title}} </a>
                                 @isset($sub)
                                     <ul class="dropdown-menu multi-level animated-2s fadeInUpHalf">
                                         @foreach($sub as $item)
-                                            <li><a href="{{route('rubric.choose_car',$item->id)}}"> {{isset($item->custom_name)?$item->custom_name:$item->name}} </a></li>
+                                            @if(isset($search_cars[0]))
+                                                <li><a href="{{route('catalog',$item->id)}}?car={{$search_cars[0]['cookie']['modification_auto']}}"> {{isset($item->custom_name)?$item->custom_name:$item->name}} </a></li>
+                                            @else
+                                                <li><a href="{{route('rubric.choose_car',$item->id)}}"> {{isset($item->custom_name)?$item->custom_name:$item->name}} </a></li>
+                                            @endif
                                         @endforeach
                                     </ul>
                                 @endisset

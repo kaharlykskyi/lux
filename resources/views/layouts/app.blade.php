@@ -51,9 +51,7 @@
     <!-- Page Wrapper -->
     <div id="wrap" class="layout-1">
         <!-- Top bar -->
-        @component('component.top_bar')
-
-        @endcomponent
+        @include('component.top_bar')
 
         <!-- Header -->
         @component('component.header')
