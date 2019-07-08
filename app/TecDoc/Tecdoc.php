@@ -562,24 +562,29 @@ class Tecdoc
         ");
     }
 
-    public function getManufacturerForOed($oem_id,$matchcode,$alies_manfactias){
+    public function getManufacturerForOed(array $params,$alies_manfactias){
 
-        $lifter = [
-            ['oe.OENbr',$oem_id]
-        ];
-
-        if (isset($matchcode)){
-            $str = isset($alies_manfactias[$matchcode])?$alies_manfactias[$matchcode]:$matchcode;
-            $lifter[] = ['m.matchcode',$str];
+        if (isset($params['OENbr'])){
+            return DB::connection($this->connection)
+                ->table('manufacturers as m')
+                ->join('article_oe as oe','oe.manufacturerId','=','m.id')
+                ->where('oe.OENbr',$params['OENbr'])
+                ->select(DB::raw('m.id, m.matchcode, m.description'))
+                ->distinct()
+                ->first();
+        }elseif(isset($params['trademark'])) {
+            $str = isset($alies_manfactias[$params['trademark']])?$alies_manfactias[$params['trademark']]:$params['trademark'];
+            return DB::connection($this->connection)
+                ->table('manufacturers as m')
+                ->join('article_oe as oe','oe.manufacturerId','=','m.id')
+                ->where('m.matchcode',$str)
+                ->orWhere('m.description',$str)
+                ->select(DB::raw('m.id, m.matchcode, m.description'))
+                ->distinct()
+                ->first();
+        }else{
+            return null;
         }
-
-        return DB::connection($this->connection)
-            ->table('manufacturers as m')
-            ->join('article_oe as oe','oe.manufacturerId','=','m.id')
-            ->where($lifter)
-            ->select(DB::raw('m.id, m.matchcode, m.description'))
-            ->distinct()
-            ->first();
     }
 
     /**
@@ -931,7 +936,7 @@ class Tecdoc
             ->join('suppliers AS sp',DB::raw('ac.SupplierId'),DB::raw('sp.id'))
             ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
                 $query->on(DB::raw('p.articles'),DB::raw('ac.PartsDataSupplierArticleNumber'));
-                $query->on(DB::raw('p.brand'),DB::raw('ac.SupplierId'));
+                $query->on('p.brand','ac.SupplierId');
             })
             ->where(DB::raw('ac.OENbr'),$OENbr)
             ->where(DB::raw('ac.manufacturerId'),(int)$manufacturer_id)

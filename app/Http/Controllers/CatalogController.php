@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AllCategoryTree;
+use App\Product;
 use App\Services\Catalog;
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
@@ -140,7 +141,10 @@ class CatalogController extends Controller
             case isset($request->pcode) || !empty($request->query('query')):
                 $OENbr = isset($request->pcode)?$request->pcode:$request->query('query');
 
-                $manufacturer = $this->tecdoc->getManufacturerForOed($OENbr,isset($request->trademark)?$request->trademark:null,$this->alias_manufactures);
+                $manufacturer = $this->tecdoc->getManufacturerForOed([
+                    'OENbr' => isset($request->trademark)?null:$OENbr,
+                    'trademark' =>isset($request->trademark)?$request->trademark:null
+                ],$this->alias_manufactures);
 
                 if (isset($manufacturer)){
                     $this->brands = $this->service->getBrands('pcode',['OENbr' =>$OENbr,'manufacturer' => $manufacturer->id]);
@@ -156,7 +160,20 @@ class CatalogController extends Controller
                         ],
                         'supplier' => isset($request->supplier)?$this->filter_supplier:null
                     ],$this->sort_prise);
-                } else {
+
+                    $original_products = Product::join(DB::raw(config('database.connections.mysql_tecdoc.database').'.manufacturers m'),'m.id','=','products.brand')
+                        ->where('products.brand',$manufacturer->id)
+                        ->where('products.articles',$OENbr)
+                        ->select('products.*','m.description AS matchcode')
+                        ->distinct()
+                        ->get();
+
+                    $this->catalog_products = $this->catalog_products->getCollection()->toArray();
+                    foreach ($original_products as $item){
+                        array_push($this->catalog_products,$item);
+                    }
+                    $this->catalog_products = $this->arrayPaginator($this->catalog_products,$request,$this->pre_products);
+                }else{
                     $this->catalog_products = $this->arrayPaginator($this->catalog_products,$request,$this->pre_products);
                 }
                 break;
