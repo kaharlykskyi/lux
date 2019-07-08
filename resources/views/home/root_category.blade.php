@@ -29,8 +29,8 @@
                                             @endforeach
                                         </div>
                                         <div class="col-sm-4 hidden-xs">
-                                            @isset($img_data)
-                                                <div class="category-img" style="background-image: url('{{asset('images/catalog/' . $category->logo)}}')">
+                                            @isset($category['root']->logo)
+                                                <div class="category-img" style="background-image: url('{{asset('images/catalog/' . $category['root']->logo)}}')">
 
                                                 </div>
                                             @endisset
