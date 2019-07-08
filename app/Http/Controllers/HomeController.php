@@ -19,6 +19,7 @@ class HomeController extends Controller
     {
         parent::__construct();
         $this->tecdoc = new Tecdoc('mysql_tecdoc');
+        $this->tecdoc->setType('passenger');
         $this->service = new Home();
     }
 
@@ -47,8 +48,27 @@ class HomeController extends Controller
 
     public function allBrands(Request $request){
 
+        if (isset($request->rootcategory)){
+            $root = CategoresGroupForCar::findOrFail($request->rootcategory);
+            $sub = json_decode($root->categories);
+            $sub_categories = [];
+
+            $modification = $request->modification_auto;
+
+            foreach ($sub as $item){
+                if (!empty($item)){
+                    $category = Category::findOrFail((int)$item);
+                    $sub_categories[] = [
+                        'root' => $category,
+                        'sub' => $this->tecdoc->getSections($modification,$category->tecdoc_id,null,true)
+                    ];
+                }
+            }
+
+            return view('home.root_category',compact('root','sub_categories','modification'));
+        }
+
         if (isset($request->brand) && isset($request->model)){
-            $this->tecdoc->setType('passenger');
             $brand = $this->tecdoc->getBrandById($request->brand);
             $model = $this->tecdoc->getModelById($request->model);
             $modification = $this->tecdoc->getModifications($request->model);
@@ -57,8 +77,6 @@ class HomeController extends Controller
         }
 
         if (isset($request->modification_auto)){
-            $type = isset($request->type_auto)?$request->type_auto:'passenger';
-            $this->tecdoc->setType($type);
             if ($request->has('parent_id')){
                 $categories = $this->tecdoc->getSectionName((int)$request->parent_id);
                 $categories[0]->subCategories = $this->tecdoc->getSections($request->modification_auto,(int)$request->parent_id,null,true);
@@ -72,7 +90,6 @@ class HomeController extends Controller
         }
 
         if (isset($request->brand)){
-            $this->tecdoc->setType('passenger');
             $brand = $this->tecdoc->getBrandById($request->brand);
             $brand[0]->models = $this->tecdoc->getModels($brand[0]->id);
 
@@ -82,7 +99,6 @@ class HomeController extends Controller
         $brands = DB::table('show_brand')
             ->where('ispassengercar','=','true')
             ->select('brand_id AS id','description')->get();
-        $this->tecdoc->setType('passenger');
         foreach ($brands as $k => $brand){
             $brands[$k]->models = $this->tecdoc->getModels($brand->id);
         }

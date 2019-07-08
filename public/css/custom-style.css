@@ -531,7 +531,7 @@ header .logo img {
 .filter-section .search-car__list > li{
     border: 2px solid #ccc;
     border-radius: 15px;
-    width: 210px;
+    width: 260px;
 }
 
 #modification_auto{
@@ -1032,7 +1032,7 @@ body .modal-content{
     height: 75px;
 }
 
-#root-category-modification .list-group-item{
+#root-category-modification .list-group-item,.category-car a.list-group-item{
     color: #348ccb;
     font: 12px/20px Arial,regular;
     text-decoration: underline !important;
@@ -1040,10 +1040,14 @@ body .modal-content{
     background: transparent;
 }
 
-#root-category-modification .list-group-item:hover{
+#root-category-modification .list-group-item:hover,.category-car a.list-group-item:hover{
     color: #FF7A00;
     font: 12px/20px Arial,regular;
     text-decoration: none;
+}
+
+.category-car .h6{
+    text-decoration: underline !important;
 }
 
 #reviewStars-input input:checked ~ label, #reviewStars-input label, #reviewStars-input label:hover, #reviewStars-input label:hover ~ label {

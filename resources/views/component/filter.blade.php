@@ -30,7 +30,7 @@
                                     <div class="col-xs-12" id="filter-cars-block">
                                         <div id="history-car" style="display: none"></div>
                                         <ul class="search-car__list">
-                                            <li>
+                                            <li class="hidden">
                                                 <select class="filter_select" name="type_auto" id="type_auto">
                                                     <option selected value="passenger">{{__('Легковой')}}</option>
                                                 </select>
