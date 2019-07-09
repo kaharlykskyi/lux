@@ -68,7 +68,7 @@ class LiqPayController extends Controller
             'amount'         => "{$data['amount']}",
             'currency'       => 'UAH',
             'description'    => isset($data['order_id'])
-                                    ?"Оплата заказа №{$data['order_id']}"
+                                    ?"Оплата заказа №{$data['order_id']} на CarMakers"
                                     :'Пополнение баланса на CarMakers',
             'order_id'       => "{$balanceHistory->id}",
             'version'        => '3',

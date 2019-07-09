@@ -60,7 +60,7 @@
                 <label>{{__('Способы оплаты')}}
                     <select name="pay_method" id="pay_method" class="form-control">
                         <option value="receipt" selected >{{__('При получении')}}</option>
-                        <option value="online" >{{__('Онлайн')}}</option>
+                        <option value="online" >{{__('LigPay - Приват24')}}</option>
                     </select>
                 </label>
             </li>
