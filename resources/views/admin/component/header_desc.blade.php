@@ -7,7 +7,7 @@
                     <div class="account-wrap">
                         <div class="account-item clearfix js-item-menu">
                             <div class="content">
-                                <a class="js-acc-btn" href="#">{{Auth::user()->name}}</a>
+                                <a class="js-acc-btn" href="#">{{Auth::user()->fio}}</a>
                             </div>
                             <div class="account-dropdown js-dropdown">
                                 <div class="account-dropdown__body">

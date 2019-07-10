@@ -188,5 +188,6 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
         Route::post('/products/create-brand','NoBrandProductController@createBrand')->name('admin.no_brands.create_brand');
         Route::match(['get', 'post'], '/alias','NoBrandProductController@brandAlias')->name('admin.no_brands.alis');
         Route::get('/alias/{id}','NoBrandProductController@brandAliasDelete')->name('admin.no_brands.delete');
+        Route::post('/products/delete-brand','NoBrandProductController@deleteNoBrandProduct')->name('admin.no_brands.delete_product');
     });
 });

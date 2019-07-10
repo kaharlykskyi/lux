@@ -96,4 +96,11 @@ class NoBrandProductController extends Controller
         AliasBrand::destroy((int)$request->id);
         return back();
     }
+
+    public function deleteNoBrandProduct(Request $request){
+        $data = $request->except('_token');
+        NoBrandProduct::where('brand','=',isset($data['brand_name'])?$data['brand_name']:'')
+            ->delete();
+        return redirect()->back()->with('status','Удаление прошло успешно');
+    }
 }

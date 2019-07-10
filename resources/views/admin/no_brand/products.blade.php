@@ -22,8 +22,9 @@
                         <tr>
                             <th>{{__('Бренд')}}</th>
                             <th>{{__('Кол. товаров')}}</th>
-                            <th>{{__('Создать синоним')}}</th>
-                            <th>{{__('Создать бренд')}}</th>
+                            <th>{{__('Синоним')}}</th>
+                            <th>{{__('Бренд')}}</th>
+                            <th>{{__('Удалить')}}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -44,7 +45,7 @@
                                                 @endforeach
                                             </select>
                                             <button style="padding: 0 5px;font-size: 13px;" class="btn btn-success small">
-                                                создать
+                                                создать синоним
                                             </button>
                                         </form>
                                     </td>
@@ -54,6 +55,15 @@
                                             <input type="hidden" name="brand_name" value="{{$no_brand->brand}}">
                                             <button style="padding: 0 5px;font-size: 13px;" class="btn btn-primary small">
                                                 создать бренд
+                                            </button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="{{route('admin.no_brands.delete_product')}}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="brand_name" value="{{$no_brand->brand}}">
+                                            <button style="padding: 0 5px;font-size: 13px;" class="btn btn-danger small">
+                                                удалить
                                             </button>
                                         </form>
                                     </td>

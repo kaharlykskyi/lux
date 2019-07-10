@@ -1198,14 +1198,12 @@ body .modal-content{
 }
 
 .list-product-item .cart-btn{
-    width: 30px;
-    height: 30px;
+    padding: 5px 10px;
     min-width: 40px;
     background: #ffe289;
     border-radius: 4px;
     display: inline-block;
     text-align: center;
-    padding: 9px 0;
 }
 
 /*-----SITE PAGE-----*/
