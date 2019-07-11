@@ -326,7 +326,7 @@ class Catalog
         $list_product_loc = Product::with('provider')
             ->where('products.articles',$OENrb)
             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.manufacturers m'),'m.id','=','products.brand')
-            ->select('products.*','m.matchcode AS brand')
+            ->select('products.*','m.description AS brand')
             ->orderBy('products.price')
             ->get();
 

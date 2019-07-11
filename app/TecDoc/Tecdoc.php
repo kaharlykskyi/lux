@@ -756,7 +756,10 @@ class Tecdoc
                 $query->on('c.manufacturerId','=','a.manufacturerId');
             })
             ->join('suppliers as s','s.id','=','c.SupplierId')
-            ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),'p.articles','=','c.PartsDataSupplierArticleNumber')
+            ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),function ($query){
+                $query->on('p.articles','=','c.PartsDataSupplierArticleNumber');
+                $query->on('p.brand','=','c.SupplierId');
+            })
             ->where('a.datasupplierarticlenumber',$number)
             ->where('a.SupplierId',(int)$brand_id)
             ->where('p.articles','<>',$number)
@@ -775,7 +778,10 @@ class Tecdoc
     {
         return DB::connection($this->connection)
             ->table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_acc as acc'))
-            ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('acc.AccDataSupplierArticleNumber'))
+            ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
+                $query->on('p.articles','acc.AccDataSupplierArticleNumber');
+                $query->on('p.brand','acc.AccSupplierId');
+            })
             ->where(DB::raw('acc.DataSupplierArticleNumber'),$number)
             ->select(DB::raw('acc.AccSupplierId AS supplierId, acc.AccDataSupplierArticleNumber DataSupplierArticleNumber, p.brand matchcode, p.id, p.name, p.price,p.old_price,p.count,
                     (SELECT a_img.PictureName 
