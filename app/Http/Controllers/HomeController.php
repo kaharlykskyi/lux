@@ -142,6 +142,11 @@ class HomeController extends Controller
     public function getSectionParts(Request $request){
         $data = $request->except('_token');
 
+        if (isset($data['fo_category'])){
+            $fo_category = $data['fo_category'];
+            unset($data['fo_category']);
+        }
+
         $coocie_cars = $request->cookie('search_cars');
         if(isset($coocie_cars)){
             $cars = json_decode($coocie_cars,true);
@@ -158,6 +163,13 @@ class HomeController extends Controller
         } else {
             $cars[] = $data;
             $cookies =  Cookie::forever('search_cars',json_encode($cars));
+        }
+
+        if (isset($fo_category)){
+            return response()->json([
+                'fo_category' => true,
+                'link' => route('catalog',$fo_category).'?car='.$data['modification_auto']
+            ])->withCookie($cookies);
         }
 
         $category = CategoresGroupForCar::all();

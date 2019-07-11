@@ -11,13 +11,15 @@
                     <div class="whiteBlock"></div>
                 </li>
 
-                <li class="tab fancyTab">
-                    <div class="arrow-down"><div class="arrow-down-inner"></div></div>
-                    <a id="tab2" href="#tabBody2" role="tab" aria-controls="tabBody2" aria-selected="true" data-toggle="tab" tabindex="0">
-                        <span>{{__('Подбор по VIN')}}</span>
-                    </a>
-                    <div class="whiteBlock"></div>
-                </li>
+                @if(!isset($fo_category))
+                    <li class="tab fancyTab">
+                        <div class="arrow-down"><div class="arrow-down-inner"></div></div>
+                        <a id="tab2" href="#tabBody2" role="tab" aria-controls="tabBody2" aria-selected="true" data-toggle="tab" tabindex="0">
+                            <span>{{__('Подбор по VIN')}}</span>
+                        </a>
+                        <div class="whiteBlock"></div>
+                    </li>
+                @endif
             </ul>
             <div id="myTabContent" class="tab-content fancyTabContent" aria-live="polite">
                 <div class="tab-pane active in fade" id="tabBody1" role="tabpanel" aria-labelledby="tab1" aria-hidden="true" tabindex="0">
@@ -26,6 +28,9 @@
                         <div class="col-md-12">
                             <form method="post" action="{{route('get_section_part')}}" id="search-detail-car-form">
                                 @csrf
+                                @if(isset($fo_category))
+                                    <input type="hidden" name="fo_category" value="{{$fo_category}}">
+                                @endif
                                 <div class="row padding-30">
                                     <div class="col-xs-12" id="filter-cars-block">
                                         <div id="history-car" style="display: none"></div>
@@ -77,7 +82,7 @@
                                 </div>
                             </form>
                             <div class="col-xs-12 margin-top-10" style="display: none;" id="root-category-modification-wrapper">
-                                <p class="h4 text-center">{{__('Категории в которых искать детали')}}</p>
+                                @if(!isset($fo_category))<p class="h4 text-center">{{__('Категории в которых искать детали')}}</p>@endif
                                 <div id="root-category-modification"></div>
                             </div>
                             <script>

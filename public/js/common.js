@@ -72,6 +72,10 @@ $(document).ready(function() {
         `);
         $('#root-category-modification-wrapper').show();
         $.post($('#search-detail-car-form').attr('action'),$('#search-detail-car-form').serialize(),function (data) {
+            if (data.fo_category !== undefined){
+                location.href = data.link;
+                return false;
+            }
             $('#root-category-modification-wrapper').show();
             $('#root-category-modification').html(makeTemplateCategoryCar(data));
         });
