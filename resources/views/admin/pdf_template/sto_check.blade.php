@@ -49,11 +49,11 @@
                     <strong>№ {{$check->id}}</strong>
                 </p>
                 <p style="font-size: 11px;line-height: 1;text-align: left;padding-left: 15px">
-                    Місце складання {{$check->place}}<br>
-                    Дата зверненя {{$check->application_date}}<br>
-                    Дата складання {{$check->date_compilation}}<br>
-                    Приймальник {{$check->acceptor}}<br>
-                    Дата печати {{date('Y-m-d')}}<br>
+                    Місце складання: {{$check->place}}<br>
+                    Дата звернення: {{$check->application_date}}<br>
+                    Дата складання: {{$check->date_compilation}}<br>
+                    Приймальник: {{$check->acceptor}}<br>
+                    Дата печати: {{date('Y-m-d')}}<br>
                 </p>
             </div>
         </div>
@@ -93,11 +93,9 @@
                 <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">№ деталі</th>
                     <th scope="col">Назва</th>
                     <th scope="col">Кількість</th>
                     <th scope="col">Ціна</th>
-                    <th scope="col">Ціна зі снижкою</th>
                     <th scope="col">Сума</th>
                 </tr>
                 </thead>
@@ -109,7 +107,7 @@
                 @endphp
                 @foreach($check->work as $k => $work)
                     @php
-                        $price = (isset($work->price_discount) && $work->price_discount > 0)?$work->price_discount * $work->count:$work->price * $work->count;
+                        $price = $work->price * $work->count;
                         if ($work->type === 'material'){
                             $material_price += $price;
                         }else{
@@ -119,12 +117,10 @@
                     @endphp
                     <tr>
                         <th scope="row">{{$k + 1}}</th>
-                        <td>{{$work->article_operation}}</td>
-                        <td>{{$work->name}}</td>
+                        <td>{{isset($work->article_operation)?"{$work->article_operation}/{$work->name}":$work->name}}</td>
                         <td>{{$work->count}}</td>
                         <td>{{(int)$work->price}}грн.</td>
-                        <td>{{(int)$work->price_discount}}грн.</td>
-                        <td>{{(isset($work->price_discount) && $work->price_discount > 0)?(int)$work->price_discount * $work->count:(int)$work->price * $work->count}}грн.</td>
+                        <td>{{(int)$work->price * $work->count}}грн.</td>
                     </tr>
                 @endforeach
                 </tbody>

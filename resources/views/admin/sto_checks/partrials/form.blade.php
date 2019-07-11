@@ -64,12 +64,10 @@
             <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">№ материала/действия</th>
                 <th scope="col">Название</th>
                 <th scope="col">Кол.</th>
                 <th scope="col">Тип</th>
                 <th scope="col">Цена</th>
-                <th scope="col">Цена со скидкой</th>
                 <th scope="col">Сумма</th>
             </tr>
             </thead>
@@ -83,8 +81,7 @@
                                 <input type="hidden" name="id[]" value="{{$work->id}}">{{$k + 1}}
                             </div>
                         </th>
-                        <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_article[]" value="{{$work->article_operation}}"></td>
-                        <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_name[]" value="{{$work->name}}"></td>
+                        <td><input style="background: #cccccc5e;padding: 5px;" type="text" required name="product_name[]" value="{{isset($work->article_operation)?"{$work->article_operation}/{$work->name}":$work->name}}"></td>
                         <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_col[]" value="{{$work->count}}"></td>
                         <td>
                             <select style="background: #cccccc5e;padding: 5px;" name="type[]">
@@ -93,14 +90,12 @@
                             </select>
                         </td>
                         <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_price[]" value="{{round($work->price,2)}}"></td>
-                        <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_price_discount[]" value="{{round($work->price_discount,2)}}"></td>
                         <td><input onblur="sumProduct()" class="product_sum" style="background: #cccccc5e;padding: 5px;" type="text" name="product_sum[]" value="{{round((float)(($work->price_discount > 0)?$work->price_discount : $work->price) * $work->count,2)}}"></td>
                     </tr>
                 @endforeach
             @else
                 <tr>
                     <th scope="row">1</th>
-                    <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_article[]" value=""></td>
                     <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_name[]" value=""></td>
                     <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_col[]" value=""></td>
                     <td>
@@ -110,7 +105,6 @@
                         </select>
                     </td>
                     <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_price[]" value=""></td>
-                    <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_price_discount[]" value=""></td>
                     <td><input onblur="sumProduct()" class="product_sum" style="background: #cccccc5e;padding: 5px;" type="text" name="product_sum[]" value=""></td>
                 </tr>
             @endif
@@ -216,8 +210,7 @@
             <input type="hidden" name="id[]" value="new">
 @endisset
             </th>
-            <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_article[]" value=""></td>
-            <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_name[]" value=""></td>
+            <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_name[]" required value=""></td>
             <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_col[]" value=""></td>
             <td>
                 <select style="background: #cccccc5e;padding: 5px;" name="type[]">
@@ -226,7 +219,6 @@
                 </select>
             </td>
             <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_price[]" value=""></td>
-            <td><input style="background: #cccccc5e;padding: 5px;" type="text" name="product_price_discount[]" value=""></td>
             <td><input class="product_sum" onblur="sumProduct()" style="background: #cccccc5e;padding: 5px;" type="text" name="product_sum[]" value=""></td>
         </tr>`);
     }

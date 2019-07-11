@@ -47,20 +47,16 @@ class STOCheackManagerController extends Controller
         $stoCkeck->fill($data);
 
         if ($stoCkeck->save()){
-            foreach ($data['product_article'] as $k => $item){
-                if (!empty($item) && !empty($data['product_name'][$k])){
-                    $stoWork = new STOWork();
-                    $stoWork->fill([
-                        'sto_check_id' => $stoCkeck->id,
-                        'article_operation' => $item,
-                        'name' => $data['product_name'][$k],
-                        'count' => $data['product_col'][$k],
-                        'price' => (float)$data['product_price'][$k],
-                        'price_discount' => (float)$data['product_price_discount'][$k],
-                        'type' => $data['type'][$k]
-                    ]);
-                    $stoWork->save();
-                }
+            foreach ($data['product_name'] as $k => $item){
+                $stoWork = new STOWork();
+                $stoWork->fill([
+                    'sto_check_id' => $stoCkeck->id,
+                    'name' => $item,
+                    'count' => !empty($data['product_col'][$k])?$data['product_col'][$k]:1,
+                    'price' => (float)$data['product_price'][$k],
+                    'type' => $data['type'][$k]
+                ]);
+                $stoWork->save();
             }
         }
 
@@ -121,13 +117,11 @@ class STOCheackManagerController extends Controller
                 if (in_array($item,$delete)){
                     STOWork::where('id',(int)$item)->delete();
                 }else{
-                    if (!empty($item) && !empty($data['product_name'][$k])){
+                    if (!empty($item)){
                         STOWork::where('id',(int)$item)->update([
-                            'article_operation' => $data['product_article'][$k],
                             'name' => $data['product_name'][$k],
-                            'count' => $data['product_col'][$k],
+                            'count' => !empty($data['product_col'][$k])?$data['product_col'][$k]:1,
                             'price' => (float)$data['product_price'][$k],
-                            'price_discount' => (float)$data['product_price_discount'][$k],
                             'type' => $data['type'][$k]
                         ]);
                     }
@@ -136,11 +130,9 @@ class STOCheackManagerController extends Controller
                 $stoWork = new STOWork();
                 $stoWork->fill([
                     'sto_check_id' => $id,
-                    'article_operation' => $data['product_article'][$k],
                     'name' => $data['product_name'][$k],
-                    'count' => $data['product_col'][$k],
+                    'count' => !empty($data['product_col'][$k])?$data['product_col'][$k]:1,
                     'price' => (float)$data['product_price'][$k],
-                    'price_discount' => (float)$data['product_price_discount'][$k],
                     'type' => $data['type'][$k]
                 ]);
                 $stoWork->save();
