@@ -94,6 +94,7 @@ class Catalog
                         ->where(DB::raw('p.name'),'LIKE',"{$param['str']}%")
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('sp.id'),DB::raw('p.brand'))
                         ->select(DB::raw('sp.id AS supplierId, sp.description'))
+                        ->orderBy('sp.description')
                         ->distinct()
                         ->get();
                 });
@@ -110,6 +111,7 @@ class Catalog
                         ->where(DB::raw('al.linkagetypeid'),'=',2)
                         ->where('al.linkageid','=',(int)$param['car'])
                         ->select(DB::raw('sp.id AS supplierId, sp.description'))
+                        ->orderBy('sp.description')
                         ->distinct()
                         ->get();
                 });
@@ -131,6 +133,7 @@ class Catalog
                             ->where(DB::raw("pds.nodeid"),(int)$param['nodeid'])
                             ->where(DB::raw('al.linkagetypeid'),2)
                             ->select(DB::raw('s.id AS supplierId, s.description'))
+                            ->orderBy('s.description')
                             ->distinct()
                             ->get();
                     });
@@ -149,6 +152,7 @@ class Catalog
                         ->where(DB::raw("pds.nodeid"),(int)$param['nodeid'])
                         ->where(DB::raw('al.linkagetypeid'),16)
                         ->select(DB::raw('s.id AS supplierId, s.description'))
+                        ->orderBy('s.description')
                         ->distinct()
                         ->get();
                 }
@@ -163,6 +167,7 @@ class Catalog
                     ->where(DB::raw('ac.manufacturerId'),(int)$param['manufacturer'])
                     ->select(DB::raw('sp.id AS supplierId, sp.description'))
                     ->distinct()
+                    ->orderBy('sp.description')
                     ->get();
                 break;
             default:
@@ -190,6 +195,7 @@ class Catalog
                         ->where('al.linkageid','=',(int)$param['car'])
                         ->whereIn('attr.id',$attr_ids)
                         ->select(DB::raw('attr.id, attr.description, attr.displaytitle, attr.displayvalue'))
+                        ->orderBy('attr.description')
                         ->distinct()
                         ->get();
                     break;
@@ -215,6 +221,7 @@ class Catalog
                             ->where(DB::raw('al.linkagetypeid'),2)
                             ->select(DB::raw('attr.id, attr.description, attr.displaytitle, attr.displayvalue'))
                             ->distinct()
+                            ->orderBy('attr.description')
                             ->get();
                     } else {
                         $filters_data = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_attributes AS attr'))
@@ -236,6 +243,7 @@ class Catalog
                             ->where(DB::raw('al.linkagetypeid'),16)
                             ->select(DB::raw('attr.id, attr.description, attr.displaytitle, attr.displayvalue'))
                             ->distinct()
+                            ->orderBy('attr.description')
                             ->get();
                     }
 

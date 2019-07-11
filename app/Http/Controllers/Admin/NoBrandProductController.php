@@ -23,6 +23,7 @@ class NoBrandProductController extends Controller
     public function index(){
         $no_brands = NoBrandProduct::select('brand',DB::raw('COUNT(id) AS count_product'))
             ->groupBy('brand')
+            ->orderBy('brand')
             ->paginate(40);
         $suppliers = $this->tecdoc->getAllSuppliers();
         return view('admin.no_brand.products',compact('no_brands','suppliers'));
@@ -88,7 +89,7 @@ class NoBrandProductController extends Controller
         }
 
         $suppliers = $this->tecdoc->getAllSuppliers();
-        $alias = AliasBrand::paginate(40);
+        $alias = AliasBrand::orderBy('name')->paginate(40);
         return view('admin.no_brand.alias',compact('alias','suppliers'));
     }
 
