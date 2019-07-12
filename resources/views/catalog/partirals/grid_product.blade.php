@@ -60,9 +60,9 @@
                     <p class="rev"></p>
                     @isset($product->price)<div class="price">{{(int)$product->price . __(' грн')}} </div>@endisset
                     @if($product->count > 0 && isset($product->id))
-                        <a href="#." onclick="addCart('{{route('add_cart',$product->id)}}')" class="cart-btn"><i class="icon-basket-loaded"></i></a>
+                        <a href="#." onclick="addCart('{{route('add_cart',$product->id)}}')" class="cart-btn custom-cart-btn">Купить</a>
                     @else
-                        <a href="#." onclick="alert('нет в наличии')" class="cart-btn"><i class="icon-basket-loaded"></i></a>
+                        <a href="#." onclick="alert('нет в наличии')" class="cart-btn custom-cart-btn">Купить</a>
                     @endif</article>
             </div>
         @empty

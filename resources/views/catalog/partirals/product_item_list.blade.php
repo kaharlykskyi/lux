@@ -18,8 +18,8 @@
         @endif
     </div>
     @if($data->count > 0)
-        <a href="#." onclick="addCart('{{route('add_cart',$data->id)}}')" class="cart-btn">КУПИТЬ</a>
+        <a href="#." onclick="addCart('{{route('add_cart',$data->id)}}')" class="cart-btn">Купить</a>
     @else
-        <a href="#." onclick="alert('нет в наличии')" class="cart-btn"><i class="icon-basket-loaded"></i></a>
+        <a href="#." onclick="alert('нет в наличии')" class="cart-btn">Купить</a>
     @endif
 </div>

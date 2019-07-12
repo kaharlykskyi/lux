@@ -1200,10 +1200,22 @@ body .modal-content{
 .list-product-item .cart-btn{
     padding: 5px 10px;
     min-width: 40px;
-    background: #ffe289;
+    background: #08c;
     border-radius: 4px;
     display: inline-block;
     text-align: center;
+    color: #fff;
+}
+
+.product article .cart-btn.custom-cart-btn{
+    border-radius: 5px;
+    width: auto;
+    height: auto;
+    line-height: 1;
+    padding: 8px;
+    background: #08c;
+    color: #fff !important;
+    margin-top: -5px;
 }
 
 /*-----SITE PAGE-----*/
