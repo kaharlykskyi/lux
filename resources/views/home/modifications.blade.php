@@ -22,7 +22,7 @@
                                 @foreach($modification as $item)
                                     @if($item->attributegroup === 'General' && $item->attributetype === 'ConstructionInterval')
                                         <li class="list-group-item margin-bottom-15 row">
-                                            <a href="{{route('all_brands',['modification_auto' => $item->id])}}">
+                                            <a href="{{route('all_brands')}}?modification_auto={{$item->id}}">
                                                 <h6 class="text-uppercase">
                                                     {{$item->name}}<br>
                                                     <span class="small text-right">{{$item->displayvalue}}</span>
