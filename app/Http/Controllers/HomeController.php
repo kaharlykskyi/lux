@@ -88,7 +88,13 @@ class HomeController extends Controller
             if ($request->has('parent_id')){
                 $category_name = str_replace('@','/',$request->parent_id);
                 $categories = AllCategoryTree::where('tecdoc_name',$category_name)->first();
-                $categories->subCategories = $this->tecdoc->getAllCategoryTree($category_name,0,(int)$request->modification_auto);
+                if (isset($categories)){
+                    $categories->subCategories = $this->tecdoc->getAllCategoryTree($category_name,0,(int)$request->modification_auto);
+                }else{
+                    $categories = (object)[];
+                    $categories->tecdoc_name = $category_name;
+                    $categories->subCategories = $this->tecdoc->getAllCategoryTree($category_name,0,(int)$request->modification_auto);
+                }
             }else{
                 $categories = $this->tecdoc->getSections($request->modification_auto);
                 foreach ($categories as $category){
