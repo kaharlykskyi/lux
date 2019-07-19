@@ -1020,7 +1020,7 @@ class Tecdoc
 
     public function getAllCategoryTree($parent = null,$level = null,$modif = null){
         switch ($level){
-            case 0:
+            case 'root':
                 $where = "WHERE prd.assemblygroupdescription='{$parent}'";
                 $select = " prd.description as name,prd.id";
                 break;
