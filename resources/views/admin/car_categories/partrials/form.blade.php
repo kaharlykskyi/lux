@@ -51,31 +51,31 @@
     </div>
     <div class="col-12 col-md-9">
         @php
-            if (isset($car_categories->id)){
+            if (isset($car_categories->id) && isset($car_categories->categories)){
                 $use_category = json_decode($car_categories->categories);
             }else{
                 $use_category = [];
             }
         @endphp
-        <ul id="sortable1" class="connectedSortable">
-            @if(isset($all_car_category) && !empty($all_car_category))
-                @foreach($all_car_category as $category)
+        <ul style="height: 370px;overflow: auto;" id="sortable1" class="connectedSortable">
+            @if(isset($all_category) && !empty($all_category))
+                @foreach($all_category as $category)
                     @if(isset($use_category))
-                        @if(!in_array($category->id,$use_category))
-                            <li date-id="{{$category->id}}" class="ui-state-default">{{$category->name}}</li>
+                        @if(!in_array($category->assemblygroupdescription,$use_category))
+                            <li date-id="{{$category->assemblygroupdescription}}" class="ui-state-default">{{$category->assemblygroupdescription}}</li>
                         @endif
                     @else
-                        <li date-id="{{$category->id}}" class="ui-state-default">{{$category->name}}</li>
+                        <li date-id="{{$category->assemblygroupdescription}}" class="ui-state-default">{{$category->assemblygroupdescription}}</li>
                     @endif
                 @endforeach
             @endif
         </ul>
 
         <ul id="sortable2" class="connectedSortable">
-            @if(isset($all_car_category) && !empty($all_car_category))
-                @foreach($all_car_category as $item)
-                    @if(in_array($item->id,$use_category))
-                        <li date-id="{{$item->id}}" class="ui-state-highlight">{{$item->name}}</li>
+            @if(isset($all_category) && !empty($all_category))
+                @foreach($all_category as $item)
+                    @if(in_array($item->assemblygroupdescription,$use_category))
+                        <li date-id="{{$item->assemblygroupdescription}}" class="ui-state-highlight">{{$item->assemblygroupdescription}}</li>
                     @endif
                 @endforeach
             @endif
@@ -106,7 +106,7 @@
             let use_category_str = '';
 
             for (let item = 0;item < use_category.length;item++){
-                use_category_str += `${$(use_category[item]).attr('date-id')},`;
+                use_category_str += `${$(use_category[item]).attr('date-id')}@`;
             }
 
             $('#categories').val(use_category_str);

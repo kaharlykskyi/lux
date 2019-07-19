@@ -12,8 +12,6 @@
                         <i class="fa fa-list-alt" aria-hidden="true"></i>{{__('Каталог')}}</a>
                     <ul class="list-unstyled navbar__sub-list js-sub-list">
                         <li>
-                            <a href="{{route('admin.category.index')}}">{{__('Категории для типов машин')}}</a>
-                            <a href="{{route('admin.car_categories.index')}}">{{__('Групировка категорий для машин')}}</a>
                             <a href="{{route('admin.product.index')}}">{{__('Товары')}}</a>
                             <a href="{{route('admin.no_brands.products')}}">{{__('Несоотвествия бренда')}}</a>
                             <a href="{{route('admin.no_brands.alis')}}">{{__('Сопоставления бренда')}}</a>
@@ -21,6 +19,7 @@
                             <a href="{{route('admin.show_brand')}}">{{__('Бренды')}}</a>
                             <a href="{{route('admin.filter','use')}}">{{__('Настройки фильтра')}}</a>
                             <a href="{{route('admin.all_category.index')}}">{{__('Общая структура категорий')}}</a>
+                            <a href="{{route('admin.car_categories.index')}}">{{__('Групировка категорий для машин')}}</a>
                             <a href="{{route('admin.home_category.index')}}">{{__('Групировка категорий для главной страницы')}}</a>
                         </li>
                     </ul>

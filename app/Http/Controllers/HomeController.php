@@ -2,7 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\{Banner, CallOrder, CategoresGroupForCar, Category, HomeCategoryGroup, Services\Home, TecDoc\Tecdoc, UserCar};
+use App\{AllCategoryTree,
+    Banner,
+    CallOrder,
+    CategoresGroupForCar,
+    Category,
+    HomeCategoryGroup,
+    Services\Home,
+    TecDoc\Tecdoc,
+    UserCar};
 use Illuminate\Http\Request;
 use Illuminate\Support\{Facades\Auth, Facades\Cookie, Facades\DB, Facades\Validator};
 
@@ -57,10 +65,10 @@ class HomeController extends Controller
 
             foreach ($sub as $item){
                 if (!empty($item)){
-                    $category = Category::findOrFail((int)$item);
+                    $category = AllCategoryTree::where('tecdoc_name',$item)->first();
                     $sub_categories[] = [
-                        'root' => $category,
-                        'sub' => $this->tecdoc->getSections($modification,$category->tecdoc_id,null,true)
+                        'root' => isset($category)?$category:$item,
+                        'sub' => $this->tecdoc->getAllCategoryTree($item,0,(int)$modification)
                     ];
                 }
             }
@@ -78,8 +86,9 @@ class HomeController extends Controller
 
         if (isset($request->modification_auto)){
             if ($request->has('parent_id')){
-                $categories = $this->tecdoc->getSectionName((int)$request->parent_id);
-                $categories[0]->subCategories = $this->tecdoc->getSections($request->modification_auto,(int)$request->parent_id,null,true);
+                $category_name = str_replace('@','/',$request->parent_id);
+                $categories = AllCategoryTree::where('tecdoc_name',$category_name)->first();
+                $categories->subCategories = $this->tecdoc->getAllCategoryTree($category_name,0,(int)$request->modification_auto);
             }else{
                 $categories = $this->tecdoc->getSections($request->modification_auto);
                 foreach ($categories as $category){
@@ -175,8 +184,10 @@ class HomeController extends Controller
         $category = CategoresGroupForCar::all();
 
         foreach ($category as $k => $item){
-            $ids = json_decode($item->categories);
-            $category[$k]->sub_category = Category::whereIn('id',$ids)->get();
+            if (isset($item->categories)){
+                $ids = json_decode($item->categories);
+                $category[$k]->sub_category = $ids;
+            }
         }
 
 

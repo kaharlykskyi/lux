@@ -887,7 +887,7 @@ class Tecdoc
                 ->groupBy('p.articles')
                 ->havingRaw('MIN(p.price)')
                 ->distinct()
-                ->simplePaginate((int)$pre,['p.id']);
+                ->paginate((int)$pre,['p.id']);
         } else{
             return DB::connection($this->connection)
                 ->table(DB::raw('article_links as al'))
@@ -925,7 +925,7 @@ class Tecdoc
                 ->groupBy('p.articles')
                 ->havingRaw('MIN(p.price)')
                 ->distinct()
-                ->simplePaginate((int)$pre,['p.id']);
+                ->paginate((int)$pre,['p.id']);
         }
     }
 
@@ -1018,17 +1018,28 @@ class Tecdoc
         });
     }
 
-    public function getAllCategoryTree($parent = null,$level = null){
-
+    public function getAllCategoryTree($parent = null,$level = null,$modif = null){
         switch ($level){
+            case 0:
+                $where = "WHERE prd.assemblygroupdescription='{$parent}'";
+                $select = " prd.description as name,prd.id";
+                break;
             case 1:
                 $where = "WHERE assemblygroupdescription='{$parent}'";
                 $select = " normalizeddescription as name,usagedescription,id";
                 break;
             default:
                 $where = '';
-                $select = ' assemblygroupdescription as name';
+                $select = ' prd.assemblygroupdescription as name';
         }
+
+        if (isset($modif)){
+            $select .= ", (select COUNT(DISTINCT p.articles) 
+                            from td1q2018.article_links AS al
+                            inner join lux.products AS p on p.articles = al.DataSupplierArticleNumber  AND p.brand = al.supplierid
+                            where al.productid=prd.id AND al.linkagetypeid=2 AND al.linkageid={$modif} AND p.count > 0) AS count_product";
+        }
+
 
         return DB::connection($this->connection)
             ->select("SELECT DISTINCT {$select} FROM prd {$where}");

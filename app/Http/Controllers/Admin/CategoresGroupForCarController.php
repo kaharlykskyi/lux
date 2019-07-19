@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\{CategoresGroupForCar, Category, Http\Controllers\Controller};
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CategoresGroupForCarController extends Controller
@@ -26,8 +27,8 @@ class CategoresGroupForCarController extends Controller
      */
     public function create()
     {
-        $all_car_category = Category::all();
-        return view('admin.car_categories.create',compact('all_car_category'));
+        $all_category = DB::connection('mysql_tecdoc')->table('prd')->select('assemblygroupdescription')->distinct()->get();
+        return view('admin.car_categories.create',compact('all_category'));
     }
 
     /**
@@ -49,7 +50,7 @@ class CategoresGroupForCarController extends Controller
                 ->withErrors($validate)
                 ->withInput();
         }
-        $data['categories'] = json_encode(explode(',',$data['categories']));
+        $data['categories'] = json_encode(explode('@',$data['categories']));
         if ($request->hasFile('logo')){
             $file = $request->file('logo');
             $file_name = time() . '_' . $file->getClientOriginalName();
@@ -83,8 +84,8 @@ class CategoresGroupForCarController extends Controller
     public function edit($id)
     {
         $car_categories = CategoresGroupForCar::find((int)$id);
-        $all_car_category = Category::all();
-        return view('admin.car_categories.edit',compact('car_categories','all_car_category'));
+        $all_category = DB::connection('mysql_tecdoc')->table('prd')->select('assemblygroupdescription')->distinct()->get();
+        return view('admin.car_categories.edit',compact('car_categories','all_category'));
     }
 
     /**
@@ -99,7 +100,7 @@ class CategoresGroupForCarController extends Controller
         $data = $request->except(['_method','_token']);
         $car_categories = CategoresGroupForCar::find((int)$id);
 
-        $data['categories'] = json_encode(explode(',',$data['categories']));
+        $data['categories'] = json_encode(explode('@',$data['categories']));
 
         if ($request->hasFile('logo')){
 

@@ -254,9 +254,11 @@ function makeTemplateCategoryCar(data,modification_auto,type_auto) {
                               </div>
                               <div class="panel-body row">
                                 <div class="list-group" style="background-image: url('${(item.logo !== null)?'/images/catalog/'+item.logo:''}');">`;
-        item.sub_category.forEach(function (sub) {
-            str_data += `<a href="/brands?modification_auto=${modification_auto}&type_auto=${type_auto}&parent_id=${sub.tecdoc_id}" class="list-group-item text-primary border-0" target="_blank">${sub.name}</a>`
-        });
+        if (item.sub_category !== undefined){
+            item.sub_category.forEach(function (sub) {
+                str_data += `<a href="/brands?modification_auto=${modification_auto}&type_auto=${type_auto}&parent_id=${sub.replace(/\//g,"@")}" class="list-group-item text-primary border-0" target="_blank">${sub}</a>`
+            });
+        }
         str_data += '</div></div></div></div>';
     });
 

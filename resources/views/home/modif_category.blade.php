@@ -21,31 +21,52 @@
                                 <span>Искать запчасти в</span>
                             </p>
                             <ul class="list-group">
-                                @foreach($categories as $category)
-                                    @php
-                                        $img_data = \App\Category::where([
-                                            ['tecdoc_id',$category->id],
-                                            ['type','passanger']
-                                        ])->first();
-                                    @endphp
+                                @if (!is_array($categories))
                                     <li class="list-group-item margin-bottom-15 row category-car">
-                                        <h6 class="text-uppercase">{{$category->description}}</h6>
+                                        <h6 class="text-uppercase">{{$categories->tecdoc_name}}</h6>
                                         <div class="list-group col-xs-12 col-sm-8 row">
-                                            @foreach($category->subCategories as $sub)
-                                                <a class="border-0 col-xs-12 col-sm-6 list-group-item" style="@if(isset($sub->count_product) && $sub->count_product==0) opacity: 0.6; @endif" href="{{route('catalog',$sub->id)}}?modification_auto={{$modification[0]->id}}">
-                                                    {{$sub->description}} - [<span class="small text-danger">{{isset($sub->count_product)?$sub->count_product:0}}</span>]
+                                            @foreach($categories->subCategories as $sub)
+                                                @php $name = empty($sub->usagedescription)?$sub->name:$sub->usagedescription; @endphp
+                                                <a class="border-0 col-xs-12 col-sm-6 list-group-item" style="@if(isset($sub->count_product) && $sub->count_product==0) opacity: 0.6; @endif" href="{{route('catalog',$sub->id)}}?car={{$modification[0]->id}}">
+                                                    {{$name}} - [<span class="small text-danger">{{isset($sub->count_product)?$sub->count_product:0}}</span>]
                                                 </a>
                                             @endforeach
                                         </div>
                                         <div class="col-sm-4 hidden-xs">
-                                            @isset($img_data)
-                                                <div class="category-img" style="background-image: url('{{asset('images/catalog/' . $img_data->logo)}}')">
+                                            @isset($categories->image)
+                                                <div class="category-img" style="background-image: url('{{asset('images/catalog/' . $categories->image)}}')">
 
                                                 </div>
                                             @endisset
                                         </div>
                                     </li>
-                                @endforeach
+                                @else
+                                    @foreach($categories as $category)
+                                        @php
+                                            $img_data = \App\Category::where([
+                                                ['tecdoc_id',$category->id],
+                                                ['type','passanger']
+                                            ])->first();
+                                        @endphp
+                                        <li class="list-group-item margin-bottom-15 row category-car">
+                                            <h6 class="text-uppercase">{{$category->description}}</h6>
+                                            <div class="list-group col-xs-12 col-sm-8 row">
+                                                @foreach($category->subCategories as $sub)
+                                                    <a class="border-0 col-xs-12 col-sm-6 list-group-item" style="@if(isset($sub->count_product) && $sub->count_product==0) opacity: 0.6; @endif" href="{{route('catalog',$sub->id)}}?modification_auto={{$modification[0]->id}}">
+                                                        {{$sub->description}} - [<span class="small text-danger">{{isset($sub->count_product)?$sub->count_product:0}}</span>]
+                                                    </a>
+                                                @endforeach
+                                            </div>
+                                            <div class="col-sm-4 hidden-xs">
+                                                @isset($img_data)
+                                                    <div class="category-img" style="background-image: url('{{asset('images/catalog/' . $img_data->logo)}}')">
+
+                                                    </div>
+                                                @endisset
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                @endif
                             </ul>
                         </div>
                     @endisset

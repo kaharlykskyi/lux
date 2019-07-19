@@ -36,9 +36,6 @@
                             <a href="{{route('admin.product.popular')}}">{{__('Популярные товары')}}</a>
                         </li>
                         <li>
-                            <a href="{{route('admin.category.index')}}">{{__('Категории для типов машин')}}</a>
-                        </li>
-                        <li>
                             <a href="{{route('admin.show_brand')}}">{{__('Бренды')}}</a>
                         </li>
                         <li>
