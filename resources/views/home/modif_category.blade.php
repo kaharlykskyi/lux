@@ -26,10 +26,20 @@
                                         <h6 class="text-uppercase">{{$categories->tecdoc_name}}</h6>
                                         <div class="list-group col-xs-12 col-sm-8 row">
                                             @foreach($categories->subCategories as $sub)
-                                                @php $name = empty($sub->usagedescription)?$sub->name:$sub->usagedescription; @endphp
-                                                <a class="border-0 col-xs-12 col-sm-6 list-group-item" style="@if(isset($sub->count_product) && $sub->count_product==0) opacity: 0.6; @endif" href="{{route('catalog',$sub->id)}}?car={{$modification[0]->id}}">
-                                                    {{$name}} - [<span class="small text-danger">{{isset($sub->count_product)?$sub->count_product:0}}</span>]
-                                                </a>
+                                                @php
+                                                    if (!empty($sub->usagedescription)){
+                                                        $name=$sub->usagedescription;
+                                                    }elseif (!empty($sub->normalizeddescription)){
+                                                        $name=$sub->normalizeddescription;
+                                                    }elseif (!empty($sub->description)){
+                                                        $name=$sub->description;
+                                                    }
+                                                @endphp
+                                                @if (isset($sub->count_product) && $sub->count_product > 0)
+                                                    <a class="border-0 col-xs-12 col-sm-6 list-group-item" style="@if(isset($sub->count_product) && $sub->count_product==0) opacity: 0.6; @endif" href="{{route('catalog',$sub->id)}}?car={{$modification[0]->id}}">
+                                                        {{$name}} - [<span class="small text-danger">{{isset($sub->count_product)?$sub->count_product:0}}</span>]
+                                                    </a>
+                                                @endif
                                             @endforeach
                                         </div>
                                         <div class="col-sm-4 hidden-xs">
