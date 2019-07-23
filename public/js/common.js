@@ -294,6 +294,7 @@ function dataFilter(level,link) {
         case 4:
             if($('#modification_auto').val() !== ''){
                 $('#search-detail-car').removeClass('hidden').show();
+                $('.modification_auto_block').addClass('select');
                 $('#car_f').attr('src',`https://yii.dbroker.com.ua/img/all_cars/${$('#model_auto').val()}f.png`);
                 $('#car_s').attr('src',`https://yii.dbroker.com.ua/img/all_cars/${$('#model_auto').val()}s.png`);
             }

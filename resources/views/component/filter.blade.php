@@ -53,12 +53,12 @@
                                                     <option selected value="">{{__('Марка')}}</option>
                                                 </select>
                                             </li>
-                                            <li>
+                                            <li class="model_auto">
                                                 <select class="filter_select" name="model_auto" id="model_auto">
                                                     <option selected value="">{{__('Модель')}}</option>
                                                 </select>
                                             </li>
-                                            <li>
+                                            <li class="modification_auto_block">
                                                 <div id="modification_auto_block" class="position-relative" style="height: 100%;">
                                                     <input type="text" style="cursor: pointer;" name="modification_auto" readonly id="modification_auto" value="{{__('Модификация')}}">
                                                     <b class="button" style="position: absolute;top: 7px;right: 15px;color: #ccc;">▾</b>
@@ -100,12 +100,20 @@
                                     });
                                 });
                                 $('#year_auto').change(function () {
+                                    $('.year_auto .selectric').addClass('select');
+                                    $('.model_auto .selectric').removeClass('select');
+                                    $('.modification_auto_block').removeClass('select');
+                                    $('.brand_auto .selectric').removeClass('select');
                                     dataFilter(1,`{{route('gat_brands')}}?type_auto=${$('#type_auto').val()}`);
                                 });
                                 $('#brand_auto').change(function () {
+                                    $('.brand_auto .selectric').addClass('select');
+                                    $('.model_auto .selectric').removeClass('select');
+                                    $('.modification_auto_block').removeClass('select');
                                     dataFilter(2,`{{route('gat_model')}}?type_auto=${$('#type_auto').val()}&brand_id=${$('#brand_auto').val()}&year_auto=${$('#year_auto').val()}`);
                                 });
                                 $('#model_auto').change(function () {
+                                    $('.model_auto .selectric').addClass('select');
                                     dataFilter(3,`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}`);
                                 });
                             </script>

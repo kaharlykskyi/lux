@@ -23,7 +23,6 @@ class Catalog
             case 'category':
                 $price = Cache::remember('min_max_category_'.$param['id'], 60*24, function () use ($param) {
                     return DB::connection('mysql_tecdoc')->table(DB::raw('article_links as al'))
-                        ->join('suppliers AS sp',DB::raw('al.SupplierId'),DB::raw('sp.id'))
                         ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
                             $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
                             $query->on('p.brand','=','al.SupplierId');
@@ -40,7 +39,6 @@ class Catalog
                 if ($param['type'] === 'passenger'){
                     $price = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'))
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
-                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
                         ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
                             $query->on('p.articles','=','al.DataSupplierArticleNumber');
@@ -56,7 +54,6 @@ class Catalog
                 } else {
                     $price = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'))
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
-                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS s'),DB::raw('s.id'),DB::raw('al.supplierid'))
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
                         ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
                             $query->on('p.articles','=','al.DataSupplierArticleNumber');
@@ -75,7 +72,6 @@ class Catalog
                 break;
             case 'pcode':
                 $price = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_cross AS ac'))
-                    ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('ac.SupplierId'),DB::raw('sp.id'))
                     ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('ac.PartsDataSupplierArticleNumber'))
                     ->where(DB::raw('ac.OENbr'),$param['OENbr'])
                     ->where(DB::raw('ac.manufacturerId'),(int)$param['manufacturer'])

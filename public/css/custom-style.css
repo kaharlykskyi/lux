@@ -1493,6 +1493,10 @@ html .oe-list a {
     background: #F0F0F0;
 }
 
+.selectric.select,.modification_auto_block.select{
+    box-shadow: 1px 1px 10px #0a95da;
+}
+
 @media (max-width: 1200px) {
 
     .fancyTab .fa {
