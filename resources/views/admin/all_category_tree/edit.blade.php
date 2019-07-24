@@ -52,7 +52,7 @@
                                             @if ($errors->has('hurl'))
                                                 <small class="form-text text-danger">{{ $errors->first('hurl') }}</small>
                                             @endif
-                                            <small class="form-text text-info">Должно быть уникальным.Если не заполнить то сгенерируеться автоматически: имя + уровень вложености</small>
+                                            <small class="form-text text-info">Должно быть уникальным.Если не заполнить то сгенерируеться автоматически</small>
                                         @else
                                             <p class="h5">{{$save_category->hurl}}</p>
                                         @endif

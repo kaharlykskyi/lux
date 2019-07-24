@@ -19,9 +19,10 @@ class AllCategoryTreeController extends Controller
     }
 
     public function index(Request $request){
-        $parent = isset($request->parent_category)?$request->parent_category:null;
-        if (isset($parent)){
-            $categories = $this->tecdoc->getAllCategoryTree($parent, $request->level);
+        $parent = null;
+        if (isset($request->parent_category)){
+            $parent = AllCategoryTree::findOrFail((int)$request->parent_category);
+            $categories = $this->tecdoc->getAllCategoryTree($parent->tecdoc_name, $request->level);
         } else{
             $categories = $this->tecdoc->getAllCategoryTree();
         }
@@ -33,33 +34,16 @@ class AllCategoryTreeController extends Controller
     public function edit(Request $request){
 
         if ($request->isMethod('post')){
-            $data = $request->post();
+            $data = $request->except('_token');
+
             $data['level'] = isset($data['level'])?(int)$data['level']:0;
             $data['show'] = isset($data['show'])?1:0;
-            $data['hurl'] = isset($data['hurl'])?$data['hurl']:str_replace([' ',','],'_',$this->transliterateRU($data['name'])) .'_'.$data['level'];
+            $data['hurl'] = isset($data['hurl'])?$data['hurl']:str_replace([' ',',','/'],'_',$this->transliterateRU($data['name']));
 
-            $category = DB::connection('mysql_tecdoc')
-                ->table('prd')
-                ->where('assemblygroupdescription',$data['parent'])
-                ->orWhere('normalizeddescription',$data['parent'])
-                ->orWhere('usagedescription',$data['parent'])
-                ->first();
-
-            switch ($data['level']){
-                case 1:
-                    $parent = AllCategoryTree::where('tecdoc_name',$category->assemblygroupdescription)
-                        ->where('level',$data['level'] - 1)->first();
-                    break;
-                case 2:
-                    $parent = AllCategoryTree::where('tecdoc_name',$category->normalizeddescription)
-                        ->where('level',$data['level'] - 1)->first();
-                    break;
-                default:
-                    $parent = null;
-            }
-
-            $category_save = AllCategoryTree::where('tecdoc_name',$data['tecdoc_name'])
-                ->where('level',$data['level'])->first();
+            $filter = [['level','=',isset($data['level'])?(int)$data['level']:0]];
+            if (isset($data['tecdoc_id'])) $filter[] = ['tecdoc_id','=',(int)$data['tecdoc_id']];
+            else $filter[] = ['tecdoc_name','=',$data['tecdoc_name']];
+            $category_save = AllCategoryTree::where($filter)->first();
 
             if ($request->hasFile('logo')){
 
@@ -75,7 +59,7 @@ class AllCategoryTreeController extends Controller
             if (!isset($category_save)){
                 $save_category = new AllCategoryTree();
                 $save_category->fill([
-                    'parent_category' => isset($parent)?$parent->id:$parent,
+                    'parent_category' => isset($data['parent'])?(int)$data['parent']:null,
                     'hurl' => $data['hurl'],
                     'name' => $data['name'],
                     'image' => isset($file_name)?$file_name:null,
@@ -99,15 +83,15 @@ class AllCategoryTreeController extends Controller
         }
 
         $search_category = trim($request->category);
-        $category = DB::connection('mysql_tecdoc')
-            ->table('prd')
-            ->where('assemblygroupdescription',$search_category)
-            ->orWhere('normalizeddescription',$search_category)
-            ->orWhere('usagedescription',$search_category)
-            ->first();
 
-        $save_category = AllCategoryTree::where('tecdoc_name',$search_category)
-            ->where('level',isset($request->level)?(int)$request->level:0)->first();
+        if (isset($request->id)) $filter[] = ['id','=',(int)$request->id];
+        else $filter[] = ['assemblygroupdescription','=',$search_category];
+        $category = DB::connection('mysql_tecdoc')->table('prd')->where($filter)->first();
+
+        $filter = [['level','=',isset($request->level)?(int)$request->level:0]];
+        if (isset($request->id)) $filter[] = ['tecdoc_id','=',(int)$request->id];
+        else $filter[] = ['tecdoc_name','=',$search_category];
+        $save_category = AllCategoryTree::where($filter)->first();
 
         return view('admin.all_category_tree.edit',compact('category','search_category','save_category'));
     }

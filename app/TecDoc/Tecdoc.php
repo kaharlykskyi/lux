@@ -1020,23 +1020,18 @@ class Tecdoc
 
     public function getAllCategoryTree($parent = null,$level = null,$modif = null){
         switch ($level){
-            case 'root':
+            case 1:
                 $where = "WHERE prd.assemblygroupdescription='{$parent}'";
                 $select = " prd.assemblygroupdescription,
                             prd.description as name,prd.id,
                             prd.normalizeddescription,
-                            prd.usagedescription";
-                break;
-            case 1:
-                $where = "WHERE assemblygroupdescription='{$parent}'";
-                $select = " prd.assemblygroupdescription,
-                            prd.description as name,prd.id,
-                            prd.normalizeddescription,
-                            prd.usagedescription";
+                            prd.usagedescription,act.image,act.name AS custom_name,act.id AS custom_id";
+                $join_where = ' prd.id = act.tecdoc_id';
                 break;
             default:
                 $where = '';
-                $select = ' prd.assemblygroupdescription as name';
+                $select = ' prd.assemblygroupdescription as name,act.image,act.name AS custom_name,act.id AS custom_id';
+                $join_where = ' prd.assemblygroupdescription = act.tecdoc_name';
         }
 
         if (isset($modif)){
@@ -1048,7 +1043,9 @@ class Tecdoc
 
 
         return DB::connection($this->connection)
-            ->select("SELECT DISTINCT {$select} FROM prd {$where}");
+            ->select("SELECT DISTINCT {$select} FROM prd 
+                    LEFT JOIN lux.all_category_trees AS act ON {$join_where}
+                    {$where}");
     }
 
     public function getPdrForId($id){

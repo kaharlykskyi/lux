@@ -68,7 +68,7 @@ class HomeController extends Controller
                     $category = AllCategoryTree::where('tecdoc_name',$item)->first();
                     $sub_categories[] = [
                         'root' => isset($category)?$category:$item,
-                        'sub' => $this->tecdoc->getAllCategoryTree($item,'root',(int)$modification)
+                        'sub' => $this->tecdoc->getAllCategoryTree($item,1,(int)$modification)
                     ];
                 }
             }

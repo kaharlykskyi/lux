@@ -13,6 +13,7 @@
             </div>
         @endif
         <div class="row">
+            @include('admin.component.back')
             <div class="col-md-12">
                 <!-- DATA TABLE -->
                 <h3 class="title-5 m-b-35 m-t-15">{{__('Общие категории сайта')}}</h3>
@@ -34,23 +35,37 @@
                                 @if(!empty($category->name))
                                     <tr>
                                         <th>
-                                            @php $img = DB::table('all_category_trees')->where('tecdoc_name',!empty($category->usagedescription)?$category->usagedescription:$category->name)->where('level',request()->has('level')?(int)request('level'):0)->first(); @endphp
-                                            <img style="width: 35px;height: auto;" src="@if(isset($img->image)) {{asset('images/catalog/' . $img->image)}} @else {{asset('images/map-locator.png')}} @endif" alt="">
+                                            @php
+                                                $category_title = '';
+                                                if(request()->has('level')){
+                                                    if (!empty($category->usagedescription)){
+                                                        $category_title=$category->usagedescription;
+                                                    }elseif (!empty($category->normalizeddescription)){
+                                                        $category_title=$category->normalizeddescription;
+                                                    }elseif (!empty($category->name)){
+                                                        $category_title=$category->name;
+                                                    }
+                                                }else{
+                                                    $category_title = $category->name;
+                                                }
+                                            @endphp
+                                            <img style="width: 35px;height: auto;" src="@if(isset($category->image)) {{asset('images/catalog/' .$category->image)}} @else {{asset('images/map-locator.png')}} @endif" alt="">
                                         </th>
                                         <th>
-                                            @if(!empty($category->usagedescription))
-                                                {{$category->usagedescription}}
+                                            @if (request()->has('level'))
+                                                @php $name4 = !empty($category->usagedescription)?' -->' .$category->usagedescription:'' @endphp
+                                                {{$category->name.' -->'.$category->normalizeddescription . $name4}}
                                             @else
-                                                {{$category->name}}
+                                                {{$category_title}}
                                             @endif
                                         </th>
                                         <th>
                                             <div class="table-data-feature">
-                                                <button onclick="location.href = '{{route('admin.all_category.edit')}}?category={{!empty($category->usagedescription)?$category->usagedescription:$category->name}}&level={{request()->query('level')}}&parent={{$parent}}{{isset($category->id)?'&id='.$category->id:''}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Редактирвать')}}">
+                                                <button onclick="location.href = '{{route('admin.all_category.edit')}}?category={{$category_title}}&level={{request()->query('level')}}{{isset($parent)?'&parent='.$parent->id:''}}{{isset($category->id)?'&id='.$category->id:''}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Редактирвать')}}">
                                                     <i class="zmdi zmdi-edit"></i>
                                                 </button>
-                                                @if((int)request()->query('level') === 0)
-                                                    <button onclick="location.href = '{{route('admin.all_category.index')}}?parent_category={{$category->name}}&level={{request()->has('level')?(int)request()->query('level') + 1:1}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Дочерние категории')}}">
+                                                @if((int)request()->query('level') === 0 && isset($category->custom_id))
+                                                    <button onclick="location.href = '{{route('admin.all_category.index')}}?parent_category={{$category->custom_id}}&level=1'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Дочерние категории')}}">
                                                         <i class="fa fa-sitemap" style="font-size: 17px;" aria-hidden="true"></i>
                                                     </button>
                                                 @endif
