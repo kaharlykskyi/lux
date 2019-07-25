@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\{CallOrder, Cart, CartProduct, OrderPay, Page, Services\Home, STOClients, TopMenu, User};
+use App\{AllCategoryTree, CallOrder, Cart, CartProduct, OrderPay, Page, Services\Home, STOClients, TopMenu, User};
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\{Facades\Auth, Facades\Cache, Facades\Cookie, Facades\View};
@@ -56,7 +56,15 @@ class InitApp
             });
 
             $top_menu = Cache::remember('top_menu', 60*24, function () {
-                return TopMenu::where('show_menu',1)->get();
+                $top_menu = TopMenu::where('show_menu',1)->get();
+                foreach ($top_menu as $item){
+                    if (isset($item->tecdoc_category)){
+                        $sub_cat = json_decode($item->tecdoc_category);
+                        $item->sub_categores = AllCategoryTree::whereIn('id',$sub_cat)->get();
+                    }
+
+                }
+                return $top_menu;
             });
 
             $cart = Cart::where([

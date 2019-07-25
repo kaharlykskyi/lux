@@ -159,7 +159,6 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     });
     Route::match(['get', 'post'], '/brands','ShowBrandController@index')->name('admin.show_brand');
 
-    Route::get('/search-tecdoc-category','TopMenuController@tecdocCategory')->name('admin.top_menu.tecdoc_category');
     Route::match(['get', 'post'], '/comment','DashboardController@productComment')->name('admin.comment');
     Route::match(['get', 'post'], '/shipping-payment','DashboardController@shippingPayment')->name('admin.shipping_payment');
     Route::get('/popular-product','ProductController@popularProduct')->name('admin.product.popular');

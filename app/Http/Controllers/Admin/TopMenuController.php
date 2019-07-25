@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\TopMenu;
+use App\{AllCategoryTree, TopMenu, Http\Controllers\Controller};
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
 class TopMenuController extends Controller
 {
@@ -28,7 +26,8 @@ class TopMenuController extends Controller
      */
     public function create()
     {
-        return view('admin.menu.create');
+        $all_category = AllCategoryTree::where('level',1)->get();
+        return view('admin.menu.create',compact('all_category'));
     }
 
     /**
@@ -77,7 +76,8 @@ class TopMenuController extends Controller
     public function edit($id)
     {
         $top_menu = TopMenu::findOrFail($id);
-        return view('admin.menu.edit',compact('top_menu'));
+        $all_category = AllCategoryTree::where('level',1)->get();
+        return view('admin.menu.edit',compact('top_menu','all_category'));
     }
 
     /**
@@ -117,15 +117,5 @@ class TopMenuController extends Controller
         Cache::forget('top_menu');
         TopMenu::destroy($id);
         return back()->with('status','Удаление успешно');
-    }
-
-    public function tecdocCategory(Request $request){
-        $data = DB::connection('mysql_tecdoc')
-            ->table('prd')
-            ->where('normalizeddescription','LIKE',"{$request->category}%")
-            ->select('id','normalizeddescription','usagedescription')
-            ->distinct()
-            ->get();
-        return response()->json($data);
     }
 }
