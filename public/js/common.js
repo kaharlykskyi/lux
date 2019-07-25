@@ -254,9 +254,9 @@ function makeTemplateCategoryCar(data,modification_auto,type_auto) {
                               </div>
                               <div class="panel-body row">
                                 <div class="list-group" style="background-image: url('${(item.logo !== null)?'/images/catalog/'+item.logo:''}');">`;
-        if (item.sub_category !== undefined){
-            item.sub_category.forEach(function (sub) {
-                str_data += `<a href="/brands?modification_auto=${modification_auto}&type_auto=${type_auto}&parent_id=${sub.replace(/\//g,"@")}" class="list-group-item text-primary border-0" target="_blank">${sub}</a>`
+        if (item.child_categories !== undefined){
+            item.child_categories.forEach(function (sub) {
+                str_data += `<a href="/brands/${sub.id}?modification_auto=${modification_auto}" class="list-group-item text-primary border-0" target="_blank">${sub.title}</a>`
             });
         }
         str_data += '</div></div></div></div>';

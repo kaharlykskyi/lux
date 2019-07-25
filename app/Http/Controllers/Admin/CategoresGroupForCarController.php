@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\{CategoresGroupForCar, Category, Http\Controllers\Controller};
+use App\{AllCategoryTree, CategoresGroupForCar, Http\Controllers\Controller};
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CategoresGroupForCarController extends Controller
@@ -16,7 +15,8 @@ class CategoresGroupForCarController extends Controller
      */
     public function index()
     {
-        $car_category = CategoresGroupForCar::paginate(40);
+        $car_category = CategoresGroupForCar::with('childCategories')
+            ->whereNull('parent_id')->paginate(40);
         return view('admin.car_categories.index',compact('car_category'));
     }
 
@@ -27,8 +27,9 @@ class CategoresGroupForCarController extends Controller
      */
     public function create()
     {
-        $all_category = DB::connection('mysql_tecdoc')->table('prd')->select('assemblygroupdescription')->distinct()->get();
-        return view('admin.car_categories.create',compact('all_category'));
+        $root_car_category = CategoresGroupForCar::whereNull('parent_id')->get();
+        $all_category = AllCategoryTree::where('level',1)->get();
+        return view('admin.car_categories.create',compact('all_category','root_car_category'));
     }
 
     /**
@@ -57,6 +58,9 @@ class CategoresGroupForCarController extends Controller
             $file->move(public_path() . '/images/catalog/',$file_name);
         }
         $data['logo'] = isset($file_name)?$file_name:null;
+        if ($data['parent_id'] == 0){
+            $data['parent_id'] = null;
+        }
 
         $car_group_category = new CategoresGroupForCar();
         $car_group_category->fill($data);
@@ -84,8 +88,9 @@ class CategoresGroupForCarController extends Controller
     public function edit($id)
     {
         $car_categories = CategoresGroupForCar::find((int)$id);
-        $all_category = DB::connection('mysql_tecdoc')->table('prd')->select('assemblygroupdescription')->distinct()->get();
-        return view('admin.car_categories.edit',compact('car_categories','all_category'));
+        $root_car_category = CategoresGroupForCar::whereNull('parent_id')->get();
+        $all_category = AllCategoryTree::where('level',1)->get();
+        return view('admin.car_categories.edit',compact('car_categories','all_category','root_car_category'));
     }
 
     /**
@@ -117,6 +122,10 @@ class CategoresGroupForCarController extends Controller
             $data['logo'] = $file_name;
         }else{
             unset($data['logo']);
+        }
+
+        if ($data['parent_id'] == 0){
+            $data['parent_id'] = null;
         }
 
 

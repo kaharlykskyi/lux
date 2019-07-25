@@ -57,23 +57,45 @@ class HomeController extends Controller
     public function allBrands(Request $request){
 
         if (isset($request->rootcategory)){
-            $root = CategoresGroupForCar::findOrFail($request->rootcategory);
-            $sub = json_decode($root->categories);
-            $sub_categories = [];
-
+            $root = CategoresGroupForCar::with('childCategories')->findOrFail($request->rootcategory);
             $modification = $request->modification_auto;
 
-            foreach ($sub as $item){
-                if (!empty($item)){
-                    $category = AllCategoryTree::where('tecdoc_name',$item)->first();
-                    $sub_categories[] = [
-                        'root' => isset($category)?$category:$item,
-                        'sub' => $this->tecdoc->getAllCategoryTree($item,1,(int)$modification)
-                    ];
+            if (isset($root->categories)){
+                $sub = json_decode($root->categories);
+                $sub_categories = [];
+                foreach ($sub as $item){
+                    if (!empty($item)){
+                        $custom_data = AllCategoryTree::where('id',$item)->first();
+                        $sub_categories[] = [
+                            'custom_data' => $custom_data,
+                            'tecdoc' => $this->tecdoc->getAllCategoryTree($custom_data->tecdoc_id,'id',(int)$modification)
+                        ];
+                    }
+                }
+                $root->sub_categories = $sub_categories;
+            }
+
+            if ($root->childCategories->isNotEmpty()){
+                foreach ($root->childCategories as $k => $child){
+                    if(isset($child->categories)){
+                        $child_sub = json_decode($child->categories);
+                        $child_sub_categories = [];
+                        foreach ($child_sub as $item){
+                            if (!empty($item)){
+                                $custom_data = AllCategoryTree::where('id',$item)->first();
+                                $child_sub_categories[] = [
+                                    'custom_data' => $custom_data,
+                                    'tecdoc' => $this->tecdoc->getAllCategoryTree($custom_data->tecdoc_id,'id',(int)$modification)
+                                ];
+                            }
+                        }
+
+                        $child->sub_categories = $child_sub_categories;
+                    }
                 }
             }
 
-            return view('home.root_category',compact('root','sub_categories','modification'));
+            return view('home.root_category',compact('root','modification'));
         }
 
         if (isset($request->brand) && isset($request->model)){
@@ -85,21 +107,9 @@ class HomeController extends Controller
         }
 
         if (isset($request->modification_auto)){
-            if ($request->has('parent_id')){
-                $category_name = str_replace('@','/',$request->parent_id);
-                $categories = AllCategoryTree::where('tecdoc_name',$category_name)->first();
-                if (isset($categories)){
-                    $categories->subCategories = $this->tecdoc->getAllCategoryTree($category_name,0,(int)$request->modification_auto);
-                }else{
-                    $categories = (object)[];
-                    $categories->tecdoc_name = $category_name;
-                    $categories->subCategories = $this->tecdoc->getAllCategoryTree($category_name,0,(int)$request->modification_auto);
-                }
-            }else{
-                $categories = $this->tecdoc->getSections($request->modification_auto);
-                foreach ($categories as $category){
-                    $category->subCategories = $this->tecdoc->getSections($request->modification_auto,$category->id,null,true);
-                }
+            $categories = $this->tecdoc->getSections($request->modification_auto);
+            foreach ($categories as $category){
+                $category->subCategories = $this->tecdoc->getSections($request->modification_auto,$category->id,null,true);
             }
             return view('home.modif_category',['categories' => $categories,'modification' => $this->tecdoc->getModificationById($request->modification_auto)]);
         }
@@ -187,15 +197,8 @@ class HomeController extends Controller
             ])->withCookie($cookies);
         }
 
-        $category = CategoresGroupForCar::all();
-
-        foreach ($category as $k => $item){
-            if (isset($item->categories)){
-                $ids = json_decode($item->categories);
-                $category[$k]->sub_category = $ids;
-            }
-        }
-
+        $category = CategoresGroupForCar::with('childCategories')
+            ->whereNull('parent_id')->get();
 
         return response()->json([
             'response' => $category,

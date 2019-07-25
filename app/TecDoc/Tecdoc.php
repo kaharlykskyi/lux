@@ -1028,6 +1028,11 @@ class Tecdoc
                             prd.usagedescription,act.image,act.name AS custom_name,act.id AS custom_id";
                 $join_where = ' prd.id = act.tecdoc_id';
                 break;
+            case 'id':
+                $where = "WHERE prd.id='{$parent}'";
+                $select = " act.id AS custom_id";
+                $join_where = ' prd.id = act.tecdoc_id';
+                break;
             default:
                 $where = '';
                 $select = ' prd.assemblygroupdescription as name,act.image,act.name AS custom_name,act.id AS custom_id';

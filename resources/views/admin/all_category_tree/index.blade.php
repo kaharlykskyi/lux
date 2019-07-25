@@ -17,9 +17,6 @@
             <div class="col-md-12">
                 <!-- DATA TABLE -->
                 <h3 class="title-5 m-b-35 m-t-15">{{__('Общие категории сайта')}}</h3>
-                <span class="small text-info">
-                    Перед редактированием дочерних категори, сначала сохраните родительскую, что бы была коректная связь
-                </span>
                 <div class="table-responsive table-responsive-data2">
                     <table class="table table-data2">
                         <thead>

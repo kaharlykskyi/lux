@@ -56,9 +56,40 @@
                                                             <i class="zmdi zmdi-delete"></i>
                                                         </button>
                                                     </form>
+                                                    @if (isset($item->childCategories) && !empty($item->childCategories))
+                                                        <button onclick="$('#child-categories_{{$item->id}}').toggle();" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Дочерние категории')}}">
+                                                            <i class="fa fa-sitemap" style="font-size: 17px;" aria-hidden="true"></i>
+                                                        </button>
+                                                    @endif
                                                 </div>
                                             </td>
                                         </tr>
+                                        @if (isset($item->childCategories) && !empty($item->childCategories))
+                                            <tr style="display: none;margin: 10px 20px" id="child-categories_{{$item->id}}">
+                                                <td colspan="5">
+                                                    <ul class="list-group">
+                                                        @foreach($item->childCategories as $category)
+                                                            <li style="padding: 5px 10px;" class="list-group-item">
+                                                                {{$category->title}}
+                                                                <div style="position: absolute;top: 3px;right: 16px;" class="table-data-feature">
+                                                                    <button onclick="location.href = '{{route('admin.car_categories.edit',['home_category' => $category->id])}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Редактирвать')}}">
+                                                                        <i class="zmdi zmdi-edit"></i>
+                                                                    </button>
+                                                                    <form onsubmit="if(confirm('DELETE?')){return true}else{return false}"
+                                                                          action="{{route('admin.car_categories.destroy',$category->id)}}" method="post">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Удалить')}}">
+                                                                            <i class="zmdi zmdi-delete"></i>
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @empty
                                         <tr>
                                             <td colspan="5">

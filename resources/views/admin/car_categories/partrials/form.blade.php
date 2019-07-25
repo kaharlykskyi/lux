@@ -36,6 +36,20 @@
 
 <div class="row form-group">
     <div class="col col-md-3">
+        <label for="parent_id" class=" form-control-label">{{__('Главная категория')}}</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <select name="parent_id" id="parent_id" class="form-control">
+            <option value="0">Главная</option>
+            @foreach($root_car_category as $category)
+                <option @if(isset($car_categories->id) && $car_categories->parent_id === $category->id) selected @endif value="{{$category->id}}">{{$category->title}}</option>
+            @endforeach
+        </select>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col col-md-3">
         <label for="logo" class=" form-control-label">{{__('Картинка категории')}}</label>
     </div>
     <div class="col-12 col-md-9">
@@ -61,11 +75,11 @@
             @if(isset($all_category) && !empty($all_category))
                 @foreach($all_category as $category)
                     @if(isset($use_category))
-                        @if(!in_array($category->assemblygroupdescription,$use_category))
-                            <li date-id="{{$category->assemblygroupdescription}}" class="ui-state-default">{{$category->assemblygroupdescription}}</li>
+                        @if(!in_array($category->id,$use_category))
+                            <li date-id="{{$category->id}}" class="ui-state-default">{{$category->name}}</li>
                         @endif
                     @else
-                        <li date-id="{{$category->assemblygroupdescription}}" class="ui-state-default">{{$category->assemblygroupdescription}}</li>
+                        <li date-id="{{$category->id}}" class="ui-state-default">{{$category->name}}</li>
                     @endif
                 @endforeach
             @endif
@@ -74,8 +88,8 @@
         <ul id="sortable2" class="connectedSortable">
             @if(isset($all_category) && !empty($all_category))
                 @foreach($all_category as $item)
-                    @if(in_array($item->assemblygroupdescription,$use_category))
-                        <li date-id="{{$item->assemblygroupdescription}}" class="ui-state-highlight">{{$item->assemblygroupdescription}}</li>
+                    @if(in_array($item->id,$use_category))
+                        <li date-id="{{$item->id}}" class="ui-state-highlight">{{$item->name}}</li>
                     @endif
                 @endforeach
             @endif
