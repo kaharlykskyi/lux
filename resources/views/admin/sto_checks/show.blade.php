@@ -79,6 +79,7 @@
                         <thead>
                         <tr>
                             <th scope="col">#</th>
+                            <th scope="col">№ деталі</th>
                             <th scope="col">Назва</th>
                             <th scope="col">Кількість</th>
                             <th scope="col">Ціна</th>
@@ -103,7 +104,8 @@
                             @endphp
                             <tr>
                                 <th scope="row">{{$k + 1}}</th>
-                                <td>{{isset($work->article_operation)?"{$work->article_operation}/{$work->name}":$work->name}}</td>
+                                <td>{{$work->article_operation}}</td>
+                                <td>{{$work->name}}</td>
                                 <td>{{$work->count}}</td>
                                 <td>{{(int)$work->price}}грн.</td>
                                 <td>{{(int)$work->price * $work->count}}грн.</td>

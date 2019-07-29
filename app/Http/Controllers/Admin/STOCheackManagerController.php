@@ -47,11 +47,12 @@ class STOCheackManagerController extends Controller
         $stoCkeck->fill($data);
 
         if ($stoCkeck->save()){
-            foreach ($data['product_name'] as $k => $item){
+            foreach ($data['product_article'] as $k => $item){
                 $stoWork = new STOWork();
                 $stoWork->fill([
                     'sto_check_id' => $stoCkeck->id,
-                    'name' => $item,
+                    'article_operation' => $item,
+                    'name' => $data['product_name'][$k],
                     'count' => !empty($data['product_col'][$k])?$data['product_col'][$k]:1,
                     'price' => (float)$data['product_price'][$k],
                     'type' => $data['type'][$k]
@@ -117,19 +118,19 @@ class STOCheackManagerController extends Controller
                 if (in_array($item,$delete)){
                     STOWork::where('id',(int)$item)->delete();
                 }else{
-                    if (!empty($item)){
-                        STOWork::where('id',(int)$item)->update([
-                            'name' => $data['product_name'][$k],
-                            'count' => !empty($data['product_col'][$k])?$data['product_col'][$k]:1,
-                            'price' => (float)$data['product_price'][$k],
-                            'type' => $data['type'][$k]
-                        ]);
-                    }
+                    STOWork::where('id',(int)$item)->update([
+                        'article_operation' => $data['product_article'][$k],
+                        'name' => $data['product_name'][$k],
+                        'count' => !empty($data['product_col'][$k])?$data['product_col'][$k]:1,
+                        'price' => (float)$data['product_price'][$k],
+                        'type' => $data['type'][$k]
+                    ]);
                 }
             }else{
                 $stoWork = new STOWork();
                 $stoWork->fill([
                     'sto_check_id' => $id,
+                    'article_operation' => $data['product_article'][$k],
                     'name' => $data['product_name'][$k],
                     'count' => !empty($data['product_col'][$k])?$data['product_col'][$k]:1,
                     'price' => (float)$data['product_price'][$k],

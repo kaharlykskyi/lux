@@ -80,6 +80,7 @@
 <script src="{{asset('admin_area/vendor/perfect-scrollbar/perfect-scrollbar.js')}}"></script>
 <script src="{{asset('admin_area/vendor/chartjs/Chart.bundle.min.js')}}"></script>
 <script src="{{asset('admin_area/vendor/select2/select2.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/maskedinput.min.js')}}"></script>
 @yield('script')
 
 <!-- Main JS-->

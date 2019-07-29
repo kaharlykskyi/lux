@@ -98,9 +98,13 @@
     <i class="fa fa-dot-circle-o"></i> {{__('Сохранить')}}
 </button>
 
-<script>
-    function submit_sto_client_form(obj){
-        $('#sto_client_form').submit();
-        $(obj).attr('disabled','disabled')
-    }
-</script>
+@section('script')
+    <script>
+        $("#phone").mask("+380999999999");
+
+        function submit_sto_client_form(obj){
+            $('#sto_client_form').submit();
+            $(obj).attr('disabled','disabled')
+        }
+    </script>
+@stop
