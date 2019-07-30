@@ -198,7 +198,7 @@ class HomeController extends Controller
         }
 
         $category = CategoresGroupForCar::with('childCategories')
-            ->whereNull('parent_id')->get();
+            ->whereNull('parent_id')->orderByDesc(DB::raw('-`range`'))->get();
 
         return response()->json([
             'response' => $category,

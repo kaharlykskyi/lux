@@ -50,6 +50,19 @@
 
 <div class="row form-group">
     <div class="col col-md-3">
+        <label for="range" class=" form-control-label">{{__('Позиция в меню')}}</label>
+        <small class="form-text text-info">не отрицательные числа</small>
+    </div>
+    <div class="col-12 col-md-9">
+        <input type="number" id="range" name="range" value="{{isset($car_categories->id)?$car_categories->range:old('range')}}" class="form-control">
+        @if ($errors->has('range'))
+            <small class="form-text text-danger">{{ $errors->first('range') }}</small>
+        @endif
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col col-md-3">
         <label for="logo" class=" form-control-label">{{__('Картинка категории')}}</label>
     </div>
     <div class="col-12 col-md-9">

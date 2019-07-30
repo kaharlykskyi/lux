@@ -100,20 +100,20 @@
                                     });
                                 });
                                 $('#year_auto').change(function () {
-                                    $('.year_auto .selectric').addClass('select');
-                                    $('.model_auto .selectric').removeClass('select');
+                                    $('.year_auto').addClass('select');
+                                    $('.model_auto').removeClass('select');
                                     $('.modification_auto_block').removeClass('select');
-                                    $('.brand_auto .selectric').removeClass('select');
+                                    $('.brand_auto').removeClass('select');
                                     dataFilter(1,`{{route('gat_brands')}}?type_auto=${$('#type_auto').val()}`);
                                 });
                                 $('#brand_auto').change(function () {
-                                    $('.brand_auto .selectric').addClass('select');
-                                    $('.model_auto .selectric').removeClass('select');
+                                    $('.brand_auto').addClass('select');
+                                    $('.model_auto').removeClass('select');
                                     $('.modification_auto_block').removeClass('select');
                                     dataFilter(2,`{{route('gat_model')}}?type_auto=${$('#type_auto').val()}&brand_id=${$('#brand_auto').val()}&year_auto=${$('#year_auto').val()}`);
                                 });
                                 $('#model_auto').change(function () {
-                                    $('.model_auto .selectric').addClass('select');
+                                    $('.model_auto').addClass('select');
                                     dataFilter(3,`{{route('get_modifications')}}?type_auto=${$('#type_auto').val()}&model_id=${$('#model_auto').val()}`);
                                 });
                             </script>

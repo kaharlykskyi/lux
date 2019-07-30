@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\{AllCategoryTree, CategoresGroupForCar, Http\Controllers\Controller};
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CategoresGroupForCarController extends Controller
@@ -16,7 +17,7 @@ class CategoresGroupForCarController extends Controller
     public function index()
     {
         $car_category = CategoresGroupForCar::with('childCategories')
-            ->whereNull('parent_id')->paginate(40);
+            ->whereNull('parent_id')->orderByDesc(DB::raw('-`range`'))->paginate(40);
         return view('admin.car_categories.index',compact('car_category'));
     }
 
