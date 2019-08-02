@@ -66,21 +66,35 @@
 
             <div class="collapse navbar-collapse" id="nav-open-btn">
                 <ul class="nav">
-                    @isset($top_menu_global)
-                        @foreach($top_menu_global as $category)
-                            <li @isset($category->sub_categores)class="dropdown"@endisset>
-                                <a class="dropdown-toggle" data-toggle="dropdown" href=".#">{{$category->title}} </a>
-                                @isset($category->sub_categores)
-                                    <ul class="dropdown-menu multi-level animated-2s fadeInUpHalf">
-                                        @foreach($category->sub_categores as $item)
-                                            @if(isset($search_cars[0]))
-                                                <li><a href="{{route('catalog',$item->tecdoc_id)}}?car={{$search_cars[0]['cookie']['modification_auto']}}"> {{$item->name}} </a></li>
-                                            @else
-                                                <li><a href="{{route('rubric.choose_car',$item->tecdoc_id)}}"> {{$item->name}} </a></li>
-                                            @endif
-                                        @endforeach
-                                    </ul>
-                                @endisset
+                    @isset($all_category_global)
+                        @foreach($all_category_global as $category)
+                            <li class="dropdown megamenu">
+                                <a href="./#" class="dropdown-toggle" data-toggle="dropdown">{{$category->title}}</a>
+                                <div class="dropdown-menu animated-2s fadeInUpHalf">
+                                    <div class="mega-inside">
+                                        <div class="row">
+                                            <div class="col-sm-9">
+                                                @foreach($category->childCategories as $child)
+                                                    <div class="col-sm-3">
+                                                        <h6>{{$child->title}}</h6>
+                                                        <ul>
+                                                            @isset($child->sub_categores)
+                                                                @foreach($child->sub_categores as $item)
+                                                                    @if(isset($search_cars[0]))
+                                                                        <li><a href="{{route('catalog',$item->tecdoc_id)}}?car={{$search_cars[0]['cookie']['modification_auto']}}"> {{$item->name}} </a></li>
+                                                                    @else
+                                                                        <li><a href="{{route('rubric.choose_car',$item->tecdoc_id)}}"> {{$item->name}} </a></li>
+                                                                    @endif
+                                                                @endforeach
+                                                            @endisset
+                                                        </ul>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                            <div class="col-sm-3"> <img class="" src="{{asset('images/catalog/' . $category->logo)}}" alt="" > </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </li>
                         @endforeach
                     @endisset

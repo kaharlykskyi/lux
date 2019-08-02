@@ -77,7 +77,7 @@
                                         <img id="car_s" src="" alt="">
                                     </div>
                                     <div class="col-xs-12 text-center">
-                                        <button type="submit" onclick="$('#modification_auto').val($('#modification_auto').attr('data-id'));" style="width: 200px;" class="btn-round btn-sm">{{__('Подобрать')}}</button>
+                                        <button type="submit" onclick="$('#home-page-content').hide();$('#modification_auto').val($('#modification_auto').attr('data-id'));" style="width: 200px;" class="btn-round btn-sm">{{__('Подобрать')}}</button>
                                     </div>
                                 </div>
                             </form>

@@ -6,8 +6,6 @@ use App\{AllCategoryTree,
     Banner,
     CallOrder,
     CategoresGroupForCar,
-    Category,
-    HomeCategoryGroup,
     Services\Home,
     TecDoc\Tecdoc,
     UserCar};
@@ -42,16 +40,14 @@ class HomeController extends Controller
                 ->select('brand_id AS id','description')->limit(20)->get();
 
             $popular_products = $this->service->getPopularProduct();
-            $home_category = HomeCategoryGroup::all();
         }else{
             $brands = [];
             $popular_products = [];
-            $home_category = [];
         }
 
         $slides = Banner::all();
 
-        return view('home.index',compact('search_cars','brands','popular_products','slides','home_category'));
+        return view('home.index',compact('search_cars','brands','popular_products','slides'));
     }
 
     public function allBrands(Request $request){

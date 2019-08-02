@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\{AllCategoryTree, CategoresGroupForCar, Http\Controllers\Controller};
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -66,6 +67,7 @@ class CategoresGroupForCarController extends Controller
         $car_group_category = new CategoresGroupForCar();
         $car_group_category->fill($data);
         $car_group_category->save();
+        Cache::forget('all_category');
         return redirect()->route('admin.car_categories.index')->with('status','Данные сохранены');
     }
 
@@ -132,7 +134,7 @@ class CategoresGroupForCarController extends Controller
 
         $car_categories->fill($data);
         $car_categories->update();
-
+        Cache::forget('all_category');
         return back()->with('status','Данные сохранены');
     }
 
@@ -145,6 +147,7 @@ class CategoresGroupForCarController extends Controller
     public function destroy($id)
     {
         CategoresGroupForCar::where('id',(int)$id)->delete();
+        Cache::forget('all_category');
         return back()->with('status','Категория удалена');
     }
 }

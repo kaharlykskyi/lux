@@ -19,8 +19,7 @@
                             <a href="{{route('admin.show_brand')}}">{{__('Бренды')}}</a>
                             <a href="{{route('admin.filter','use')}}">{{__('Настройки фильтра')}}</a>
                             <a href="{{route('admin.all_category.index')}}">{{__('Общая структура категорий')}}</a>
-                            <a href="{{route('admin.car_categories.index')}}">{{__('Групировка категорий для машин')}}</a>
-                            <a href="{{route('admin.home_category.index')}}">{{__('Групировка категорий для главной страницы')}}</a>
+                            <a href="{{route('admin.car_categories.index')}}">{{__('Групировка категорий')}}</a>
                         </li>
                     </ul>
                 </li>
@@ -112,9 +111,6 @@
                         </li>
                         <li>
                             <a href="{{route('admin.banner.index')}}">{{__('Слайды баннера')}}</a>
-                        </li>
-                        <li>
-                            <a href="{{route('admin.top_menu.index')}}">{{__('Меню')}}</a>
                         </li>
                         <li>
                             <a href="{{route('admin.comment')}}">{{__('Комментарии')}}</a>

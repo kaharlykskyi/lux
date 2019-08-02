@@ -2,10 +2,19 @@
 
 namespace App\Http\Middleware;
 
-use App\{AllCategoryTree, CallOrder, Cart, CartProduct, OrderPay, Page, Services\Home, STOClients, TopMenu, User};
+use App\{AllCategoryTree,
+    CallOrder,
+    Cart,
+    CartProduct,
+    CategoresGroupForCar,
+    OrderPay,
+    Page,
+    Services\Home,
+    STOClients,
+    User};
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\{Facades\Auth, Facades\Cache, Facades\Cookie, Facades\View};
+use Illuminate\Support\{Facades\Auth, Facades\Cache, Facades\Cookie, Facades\DB, Facades\View};
 
 class InitApp
 {
@@ -55,16 +64,22 @@ class InitApp
                 return Page::all();
             });
 
-            $top_menu = Cache::remember('top_menu', 60*24, function () {
-                $top_menu = TopMenu::where('show_menu',1)->get();
-                foreach ($top_menu as $item){
-                    if (isset($item->tecdoc_category)){
-                        $sub_cat = json_decode($item->tecdoc_category);
-                        $item->sub_categores = AllCategoryTree::whereIn('id',$sub_cat)->get();
-                    }
+            $all_category = Cache::remember('all_category', 60*24, function () {
+                $all_category = CategoresGroupForCar::with('childCategories')
+                    ->whereNull('parent_id')->orderByDesc(DB::raw('-`range`'))->get();
 
+                foreach ($all_category as $item){
+                    foreach ($item->childCategories as $child){
+                        if (isset($child->categories)){
+                            $sub_cat = json_decode($child->categories);
+                            if (!empty($sub_cat[0])){
+                                $child->sub_categores = AllCategoryTree::whereIn('id',$sub_cat)->get();
+                            }
+                        }
+                    }
                 }
-                return $top_menu;
+
+                return $all_category;
             });
 
             $cart = Cart::where([
@@ -84,7 +99,7 @@ class InitApp
         View::share([
             'products_cart_global' => isset($products)?$products:null,
             'pages_global' => isset($pages)?$pages:[],
-            'top_menu_global' => isset($top_menu)?$top_menu:[],
+            'all_category_global' => isset($all_category)?$all_category:[],
             'count_new_orders_global' => isset($count_new_orders)?$count_new_orders:0,
             'count_new_call_orders_global' => isset($count_new_call_orders)?$count_new_call_orders:0,
             'count_new_pay_mass_global' => isset($count_new_pay_mass)?$count_new_pay_mass:0,

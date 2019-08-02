@@ -452,7 +452,19 @@ header .ownmenu .nav ul.dropdown-menu .indicator {
 	height: 2px;
 	background: #999;
 }
+a.dropdown-toggle::after {
+    display: none ;
+}
 @media (max-width:767px) {
+header .nav {
+    display: block !important;
+}
+    header .navbar li a {
+        font-size: 14px !important;
+    }
+    header .navbar li a::after {
+        display: inline-block;
+    }
 .ownmenu > li {
 	display: block;
 	width: 100%;
@@ -2924,6 +2936,7 @@ header .navbar {
 header .nav {
 	padding: 0px;
 	margin: 0px;
+    display: flex;
 }
 header .logo {
 	float: left;
@@ -2973,11 +2986,11 @@ header .sticky {
 	transition: 0.2s ease-in-out;
 }
 header .navbar li a {
-	font-size: 16px;
 	color: #fff;
-	font-weight: 500;
-	padding: 16px 15px;
 	letter-spacing: 0px;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 9px 5px;
 }
 .ownmenu .cate-style {
 	text-align: left;

@@ -32,17 +32,13 @@
         @endif
 
         @if(!isset($search_cars) || empty($search_cars))
-            @component('home.component.category',[
-                'home_category' => $home_category
-            ])
-
-            @endcomponent
-
-            @component('home.component.main_page_links',[
-                    'brands' => $brands,
-                    'popular_products' => $popular_products,
-                ])
-            @endcomponent
+            <div id="home-page-content">
+                @component('home.component.main_page_links',[
+                        'brands' => $brands,
+                        'popular_products' => $popular_products,
+                    ])
+                @endcomponent
+            </div>
         @endif
 
         <div class="container">

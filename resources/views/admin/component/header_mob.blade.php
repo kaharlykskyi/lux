@@ -30,7 +30,7 @@
                             <a href="{{route('admin.no_brands.alis')}}">{{__('Сопоставления бренда')}}</a>
                         </li>
                         <li>
-                            <a href="{{route('admin.car_categories.index')}}">{{__('Групировка категорий для машин')}}</a>
+                            <a href="{{route('admin.car_categories.index')}}">{{__('Групировка категорий')}}</a>
                         </li>
                         <li>
                             <a href="{{route('admin.product.popular')}}">{{__('Популярные товары')}}</a>
@@ -43,9 +43,6 @@
                         </li>
                         <li>
                             <a href="{{route('admin.all_category.index')}}">{{__('Общая структура категорий')}}</a>
-                        </li>
-                        <li>
-                            <a href="{{route('admin.home_category.index')}}">{{__('Групировка категорий для главной страницы')}}</a>
                         </li>
                     </ul>
                 </li>
@@ -137,9 +134,6 @@
                         </li>
                         <li>
                             <a href="{{route('admin.banner.index')}}">{{__('Слайды баннера')}}</a>
-                        </li>
-                        <li>
-                            <a href="{{route('admin.top_menu.index')}}">{{__('Меню')}}</a>
                         </li>
                         <li>
                             <a href="{{route('admin.comment')}}">{{__('Комментарии')}}</a>
