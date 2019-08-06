@@ -344,11 +344,11 @@ class Catalog
                 $query->on('p.articles','=','article_oe.DataSupplierArticleNumber');
                 $query->on('p.brand','=','article_oe.SupplierId');
             })
-            ->join('manufacturers','manufacturers.id','=','p.brand')
+            ->join('suppliers','suppliers.id','=','p.brand')
             ->join(DB::raw(config('database.connections.mysql.database') . '.providers'),'providers.id','=','p.provider_id')
             ->where('article_oe.OENbr',$OENrb)
             ->where('article_oe.manufacturerId',(int)$manufacturerId)
-            ->select('p.*','article_oe.SupplierId','providers.name AS provider_name','manufacturers.description AS brand',
+            ->select('p.*','article_oe.SupplierId','providers.name AS provider_name','suppliers.description AS brand',
                 DB::raw('(SELECT a_img.PictureName 
                             FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 
                             WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=p.brand LIMIT 1) AS file'))
