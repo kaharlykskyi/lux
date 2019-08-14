@@ -7,10 +7,6 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class VinDecoder
 {
-
-
-    protected $base_url = 'https://exist.ua';
-
     protected $vin_cat_url = 'https://exist.ua/cat/oe/';
 
     public function getCatalogForImage($data){
@@ -73,15 +69,9 @@ class VinDecoder
         ];
     }
 
-    public function getAjaxData($data){
+    public function getAjaxData($query){
         $ch = curl_init();
-        $postvars = '';
-        foreach($data as $key => $value) {
-            $postvars .= $key . "=" . $value . "&";
-        }
-        curl_setopt($ch,CURLOPT_URL,$this->base_url . '/ajaxQuery.php');
-        curl_setopt($ch,CURLOPT_POST, 1);
-        curl_setopt($ch,CURLOPT_POSTFIELDS,$postvars);
+        curl_setopt($ch,CURLOPT_URL, $query);
         curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch,CURLOPT_CONNECTTIMEOUT ,3);
         curl_setopt($ch,CURLOPT_TIMEOUT, 20);

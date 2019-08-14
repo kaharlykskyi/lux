@@ -46,6 +46,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="{{asset('js/jquery.selectric.min.js')}}"></script>
     <script src="{{asset('js/jquery.colorbox.js')}}"></script>
+    @yield('style')
 </head>
 <body>
     <!-- Page Wrapper -->
