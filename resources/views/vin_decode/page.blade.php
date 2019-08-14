@@ -88,7 +88,7 @@
                                         @php $item_arr = get_object_vars($item)@endphp
                                         <button class="unit-map-point" name="" data-id="{{$item_arr['@code']}}"
                                                 style="left: {{$item_arr['@x1']}}px; top: {{$item_arr['@y1']}}px; width: 56px; height: 72px;"
-                                                title="{{$item_arr['@name']}} " type="button"></button>
+                                                title="{{isset($item_arr['@name'])?$item_arr['@name']:''}} " type="button"></button>
                                     @endforeach
                                 </div>
                             </div>
