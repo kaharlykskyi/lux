@@ -80,6 +80,7 @@ Route::match(['get', 'post'],'/vin-decode','VinDecodeController@index')->name('v
 Route::get('/vin-decode/catalog','VinDecodeController@catalog')->name('vin_decode.catalog');
 Route::get('/vin-decode/catalog/page','VinDecodeController@page')->name('vin_decode.catalog.page');
 Route::get('/vin-decode/quick_group','VinDecodeController@quickGroup')->name('vin_decode.quick_group');
+Route::get('/vin-decode/vin_car','VinDecodeController@vinCar')->name('vin_decode.vin_car');
 
 /*--------CATALOG--------*/
 Route::match(['get', 'post'],'/catalog/{category?}','CatalogController@index')->name('catalog');

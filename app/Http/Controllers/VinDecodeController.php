@@ -25,13 +25,7 @@ class VinDecodeController extends Controller
     }
 
     public function index(Request $request){
-        try{
-            $vin = $request->post('vin');
-            $response = file_get_contents('https://exist.ua/api/v1/laximo/oem/vehicle/?catalog=&task=vin&vin=' . $vin);
-        }catch (Exception $exception){
-            dd($exception);
-            $response = json_encode([]);
-        }
+        $vin = $request->post('vin');
         return view('vin_decode.index',compact('vin','response'));
     }
 
@@ -60,6 +54,13 @@ class VinDecodeController extends Controller
         return response(
             $this->service
                 ->getAjaxData('https://exist.ua/api/v1/laximo/oem/detail/?' . $request->getQueryString())
+        );
+    }
+
+    public function vinCar(Request $request){
+        return response(
+            $this->service
+                ->getAjaxData('https://exist.ua/api/v1/laximo/oem/vehicle/?catalog=&task=vin&vin=' . $request->vin)
         );
     }
 }

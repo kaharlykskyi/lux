@@ -9,13 +9,13 @@ use Illuminate\Support\Facades\{Cache, DB};
 
 class Catalog
 {
-    public function getMinMaxPrice($level,$param){
+    public function getMaxPrice($level,$param){
         switch ($level){
             case 'search_str':
                 $price = Cache::remember('min_max_search_str_'.(new Controller())->transliterateRU($param['str'],true), 60*24, function () use ($param) {
                     return DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
                         ->where(DB::raw('p.name'),'LIKE',"{$param['str']}%")
-                        ->select(DB::raw(' MIN(p.price) AS min, MAX(p.price) AS max'))
+                        ->select(DB::raw('MAX(p.price) AS max'))
                         ->get();
                 });
                 return $price[0];
@@ -30,7 +30,7 @@ class Catalog
                         ->where('al.productid',(int)$param['id'])
                         ->where(DB::raw('al.linkagetypeid'),'=',2)
                         ->where('al.linkageid','=',(int)$param['car'])
-                        ->select(DB::raw('MIN(p.price) AS min, MAX(p.price) AS max'))
+                        ->select(DB::raw('MAX(p.price) AS max'))
                         ->get();
                 });
                 return $price[0];
@@ -49,7 +49,7 @@ class Catalog
                         ->where(DB::raw("al.linkageid"),(int)$param['linkageid'])
                         ->where(DB::raw("pds.nodeid"),(int)$param['nodeid'])
                         ->where(DB::raw('al.linkagetypeid'),2)
-                        ->select(DB::raw('MIN(p.price) AS min, MAX(p.price) AS max'))
+                        ->select(DB::raw('MAX(p.price) AS max'))
                         ->get();
                 } else {
                     $price = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'))
@@ -75,7 +75,7 @@ class Catalog
                     ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('ac.PartsDataSupplierArticleNumber'))
                     ->where(DB::raw('ac.OENbr'),$param['OENbr'])
                     ->where(DB::raw('ac.manufacturerId'),(int)$param['manufacturer'])
-                    ->select(DB::raw('MIN(p.price) AS min, MAX(p.price) AS max'))
+                    ->select(DB::raw('MAX(p.price) AS max'))
                     ->get();
                 return $price[0];
                 break;

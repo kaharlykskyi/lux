@@ -89,14 +89,16 @@
 
     <script>
         $(document).ready(function () {
-            const data = JSON.parse('{!! $response !!}');
-            if (data.data === undefined || data.data.list.length === 0){
-                $('#car_data').html('<tr><td class="" colspan="9">Нету данных</td></tr>');
-            }else {
-                let html ='';
-                data.data.list.forEach(function (item) {
-                    let link = `{{route('vin_decode.catalog')}}?ssd=${item["@ssd"]}&vehicle_id=${item["@vehicleid"]}&catalog=${item["@catalog"]}&task=qdetails&wizard=${data.data.search_info.wizard}&wizard2=${data.data.search_info.wizard2}`;
-                      html += `
+            $('#car_data').html('<tr><td class="" colspan="9">Загрузка данных</td></tr>');
+            $.get('{{route('vin_decode.vin_car')}}?vin={{$vin}}',function (data) {
+                const responce = JSON.parse(data);
+                if (responce.data === undefined || responce.data.list.length === 0){
+                    $('#car_data').html('<tr><td class="" colspan="9">Нету данных</td></tr>');
+                }else {
+                    let html ='';
+                    responce.data.list.forEach(function (item) {
+                        let link = `{{route('vin_decode.catalog')}}?ssd=${item["@ssd"]}&vehicle_id=${item["@vehicleid"]}&catalog=${item["@catalog"]}&task=qdetails&wizard=${responce.data.search_info.wizard}&wizard2=${responce.data.search_info.wizard2}`;
+                        html += `
                                 <tr class="null    ">
                                     <td class="" colspan="1" data-field="Бренд">
                                         <div class="cell-inner">
@@ -109,32 +111,33 @@
                                         </div>
                                     </td>`;
 
-                    let prodRange = '';
-                    let market = '';
-                    let engine = '';
-                    let engine_info = '';
-                    let transmission = '';
-                    item.attribute.forEach(function (val) {
-                        if (val['@key'] === 'prodRange'){
-                            prodRange = td_template(val,link);
-                        }
-                        if (val['@key'] === 'market'){
-                            market = td_template(val,link);
-                        }
-                        if (val['@key'] === 'engine'){
-                            engine = td_template(val,link);
-                        }
-                        if (val['@key'] === 'engine_info'){
-                            engine_info = td_template(val,link);
-                        }
-                        if (val['@key'] === 'transmission'){
-                            transmission = td_template(val,link);
-                        }
+                        let prodRange = '<td></td>';
+                        let market = '<td></td>';
+                        let engine = '<td></td>';
+                        let engine_info = '<td></td>';
+                        let transmission = '<td></td>';
+                        item.attribute.forEach(function (val) {
+                            if (val['@key'] === 'prodRange'){
+                                prodRange = td_template(val,link);
+                            }
+                            if (val['@key'] === 'market'){
+                                market = td_template(val,link);
+                            }
+                            if (val['@key'] === 'engine'){
+                                engine = td_template(val,link);
+                            }
+                            if (val['@key'] === 'engine_info'){
+                                engine_info = td_template(val,link);
+                            }
+                            if (val['@key'] === 'transmission'){
+                                transmission = td_template(val,link);
+                            }
+                        });
+                        html += `${prodRange+market+engine+engine_info+transmission}</tr>`;
                     });
-                    html += `${prodRange+market+engine+engine_info+transmission}</tr><tr><td class="divider" colspan="9"></td></tr>`;
-                });
-                $('#car_data').html(html);
-            }
+                    $('#car_data').html(html);
+                }
+            });
         });
 
         function td_template(item,link) {
