@@ -30,24 +30,47 @@ class VinDecodeController extends Controller
     }
 
     public function catalog(Request $request){
-        try{
-            $data = file_get_contents('https://exist.ua/api/v1/laximo/oem/groups/?' . $request->getQueryString() . 'quick_group_id=');
-            $response = json_decode($data);
-        }catch (Exception $exception){
-            $response = [];
+        if ($request->task === 'qdetails'){
+            try{
+                $data = file_get_contents('https://exist.ua/api/v1/laximo/oem/groups/?' . $request->getQueryString() . 'quick_group_id=');
+                $response = json_decode($data);
+            }catch (Exception $exception){
+                $response = [];
+            }
+            return view('vin_decode.catalog_group',compact('response'));
+        }elseif ($request->task === 'units'){
+            try{
+                $categories = json_decode(file_get_contents('https://exist.ua/api/v1/laximo/oem/categories/?'. $request->getQueryString() . '&category_id=-1'));
+                $list_units = json_decode(file_get_contents('https://exist.ua/api/v1/laximo/oem/detail/list_unit/?' . $request->getQueryString() . '&category_id=-1'));
+                $sort_categories = ['root' => [],'child' => []];
+                $search_info = $categories->data->search_info;
+
+                foreach ($categories->data->list as $row){
+                    $row_arr = get_object_vars($row);
+                    if ($row_arr['@childrens'] === 'true'){
+                        $sort_categories['root'][] = $row_arr;
+                    }else{
+                        $sort_categories['child'][$row_arr['@parentcategoryid']][] = $row_arr;
+                    }
+                }
+
+            }catch (Exception $exception){
+                $sort_categories = [];
+                $list_units = [];
+            }
+            return view('vin_decode.catalog_units',compact('list_units','sort_categories','search_info'));
         }
-        return view('vin_decode.catalog_group',compact('response'));
+        return abort(404);
     }
 
     public function page(Request $request){
-        $oem_info = json_decode(file_get_contents('https://exist.ua/api/v1/laximo/oem/info/?' . $request->getQueryString()));
-        $oem_detail_unit = json_decode(file_get_contents('https://exist.ua/api/v1/laximo/oem/detail/unit/?' . $request->getQueryString()));
-        return view('vin_decode.page',compact('oem_info','oem_detail_unit'));
-    }
-
-    public function pageData(){
-        $data = session('page-data');
-        return view('vin_decode.frame_detal',compact('data'));
+        try{
+            $oem_info = json_decode(file_get_contents('https://exist.ua/api/v1/laximo/oem/info/?' . $request->getQueryString()));
+            $oem_detail_unit = json_decode(file_get_contents('https://exist.ua/api/v1/laximo/oem/detail/unit/?' . $request->getQueryString()));
+            return view('vin_decode.page',compact('oem_info','oem_detail_unit'));
+        }catch (Exception $exception){
+            return back()->with('status','Произошла ошибка');
+        }
     }
 
     public function quickGroup(Request $request){
@@ -62,5 +85,12 @@ class VinDecodeController extends Controller
             $this->service
                 ->getAjaxData('https://exist.ua/api/v1/laximo/oem/vehicle/?catalog=&task=vin&vin=' . $request->vin)
         );
+    }
+
+    public function units(Request $request){
+        return response()->json([
+            'list_units' => json_decode($this->service->getAjaxData('https://exist.ua/api/v1/laximo/oem/detail/list_unit/?' . $request->getQueryString())),
+            'categories' => json_decode($this->service->getAjaxData('https://exist.ua/api/v1/laximo/oem/categories/?' . $request->getQueryString()))
+        ]);
     }
 }

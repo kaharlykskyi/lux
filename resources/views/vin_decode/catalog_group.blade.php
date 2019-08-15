@@ -39,6 +39,14 @@
     @endcomponent
 
     <div class="container margin-top-20">
+        <div class="row margin-bottom-15">
+            <div class="col-sm-12">
+                <ul class="nav nav-pills">
+                    <li role="presentation" class="active"><a href="#">Поиск по группам</a></li>
+                    <li role="presentation"><a href="{{str_replace('&task=qdetails','&task=units',request()->fullUrl())}}">Поиск по категориям</a></li>
+                </ul>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-5" id="vin_decode_menu">
                 @if (!empty($response->data->list))
