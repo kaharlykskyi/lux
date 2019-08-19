@@ -22,9 +22,11 @@
                                     <h6 class="text-uppercase">{{$root->title}}</h6>
                                     <div class="list-group col-xs-12 col-sm-8 row">
                                         @foreach($root->sub_categories as $sub)
-                                            <a class="border-0 col-xs-12 col-sm-6 list-group-item" style="@if(isset($sub['tecdoc'][0]->count_product) && $sub['tecdoc'][0]->count_product==0) opacity: 0.6; @endif" href="{{route('catalog',$sub['custom_data']->tecdoc_id)}}?car={{$modification}}">
-                                                {{$sub['custom_data']->name}} - [<span class="small text-danger">{{isset($sub['tecdoc'][0]->count_product)?$sub['tecdoc'][0]->count_product:0}}</span>]
-                                            </a>
+                                            @if (isset($sub['tecdoc'][0]->count_product) && $sub['tecdoc'][0]->count_product > 0)
+                                                <a class="border-0 col-xs-12 col-sm-6 list-group-item" style="@if(isset($sub['tecdoc'][0]->count_product) && $sub['tecdoc'][0]->count_product==0) opacity: 0.6; @endif" href="{{route('catalog',$sub['custom_data']->tecdoc_id)}}?car={{$modification}}">
+                                                    {{$sub['custom_data']->name}} - [<span class="small text-danger">{{$sub['tecdoc'][0]->count_product}}</span>]
+                                                </a>
+                                            @endif
                                         @endforeach
                                     </div>
                                     <div class="col-sm-4 hidden-xs">
