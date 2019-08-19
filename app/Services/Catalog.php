@@ -64,7 +64,7 @@ class Catalog
                         ->where(DB::raw("al.linkageid"),(int)$param['linkageid'])
                         ->where(DB::raw("pds.nodeid"),(int)$param['nodeid'])
                         ->where(DB::raw('al.linkagetypeid'),16)
-                        ->select(DB::raw('MIN(p.price) AS min, MAX(p.price) AS max'))
+                        ->select(DB::raw('MAX(p.price) AS max'))
                         ->get();
                 }
 

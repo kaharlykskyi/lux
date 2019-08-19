@@ -69,14 +69,22 @@
                     @isset($all_category_global)
                         @foreach($all_category_global as $category)
                             <li class="dropdown megamenu">
-                                <a href="./#" class="dropdown-toggle" data-toggle="dropdown">{{$category->title}}</a>
+                                @if(isset($search_cars[0]))
+                                    <a href="{{route('all_brands',$category->id)}}?modification_auto={{$search_cars[0]['cookie']['modification_auto']}}" class="dropdown-toggle" onclick="checkCountClick(this)" data-click="0" data-toggle="dropdown">{{$category->title}}</a>
+                                @else
+                                    <a href="./#" class="dropdown-toggle" data-toggle="dropdown">{{$category->title}}</a>
+                                @endif
                                 <div class="dropdown-menu animated-2s fadeInUpHalf">
                                     <div class="mega-inside">
                                         <div class="row">
                                             <div class="col-sm-9">
                                                 @foreach($category->childCategories as $child)
                                                     <div class="col-sm-3">
-                                                        <h6>{{$child->title}}</h6>
+                                                        @if(isset($search_cars[0]))
+                                                            <h6><a href="{{route('all_brands',$child->id)}}?modification_auto={{$search_cars[0]['cookie']['modification_auto']}}"> {{$child->title}} </a></h6>
+                                                        @else
+                                                            <h6>{{$child->title}}</h6>
+                                                        @endif
                                                         <ul>
                                                             @isset($child->sub_categores)
                                                                 @foreach($child->sub_categores as $item)
@@ -103,3 +111,13 @@
         </div>
     </nav>
 </header>
+<script>
+    function checkCountClick(obj) {
+        if ($(obj).attr('data-click') === '0' && window.innerWidth < 768){
+            $(obj).attr('data-click',1)
+            return false
+        }else{
+            location.href = $(obj).attr('href')
+        }
+    }
+</script>

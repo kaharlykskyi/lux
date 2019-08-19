@@ -1042,8 +1042,8 @@ class Tecdoc
         if (isset($modif)){
             $select .= ", (select COUNT(DISTINCT p.articles) 
                             from td1q2018.article_links AS al
-                            inner join lux.products AS p on p.articles = al.DataSupplierArticleNumber  AND p.brand = al.supplierid
-                            where al.productid=prd.id AND al.linkagetypeid=2 AND al.linkageid={$modif} AND p.count > 0) AS count_product";
+                            inner join lux.products AS p on p.articles = al.DataSupplierArticleNumber  AND p.brand = al.SupplierId
+                            where al.productid=prd.id AND al.linkageid={$modif} AND p.count > 0) AS count_product";
         }
 
 

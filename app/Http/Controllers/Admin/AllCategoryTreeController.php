@@ -38,7 +38,7 @@ class AllCategoryTreeController extends Controller
 
             $data['level'] = isset($data['level'])?(int)$data['level']:0;
             $data['show'] = isset($data['show'])?1:0;
-            $data['hurl'] = isset($data['hurl'])?$data['hurl']:str_replace([' ',',','/'],'_',$this->transliterateRU($data['name']));
+            $data['hurl'] = isset($data['hurl'])?$data['hurl']:str_replace([' ',',','/','-'],'_',$this->transliterateRU($data['name']));
 
             $filter = [['level','=',isset($data['level'])?(int)$data['level']:0]];
             if (isset($data['tecdoc_id'])) $filter[] = ['tecdoc_id','=',(int)$data['tecdoc_id']];
@@ -86,12 +86,17 @@ class AllCategoryTreeController extends Controller
 
         if (isset($request->id)) $filter[] = ['id','=',(int)$request->id];
         else $filter[] = ['assemblygroupdescription','=',$search_category];
-        $category = DB::connection('mysql_tecdoc')->table('prd')->where($filter)->first();
+        $category = DB::connection('mysql_tecdoc')->table('prd')
+            ->where('id','=',(int)$request->id)->first();
 
         $filter = [['level','=',isset($request->level)?(int)$request->level:0]];
         if (isset($request->id)) $filter[] = ['tecdoc_id','=',(int)$request->id];
         else $filter[] = ['tecdoc_name','=',$search_category];
         $save_category = AllCategoryTree::where($filter)->first();
+
+        if ($request->has('id')){
+            $search_category = "{$category->normalizeddescription} - $category->usagedescription";
+        }
 
         return view('admin.all_category_tree.edit',compact('category','search_category','save_category'));
     }
