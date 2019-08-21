@@ -20,7 +20,14 @@
                     <a href="https://goo.gl/maps/m8LwKwkbNf7MpBPFA" target="_blank">(посмотреть на карте)</a>
                 </p>
                 <p>{{__('E-mail')}}: {{config('app.work_mail')}}</p>
-                <div class="social-links"> <a href="#."><i class="fa fa-facebook"></i></a> <a href="#."><i class="fa fa-twitter"></i></a> <a href="#."><i class="fa fa-linkedin"></i></a> <a href="#."><i class="fa fa-pinterest"></i></a> <a href="#."><i class="fa fa-instagram"></i></a> <a href="#."><i class="fa fa-google"></i></a> </div>
+                <div class="social-links">
+                    <a href="#."><i class="fa fa-facebook"></i></a>
+                    <a href="#."><i class="fa fa-twitter"></i></a>
+                    <a href="#."><i class="fa fa-linkedin"></i></a>
+                    <a href="#."><i class="fa fa-pinterest"></i></a>
+                    <a href="https://www.instagram.com/autodok_/?igshid=spy0tp14xa3r" target="_blank"><i class="fa fa-instagram"></i></a>
+                    <a href="#."><i class="fa fa-google"></i></a>
+                </div>
             </div>
             <div class="col-md-4">
                 <h4>{{__('Для клиента')}}</h4>
