@@ -70,8 +70,7 @@ class AllCategoryTreeController extends Controller
                 ]);
                 $save_category->save();
             } else{
-                AllCategoryTree::where('tecdoc_name',$data['tecdoc_name'])
-                    ->where('level',$data['level'])
+                AllCategoryTree::where('id',(int)$data['id'])
                     ->update([
                         'name' => $data['name'],
                         'image' => isset($file_name)?$file_name:$category_save->image,

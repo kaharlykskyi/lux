@@ -20,6 +20,7 @@
                                 <input type="hidden" name="level" value="{{request()->query('level')}}">
                                 <input type="hidden" name="parent" value="{{request()->query('parent')}}">
                                 <input type="hidden" name="tecdoc_id" value="{{request()->query('id')}}">
+                                <input type="hidden" name="id" value="{{isset($save_category->id)?$save_category->id:''}}">
 
                                 <div class="row form-group">
                                     <div class="col col-md-3">
