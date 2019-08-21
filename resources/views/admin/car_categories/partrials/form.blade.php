@@ -74,7 +74,7 @@
 <div class="row form-group">
     <div class="col col-md-3">
         <label for="key_words" class=" form-control-label">{{__('Дочерние категории')}}</label><br>
-        <span class="small text-info">Перетащите в право неообходимые категории</span>
+        <span class="small text-info">Выбирите главную категорию категорию, а потом перетащите в право неообходимые категории</span>
     </div>
     <div class="col-12 col-md-9">
         @php
@@ -84,19 +84,14 @@
                 $use_category = [];
             }
         @endphp
-        <ul style="height: 370px;overflow: auto;" id="sortable1" class="connectedSortable">
-            @if(isset($all_category) && !empty($all_category))
-                @foreach($all_category as $category)
-                    @if(isset($use_category))
-                        @if(!in_array($category->id,$use_category))
-                            <li date-id="{{$category->id}}" class="ui-state-default">{{$category->name}}</li>
-                        @endif
-                    @else
-                        <li date-id="{{$category->id}}" class="ui-state-default">{{$category->name}}</li>
-                    @endif
-                @endforeach
-            @endif
+        <ul class="list-group" id="root_tecdoc_cat" style="height: 370px;overflow: auto;width: 50%;float: left;">
+            @foreach ($root_all_category as $category)
+                <li style="padding-left: 5px !important;cursor: pointer" onclick="getChild({{$category->id}})" class="list-group-item d-flex justify-content-between align-items-center p-0">
+                    {{$category->name}}
+                </li>
+            @endforeach
         </ul>
+        <ul style="height: 370px;overflow: auto;display: none" id="sortable1" class="connectedSortable"></ul>
 
         <ul id="sortable2" class="connectedSortable">
             @if(isset($all_category) && !empty($all_category))
@@ -137,6 +132,17 @@
             }
 
             $('#categories').val(use_category_str);
+        }
+        function getChild(id) {
+            $('#root_tecdoc_cat').hide();
+            $('#sortable1').html('<li class="ui-state-default">загрузка...</li>').show()
+            $.get(`{{route('admin.tecdoc.child_category')}}?id=${id}`,function (data) {
+                let html = '';
+                data.forEach(function (item) {
+                    html += `<li date-id="${item.id}" class="ui-state-default">${item.name}</li>`
+                })
+                $('#sortable1').html(html);
+            })
         }
     </script>
 @endsection

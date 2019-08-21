@@ -150,6 +150,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
         'car_categories' => 'CategoresGroupForCarController'
     ],['as' => 'admin']);
     Route::get('/start-import','ProductController@startImport')->name('admin.start_import');
+    Route::get('/child-tecdoc-category','CategoresGroupForCarController@getChildCategory')->name('admin.tecdoc.child_category');
 
     Route::group(['prefix' => 'feedback'],function (){
         Route::get('/','FeedBackController@index')->name('admin.feedback');

@@ -30,8 +30,9 @@ class CategoresGroupForCarController extends Controller
     public function create()
     {
         $root_car_category = CategoresGroupForCar::whereNull('parent_id')->get();
+        $root_all_category = AllCategoryTree::whereNull('parent_category')->get();
         $all_category = AllCategoryTree::where('level',1)->get();
-        return view('admin.car_categories.create',compact('all_category','root_car_category'));
+        return view('admin.car_categories.create',compact('all_category','root_car_category','root_all_category'));
     }
 
     /**
@@ -92,8 +93,9 @@ class CategoresGroupForCarController extends Controller
     {
         $car_categories = CategoresGroupForCar::find((int)$id);
         $root_car_category = CategoresGroupForCar::whereNull('parent_id')->get();
+        $root_all_category = AllCategoryTree::whereNull('parent_category')->get();
         $all_category = AllCategoryTree::where('level',1)->get();
-        return view('admin.car_categories.edit',compact('car_categories','all_category','root_car_category'));
+        return view('admin.car_categories.edit',compact('car_categories','all_category','root_car_category','root_all_category'));
     }
 
     /**
@@ -149,5 +151,9 @@ class CategoresGroupForCarController extends Controller
         CategoresGroupForCar::where('id',(int)$id)->delete();
         Cache::forget('all_category');
         return back()->with('status','Категория удалена');
+    }
+
+    public function getChildCategory(Request $request){
+        return response()->json(AllCategoryTree::where('parent_category',(int)$request->id)->get());
     }
 }
