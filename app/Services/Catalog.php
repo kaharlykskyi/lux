@@ -21,18 +21,21 @@ class Catalog
                 return $price[0];
                 break;
             case 'category':
-                $price = Cache::remember('min_max_category_'.$param['id'], 60*24, function () use ($param) {
-                    return DB::connection('mysql_tecdoc')->table(DB::raw('article_links as al'))
-                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
-                            $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
-                            $query->on('p.brand','=','al.SupplierId');
-                        })
-                        ->where('al.productid',(int)$param['id'])
-                        ->where(DB::raw('al.linkagetypeid'),'=',2)
-                        ->where('al.linkageid','=',(int)$param['car'])
-                        ->select(DB::raw('MAX(p.price) AS max'))
-                        ->get();
-                });
+                $prd_id = [$param['category']->tecdoc_id];
+                foreach ($param['category']->subCategory as $subCategory){
+                    $prd_id[] = $subCategory->tecdoc_id;
+                }
+
+                $price =  DB::connection('mysql_tecdoc')->table(DB::raw('article_links as al'))
+                    ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
+                        $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
+                        $query->on('p.brand','=','al.SupplierId');
+                    })
+                    ->whereIn('al.productid',$prd_id)
+                    ->where(DB::raw('al.linkagetypeid'),'=',2)
+                    ->where('al.linkageid','=',(int)$param['car'])
+                    ->select(DB::raw('MAX(p.price) AS max'))
+                    ->get();
                 return $price[0];
                 break;
             case 'modification':
@@ -96,21 +99,25 @@ class Catalog
                 });
                 break;
             case 'category':
-                return Cache::remember('brands_category_'.$param['id'], 60*24, function () use ($param) {
-                    return DB::connection('mysql_tecdoc')->table(DB::raw('article_links as al'))
-                        ->join('suppliers AS sp',DB::raw('al.SupplierId'),DB::raw('sp.id'))
-                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
-                            $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
-                            $query->on('p.brand','=','al.SupplierId');
-                        })
-                        ->where('al.productid',(int)$param['id'])
-                        ->where(DB::raw('al.linkagetypeid'),'=',2)
-                        ->where('al.linkageid','=',(int)$param['car'])
-                        ->select(DB::raw('sp.id AS supplierId, sp.description'))
-                        ->orderBy('sp.description')
-                        ->distinct()
-                        ->get();
-                });
+                $prd_id = [$param['category']->tecdoc_id];
+                foreach ($param['category']->subCategory as $subCategory){
+                    $prd_id[] = $subCategory->tecdoc_id;
+                }
+
+                return DB::connection('mysql_tecdoc')->table(DB::raw('article_links as al'))
+                    ->join('suppliers AS sp',DB::raw('al.SupplierId'),DB::raw('sp.id'))
+                    ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
+                        $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
+                        $query->on('p.brand','=','al.SupplierId');
+                    })
+                    ->whereIn('al.productid',$prd_id)
+                    ->where(DB::raw('al.linkagetypeid'),'=',2)
+                    ->where('al.linkageid','=',(int)$param['car'])
+                    ->select(DB::raw('sp.id AS supplierId, sp.description'))
+                    ->orderBy('sp.description')
+                    ->distinct()
+                    ->get();
+
                 break;
             case 'modification':
                 if ($param['type'] === 'passenger'){
@@ -181,12 +188,16 @@ class Catalog
         if (isset($attr_ids) && !empty($attr_ids)){
             switch ($level){
                 case 'category':
+                    $prd_id = [$param['category']->tecdoc_id];
+                    foreach ($param['category']->subCategory as $subCategory){
+                        $prd_id[] = $subCategory->tecdoc_id;
+                    }
                     $filters_data = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_attributes AS attr'))
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links as al'),function ($query){
                             $query->on('al.DataSupplierArticleNumber','=','attr.DataSupplierArticleNumber');
                             $query->on('al.SupplierId','=','attr.supplierId');
                         })
-                        ->where('al.productid',(int)$param['id'])
+                        ->whereIn('al.productid',$prd_id)
                         ->where(DB::raw('al.linkagetypeid'),2)
                         ->where('al.linkageid','=',(int)$param['car'])
                         ->whereIn('attr.id',$attr_ids)

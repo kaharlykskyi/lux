@@ -64,7 +64,7 @@ class HomeController extends Controller
                         $custom_data = AllCategoryTree::where('id',$item)->first();
                         $sub_categories[] = [
                             'custom_data' => $custom_data,
-                            'tecdoc' => $this->tecdoc->getAllCategoryTree($custom_data->tecdoc_id,'id',(int)$modification)
+                            'tecdoc' => $this->tecdoc->getAllCategoryTree($custom_data,'modif',(int)$modification)
                         ];
                     }
                 }
@@ -78,10 +78,10 @@ class HomeController extends Controller
                         $child_sub_categories = [];
                         foreach ($child_sub as $item){
                             if (!empty($item)){
-                                $custom_data = AllCategoryTree::where('id',$item)->first();
+                                $custom_data = AllCategoryTree::with('subCategory')->where('id',$item)->first();
                                 $child_sub_categories[] = [
                                     'custom_data' => $custom_data,
-                                    'tecdoc' => $this->tecdoc->getAllCategoryTree($custom_data->tecdoc_id,'id',(int)$modification)
+                                    'tecdoc' => $this->tecdoc->getAllCategoryTree($custom_data,'modif',(int)$modification)
                                 ];
                             }
                         }

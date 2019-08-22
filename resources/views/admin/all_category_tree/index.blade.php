@@ -55,6 +55,17 @@
                                             @else
                                                 {{$category_title}}
                                             @endif
+                                            @if((int)request()->query('level') === 1 && isset($category->custom_id))
+                                                    <div class="form-group">
+                                                        <label class="small" for="childRoot_{{$category->custom_id}}">Переопределение родительской категории</label>
+                                                        <select onchange="changeParent({{$category->custom_id}})" data-id="{{$category->custom_id}}" class="form-control" id="childRoot_{{$category->custom_id}}">
+                                                            <option value="null">По дефолту</option>
+                                                            @foreach ($parent->subCategory as $subCategory)
+                                                                <option @if ($subCategory->id === $category->parent_category) selected @endif value="{{$subCategory->id}}">{{$subCategory->name}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                            @endif
                                         </th>
                                         <th>
                                             <div class="table-data-feature">
@@ -95,3 +106,22 @@
     </div>
 
 @endsection
+@section('script')
+   <script>
+       function changeParent(id) {
+           const parent_id = $('#childRoot_'+id).val()
+           $.post('{{route('admin.all_category.edit')}}',{
+               _token:'{{csrf_token()}}',
+               change_root:true,
+               parent_id,
+               id
+           },function (data) {
+               if (data){
+                   location.reload()
+               } else{
+                   alert('Error')
+               }
+           })
+       }
+   </script>
+@stop

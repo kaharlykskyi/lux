@@ -21,7 +21,7 @@ class AllCategoryTreeController extends Controller
     public function index(Request $request){
         $parent = null;
         if (isset($request->parent_category)){
-            $parent = AllCategoryTree::findOrFail((int)$request->parent_category);
+            $parent = AllCategoryTree::with('subCategory')->findOrFail((int)$request->parent_category);
             $categories = $this->tecdoc->getAllCategoryTree($parent->tecdoc_name, $request->level);
         } else{
             $categories = $this->tecdoc->getAllCategoryTree();
@@ -35,6 +35,17 @@ class AllCategoryTreeController extends Controller
 
         if ($request->isMethod('post')){
             $data = $request->except('_token');
+
+            if (isset($data['change_root'])){
+                $count = DB::table('all_category_trees')
+                    ->where('id',(int)$data['id'])
+                    ->update(['parent_category' => (int)$data['parent_id']]);
+                if ($count){
+                    return response()->json(true);
+                }else{
+                    return response()->json(false);
+                }
+            }
 
             $data['level'] = isset($data['level'])?(int)$data['level']:0;
             $data['show'] = isset($data['show'])?1:0;

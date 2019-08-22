@@ -856,7 +856,7 @@ class Tecdoc
         }
     }
 
-    public function getCategoryProduct($id,$linkageid,$pre,array $filter,$save_attr, $query_attr,$sort = 'ASC'){
+    public function getCategoryProduct($category,$linkageid,$pre,array $filter,$save_attr, $query_attr,$sort = 'ASC'){
         if (isset($filter['supplier'])){
             foreach ($filter['supplier'] as $k => $item){
                 $filter['supplier'][$k] = (int)$item;
@@ -864,6 +864,11 @@ class Tecdoc
         }
 
         $attr_filter = $this->getSortAttr($save_attr,$query_attr);
+
+        $prd_id = [$category->tecdoc_id];
+        foreach ($category->subCategory as $subCategory){
+            $prd_id[] = $subCategory->tecdoc_id;
+        }
 
         if (!isset($attr_filter[1])){
             return DB::connection($this->connection)
@@ -873,7 +878,7 @@ class Tecdoc
                     $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
                     $query->on('p.brand','=','al.SupplierId');
                 })
-                ->where('al.productid',(int)$id)
+                ->whereIn('al.productid',$prd_id)
                 ->where('al.linkagetypeid','=',2)
                 ->where('al.linkageid','=',$linkageid)
                 ->where([
@@ -900,7 +905,7 @@ class Tecdoc
                     $query->on('attr.DataSupplierArticleNumber','=','al.DataSupplierArticleNumber');
                     $query->on('attr.supplierId','=','al.SupplierId');
                 })
-                ->where('al.linkageid',(int)$id)
+                ->whereIn('al.linkageid',$prd_id)
                 ->where('al.linkagetypeid','=',2)
                 ->where('al.linkageid','=',$linkageid)
                 ->where([
@@ -1025,25 +1030,24 @@ class Tecdoc
                 $select = " prd.assemblygroupdescription,
                             prd.description as name,prd.id,
                             prd.normalizeddescription,
-                            prd.usagedescription,act.image,act.name AS custom_name,act.id AS custom_id";
+                            prd.usagedescription,act.image,act.name AS custom_name,act.id AS custom_id,act.parent_category";
                 $join_where = ' prd.id = act.tecdoc_id';
                 break;
-            case 'id':
-                $where = "WHERE prd.id='{$parent}'";
-                $select = " act.id AS custom_id";
-                $join_where = ' prd.id = act.tecdoc_id';
+            case 'modif':
+                $prd_id = [$parent->tecdoc_id];
+                foreach ($parent->subCategory as $subCategory){
+                    $prd_id[] = $subCategory->tecdoc_id;
+                }
+
+                return DB::connection($this->connection)
+                    ->select("SELECT COUNT(DISTINCT p.articles) AS count_product FROM td1q2018.article_links AS al 
+                            INNER JOIN lux.products AS p on p.articles = al.DataSupplierArticleNumber  AND p.brand = al.SupplierId
+                            WHERE al.productid IN (".implode(',',$prd_id).") AND al.linkageid={$modif} AND p.count > 0");
                 break;
             default:
                 $where = '';
-                $select = ' prd.assemblygroupdescription as name,act.image,act.name AS custom_name,act.id AS custom_id';
+                $select = ' prd.assemblygroupdescription as name,act.image,act.name AS custom_name,act.id AS custom_id,act.parent_category';
                 $join_where = ' prd.assemblygroupdescription = act.tecdoc_name';
-        }
-
-        if (isset($modif)){
-            $select .= ", (select COUNT(DISTINCT p.articles) 
-                            from td1q2018.article_links AS al
-                            inner join lux.products AS p on p.articles = al.DataSupplierArticleNumber  AND p.brand = al.SupplierId
-                            where al.productid=prd.id AND al.linkageid={$modif} AND p.count > 0) AS count_product";
         }
 
 

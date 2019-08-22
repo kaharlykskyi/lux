@@ -109,23 +109,23 @@ class CatalogController extends Controller
 
                         break;
                     default:
-                        $rubric_category = AllCategoryTree::where('hurl',$request->category)->first();
-                        if (isset($rubric_category)){
-                            $request->category = $rubric_category->tecdoc_id;
-                        }
+                        $rubric_category = AllCategoryTree::with('subCategory')
+                            ->where('hurl',$request->category)
+                            ->orWhere('tecdoc_id',(int)$request->category)
+                            ->firstOrFail();
 
                         $this->brands = $this->service->getBrands('category',[
-                            'id' => $request->category,
+                            'category' => $rubric_category,
                             'type' => $type,
                             'car' => $request->car
                         ]);
 
-                        $price = $this->service->getMaxPrice('category',['id' => $request->category,'type' => $type,'car' => $request->car]);
+                        $price = $this->service->getMaxPrice('category',['category' => $rubric_category,'type' => $type,'car' => $request->car]);
                         $this->max_price->start_price = round($price->max,2);
 
-                        $this->attribute = $this->service->getAttributes('category',['id' => $request->category,'type' => $type,'car' => $request->car],$save_filters);
+                        $this->attribute = $this->service->getAttributes('category',['category' => $rubric_category,'type' => $type,'car' => $request->car],$save_filters);
 
-                        $this->catalog_products = $this->tecdoc->getCategoryProduct($request->category,$request->car,$this->pre_products,[
+                        $this->catalog_products = $this->tecdoc->getCategoryProduct($rubric_category,$request->car,$this->pre_products,[
                             'price' => [
                                 'min' => ($this->min_price->filter_price > 0)?$this->min_price->filter_price:$this->min_price->start_price,
                                 'max' => ($this->max_price->filter_price > 0)?$this->max_price->filter_price:$this->max_price->start_price
