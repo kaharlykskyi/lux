@@ -9,83 +9,6 @@ use Illuminate\Support\Facades\{Cache, DB};
 
 class Catalog
 {
-    public function getMaxPrice($level,$param){
-        switch ($level){
-            case 'search_str':
-                $price = Cache::remember('min_max_search_str_'.(new Controller())->transliterateRU($param['str'],true), 60*24, function () use ($param) {
-                    return DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
-                        ->where(DB::raw('p.name'),'LIKE',"{$param['str']}%")
-                        ->select(DB::raw('MAX(p.price) AS max'))
-                        ->get();
-                });
-                return $price[0];
-                break;
-            case 'category':
-                $prd_id = [$param['category']->tecdoc_id];
-                foreach ($param['category']->subCategory as $subCategory){
-                    $prd_id[] = $subCategory->tecdoc_id;
-                }
-
-                $price =  DB::connection('mysql_tecdoc')->table(DB::raw('article_prd as a_prd'))
-                    ->join('suppliers AS sp',DB::raw('a_prd.SupplierId'),DB::raw('sp.id'))
-                    ->join('passanger_car_pds AS pds','pds.supplierid','=','a_prd.SupplierId')
-                    ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
-                        $query->on(DB::raw('p.articles'),DB::raw('a_prd.DataSupplierArticleNumber'));
-                        $query->on('p.brand','=','a_prd.SupplierId');
-                    })
-                    ->whereIn('a_prd.productid',$prd_id)
-                    ->where('pds.passangercarid','=',(int)$param['car'])
-                    ->select(DB::raw('MAX(p.price) AS max'))
-                    ->get();
-                return $price[0];
-                break;
-            case 'modification':
-                if ($param['type'] === 'passenger'){
-                    $price = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'))
-                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
-                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
-                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
-                            $query->on('p.articles','=','al.DataSupplierArticleNumber');
-                            $query->on('p.brand','=','al.supplierid');
-                        })
-                        ->where(DB::raw('al.productid'),DB::raw('pds.productid'))
-                        ->where(DB::raw('al.linkageid'),DB::raw('pds.passangercarid'))
-                        ->where(DB::raw("al.linkageid"),(int)$param['linkageid'])
-                        ->where(DB::raw("pds.nodeid"),(int)$param['nodeid'])
-                        ->where(DB::raw('al.linkagetypeid'),2)
-                        ->select(DB::raw('MAX(p.price) AS max'))
-                        ->get();
-                } else {
-                    $price = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'))
-                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_pds AS pds'),DB::raw('al.supplierid'),DB::raw('pds.supplierid'))
-                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.commercial_vehicle_prd AS prd'),DB::raw('prd.id'),DB::raw('al.productid'))
-                        ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
-                            $query->on('p.articles','=','al.DataSupplierArticleNumber');
-                            $query->on('p.brand','=','al.supplierid');
-                        })
-                        ->where(DB::raw('al.productid'),DB::raw('pds.productid'))
-                        ->where(DB::raw('al.linkageid'),DB::raw('pds.passangercarid'))
-                        ->where(DB::raw("al.linkageid"),(int)$param['linkageid'])
-                        ->where(DB::raw("pds.nodeid"),(int)$param['nodeid'])
-                        ->where(DB::raw('al.linkagetypeid'),16)
-                        ->select(DB::raw('MAX(p.price) AS max'))
-                        ->get();
-                }
-
-                return $price[0];
-                break;
-            case 'pcode':
-                $price = DB::table(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_cross AS ac'))
-                    ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('ac.PartsDataSupplierArticleNumber'))
-                    ->where(DB::raw('ac.OENbr'),$param['OENbr'])
-                    ->where(DB::raw('ac.manufacturerId'),(int)$param['manufacturer'])
-                    ->select(DB::raw('MAX(p.price) AS max'))
-                    ->get();
-                return $price[0];
-                break;
-        }
-    }
-
     public function getBrands($level,$param){
         switch ($level){
             case 'search_str':
@@ -94,7 +17,8 @@ class Catalog
                         ->where(DB::raw('p.name'),'LIKE',"{$param['str']}%")
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),DB::raw('sp.id'),DB::raw('p.brand'))
                         ->select(DB::raw('sp.id AS supplierId, sp.description'))
-                        ->orderBy('sp.description')
+                        ->orderBy('sp.description, MAX(p.price) AS max')
+                        ->groupBy('sp.description')
                         ->distinct()
                         ->get();
                 });
@@ -114,7 +38,8 @@ class Catalog
                     })
                     ->whereIn('a_prd.productid',$prd_id)
                     ->where('pds.passangercarid','=',(int)$param['car'])
-                    ->select(DB::raw('sp.id AS supplierId, sp.description'))
+                    ->select(DB::raw('sp.id AS supplierId, sp.description, MAX(p.price) AS max'))
+                    ->groupBy('sp.description')
                     ->orderBy('sp.description')
                     ->distinct()
                     ->get();
@@ -136,7 +61,8 @@ class Catalog
                             ->where(DB::raw("al.linkageid"),(int)$param['linkageid'])
                             ->where(DB::raw("pds.nodeid"),(int)$param['nodeid'])
                             ->where(DB::raw('al.linkagetypeid'),2)
-                            ->select(DB::raw('s.id AS supplierId, s.description'))
+                            ->select(DB::raw('s.id AS supplierId, s.description,MAX(p.price) AS max'))
+                            ->groupBy('s.description')
                             ->orderBy('s.description')
                             ->distinct()
                             ->get();
@@ -155,7 +81,8 @@ class Catalog
                         ->where(DB::raw("al.linkageid"),(int)$param['linkageid'])
                         ->where(DB::raw("pds.nodeid"),(int)$param['nodeid'])
                         ->where(DB::raw('al.linkagetypeid'),16)
-                        ->select(DB::raw('s.id AS supplierId, s.description'))
+                        ->select(DB::raw('s.id AS supplierId, s.description,MAX(p.price) AS max'))
+                        ->groupBy('s.description')
                         ->orderBy('s.description')
                         ->distinct()
                         ->get();
@@ -169,8 +96,9 @@ class Catalog
                     ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),DB::raw('p.articles'),DB::raw('ac.PartsDataSupplierArticleNumber'))
                     ->where(DB::raw('ac.OENbr'),$param['OENbr'])
                     ->where(DB::raw('ac.manufacturerId'),(int)$param['manufacturer'])
-                    ->select(DB::raw('sp.id AS supplierId, sp.description'))
+                    ->select(DB::raw('sp.id AS supplierId, sp.description,MAX(p.price) AS max'))
                     ->distinct()
+                    ->groupBy('sp.description')
                     ->orderBy('sp.description')
                     ->get();
                 break;

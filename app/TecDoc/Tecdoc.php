@@ -1032,15 +1032,11 @@ class Tecdoc
                 $join_where = ' prd.id = act.tecdoc_id';
                 break;
             case 'modif':
-                $prd_id = [$parent->tecdoc_id];
-                foreach ($parent->subCategory as $subCategory){
-                    $prd_id[] = $subCategory->tecdoc_id;
-                }
-
-                return DB::connection($this->connection)->select("SELECT COUNT(DISTINCT p.articles) AS count_product FROM td1q2018.article_prd AS a_prd 
+                return DB::connection($this->connection)->select("SELECT COUNT(DISTINCT p.articles) AS count_product,a_prd.productid AS id FROM td1q2018.article_prd AS a_prd 
                         INNER JOIN passanger_car_pds AS pds ON a_prd.supplierid = pds.supplierid
                         INNER JOIN lux.products AS p on p.articles = a_prd.DataSupplierArticleNumber  AND p.brand = a_prd.SupplierId
-                        WHERE a_prd.productid IN (".implode(',',$prd_id).") AND pds.passangercarid={$modif} AND p.count > 0");
+                        WHERE a_prd.productid IN (".implode(',',$parent).") AND pds.passangercarid={$modif} AND p.count > 0
+                        GROUP BY a_prd.productid");
                 break;
             default:
                 $where = '';

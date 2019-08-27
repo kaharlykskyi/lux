@@ -6,6 +6,7 @@ use App\AllCategoryTree;
 use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class AllCategoryTreeController extends Controller
@@ -41,6 +42,7 @@ class AllCategoryTreeController extends Controller
                     ->where('id',(int)$data['id'])
                     ->update(['parent_category' => (int)$data['parent_id']]);
                 if ($count){
+                    Cache::forget('tecdoc_category_info_'.$data['id']);
                     return response()->json(true);
                 }else{
                     return response()->json(false);
@@ -87,8 +89,8 @@ class AllCategoryTreeController extends Controller
                         'image' => isset($file_name)?$file_name:$category_save->image,
                         'show' => $data['show'],
                     ]);
+                Cache::forget('tecdoc_category_info_'.$data['id']);
             }
-
             return redirect()->back()->with('status','Данные не сохранены');
         }
 

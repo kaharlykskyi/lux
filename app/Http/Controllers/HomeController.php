@@ -10,7 +10,7 @@ use App\{AllCategoryTree,
     TecDoc\Tecdoc,
     UserCar};
 use Illuminate\Http\Request;
-use Illuminate\Support\{Facades\Auth, Facades\Cookie, Facades\DB, Facades\Validator};
+use Illuminate\Support\{Facades\Auth, Facades\Cache, Facades\Cookie, Facades\DB, Facades\Validator};
 
 class HomeController extends Controller
 {
@@ -55,17 +55,21 @@ class HomeController extends Controller
         if (isset($request->rootcategory)){
             $root = CategoresGroupForCar::with('childCategories')->findOrFail($request->rootcategory);
             $modification = $request->modification_auto;
+            $all_ids = [];
 
             if (isset($root->categories)){
                 $sub = json_decode($root->categories);
                 $sub_categories = [];
                 foreach ($sub as $item){
                     if (!empty($item)){
-                        $custom_data = AllCategoryTree::where('id',$item)->first();
-                        $sub_categories[] = [
-                            'custom_data' => $custom_data,
-                            'tecdoc' => $this->tecdoc->getAllCategoryTree($custom_data,'modif',(int)$modification)
-                        ];
+                        $custom_data = Cache::remember('tecdoc_category_info_'.$item, 60*24*7*365, function () use ($item) {
+                            return AllCategoryTree::with('subCategory')->where('id',$item)->first();
+                        });
+                        $sub_categories[] = $custom_data;
+                        $all_ids[] = $custom_data->tecdoc_id;
+                        foreach ($custom_data->subCategory as $subCategory){
+                            $all_ids[] = $subCategory->tecdoc_id;
+                        }
                     }
                 }
                 $root->sub_categories = $sub_categories;
@@ -78,11 +82,14 @@ class HomeController extends Controller
                         $child_sub_categories = [];
                         foreach ($child_sub as $item){
                             if (!empty($item)){
-                                $custom_data = AllCategoryTree::with('subCategory')->where('id',$item)->first();
-                                $child_sub_categories[] = [
-                                    'custom_data' => $custom_data,
-                                    'tecdoc' => $this->tecdoc->getAllCategoryTree($custom_data,'modif',(int)$modification)
-                                ];
+                                $custom_data = Cache::remember('tecdoc_category_info_'.$item, 60*24*7*365, function () use ($item) {
+                                    return AllCategoryTree::with('subCategory')->where('id',$item)->first();
+                                });
+                                $child_sub_categories[] = $custom_data;
+                                $all_ids[] = $custom_data->tecdoc_id;
+                                foreach ($custom_data->subCategory as $subCategory){
+                                    $all_ids[] = $subCategory->tecdoc_id;
+                                }
                             }
                         }
 
@@ -91,7 +98,9 @@ class HomeController extends Controller
                 }
             }
 
-            return view('home.root_category',compact('root','modification'));
+            $all_count = $this->tecdoc->getAllCategoryTree($all_ids,'modif',(int)$modification);
+
+            return view('home.root_category',compact('root','modification','all_count'));
         }
 
         if (isset($request->brand) && isset($request->model)){
