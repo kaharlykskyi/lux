@@ -871,16 +871,15 @@ class Tecdoc
         }
 
         if (!isset($attr_filter[1])){
-            return DB::connection($this->connection)
-                ->table(DB::raw('article_links as al'))
-                ->join('suppliers AS sp',DB::raw('al.SupplierId'),DB::raw('sp.id'))
+            return DB::connection($this->connection)->table(DB::raw('article_prd as a_prd'))
+                ->join('suppliers AS sp',DB::raw('a_prd.SupplierId'),DB::raw('sp.id'))
+                ->join('passanger_car_pds AS pds','pds.supplierid','=','a_prd.SupplierId')
                 ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
-                    $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
-                    $query->on('p.brand','=','al.SupplierId');
+                    $query->on(DB::raw('p.articles'),DB::raw('a_prd.DataSupplierArticleNumber'));
+                    $query->on('p.brand','=','a_prd.SupplierId');
                 })
-                ->whereIn('al.productid',$prd_id)
-                ->where('al.linkagetypeid','=',2)
-                ->where('al.linkageid','=',$linkageid)
+                ->whereIn('a_prd.productid',$prd_id)
+                ->where('pds.passangercarid','=',(int)$linkageid)
                 ->where([
                     [DB::raw('p.price'),'>=',$filter['price']['min']],
                     [DB::raw('p.price'),'<=',$filter['price']['max']]
@@ -894,20 +893,19 @@ class Tecdoc
                 ->distinct()
                 ->paginate((int)$pre,['p.id']);
         } else{
-            return DB::connection($this->connection)
-                ->table(DB::raw('article_links as al'))
-                ->join('suppliers AS sp',DB::raw('al.SupplierId'),DB::raw('sp.id'))
+            return DB::connection($this->connection)->table(DB::raw('article_prd as a_prd'))
+                ->join('suppliers AS sp',DB::raw('a_prd.SupplierId'),DB::raw('sp.id'))
+                ->join('passanger_car_pds AS pds','pds.supplierid','=','a_prd.SupplierId')
                 ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
-                    $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
-                    $query->on('p.brand','=','al.SupplierId');
+                    $query->on(DB::raw('p.articles'),DB::raw('a_prd.DataSupplierArticleNumber'));
+                    $query->on('p.brand','=','a_prd.SupplierId');
                 })
                 ->leftJoin('article_attributes as attr',function ($query){
-                    $query->on('attr.DataSupplierArticleNumber','=','al.DataSupplierArticleNumber');
-                    $query->on('attr.supplierId','=','al.SupplierId');
+                    $query->on('attr.DataSupplierArticleNumber','=','a_prd.DataSupplierArticleNumber');
+                    $query->on('attr.supplierId','=','a_prd.SupplierId');
                 })
-                ->whereIn('al.linkageid',$prd_id)
-                ->where('al.linkagetypeid','=',2)
-                ->where('al.linkageid','=',$linkageid)
+                ->whereIn('a_prd.productid',$prd_id)
+                ->where('pds.passangercarid','=',(int)$linkageid)
                 ->where([
                     [DB::raw('p.price'),'>=',$filter['price']['min']],
                     [DB::raw('p.price'),'<=',$filter['price']['max']]
@@ -1039,10 +1037,10 @@ class Tecdoc
                     $prd_id[] = $subCategory->tecdoc_id;
                 }
 
-                return DB::connection($this->connection)
-                    ->select("SELECT COUNT(DISTINCT p.articles) AS count_product FROM td1q2018.article_links AS al 
-                            INNER JOIN lux.products AS p on p.articles = al.DataSupplierArticleNumber  AND p.brand = al.SupplierId
-                            WHERE al.productid IN (".implode(',',$prd_id).") AND al.linkageid={$modif} AND p.count > 0");
+                return DB::connection($this->connection)->select("SELECT COUNT(DISTINCT p.articles) AS count_product FROM td1q2018.article_prd AS a_prd 
+                        INNER JOIN passanger_car_pds AS pds ON a_prd.supplierid = pds.supplierid
+                        INNER JOIN lux.products AS p on p.articles = a_prd.DataSupplierArticleNumber  AND p.brand = a_prd.SupplierId
+                        WHERE a_prd.productid IN (".implode(',',$prd_id).") AND pds.passangercarid={$modif} AND p.count > 0");
                 break;
             default:
                 $where = '';

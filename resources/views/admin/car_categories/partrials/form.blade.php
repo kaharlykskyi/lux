@@ -17,6 +17,19 @@
             font-size: 1rem;
             width: 99%;
         }
+        #droppable{
+            position: absolute;
+            right: 0;
+            z-index: 1;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            top: -60px;
+            left: 0;
+            background: transparent;
+            border: none;
+        }
     </style>
 @endsection
 
@@ -77,6 +90,9 @@
         <span class="small text-info">Выбирите главную категорию категорию, а потом перетащите в право неообходимые категории</span>
     </div>
     <div class="col-12 col-md-9">
+        <div id="droppable" class="ui-widget-header">
+            <p><i class="fa fa-trash" aria-hidden="true"></i></p>
+        </div>
         @php
             if (isset($car_categories->id) && isset($car_categories->categories)){
                 $use_category = json_decode($car_categories->categories);
@@ -122,6 +138,23 @@
             $( "#sortable1, #sortable2" ).sortable({
                 connectWith: ".connectedSortable"
             }).disableSelection();
+
+            $( "#droppable" ).droppable({
+                drop: function( event, ui ) {
+                    console.log(ui.draggable)
+                    $(ui.draggable).remove()
+                    $( this )
+                        .removeClass( "ui-state-highlight" )
+                },
+                over: function( event, ui ) {
+                    $( this )
+                        .addClass( "ui-state-highlight" )
+                },
+                out: function( event, ui ) {
+                    $( this )
+                        .removeClass( "ui-state-highlight" )
+                }
+            });
         } );
         function setCategoryId() {
             const use_category = $('#sortable2 > li');

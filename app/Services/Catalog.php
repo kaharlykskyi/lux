@@ -26,14 +26,15 @@ class Catalog
                     $prd_id[] = $subCategory->tecdoc_id;
                 }
 
-                $price =  DB::connection('mysql_tecdoc')->table(DB::raw('article_links as al'))
+                $price =  DB::connection('mysql_tecdoc')->table(DB::raw('article_prd as a_prd'))
+                    ->join('suppliers AS sp',DB::raw('a_prd.SupplierId'),DB::raw('sp.id'))
+                    ->join('passanger_car_pds AS pds','pds.supplierid','=','a_prd.SupplierId')
                     ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
-                        $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
-                        $query->on('p.brand','=','al.SupplierId');
+                        $query->on(DB::raw('p.articles'),DB::raw('a_prd.DataSupplierArticleNumber'));
+                        $query->on('p.brand','=','a_prd.SupplierId');
                     })
-                    ->whereIn('al.productid',$prd_id)
-                    ->where(DB::raw('al.linkagetypeid'),'=',2)
-                    ->where('al.linkageid','=',(int)$param['car'])
+                    ->whereIn('a_prd.productid',$prd_id)
+                    ->where('pds.passangercarid','=',(int)$param['car'])
                     ->select(DB::raw('MAX(p.price) AS max'))
                     ->get();
                 return $price[0];
@@ -104,15 +105,15 @@ class Catalog
                     $prd_id[] = $subCategory->tecdoc_id;
                 }
 
-                return DB::connection('mysql_tecdoc')->table(DB::raw('article_links as al'))
-                    ->join('suppliers AS sp',DB::raw('al.SupplierId'),DB::raw('sp.id'))
+                return DB::connection('mysql_tecdoc')->table(DB::raw('article_prd as a_prd'))
+                    ->join('suppliers AS sp',DB::raw('a_prd.SupplierId'),DB::raw('sp.id'))
+                    ->join('passanger_car_pds AS pds','pds.supplierid','=','a_prd.SupplierId')
                     ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
-                        $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
-                        $query->on('p.brand','=','al.SupplierId');
+                        $query->on(DB::raw('p.articles'),DB::raw('a_prd.DataSupplierArticleNumber'));
+                        $query->on('p.brand','=','a_prd.SupplierId');
                     })
-                    ->whereIn('al.productid',$prd_id)
-                    ->where(DB::raw('al.linkagetypeid'),'=',2)
-                    ->where('al.linkageid','=',(int)$param['car'])
+                    ->whereIn('a_prd.productid',$prd_id)
+                    ->where('pds.passangercarid','=',(int)$param['car'])
                     ->select(DB::raw('sp.id AS supplierId, sp.description'))
                     ->orderBy('sp.description')
                     ->distinct()
