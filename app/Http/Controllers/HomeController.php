@@ -66,9 +66,11 @@ class HomeController extends Controller
                             return AllCategoryTree::with('subCategory')->where('id',$item)->first();
                         });
                         $sub_categories[] = $custom_data;
-                        $all_ids[] = $custom_data->tecdoc_id;
-                        foreach ($custom_data->subCategory as $subCategory){
-                            $all_ids[] = $subCategory->tecdoc_id;
+                        if (isset($custom_data->tecdoc_id)) $all_ids[] = $custom_data->tecdoc_id;
+                        if (isset($custom_data->subCategory)){
+                            foreach ($custom_data->subCategory as $subCategory){
+                                $all_ids[] = $subCategory->tecdoc_id;
+                            }
                         }
                     }
                 }
@@ -86,9 +88,11 @@ class HomeController extends Controller
                                     return AllCategoryTree::with('subCategory')->where('id',$item)->first();
                                 });
                                 $child_sub_categories[] = $custom_data;
-                                $all_ids[] = $custom_data->tecdoc_id;
-                                foreach ($custom_data->subCategory as $subCategory){
-                                    $all_ids[] = $subCategory->tecdoc_id;
+                                if (isset($custom_data->tecdoc_id)) $all_ids[] = $custom_data->tecdoc_id;
+                                if (isset($custom_data->subCategory)){
+                                    foreach ($custom_data->subCategory as $subCategory){
+                                        $all_ids[] = $subCategory->tecdoc_id;
+                                    }
                                 }
                             }
                         }

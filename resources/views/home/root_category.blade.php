@@ -25,10 +25,10 @@
                                             @php
                                                 $count_product = 0;
                                                 foreach($all_count as $item){
-                                                    if ($sub->tecdoc_id === $item->id){
+                                                    if (isset($sub->tecdoc_id) && $sub->tecdoc_id === $item->id){
                                                         $count_product += (int)$item->count_product;
                                                     }
-                                                    if ($sub->subCategory->isNotEmpty()){
+                                                    if (isset($sub->subCategory) && $sub->subCategory->isNotEmpty()){
                                                         foreach ($sub->subCategory as $child){
                                                             if ($child->tecdoc_id === $item->id){
                                                                 $count_product += (int)$item->count_product;
