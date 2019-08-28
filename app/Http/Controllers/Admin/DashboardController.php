@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\{CallOrder, Cart, FastBuy, OrderPay, ProductComment, Services\Admin\Dashboard, StoreSettings, User};
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -186,5 +187,10 @@ class DashboardController extends Controller
             $settings->save();
         }
         return response()->json(true);
+    }
+
+    public function cacheClear(){
+        Artisan::call('cache:clear');
+        return redirect()->back();
     }
 }

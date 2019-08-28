@@ -189,4 +189,6 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
         Route::get('/alias/{id}','NoBrandProductController@brandAliasDelete')->name('admin.no_brands.delete');
         Route::post('/products/delete-brand','NoBrandProductController@deleteNoBrandProduct')->name('admin.no_brands.delete_product');
     });
+
+    Route::get('/cache/clear','DashboardController@cacheClear')->name('admin.cache.clear');
 });

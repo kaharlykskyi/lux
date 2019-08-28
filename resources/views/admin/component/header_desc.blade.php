@@ -2,7 +2,9 @@
     <div class="section__content section__content--p30">
         <div class="container-fluid">
             <div class="header-wrap">
-                <div class="form-header"></div>
+                <div class="form-header">
+                    <a class="btn btn-primary" href="{{route('admin.cache.clear')}}" role="button">Очистить кеш сайта</a>
+                </div>
                 <div class="header-button" style="justify-content: flex-end;">
                     <div class="account-wrap">
                         <div class="account-item clearfix js-item-menu">
