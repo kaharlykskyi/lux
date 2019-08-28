@@ -102,7 +102,9 @@ class HomeController extends Controller
                 }
             }
 
-            $all_count = $this->tecdoc->getAllCategoryTree($all_ids,'modif',(int)$modification);
+            $all_count = Cache::remember('count_product_modif_'.$modification.$root->id,60*24,function () use ($modification, $all_ids) {
+                return $this->tecdoc->getAllCategoryTree($all_ids,'modif',(int)$modification);
+            });
 
             return view('home.root_category',compact('root','modification','all_count'));
         }

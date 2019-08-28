@@ -79,6 +79,11 @@
                                         <div class="row">
                                             <div class="col-sm-9">
                                                 @foreach($category->childCategories as $child)
+                                                    @php
+                                                        if ($search_cars[0]){
+                                                            $count_product = Cache::get('count_product_modif_'.$search_cars[0]['cookie']['modification_auto'].$child->id) ;
+                                                        }
+                                                    @endphp
                                                     <div class="col-sm-3">
                                                         @if(isset($search_cars[0]))
                                                             <h6><a href="{{route('all_brands',$child->id)}}?modification_auto={{$search_cars[0]['cookie']['modification_auto']}}"> {{$child->title}} </a></h6>
@@ -89,7 +94,21 @@
                                                             @isset($child->sub_categores)
                                                                 @foreach($child->sub_categores as $item)
                                                                     @if(isset($search_cars[0]))
-                                                                        <li><a href="{{route('catalog',$item->tecdoc_id)}}?car={{$search_cars[0]['cookie']['modification_auto']}}"> {{$item->name}} </a></li>
+                                                                        @if (!empty($count_product))
+                                                                            @php
+                                                                                $count = 0;
+                                                                                foreach ($count_product as $val){
+                                                                                    if ($item->tecdoc_id === $val->id){
+                                                                                        $count += (int)$val->count_product;
+                                                                                    }
+                                                                                }
+                                                                            @endphp
+                                                                            @if ($count > 0)
+                                                                                <li><a href="{{route('catalog',$item->tecdoc_id)}}?car={{$search_cars[0]['cookie']['modification_auto']}}"> {{$item->name}}[<span class="text-danger">{{$count}}</span>] </a></li>
+                                                                            @endif
+                                                                        @else
+                                                                            <li><a href="{{route('catalog',$item->tecdoc_id)}}?car={{$search_cars[0]['cookie']['modification_auto']}}"> {{$item->name}} </a></li>
+                                                                        @endif
                                                                     @else
                                                                         <li><a href="{{route('rubric.choose_car',$item->tecdoc_id)}}"> {{$item->name}} </a></li>
                                                                     @endif
