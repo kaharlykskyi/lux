@@ -899,6 +899,10 @@ class Tecdoc
                     $query->on(DB::raw('p.articles'),DB::raw('al.DataSupplierArticleNumber'));
                     $query->on('p.brand','=','al.SupplierId');
                 })
+                ->leftJoin('article_attributes as attr',function ($query){
+                    $query->on('attr.DataSupplierArticleNumber','=','al.DataSupplierArticleNumber');
+                    $query->on('attr.supplierId','=','al.SupplierId');
+                })
                 ->whereIn('al.productid',$prd_id)
                 ->where('al.linkageid','=',(int)$linkageid)
                 ->where(DB::raw('al.linkagetypeid'),2)
@@ -1058,10 +1062,12 @@ class Tecdoc
                     if ($item->hurl . '_' . $item->filter_id === $k){
                         $buff = explode(',',$val);
                         foreach ($buff as $data){
-                            $attr_filter[] = [
-                                ['attr.id','=',$item->filter_id],
-                                ['attr.displayvalue','=',$data]
-                            ];
+                            if (!empty($data)){
+                                $attr_filter[] = [
+                                    ['attr.id','=',$item->filter_id],
+                                    ['attr.displayvalue','=',$data]
+                                ];
+                            }
                         }
                     }
                 }
