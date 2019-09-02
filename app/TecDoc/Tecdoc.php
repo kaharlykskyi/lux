@@ -870,7 +870,7 @@ class Tecdoc
             $prd_id[] = $subCategory->tecdoc_id;
         }
 
-        if (!isset($attr_filter[1])){
+        if (empty($attr_filter)){
             return DB::connection($this->connection)->table(DB::raw('article_links as al'))
                 ->join('suppliers AS sp',DB::raw('al.SupplierId'),DB::raw('sp.id'))
                 ->join(DB::raw(config('database.connections.mysql.database').'.products AS p'),function ($query){
