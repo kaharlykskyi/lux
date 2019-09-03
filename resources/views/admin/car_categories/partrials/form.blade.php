@@ -129,10 +129,7 @@
     </div>
 </div>
 @section('script')
-    <script
-        src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
-        integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
     <script>
         $( function() {
             $( "#sortable1, #sortable2" ).sortable({
@@ -159,9 +156,14 @@
         function setCategoryId() {
             const use_category = $('#sortable2 > li');
             let use_category_str = '';
+            const useTecDocIds = [];
 
             for (let item = 0;item < use_category.length;item++){
-                use_category_str += `${$(use_category[item]).attr('date-id')}@`;
+                const id = $(use_category[item]).attr('date-id');
+                if(!useTecDocIds.includes(id)){
+                    useTecDocIds.push(id);
+                    use_category_str += `${id}@`;
+                }
             }
 
             $('#categories').val(use_category_str);
@@ -171,8 +173,18 @@
             $('#sortable1').html('<li class="ui-state-default">загрузка...</li>').show()
             $.get(`{{route('admin.tecdoc.child_category')}}?id=${id}`,function (data) {
                 let html = '';
+                const useTecDocIds = [];
                 data.forEach(function (item) {
-                    html += `<li date-id="${item.id}" class="ui-state-default">${item.name}</li>`
+                    const used = false;
+                    useTecDocIds.forEach(item => {
+                        if(item === item.tecdoc_id){
+                            return true;
+                        }
+                    });
+                    if(!used){
+                        useTecDocIds.push(item.tecdoc_id);
+                        html += `<li date-id="${item.id}" class="ui-state-default">${item.name}</li>`
+                    }
                 })
                 $('#sortable1').html(html);
             })

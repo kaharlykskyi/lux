@@ -33,26 +33,23 @@
         <!-- Product -->
             <div class="product" @isset($product->id)id="product-{{$product->id}}"@endisset>
                 <article>
-                    @if(isset($files))
-                        @php $not_img = true; @endphp
-                        @foreach($files as $file)
-                            @if($product->articles === $file->DataSupplierArticleNumber && (int)$product->supplierId === (int)$file->SupplierId)
-                                @php $brand_folder = explode('_',$file->PictureName);$not_img = false; @endphp
-                                <img class="img-responsive" src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$file->PictureName))}}" alt="" >
-                                @break
-                            @endif
-                        @endforeach
-                        @if($not_img)
-                            <img  class="img-responsive" src="{{asset('images/default-no-image_2.png')}}" alt="" >
-                        @endif
-                    @else
-                        @if(!empty($product->file))
-                            @php $brand_folder = explode('_',$product->file) @endphp
-                            <img class="img-responsive" src="{{asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$product->file))}}" alt="" >
-                        @else
-                            <img  class="img-responsive" src="{{asset('images/default-no-image_2.png')}}" alt="" >
-                        @endif
-                    @endif
+                    @php
+                        $file_path = asset('images/default-no-image_2.png');
+                        if (isset($files)){
+                            foreach ($files as $file){
+                                if ($product->articles === $file->DataSupplierArticleNumber && (int)$product->supplierId === (int)$file->SupplierId){
+                                    $brand_folder = explode('_',$file->PictureName);
+                                    $file_path = asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$file->PictureName));
+                                }
+                            }
+                        }else{
+                            if (!empty($product->file)){
+                                $brand_folder = explode('_',$product->file);
+                                $file_path = asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$file->PictureName));
+                            }
+                        }
+                    @endphp
+                    <div class="product-img" style="background-image: url('{{$file_path}}');"></div>
                     <!-- Content -->
                     <span class="tag">{{$product->matchcode}}</span> <a href="{{route('product',$product->id)}}" class="tittle">
                         {{mb_strimwidth($product->name,0,30,' ...')}}

@@ -1069,6 +1069,14 @@ header .ownmenu .nav .dropdown.megamenu .dropdown-menu li a {
     color: #348ccb !important;
 }
 
+.product-img{
+    width: 100%;
+    height: 150px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 #root-category-modification .list-group-item:hover, .category-car a.list-group-item:hover {
     color: #FF7A00;
     font: 12px/20px Arial, regular;
