@@ -102,9 +102,13 @@ class HomeController extends Controller
                 }
             }
 
-            $all_count = Cache::remember('count_product_modif_'.$modification.$root->id,60*24,function () use ($modification, $all_ids) {
-                return $this->tecdoc->getAllCategoryTree($all_ids,'modif',(int)$modification);
-            });
+            if (!empty($all_ids)){
+                $all_count = Cache::remember('count_product_modif_'.$modification.$root->id,60*24,function () use ($modification, $all_ids) {
+                    return $this->tecdoc->getAllCategoryTree($all_ids,'modif',(int)$modification);
+                });
+            }else{
+                $all_count = [];
+            }
 
             return view('home.root_category',compact('root','modification','all_count'));
         }
