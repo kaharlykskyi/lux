@@ -10,6 +10,8 @@
             padding: 5px 0 0 0;
             float: left;
             margin-right: 10px;
+            height: 400px;
+            overflow: auto;
         }
         #sortable1 li, #sortable2 li {
             margin: 2px;
@@ -107,13 +109,16 @@
                 </li>
             @endforeach
         </ul>
-        <ul style="height: 370px;overflow: auto;display: none" id="sortable1" class="connectedSortable"></ul>
+        <ul style="display: none" id="sortable1" class="connectedSortable"></ul>
+        <button type="button" id="showRootBtn" class="btn btn-success hidden" onclick="showRoot()" style="position: absolute;bottom: -10px;left: 0;">назад</button>
 
         <ul id="sortable2" class="connectedSortable">
             @if(isset($all_category) && !empty($all_category))
+                @php $uniq_category = []; @endphp
                 @foreach($all_category as $item)
-                    @if(in_array($item->id,$use_category))
-                        <li date-id="{{$item->id}}" class="ui-state-highlight">{{$item->name}}</li>
+                    @if(in_array($item->id,$use_category) && !in_array($item->tecdoc_id,$uniq_category))
+                        <li data-tecdoc="{{$item->tecdoc_id}}" date-id="{{$item->id}}" class="ui-state-highlight">{{$item->name}}</li>
+                        @php $uniq_category[] = $item->tecdoc_id; @endphp
                     @endif
                 @endforeach
             @endif
@@ -156,12 +161,15 @@
         function setCategoryId() {
             const use_category = $('#sortable2 > li');
             let use_category_str = '';
+            const useIds = [];
             const useTecDocIds = [];
 
             for (let item = 0;item < use_category.length;item++){
                 const id = $(use_category[item]).attr('date-id');
-                if(!useTecDocIds.includes(id)){
-                    useTecDocIds.push(id);
+                const tecdoc_id = $(use_category[item]).attr('data-tecdoc');
+                if(!useIds.includes(id) && !useTecDocIds.includes(tecdoc_id)){
+                    useTecDocIds.push(tecdoc_id);
+                    useIds.push(id);
                     use_category_str += `${id}@`;
                 }
             }
@@ -169,6 +177,7 @@
             $('#categories').val(use_category_str);
         }
         function getChild(id) {
+            const useTecDocIdsSave = JSON.parse('{{json_encode($uniq_category)}}');
             $('#root_tecdoc_cat').hide();
             $('#sortable1').html('<li class="ui-state-default">загрузка...</li>').show()
             $.get(`{{route('admin.tecdoc.child_category')}}?id=${id}`,function (data) {
@@ -181,13 +190,20 @@
                             return true;
                         }
                     });
-                    if(!used){
+                    if(!used && !useTecDocIdsSave.includes(item.tecdoc_id)){
                         useTecDocIds.push(item.tecdoc_id);
-                        html += `<li date-id="${item.id}" class="ui-state-default">${item.name}</li>`
+                        html += `<li data-tecdoc="${item.tecdoc_id}" date-id="${item.id}" class="ui-state-default">${item.name}</li>`
                     }
                 })
                 $('#sortable1').html(html);
+                $('#showRootBtn').toggleClass('hidden')
             })
+        }
+
+        function showRoot() {
+            $('#showRootBtn').toggleClass('hidden');
+            $('#root_tecdoc_cat').show();
+            $('#sortable1').hide();
         }
     </script>
 @endsection

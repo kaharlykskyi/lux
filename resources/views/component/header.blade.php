@@ -90,7 +90,7 @@
                                                         @else
                                                             <h6>{{$child->title}}</h6>
                                                         @endif
-                                                        <ul>
+                                                        <ul style="max-height: 340px;overflow: auto;">
                                                             @isset($child->sub_categores)
                                                                 @foreach($child->sub_categores as $item)
                                                                     @if(isset($search_cars[0]))

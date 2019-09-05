@@ -22,7 +22,7 @@
                         <strong>{{__('Редактирование ')}}</strong> {{__('категории ' . $car_categories->title)}}
                     </div>
                     <div class="card-body card-block">
-                        <form action="{{route('admin.car_categories.update',$car_categories->id)}}" method="post" class="form-horizontal">
+                        <form action="{{route('admin.car_categories.update',$car_categories->id)}}" method="post" enctype="multipart/form-data" class="form-horizontal">
                             @method('PUT')
                             @csrf
 
