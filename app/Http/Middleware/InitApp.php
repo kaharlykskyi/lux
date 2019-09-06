@@ -69,6 +69,12 @@ class InitApp
                     ->whereNull('parent_id')->orderByDesc(DB::raw('-`range`'))->get();
 
                 foreach ($all_category as $item){
+                    if (isset($item->categories)){
+                        $sub_cat = json_decode($item->categories);
+                        if (!empty($sub_cat[0])){
+                            $item->sub_categores = AllCategoryTree::whereIn('id',$sub_cat)->get();
+                        }
+                    }
                     foreach ($item->childCategories as $child){
                         if (isset($child->categories)){
                             $sub_cat = json_decode($child->categories);

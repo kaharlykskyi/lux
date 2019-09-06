@@ -46,7 +46,7 @@
                                     </div>
                                     <div class="col-sm-4 hidden-xs">
                                         @isset($root->logo)
-                                            <div class="category-img" style="background-image: url('{{asset('images/catalog/' . $category->logo)}}')">
+                                            <div class="category-img" style="background-image: url('{{asset('images/catalog/' . $root->logo)}}')">
 
                                             </div>
                                         @endisset

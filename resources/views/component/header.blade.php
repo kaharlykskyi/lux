@@ -78,6 +78,38 @@
                                     <div class="mega-inside">
                                         <div class="row">
                                             <div class="col-sm-9">
+                                                @if (isset($category->sub_categores))
+                                                    @php
+                                                        if ($search_cars[0]){
+                                                            $count_product2 = Cache::get('count_product_modif_'.$search_cars[0]['cookie']['modification_auto'].$category->id) ;
+                                                        }
+                                                    @endphp
+                                                    <div class="col-sm-3">
+                                                        <ul>
+                                                        @foreach ($category->sub_categores as $root_child)
+                                                            @if(isset($search_cars[0]))
+                                                                @if (!empty($count_product))
+                                                                    @php
+                                                                        $count = 0;
+                                                                        foreach ($count_product as $val){
+                                                                            if ($root_child->tecdoc_id === $val->id){
+                                                                                $count += (int)$val->count_product;
+                                                                            }
+                                                                        }
+                                                                    @endphp
+                                                                    @if ($count > 0)
+                                                                        <li><a href="{{route('catalog',$root_child->tecdoc_id)}}?car={{$search_cars[0]['cookie']['modification_auto']}}"> {{$root_child->name}}[<span class="text-danger">{{$count}}</span>] </a></li>
+                                                                    @endif
+                                                                @else
+                                                                    <li><a href="{{route('catalog',$root_child->tecdoc_id)}}?car={{$search_cars[0]['cookie']['modification_auto']}}"> {{$root_child->name}} </a></li>
+                                                                @endif
+                                                            @else
+                                                                <li><a href="{{route('rubric.choose_car',$root_child->tecdoc_id)}}"> {{$root_child->name}} </a></li>
+                                                            @endif
+                                                        @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
                                                 @foreach($category->childCategories as $child)
                                                     @php
                                                         if ($search_cars[0]){
