@@ -88,10 +88,10 @@
                                                         <ul>
                                                         @foreach ($category->sub_categores as $root_child)
                                                             @if(isset($search_cars[0]))
-                                                                @if (!empty($count_product))
+                                                                @if (!empty($count_product2))
                                                                     @php
                                                                         $count = 0;
-                                                                        foreach ($count_product as $val){
+                                                                        foreach ($count_product2 as $val){
                                                                             if ($root_child->tecdoc_id === $val->id){
                                                                                 $count += (int)$val->count_product;
                                                                             }
