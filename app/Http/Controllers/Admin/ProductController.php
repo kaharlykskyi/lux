@@ -50,7 +50,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('admin.product.create');
+        $providers = Provider::all();
+        return view('admin.product.create',compact('providers'));
     }
 
     /**

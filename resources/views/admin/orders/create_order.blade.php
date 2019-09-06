@@ -52,7 +52,7 @@
                                             <label for="fio" class=" form-control-label">{{__('ФИО')}}</label>
                                         </div>
                                         <div class="col-12 col-md-9">
-                                            <input type="text" id="fio" name="fio" class="form-control">
+                                            <input type="text" id="fio" value="{{old('fio')}}" name="fio" class="form-control" >
                                             @if ($errors->has('fio'))
                                                 <small class="form-text text-danger">{{ $errors->first('fio') }}</small>
                                             @endif
@@ -63,7 +63,7 @@
                                             <label for="phone" class=" form-control-label">{{__('Телефон')}}</label>
                                         </div>
                                         <div class="col-12 col-md-9">
-                                            <input type="text" id="phone" name="phone" class="form-control">
+                                            <input type="text" id="phone" value="{{old('phone')}}" name="phone" class="form-control" required>
                                             @if ($errors->has('phone'))
                                                 <small class="form-text text-danger">{{ $errors->first('phone') }}</small>
                                             @endif
@@ -108,6 +108,9 @@
                                 </div>
                                 <div class="card-body">
                                     @include('admin.orders.partrials.cart_products')
+                                    @if ($errors->has('empty_order'))
+                                        <small class="form-text text-danger">{{ $errors->first('empty_order') }}</small>
+                                    @endif
                                 </div>
                             </div>
                         </div>

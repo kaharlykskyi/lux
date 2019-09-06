@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
@@ -198,6 +199,23 @@ class OrderController extends Controller
     public function createOrder(Request $request){
         if ($request->isMethod('post')){
             $data = $request->except('_token');
+
+            $validate = Validator::make($data,[
+                'fio' => 'required|max:255',
+                'phone' => 'required|max:255',
+            ]);
+
+            if ($validate->fails()) {
+                return redirect()->back()
+                    ->withErrors($validate)
+                    ->withInput();
+            }
+
+            if (empty($data['product_id'])){
+                return redirect()->back()
+                    ->withErrors(['empty_order' => 'Нужно добавить хотя бы один товар'])
+                    ->withInput();
+            }
 
             if ((int)$data['client_id'] === 0 ){
                 $user = new User();
