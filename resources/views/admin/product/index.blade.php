@@ -40,7 +40,7 @@
                                 });
                             }
                             function importExport() {
-                                window.open("{{route('admin.export.start')}}", '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
+                                window.open("{!! route('admin.export.start',request()->query()) !!}", '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
                             }
                         </script>
                     </div>

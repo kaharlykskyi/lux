@@ -11,18 +11,44 @@ use PHPExcel_Worksheet_PageSetup;
 
 class Product
 {
-    public function getExportData($limit = 10){
-        return DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
-            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'),DB::raw('al.DataSupplierArticleNumber'),DB::raw('p.articles'))
-            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),'sp.matchcode','=','p.brand')
-            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.prd AS prd'),DB::raw('prd.id'),DB::raw('al.linkageid'))
-            ->select(DB::raw('p.name, p.articles, p.price, p.brand, p.count, prd.normalizeddescription, al.SupplierId,
-                        (SELECT a_img.PictureName 
-                            FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 
-                            WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=sp.id LIMIT 1) AS PictureName
-                    '))
-            ->limit($limit)
-            ->get();
+    public function getExportData(array $filters){
+        $original = DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
+            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.manufacturers AS m'),'m.id','=','p.brand')
+            ->leftJoin(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'),function ($query){
+                $query->on('p.articles','al.DataSupplierArticleNumber');
+                $query->on('p.brand','al.SupplierId');
+            })
+            ->leftJoin(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_prd AS prd'),'prd.id','=','al.linkageid')
+            ->where($filters)
+            ->where('original','=',1)
+            ->where('m.ispassengercar','=','True')
+            ->select('p.name','p.articles','p.price','m.description AS brand','p.count','prd.normalizeddescription',
+                DB::raw("(SELECT a_img.PictureName 
+                        FROM ".config('database.connections.mysql_tecdoc.database').".article_images AS a_img 
+                        WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=p.brand LIMIT 1) AS PictureName"),
+                DB::raw("(SELECT GROUP_CONCAT(CONCAT(attr.description,' - ',attr.displayvalue) SEPARATOR '\n') 
+                         FROM ".config('database.connections.mysql_tecdoc.database').".article_attributes AS attr
+                         WHERE attr.supplierId=p.brand AND attr.DataSupplierArticleNumber=p.articles) AS attribute"));
+
+        $products = DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
+                        ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),'sp.id','=','p.brand')
+                        ->leftJoin(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'),function ($query){
+                            $query->on('p.articles','al.DataSupplierArticleNumber');
+                            $query->on('p.brand','al.SupplierId');
+                        })
+                        ->leftJoin(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_prd AS prd'),'prd.id','=','al.linkageid')
+                        ->where($filters)
+                        ->where('original','=',0)
+                        ->union($original)
+                        ->select('p.name','p.articles','p.price','sp.description AS brand','p.count','prd.normalizeddescription',
+                            DB::raw("(SELECT a_img.PictureName 
+                                FROM ".config('database.connections.mysql_tecdoc.database').".article_images AS a_img 
+                                WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=p.brand LIMIT 1) AS PictureName"),
+                            DB::raw("(SELECT GROUP_CONCAT(CONCAT(attr.description,' - ',attr.displayvalue) SEPARATOR '\n') 
+                                    FROM ".config('database.connections.mysql_tecdoc.database').".article_attributes AS attr
+                                    WHERE attr.supplierId=p.brand AND attr.DataSupplierArticleNumber=p.articles) AS attribute"))
+                        ->get();
+        return $products;
     }
 
     public function getAttribute($article,$supplierId){
@@ -96,12 +122,7 @@ class Product
                 $active_sheet->setCellValue('F' .$row_next,$item->brand);
                 $active_sheet->setCellValue('G' .$row_next,$item->normalizeddescription);
                 $active_sheet->setCellValue('H' .$row_next,$item->normalizeddescription);
-
-                $attr_str = '';
-                foreach ($item->attribute as $val){
-                    $attr_str .= "{$val->description} - {$val->displayvalue} \n";
-                }
-                $active_sheet->setCellValue('I' .$row_next,$attr_str);
+                $active_sheet->setCellValue('I' .$row_next,$item->attribute);
 
                 $active_sheet->setCellValue('J' .$row_next,'UAH');
                 $active_sheet->setCellValue('K' .$row_next,'шт.');

@@ -16,7 +16,7 @@ class CacheControl
     public function handle($request, Closure $next)
     {
         $response = $next($request);
-        $response->header('Cache-Control', 'must-revalidate, public, max-age=315576',false);
+        $response->headers->set('Cache-Control', 'must-revalidate, public, max-age=315576',false);
         return $response;
     }
 }

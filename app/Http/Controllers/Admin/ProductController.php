@@ -180,16 +180,8 @@ class ProductController extends Controller
     }
 
     public function startExport(Request $request){
-
-        $limit_export = isset($request->limit)?$request->limit:10000;
-
-        $exportdata = $this->service->getExportData($limit_export);
-        foreach ($exportdata as $k => $item){
-            $exportdata[$k]->attribute = $this->service->getAttribute($item->articles,$item->SupplierId);
-        }
-
+        $exportdata = $this->service->getExportData($this->filterProduct($request));
         $xls_file = $this->service->createXlsFile($exportdata);
-
         return response()->download($xls_file);
     }
 
