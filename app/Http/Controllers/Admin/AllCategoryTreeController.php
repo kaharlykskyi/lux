@@ -88,6 +88,7 @@ class AllCategoryTreeController extends Controller
                         'name' => $data['name'],
                         'image' => isset($file_name)?$file_name:$category_save->image,
                         'show' => $data['show'],
+                        'hurl' => $data['hurl'],
                     ]);
                 Cache::forget('tecdoc_category_info_'.$data['id']);
             }
