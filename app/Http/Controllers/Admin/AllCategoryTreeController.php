@@ -94,22 +94,8 @@ class AllCategoryTreeController extends Controller
             return redirect()->back()->with('status','Данные не сохранены');
         }
 
-        $search_category = trim($request->category);
+        $save_category = AllCategoryTree::where('id','=',(int)$request->id)->first();
 
-        if (isset($request->id)) $filter[] = ['id','=',(int)$request->id];
-        else $filter[] = ['assemblygroupdescription','=',$search_category];
-        $category = DB::connection('mysql_tecdoc')->table('prd')
-            ->where('id','=',(int)$request->id)->first();
-
-        $filter = [['level','=',isset($request->level)?(int)$request->level:0]];
-        if (isset($request->id)) $filter[] = ['tecdoc_id','=',(int)$request->id];
-        else $filter[] = ['tecdoc_name','=',$search_category];
-        $save_category = AllCategoryTree::where($filter)->first();
-
-        if ($request->has('id')){
-            $search_category = "{$category->normalizeddescription} - $category->usagedescription";
-        }
-
-        return view('admin.all_category_tree.edit',compact('category','search_category','save_category'));
+        return view('admin.all_category_tree.edit',compact('save_category'));
     }
 }

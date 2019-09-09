@@ -17,9 +17,9 @@
                             <form action="{{route('admin.all_category.edit')}}" method="post" enctype="multipart/form-data" class="form-horizontal">
                                 @csrf
 
-                                <input type="hidden" name="level" value="{{request()->query('level')}}">
-                                <input type="hidden" name="parent" value="{{request()->query('parent')}}">
-                                <input type="hidden" name="tecdoc_id" value="{{request()->query('id')}}">
+                                <input type="hidden" name="level" value="{{isset($save_category->level)?$save_category->level:''}}">
+                                <input type="hidden" name="parent" value="{{isset($save_category->parent_category)?$save_category->parent_category:''}}">
+                                <input type="hidden" name="tecdoc_id" value="{{isset($save_category->tecdoc_id)?$save_category->tecdoc_id:''}}">
                                 <input type="hidden" name="id" value="{{isset($save_category->id)?$save_category->id:''}}">
 
                                 <div class="row form-group">
@@ -27,7 +27,7 @@
                                         <label for="tecdoc_name" class=" form-control-label">{{__('Название в TecDoc')}}</label>
                                     </div>
                                     <div class="col-12 col-md-9">
-                                        <input type="text" id="tecdoc_name" name="tecdoc_name" value="{{$search_category}}" readonly>
+                                        <input type="text" id="tecdoc_name" name="tecdoc_name" value="{{isset($save_category->tecdoc_name)?$save_category->tecdoc_name:''}}" readonly>
                                     </div>
                                 </div>
 
@@ -36,7 +36,7 @@
                                         <label for="text-input" class=" form-control-label">{{__('Название')}}</label>
                                     </div>
                                     <div class="col-12 col-md-9">
-                                        <input type="text" id="text-input" name="name" value="{{isset($save_category->name)?$save_category->name:$search_category}}" class="form-control">
+                                        <input type="text" id="text-input" name="name" value="{{isset($save_category->name)?$save_category->name:''}}" class="form-control">
                                         @if ($errors->has('name'))
                                             <small class="form-text text-danger">{{ $errors->first('name') }}</small>
                                         @endif

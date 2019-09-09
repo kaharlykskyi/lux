@@ -38,8 +38,13 @@
                                                 }
                                             @endphp
                                             @if ($count_product > 0)
-                                                <a class="border-0 col-xs-12 col-sm-6 list-group-item" style="@if(isset($sub['tecdoc'][0]->count_product) && $sub['tecdoc'][0]->count_product==0) opacity: 0.6; @endif" href="{{route('catalog',$sub->tecdoc_id)}}?car={{$modification}}">
+                                                <a class="border-0 col-xs-12 col-sm-6 list-group-item" style="@if(isset($sub['tecdoc'][0]->count_product) && $sub['tecdoc'][0]->count_product==0) opacity: 0.6; @endif" href="{{route('catalog',$sub->hurl)}}?car={{$modification}}">
                                                     {{$sub->name}} - [<span class="small text-danger">{{$count_product}}</span>]
+                                                    @if (Auth::check() && (Auth::user()->permission === 'admin' || Auth::user()->permission === 'manager'))
+                                                        <span style="z-index: 999;cursor: zoom-in;position: absolute;top: 0;right: 0;" onclick="window.open('{{route('admin.all_category.edit')}}?id={{$sub->id}}','_blank');return false;">
+                                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                        </span>
+                                                    @endif
                                                 </a>
                                             @endif
                                         @endforeach
@@ -78,6 +83,11 @@
                                                     @if ($count_product > 0)
                                                         <a class="border-0 col-xs-12 col-sm-6 list-group-item" href="{{route('catalog',$sub->hurl)}}?car={{$modification}}">
                                                             {{$sub->name}} - [<span class="small text-danger">{{$count_product}}</span>]
+                                                            @if (Auth::check() && (Auth::user()->permission === 'admin' || Auth::user()->permission === 'manager'))
+                                                                <span style="z-index: 999;cursor: zoom-in;position: absolute;top: 0;right: 0;" onclick="window.open('{{route('admin.all_category.edit')}}?id={{$sub->id}}','_blank');return false;">
+                                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                                                </span>
+                                                            @endif
                                                         </a>
                                                     @endif
                                                 @endforeach

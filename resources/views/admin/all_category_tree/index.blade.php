@@ -69,7 +69,7 @@
                                         </th>
                                         <th>
                                             <div class="table-data-feature">
-                                                <button onclick="location.href = '{{route('admin.all_category.edit')}}?category={{$category_title}}&level={{request()->query('level')}}{{isset($parent)?'&parent='.$parent->id:''}}{{isset($category->id)?'&id='.$category->id:''}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Редактирвать')}}">
+                                                <button onclick="location.href = '{{route('admin.all_category.edit')}}?id={{$category->custom_id}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Редактирвать')}}">
                                                     <i class="zmdi zmdi-edit"></i>
                                                 </button>
                                                 @if((int)request()->query('level') === 0 && isset($category->custom_id))
