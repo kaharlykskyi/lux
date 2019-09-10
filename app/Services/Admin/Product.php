@@ -14,15 +14,15 @@ class Product
     public function getExportData(array $filters){
         $original = DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.manufacturers AS m'),'m.id','=','p.brand')
-            ->leftJoin(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'),function ($query){
-                $query->on('p.articles','al.DataSupplierArticleNumber');
-                $query->on('p.brand','al.SupplierId');
+            ->leftJoin(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_prd AS a_prd'),function ($query){
+                $query->on('p.articles','a_prd.DataSupplierArticleNumber');
+                $query->on('p.brand','a_prd.SupplierId');
             })
-            ->leftJoin(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_prd AS prd'),'prd.id','=','al.linkageid')
+            ->leftJoin(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_prd AS prd'),'prd.id','=','a_prd.productid')
             ->where($filters)
             ->where('original','=',1)
             ->where('m.ispassengercar','=','True')
-            ->select('p.name','p.articles','p.price','m.description AS brand','p.count','prd.normalizeddescription',
+            ->select('p.name','p.articles','p.price','m.description AS brand','p.count','prd.description',
                 DB::raw("(SELECT a_img.PictureName 
                         FROM ".config('database.connections.mysql_tecdoc.database').".article_images AS a_img 
                         WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=p.brand LIMIT 1) AS PictureName"),
@@ -32,15 +32,15 @@ class Product
 
         $products = DB::table(DB::raw(config('database.connections.mysql.database').'.products AS p'))
                         ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers AS sp'),'sp.id','=','p.brand')
-                        ->leftJoin(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_links AS al'),function ($query){
-                            $query->on('p.articles','al.DataSupplierArticleNumber');
-                            $query->on('p.brand','al.SupplierId');
+                        ->leftJoin(DB::raw(config('database.connections.mysql_tecdoc.database').'.article_prd AS a_prd'),function ($query){
+                            $query->on('p.articles','a_prd.DataSupplierArticleNumber');
+                            $query->on('p.brand','a_prd.SupplierId');
                         })
-                        ->leftJoin(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_prd AS prd'),'prd.id','=','al.linkageid')
+                        ->leftJoin(DB::raw(config('database.connections.mysql_tecdoc.database').'.passanger_car_prd AS prd'),'prd.id','=','a_prd.productid')
                         ->where($filters)
                         ->where('original','=',0)
                         ->union($original)
-                        ->select('p.name','p.articles','p.price','sp.description AS brand','p.count','prd.normalizeddescription',
+                        ->select('p.name','p.articles','p.price','sp.description AS brand','p.count','prd.description',
                             DB::raw("(SELECT a_img.PictureName 
                                 FROM ".config('database.connections.mysql_tecdoc.database').".article_images AS a_img 
                                 WHERE a_img.DataSupplierArticleNumber=p.articles AND a_img.SupplierId=p.brand LIMIT 1) AS PictureName"),
@@ -120,8 +120,8 @@ class Product
                 $active_sheet->setCellValue('D' .$row_next,$item->price);
                 $active_sheet->setCellValue('E' .$row_next,$item->count);
                 $active_sheet->setCellValue('F' .$row_next,$item->brand);
-                $active_sheet->setCellValue('G' .$row_next,$item->normalizeddescription);
-                $active_sheet->setCellValue('H' .$row_next,$item->normalizeddescription);
+                $active_sheet->setCellValue('G' .$row_next,$item->description);
+                $active_sheet->setCellValue('H' .$row_next,$item->description);
                 $active_sheet->setCellValue('I' .$row_next,$item->attribute);
 
                 $active_sheet->setCellValue('J' .$row_next,'UAH');
