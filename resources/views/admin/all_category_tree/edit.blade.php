@@ -18,9 +18,26 @@
                                 @csrf
 
                                 <input type="hidden" name="level" value="{{isset($save_category->level)?$save_category->level:''}}">
-                                <input type="hidden" name="parent" value="{{isset($save_category->parent_category)?$save_category->parent_category:''}}">
                                 <input type="hidden" name="tecdoc_id" value="{{isset($save_category->tecdoc_id)?$save_category->tecdoc_id:''}}">
                                 <input type="hidden" name="id" value="{{isset($save_category->id)?$save_category->id:''}}">
+
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label class="form-control-label" for="parent_category">Родительская категория</label>
+                                    </div>
+                                    <div class="col-12 col-md-9">
+                                        @if (isset($parent->subCategory))
+                                            <select class="form-control" id="parent_category" name="parent_category">
+                                                <option value="{{$parent->id}}">{{$parent->name}}</option>
+                                                @foreach ($parent->subCategory as $subCategory)
+                                                    <option @if ($subCategory->id === $save_category->parent_category) selected @endif value="{{$subCategory->id}}">{{$subCategory->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        @else
+                                            <p>{{$parent->name}}</p>
+                                        @endif
+                                    </div>
+                                </div>
 
                                 <div class="row form-group">
                                     <div class="col col-md-3">

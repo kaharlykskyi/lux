@@ -72,7 +72,7 @@ class AllCategoryTreeController extends Controller
             if (!isset($category_save)){
                 $save_category = new AllCategoryTree();
                 $save_category->fill([
-                    'parent_category' => isset($data['parent'])?(int)$data['parent']:null,
+                    'parent_category' => isset($data['parent_category'])?(int)$data['parent_category']:null,
                     'hurl' => $data['hurl'],
                     'name' => $data['name'],
                     'image' => isset($file_name)?$file_name:null,
@@ -86,6 +86,7 @@ class AllCategoryTreeController extends Controller
                 AllCategoryTree::where('id',(int)$data['id'])
                     ->update([
                         'name' => $data['name'],
+                        'parent_category' => isset($data['parent_category'])?(int)$data['parent_category']:null,
                         'image' => isset($file_name)?$file_name:$category_save->image,
                         'show' => $data['show'],
                         'hurl' => $data['hurl'],
@@ -97,6 +98,16 @@ class AllCategoryTreeController extends Controller
 
         $save_category = AllCategoryTree::where('id','=',(int)$request->id)->first();
 
-        return view('admin.all_category_tree.edit',compact('save_category'));
+        if (isset($request->parent_id)){
+            $parent = AllCategoryTree::with('subCategory')->findOrFail((int)$request->parent_id);
+        }else{
+            if (AllCategoryTree::where('id',$save_category->parent_category)->whereNull('parent_category')->exists()){
+                $parent = AllCategoryTree::with('subCategory')->findOrFail((int)$save_category->parent_category);
+            }else{
+                $parent = AllCategoryTree::findOrFail((int)$save_category->parent_category);
+            }
+        }
+
+        return view('admin.all_category_tree.edit',compact('save_category','parent'));
     }
 }

@@ -59,7 +59,7 @@
                                                     <div class="form-group">
                                                         <label class="small" for="childRoot_{{$category->custom_id}}">Переопределение родительской категории</label>
                                                         <select onchange="changeParent({{$category->custom_id}})" data-id="{{$category->custom_id}}" class="form-control" id="childRoot_{{$category->custom_id}}">
-                                                            <option value="null">По дефолту</option>
+                                                            <option value="{{$parent->id}}">{{$parent->name}}</option>
                                                             @foreach ($parent->subCategory as $subCategory)
                                                                 <option @if ($subCategory->id === $category->parent_category) selected @endif value="{{$subCategory->id}}">{{$subCategory->name}}</option>
                                                             @endforeach
@@ -69,7 +69,7 @@
                                         </th>
                                         <th>
                                             <div class="table-data-feature">
-                                                <button onclick="location.href = '{{route('admin.all_category.edit')}}?id={{$category->custom_id}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Редактирвать')}}">
+                                                <button onclick="location.href = '{{route('admin.all_category.edit')}}?id={{$category->custom_id}}{{isset($parent->id)?"&parent_id={$parent->id}":''}}'" class="item" data-toggle="tooltip" data-placement="top" title="{{__('Редактирвать')}}">
                                                     <i class="zmdi zmdi-edit"></i>
                                                 </button>
                                                 @if((int)request()->query('level') === 0 && isset($category->custom_id))
