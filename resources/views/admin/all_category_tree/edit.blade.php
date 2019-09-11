@@ -34,7 +34,7 @@
                                                 @endforeach
                                             </select>
                                         @else
-                                            <p>{{$parent->name}}</p>
+                                            @isset($parent->name) <p>{{$parent->name}}</p> @endisset
                                         @endif
                                     </div>
                                 </div>

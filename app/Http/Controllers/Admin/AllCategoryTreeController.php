@@ -104,7 +104,7 @@ class AllCategoryTreeController extends Controller
             if (AllCategoryTree::where('id',$save_category->parent_category)->whereNull('parent_category')->exists()){
                 $parent = AllCategoryTree::with('subCategory')->findOrFail((int)$save_category->parent_category);
             }else{
-                $parent = AllCategoryTree::findOrFail((int)$save_category->parent_category);
+                $parent = AllCategoryTree::find((int)$save_category->parent_category);
             }
         }
 
