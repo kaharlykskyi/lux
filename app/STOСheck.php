@@ -16,7 +16,8 @@ class STOСheck extends Model
         'acceptor',
         'application_date',
         'date_compilation',
-        'place'
+        'place',
+        'mileage',
     ];
 
     public function work(){

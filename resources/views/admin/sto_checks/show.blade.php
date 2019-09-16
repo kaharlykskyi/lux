@@ -67,7 +67,7 @@
                             <th>{{$check->client->brand}}</th>
                             <th>{{$check->client->vin}}</th>
                             <th>{{date('Y-m-d',strtotime($check->client->data))}}</th>
-                            <th>{{$check->client->mileage}}</th>
+                            <th>{{(int)$check->mileage === 0?'':$check->mileage}}</th>
                         </tr>
                         </tbody>
                     </table>

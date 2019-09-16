@@ -48,6 +48,18 @@
     </div>
 </div>
 
+<div class="row form-group">
+    <div class="col col-md-3">
+        <label for="mileage" class=" form-control-label">{{__('Пробег')}}</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <input type="text" id="mileage" name="mileage" value="@if(isset($check->id)){{$check->mileage}}@else{{old('mileage')}}@endif" class="form-control">
+        @if ($errors->has('mileage'))
+            <small class="form-text text-danger">{{ $errors->first('mileage') }}</small>
+        @endif
+    </div>
+</div>
+
 <div class="form-group">
     <label for="info_for_user">Информация для покупателя</label>
     <textarea class="form-control" name="info_for_user" id="info_for_user" rows="5">@if(isset($check->id)){{$check->info_for_user}}@else{{old('info_for_user')}}@endif</textarea>

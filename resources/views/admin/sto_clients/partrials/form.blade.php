@@ -48,18 +48,6 @@
 
 <div class="row form-group">
     <div class="col col-md-3">
-        <label for="mileage" class=" form-control-label">{{__('Пробег')}}</label>
-    </div>
-    <div class="col-12 col-md-9">
-        <input type="text" id="mileage" name="mileage" value="@if(isset($sto_client->id)){{$sto_client->mileage}}@else{{old('mileage')}}@endif" class="form-control">
-        @if ($errors->has('mileage'))
-            <small class="form-text text-danger">{{ $errors->first('mileage') }}</small>
-        @endif
-    </div>
-</div>
-
-<div class="row form-group">
-    <div class="col col-md-3">
         <label for="vin" class=" form-control-label">{{__('VIN код')}}</label>
     </div>
     <div class="col-12 col-md-9">

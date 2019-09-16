@@ -23,6 +23,7 @@ class CreateSTOсhecksTable extends Migration
             $table->text('info_for_user')->nullable();
             $table->string('price_abc')->nullable();
             $table->decimal('sum',9,2)->default(0);
+            $table->string('mileage')->default(0);
             $table->timestamps();
 
             $table->foreign('sto_clint_id')->references('id')->on('s_t_o_clients')->onDelete('CASCADE');

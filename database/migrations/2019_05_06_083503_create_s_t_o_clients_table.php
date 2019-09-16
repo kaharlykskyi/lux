@@ -18,7 +18,6 @@ class CreateSTOClientsTable extends Migration
             $table->string('fio');
             $table->string('num_auto');
             $table->string('brand');
-            $table->string('mileage')->default(0);
             $table->string('vin');
             $table->timestamp('data')->useCurrent();
             $table->string('car_name')->nullable();

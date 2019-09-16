@@ -12,7 +12,6 @@ class STOClients extends Model
         'fio',
         'num_auto',
         'brand',
-        'mileage',
         'vin',
         'data',
         'car_name',
