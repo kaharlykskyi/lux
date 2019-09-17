@@ -45,7 +45,7 @@
                         }else{
                             if (!empty($product->file)){
                                 $brand_folder = explode('_',$product->file);
-                                $file_path = asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$file->PictureName));
+                                $file_path = asset('product_imags/'.$brand_folder[0].'/'.str_ireplace(['.BMP','.JPG'],'.jpg',$product->file));
                             }
                         }
                     @endphp
