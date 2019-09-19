@@ -76,7 +76,7 @@
                             @if(!empty($all_category_global))
                                 @foreach ($all_category_global as $category_global)
                                     @foreach($category_global->childCategories as $category)
-                                        @if($category->parent_id === $root->id && !empty($category->sub_categores))
+                                        @if(($category->parent_id === $root->id || $category->id === $root->id) && !empty($category->sub_categores))
                                             <li class="list-group-item margin-bottom-15 row category-car">
                                                 <h6 class="text-uppercase">{{$category->title}}</h6>
                                                 <div class="list-group col-xs-12 col-sm-8 row">
