@@ -1,41 +1,9 @@
 @section('style')
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <style>
-        #sortable1, #sortable2 {
-            border: 1px solid #eee;
-            width: 48%;
-            min-height: 20px;
-            list-style-type: none;
-            margin: 0;
-            padding: 5px 0 0 0;
-            float: left;
-            margin-right: 10px;
-            height: 400px;
-            overflow: auto;
-        }
-        #sortable1 li, #sortable2 li {
-            margin: 2px;
-            padding: 0;
-            font-size: 1rem;
-            width: 99%;
-        }
-        #droppable{
-            position: absolute;
-            right: 0;
-            z-index: 1;
-            height: 60px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            top: -60px;
-            left: 0;
-            background: transparent;
-            border: none;
-        }
-    </style>
 @endsection
 
 <input type="hidden" name="categories" id="categories" value="{{isset($car_categories->id)?$car_categories->categories:''}}">
+<input type="hidden" name="root_child" id="root_child" value="">
 
 <div class="row form-group">
     <div class="col col-md-3">
@@ -87,11 +55,11 @@
 </div>
 
 <div class="row form-group">
-    <div class="col col-md-3">
+    <div class="col-12">
         <label for="key_words" class=" form-control-label">{{__('Дочерние категории')}}</label><br>
         <span class="small text-info">Выбирите главную категорию категорию, а потом перетащите в право неообходимые категории</span>
     </div>
-    <div class="col-12 col-md-9">
+    <div class="col-12 m-t-60">
         <div id="droppable" class="ui-widget-header">
             <p><i class="fa fa-trash" aria-hidden="true"></i></p>
         </div>
@@ -102,17 +70,33 @@
                 $use_category = [];
             }
         @endphp
-        <ul class="list-group" id="root_tecdoc_cat" style="height: 370px;overflow: auto;width: 50%;float: left;">
+        <ul class="connectedSortable" id="sortable4">
             @foreach ($root_all_category as $category)
-                <li style="padding-left: 5px !important;cursor: pointer" onclick="getChild({{$category->id}})" class="list-group-item d-flex justify-content-between align-items-center p-0">
+                @php
+                    if (isset($car_categories->id) && $car_categories->childRootCategories->count() > 0){
+                        foreach ($car_categories->childRootCategories as $item){
+                            if ($item->id === $category->id) continue;
+                        }
+                    }
+                @endphp
+                <li data-id="{{$category->id}}" class="ui-state-default">
                     {{$category->name}}
+                    <span onclick="getChild({{$category->id}})">дочерние</span>
                 </li>
             @endforeach
         </ul>
         <ul style="display: none" id="sortable1" class="connectedSortable"></ul>
         <button type="button" id="showRootBtn" class="btn btn-success hidden" onclick="showRoot()" style="position: absolute;bottom: -10px;left: 0;">назад</button>
 
-        <ul id="sortable2" class="connectedSortable">
+        <ul id="sortable3" class="connectedSortable">
+            @if (isset($car_categories->id) && $car_categories->childRootCategories->count() > 0)
+                @foreach ($car_categories->childRootCategories as $item)
+                    <li date-id="{{$item->id}}" class="ui-state-highlight">{{$item->name}}</li>
+                @endforeach
+            @endif
+        </ul>
+
+        <ul style="display: none" id="sortable2" class="connectedSortable">
             @if(isset($all_category) && !empty($all_category))
                 @php $uniq_category = []; @endphp
                 @foreach($all_category as $item)
@@ -137,13 +121,12 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
     <script>
         $( function() {
-            $( "#sortable1, #sortable2" ).sortable({
+            $( "#sortable1, #sortable2,#sortable3,#sortable4" ).sortable({
                 connectWith: ".connectedSortable"
             }).disableSelection();
 
             $( "#droppable" ).droppable({
                 drop: function( event, ui ) {
-                    console.log(ui.draggable)
                     $(ui.draggable).remove()
                     $( this )
                         .removeClass( "ui-state-highlight" )
@@ -164,6 +147,19 @@
             const useIds = [];
             const useTecDocIds = [];
 
+            const use_root_category = $('#sortable3 > li');
+            let use_root_category_str = '';
+            const useRootIds = [];
+
+            for (let item = 0;item < use_root_category.length;item++){
+                const id = $(use_root_category[item]).attr('data-id');
+                if(!useRootIds.includes(id)){
+                    useRootIds.push(id);
+                    use_root_category_str += `${id}@`;
+                }
+            }
+            console.log(use_root_category_str)
+
             for (let item = 0;item < use_category.length;item++){
                 const id = $(use_category[item]).attr('date-id');
                 const tecdoc_id = $(use_category[item]).attr('data-tecdoc');
@@ -175,10 +171,12 @@
             }
 
             $('#categories').val(use_category_str);
+            $('#root_child').val(use_root_category_str);
         }
         function getChild(id) {
             const useTecDocIdsSave = JSON.parse('{{json_encode($uniq_category)}}');
-            $('#root_tecdoc_cat').hide();
+            $('#sortable4,#sortable3').hide();
+            $('#sortable2').show();
             $('#sortable1').html('<li class="ui-state-default">загрузка...</li>').show()
             $.get(`{{route('admin.tecdoc.child_category')}}?id=${id}`,function (data) {
                 let html = '';
@@ -202,8 +200,8 @@
 
         function showRoot() {
             $('#showRootBtn').toggleClass('hidden');
-            $('#root_tecdoc_cat').show();
-            $('#sortable1').hide();
+            $('#sortable4,#sortable3').show();
+            $('#sortable1,#sortable2').hide();
         }
     </script>
 @endsection

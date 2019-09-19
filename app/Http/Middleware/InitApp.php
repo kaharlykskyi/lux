@@ -2,11 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use App\{AllCategoryTree,
-    CallOrder,
+use App\{CallOrder,
     Cart,
     CartProduct,
-    CategoresGroupForCar,
+    Http\Controllers\Controller,
     OrderPay,
     Page,
     Services\Home,
@@ -64,29 +63,7 @@ class InitApp
                 return Page::all();
             });
 
-            $all_category = Cache::remember('all_category', 60*24, function () {
-                $all_category = CategoresGroupForCar::with('childCategories')
-                    ->whereNull('parent_id')->orderByDesc(DB::raw('-`range`'))->get();
-
-                foreach ($all_category as $item){
-                    if (isset($item->categories)){
-                        $sub_cat = json_decode($item->categories);
-                        if (!empty($sub_cat[0])){
-                            $item->sub_categores = AllCategoryTree::whereIn('id',$sub_cat)->get();
-                        }
-                    }
-                    foreach ($item->childCategories as $child){
-                        if (isset($child->categories)){
-                            $sub_cat = json_decode($child->categories);
-                            if (!empty($sub_cat[0])){
-                                $child->sub_categores = AllCategoryTree::whereIn('id',$sub_cat)->get();
-                            }
-                        }
-                    }
-                }
-
-                return $all_category;
-            });
+            $all_category = Controller::getMenu($search_cars);
 
             $cart = Cart::where([
                 Auth::check()

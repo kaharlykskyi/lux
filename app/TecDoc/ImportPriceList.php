@@ -6,7 +6,7 @@ namespace App\TecDoc;
 use App\{AliasBrand, NoBrandProduct, Product, ProFile};
 use Exception;
 use GuzzleHttp\Client;
-use Illuminate\Support\{Carbon, Facades\DB, Facades\Log};
+use Illuminate\Support\{Carbon, Facades\Artisan, Facades\DB, Facades\Log};
 use PHPExcel_Cell;
 use PHPExcel_IOFactory;
 use PHPExcel_Reader_CSV;
@@ -108,6 +108,7 @@ class ImportPriceList
         ]);
 
         unlink(storage_path('app') . '/import_ease/' . $file);
+        Artisan::call('cache:clear');
     }
 
     protected function getMail(){
@@ -147,6 +148,7 @@ class ImportPriceList
                         }
 
                         $mailbox->deleteMail($mailsId);
+                        Artisan::call('cache:clear');
                     }
                 }
             }

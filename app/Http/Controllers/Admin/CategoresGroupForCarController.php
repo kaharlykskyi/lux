@@ -67,7 +67,18 @@ class CategoresGroupForCarController extends Controller
 
         $car_group_category = new CategoresGroupForCar();
         $car_group_category->fill($data);
-        $car_group_category->save();
+        if ($car_group_category->save()){
+            $root_child = explode('@',$data['root_child']);
+
+            foreach ($root_child as $item){
+                if(!empty($item)){
+                    DB::table('group_categories')->updateOrInsert([
+                        'user_category' => $car_group_category->id,
+                        'tecdoc_category' => (int)$item
+                    ]);
+                }
+            }
+        }
         Cache::forget('all_category');
         return redirect()->route('admin.car_categories.index')->with('status','Данные сохранены');
     }
@@ -91,7 +102,7 @@ class CategoresGroupForCarController extends Controller
      */
     public function edit($id)
     {
-        $car_categories = CategoresGroupForCar::find((int)$id);
+        $car_categories = CategoresGroupForCar::with('childRootCategories')->find((int)$id);
         $root_car_category = CategoresGroupForCar::whereNull('parent_id')->get();
         $root_all_category = AllCategoryTree::whereNull('parent_category')->get();
         $all_category = AllCategoryTree::where('level',1)->get();
@@ -111,6 +122,16 @@ class CategoresGroupForCarController extends Controller
         $car_categories = CategoresGroupForCar::find((int)$id);
 
         $data['categories'] = json_encode(explode('@',$data['categories']));
+        $root_child = explode('@',$data['root_child']);
+
+        foreach ($root_child as $item){
+            if(!empty($item)){
+                DB::table('group_categories')->updateOrInsert([
+                    'user_category' => $car_categories->id,
+                    'tecdoc_category' => (int)$item
+                ]);
+            }
+        }
 
         if ($request->hasFile('logo')){
 

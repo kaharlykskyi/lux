@@ -67,6 +67,7 @@
             <div class="collapse navbar-collapse" id="nav-open-btn">
                 <ul class="nav">
                     @isset($all_category_global)
+                        @php $use_tecdoc_id = []; @endphp
                         @foreach($all_category_global as $category)
                             <li class="dropdown megamenu">
                                 @if(isset($search_cars[0]))
@@ -81,17 +82,21 @@
                                                 @if (isset($category->sub_categores))
                                                     @php
                                                         if ($search_cars[0]){
-                                                            $count_product2 = Cache::get('count_product_modif_'.$search_cars[0]['cookie']['modification_auto'].$category->id) ;
+                                                            $count_product = Cache::get('count_product_modif_'.$search_cars[0]['cookie']['modification_auto']) ;
                                                         }
                                                     @endphp
                                                     <div class="col-sm-3">
                                                         <ul>
                                                         @foreach ($category->sub_categores as $root_child)
+                                                            @if (in_array($root_child->tecdoc_id,$use_tecdoc_id))
+                                                                @continue
+                                                            @endif
+                                                            @php $use_tecdoc_id[] = $root_child->tecdoc_id @endphp
                                                             @if(isset($search_cars[0]))
-                                                                @if (!empty($count_product2))
+                                                                @if (!empty($count_product))
                                                                     @php
                                                                         $count = 0;
-                                                                        foreach ($count_product2 as $val){
+                                                                        foreach ($count_product as $val){
                                                                             if ($root_child->tecdoc_id === $val->id){
                                                                                 $count += (int)$val->count_product;
                                                                             }
@@ -111,11 +116,6 @@
                                                     </div>
                                                 @endif
                                                 @foreach($category->childCategories as $child)
-                                                    @php
-                                                        if ($search_cars[0]){
-                                                            $count_product = Cache::get('count_product_modif_'.$search_cars[0]['cookie']['modification_auto'].$child->id) ;
-                                                        }
-                                                    @endphp
                                                     <div class="col-sm-3">
                                                         @if(isset($search_cars[0]))
                                                             <h6><a href="{{route('all_brands',$child->id)}}?modification_auto={{$search_cars[0]['cookie']['modification_auto']}}"> {{$child->title}} </a></h6>
@@ -125,6 +125,10 @@
                                                         <ul style="max-height: 340px;overflow: auto;">
                                                             @isset($child->sub_categores)
                                                                 @foreach($child->sub_categores as $item)
+                                                                    @if (in_array($item->tecdoc_id,$use_tecdoc_id))
+                                                                        @continue
+                                                                    @endif
+                                                                    @php $use_tecdoc_id[] = $item->tecdoc_id @endphp
                                                                     @if(isset($search_cars[0]))
                                                                         @if (!empty($count_product))
                                                                             @php

@@ -55,61 +55,7 @@ class HomeController extends Controller
         if (isset($request->rootcategory)){
             $root = CategoresGroupForCar::with('childCategories')->findOrFail($request->rootcategory);
             $modification = $request->modification_auto;
-            $all_ids = [];
-
-            if (isset($root->categories)){
-                $sub = json_decode($root->categories);
-                $sub_categories = [];
-                foreach ($sub as $item){
-                    if (!empty($item)){
-                        $custom_data = Cache::remember('tecdoc_category_info_'.$item, 60*24*7*365, function () use ($item) {
-                            return AllCategoryTree::with('subCategory')->where('id',$item)->first();
-                        });
-                        $sub_categories[] = $custom_data;
-                        if (isset($custom_data->tecdoc_id)) $all_ids[] = $custom_data->tecdoc_id;
-                        if (isset($custom_data->subCategory)){
-                            foreach ($custom_data->subCategory as $subCategory){
-                                $all_ids[] = $subCategory->tecdoc_id;
-                            }
-                        }
-                    }
-                }
-                $root->sub_categories = $sub_categories;
-            }
-
-            if ($root->childCategories->isNotEmpty()){
-                foreach ($root->childCategories as $k => $child){
-                    if(isset($child->categories)){
-                        $child_sub = json_decode($child->categories);
-                        $child_sub_categories = [];
-                        foreach ($child_sub as $item){
-                            if (!empty($item)){
-                                $custom_data = Cache::remember('tecdoc_category_info_'.$item, 60*24*7*365, function () use ($item) {
-                                    return AllCategoryTree::with('subCategory')->where('id',$item)->first();
-                                });
-                                $child_sub_categories[] = $custom_data;
-                                if (isset($custom_data->tecdoc_id)) $all_ids[] = $custom_data->tecdoc_id;
-                                if (isset($custom_data->subCategory)){
-                                    foreach ($custom_data->subCategory as $subCategory){
-                                        $all_ids[] = $subCategory->tecdoc_id;
-                                    }
-                                }
-                            }
-                        }
-
-                        $child->sub_categories = $child_sub_categories;
-                    }
-                }
-            }
-
-            if (!empty($all_ids)){
-                $all_count = Cache::remember('count_product_modif_'.$modification.$root->id,60*24,function () use ($modification, $all_ids) {
-                    return $this->tecdoc->getAllCategoryTree($all_ids,'modif',(int)$modification);
-                });
-            }else{
-                $all_count = [];
-            }
-
+            $all_count = Cache::get('count_product_modif_'.$modification);
             return view('home.root_category',compact('root','modification','all_count'));
         }
 

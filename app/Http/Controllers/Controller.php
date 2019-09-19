@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\AllCategoryTree;
 use App\Cart;
+use App\CategoresGroupForCar;
+use App\TecDoc\Tecdoc;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\{Auth, DB, Input};
+use Illuminate\Support\Facades\{Auth, Cache, DB, Input};
 
 class Controller extends BaseController
 {
@@ -71,5 +74,61 @@ class Controller extends BaseController
         }
 
         return $sum;
+    }
+
+    public static function getMenu($cars = null,$modification_auto = null){
+        $all_tecdoc_ids = [];
+        $data =  Cache::remember('all_category', 60*24*7*365, function () use ($cars) {
+            $all_category = CategoresGroupForCar::with(['childCategories' => function($query){
+                $query->with('childRootCategories');
+            },'childRootCategories'])
+                ->whereNull('parent_id')->orderByDesc(DB::raw('-`range`'))->get();
+            foreach ($all_category as $item){
+                $item = self::getSubCategory($item);
+                if (isset($item->sub_categores)){
+                    foreach ($item->sub_categores as $sub){
+                        $all_tecdoc_ids[] = $sub->tecdoc_id;
+                    }
+                }
+                foreach ($item->childCategories as $child){
+                    $child = self::getSubCategory($child);
+                    if (isset($child->sub_categores)){
+                        foreach ($child->sub_categores as $subChild){
+                            $all_tecdoc_ids[] = $subChild->tecdoc_id;
+                        }
+                    }
+                }
+            }
+
+            if (!isset($modification_auto) && isset($cars)){
+                $modification_auto = $cars[0]['cookie']->modification_auto;
+            }
+
+            if (isset($modification_auto) && !empty($all_tecdoc_ids)){
+                $tecdoc = new Tecdoc('mysql_tecdoc');
+                $tecdoc->setType('passenger');
+                Cache::remember('count_product_modif_'.$modification_auto,60*24,function () use ($tecdoc, $modification_auto, $all_tecdoc_ids) {
+                    return $tecdoc->getAllCategoryTree($all_tecdoc_ids,'modif',(int)$modification_auto);
+                });
+            }
+
+            return $all_category;
+        });
+        return $data;
+    }
+
+    private static function getSubCategory($category){
+        if (isset($category->categories)){
+            $sub_cat = json_decode($category->categories);
+            if (!empty($sub_cat[0])){
+                $category->sub_categores = AllCategoryTree::with('subCategory')->whereIn('id',$sub_cat)->get();
+            }
+        }
+        foreach ($category->childRootCategories as $childRootCategories){
+            $category->sub_categores = collect($category->sub_categores)
+                ->merge(AllCategoryTree::with('subCategory')->where('parent_category',$childRootCategories->id)->get());
+        }
+
+        return $category;
     }
 }

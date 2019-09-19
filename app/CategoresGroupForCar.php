@@ -16,4 +16,8 @@ class CategoresGroupForCar extends Model
     public function childCategories(){
         return $this->hasMany(CategoresGroupForCar::class,'parent_id')->orderByDesc(DB::raw('-`range`'));
     }
+
+    public function childRootCategories(){
+        return $this->belongsToMany(AllCategoryTree::class,'group_categories','user_category','tecdoc_category');
+    }
 }

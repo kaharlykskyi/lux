@@ -14649,3 +14649,47 @@ section {
 .hidden{
     display: none;
 }
+#sortable1, #sortable2,#sortable3,#sortable4 {
+    border: 1px solid #eee;
+    width: 48%;
+    min-height: 20px;
+    list-style-type: none;
+    margin: 0;
+    padding: 5px 0 0 0;
+    float: left;
+    margin-right: 10px;
+    height: 400px;
+    overflow: auto;
+}
+#sortable1 li, #sortable2 li {
+    margin: 2px;
+    padding: 0;
+    font-size: 1rem;
+    width: 99%;
+}
+#droppable{
+    position: absolute;
+    right: 0;
+    z-index: 1;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: -60px;
+    left: 0;
+    background: transparent;
+    border: none;
+}
+.connectedSortable li{
+    position: relative;
+}
+#sortable4 li span{
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    font-size: 10px;
+    border: 1px solid #ccc;
+    padding: 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
