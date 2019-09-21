@@ -78,7 +78,7 @@ class Controller extends BaseController
 
     public static function getMenu($cars = null,$modification_auto = null){
         $all_tecdoc_ids = [];
-        $data =  Cache::remember('all_category', 60*24*7*365, function () use ($cars) {
+        $data =  Cache::remember('all_category', 60*24*7*365, function () use ($cars,&$all_tecdoc_ids) {
             $all_category = CategoresGroupForCar::with(['childCategories' => function($query){
                 $query->with('childRootCategories');
             },'childRootCategories'])
@@ -100,21 +100,40 @@ class Controller extends BaseController
                 }
             }
 
-            if (!isset($modification_auto) && isset($cars)){
-                $modification_auto = $cars[0]['cookie']->modification_auto;
-            }
-
-            if (isset($modification_auto) && !empty($all_tecdoc_ids)){
-                $tecdoc = new Tecdoc('mysql_tecdoc');
-                $tecdoc->setType('passenger');
-                Cache::remember('count_product_modif_'.$modification_auto,60*24,function () use ($tecdoc, $modification_auto, $all_tecdoc_ids) {
-                    return $tecdoc->getAllCategoryTree($all_tecdoc_ids,'modif',(int)$modification_auto);
-                });
-            }
-
             return $all_category;
         });
+
+        Cache::remember('all_tecdoc_ids',60*24*7*365,function () use ($all_tecdoc_ids) {
+            return $all_tecdoc_ids;
+        });
+
+        if (isset($modification_auto) || !empty($cars)){
+            $count = self::getCountProductForCategory($cars,$modification_auto);
+        }
+
         return $data;
+    }
+
+    public static function getCountProductForCategory($cars,$modification_auto){
+
+        if (!isset($modification_auto) && !empty($cars)){
+            try{
+                $modification_auto = $cars[0]['cookie']->modification_auto;
+            }catch (\Exception $exception){
+                $modification_auto = $cars[0]['cookie']['modification_auto'];
+            }
+        }
+
+        $all_tecdoc_ids = Cache::get('all_tecdoc_ids');
+
+        if (isset($modification_auto) && !empty($all_tecdoc_ids)){
+            $tecdoc = new Tecdoc('mysql_tecdoc');
+            $tecdoc->setType('passenger');
+            return Cache::remember('count_product_modif_'.$modification_auto,60*24*7,function () use ($tecdoc, $modification_auto, $all_tecdoc_ids) {
+                return $tecdoc->getAllCategoryTree($all_tecdoc_ids,'modif',(int)$modification_auto);
+            });
+
+        }
     }
 
     private static function getSubCategory($category){

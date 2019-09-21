@@ -55,7 +55,7 @@ class HomeController extends Controller
         if (isset($request->rootcategory)){
             $root = CategoresGroupForCar::with('childCategories')->findOrFail($request->rootcategory);
             $modification = $request->modification_auto;
-            $all_count = Cache::get('count_product_modif_'.$modification);
+            $all_count = Controller::getCountProductForCategory(null,$modification);
             return view('home.root_category',compact('root','modification','all_count'));
         }
 
