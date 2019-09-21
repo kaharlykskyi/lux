@@ -71,7 +71,7 @@ class CategoresGroupForCarController extends Controller
             $root_child = explode('@',$data['root_child']);
 
             foreach ($root_child as $item){
-                if(!empty($item)){
+                if(!empty($item) && (int)$item !== 0){
                     DB::table('group_categories')->updateOrInsert([
                         'user_category' => $car_group_category->id,
                         'tecdoc_category' => (int)$item
@@ -125,7 +125,7 @@ class CategoresGroupForCarController extends Controller
         $root_child = explode('@',$data['root_child']);
 
         foreach ($root_child as $item){
-            if(!empty($item)){
+            if(!empty($item) && (int)$item !== 0){
                 DB::table('group_categories')->updateOrInsert([
                     'user_category' => $car_categories->id,
                     'tecdoc_category' => (int)$item
