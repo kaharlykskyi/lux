@@ -120,7 +120,7 @@ class Controller extends BaseController
             try{
                 $modification_auto = $cars[0]['cookie']->modification_auto;
             }catch (\Exception $exception){
-                $modification_auto = $cars[0]['cookie']['modification_auto'];
+                $modification_auto = isset($cars[0]['cookie']['modification_auto'])?$cars[0]['cookie']['modification_auto']:null;
             }
         }
 
