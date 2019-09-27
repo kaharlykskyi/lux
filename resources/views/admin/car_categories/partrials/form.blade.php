@@ -57,7 +57,7 @@
 <div class="row form-group">
     <div class="col-12">
         <label for="key_words" class=" form-control-label">{{__('Дочерние категории')}}</label><br>
-        <span class="small text-info">Выбирите главную категорию категорию, а потом перетащите в право неообходимые категории</span>
+        <span class="small text-info">Выбирите главную категорию, а потом перетащите в право неообходимые категории</span>
     </div>
     <div class="col-12 m-t-60">
         <div id="droppable" class="ui-widget-header">
@@ -91,7 +91,7 @@
         <ul id="sortable3" class="connectedSortable">
             @if (isset($car_categories->id) && $car_categories->childRootCategories->count() > 0)
                 @foreach ($car_categories->childRootCategories as $item)
-                    <li date-id="{{$item->id}}" class="ui-state-highlight">{{$item->name}}</li>
+                    <li data-id="{{$item->id}}" class="ui-state-highlight">{{$item->name}}</li>
                 @endforeach
             @endif
         </ul>
@@ -158,7 +158,6 @@
                     use_root_category_str += `${id}@`;
                 }
             }
-            console.log(use_root_category_str)
 
             for (let item = 0;item < use_category.length;item++){
                 const id = $(use_category[item]).attr('date-id');
@@ -168,7 +167,7 @@
                     useIds.push(id);
                     use_category_str += `${id}@`;
                 }
-            }
+            }console.log(use_root_category_str);
 
             $('#categories').val(use_category_str);
             $('#root_child').val(use_root_category_str);

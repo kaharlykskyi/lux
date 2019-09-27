@@ -119,14 +119,31 @@ class CategoresGroupForCarController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->except(['_method','_token']);
-        $car_categories = CategoresGroupForCar::find((int)$id);
+        $car_categories = CategoresGroupForCar::with('childRootCategories')->find((int)$id);
 
         $data['categories'] = json_encode(explode('@',$data['categories']));
         $root_child = explode('@',$data['root_child']);
 
+        foreach ($car_categories->childRootCategories as $category){
+            $delete = true;
+            foreach ($root_child as $val){
+                if ($category->id === (int)$val){
+                    $delete = false;
+                }
+            }
+            if ($delete){
+                DB::table('group_categories')->where([
+                    ['user_category',$car_categories->id],
+                    ['tecdoc_category',$category->id]
+                ])->delete();
+            }
+        }
+
         foreach ($root_child as $item){
-            if(!empty($item) && (int)$item !== 0){
-                DB::table('group_categories')->updateOrInsert([
+            if(!empty($item) && (int)$item !== 0 && !DB::table('group_categories')->where([
+                ['user_category',$car_categories->id],['tecdoc_category',(int)$item]
+                ])->exists()){
+                DB::table('group_categories')->insert([
                     'user_category' => $car_categories->id,
                     'tecdoc_category' => (int)$item
                 ]);
