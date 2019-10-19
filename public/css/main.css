@@ -850,7 +850,7 @@ header .nav {
 .flex-direction-nav a:before {
 	font-family:'FontAwesome';
 	font-size: 20px;
-	width:100%;	
+	width:100%;
 	text-align:center;
 	display: inline-block;
 	content: '\f104';
@@ -2910,7 +2910,7 @@ input[type="checkbox"] .styled:checked + label::after, input[type="radio"] .styl
 ========================================================*/
 header {
 	width: 100%;
-	z-index: 999;
+	z-index: 99999;
 	background: none;
 	padding: 40px 0;
 	padding-bottom: 0px;

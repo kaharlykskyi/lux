@@ -54,6 +54,27 @@ class HomeController extends Controller
 
         if (isset($request->rootcategory)){
             $root = CategoresGroupForCar::with('childCategories')->findOrFail($request->rootcategory);
+
+            if (isset($root->categories)){
+                $sub = json_decode($root->categories);
+                $sub_categories = [];
+                foreach ($sub as $item){
+                    if (!empty($item)){
+                        $custom_data = Cache::remember('tecdoc_category_info_'.$item, 60*24*7*365, function () use ($item) {
+                            return AllCategoryTree::with('subCategory')->where('id',$item)->first();
+                        });
+                        $sub_categories[] = $custom_data;
+                        if (isset($custom_data->tecdoc_id)) $all_ids[] = $custom_data->tecdoc_id;
+                        if (isset($custom_data->subCategory)){
+                            foreach ($custom_data->subCategory as $subCategory){
+                                $all_ids[] = $subCategory->tecdoc_id;
+                            }
+                        }
+                    }
+                }
+                $root->sub_categories = $sub_categories;
+            }
+
             $modification = $request->modification_auto;
             $all_count = Controller::getCountProductForCategory(null,$modification);
             return view('home.root_category',compact('root','modification','all_count'));
