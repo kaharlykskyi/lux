@@ -47,7 +47,7 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             {{ str_limit(Auth::user()->fio,10,'...') }} <span class="caret"></span>
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" style="z-index: 99999999">
                             <li>
                                 <a href="{{route('profile')}}">{{__('Профиль')}}</a>
                             </li>
