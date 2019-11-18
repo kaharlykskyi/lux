@@ -163,8 +163,6 @@
     </ul>
 @endif
 
-@include('catalog.partirals.pruduct_info_modal')
-
 <script>
     function moreProduct(obj,id) {
         $(id).toggle();

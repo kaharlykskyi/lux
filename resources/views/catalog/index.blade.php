@@ -42,6 +42,8 @@
         </section>
     </div>
 
+    @include('catalog.partirals.pruduct_info_modal')
+
     <script>
         function addCart(hurl) {
             $.post(hurl,{'product_count':1,'_token':'{{csrf_token()}}'}, function (data) {
