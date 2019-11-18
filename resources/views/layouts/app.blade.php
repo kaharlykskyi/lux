@@ -15,22 +15,22 @@
     <link rel="icon" href="{{asset('favicon.ico')}}" type="image/x-icon">
 
     <!-- SLIDER REVOLUTION 4.x CSS SETTINGS -->
-    <link rel="stylesheet" type="text/css" href="{{asset('rs-plugin/css/settings.css')}}" media="screen" />
+    <link rel="stylesheet" type="text/css" href="{{asset('rs-plugin/css/settings.css')}}" media="none" onload="if(media!=='screen')media='screen'" />
 
     <!-- StyleSheets -->
-    <link rel="stylesheet" href="{{asset('css/ionicons.min.css')}}">
-    <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
-    <link rel="stylesheet" href="{{asset('css/main.css')}}">
-    <link rel="stylesheet" href="{{asset('css/style.css')}}">
-    <link rel="stylesheet" href="{{asset('css/responsive.css')}}">
-    <link rel="stylesheet" href="{{asset('css/custom-style.css')}}">
-    <link rel="stylesheet" href="{{asset('css/selectric.css')}}">
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
+    <link rel="stylesheet" href="{{asset('css/ionicons.min.css')}}" media="none" onload="if(media!=='all')media='all'">
+    <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}" media="none" onload="if(media!=='all')media='all'">
+    <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}" media="none" onload="if(media!=='all')media='all'">
+    <link rel="stylesheet" href="{{asset('css/main.css')}}" media="none" onload="if(media!=='all')media='all'">
+    <link rel="stylesheet" href="{{asset('css/style.css')}}" media="none" onload="if(media!=='all')media='all'">
+    <link rel="stylesheet" href="{{asset('css/responsive.css')}}" media="none" onload="if(media!=='all')media='all'">
+    <link rel="stylesheet" href="{{asset('css/custom-style.css')}}" media="none" onload="if(media!=='all')media='all'">
+    <link rel="stylesheet" href="{{asset('css/selectric.css')}}" media="none" onload="if(media!=='all')media='all'">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" media="none" onload="if(media!=='all')media='all'">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" media="none" onload="if(media!=='all')media='all'" />
 
     <!-- Fonts Online -->
-    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet" media="none" onload="if(media!=='all')media='all'">
 
 
     <!-- JavaScripts -->
@@ -44,8 +44,8 @@
 
     <script src="{{asset('js/vendors/jquery/jquery.min.js')}}"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="{{asset('js/jquery.selectric.min.js')}}"></script>
-    <script src="{{asset('js/jquery.colorbox.js')}}"></script>
+    <script src="{{asset('js/jquery.selectric.min.js')}}" defer></script>
+    <script src="{{asset('js/jquery.colorbox.js')}}" defer></script>
     @yield('style')
 </head>
 <body>
