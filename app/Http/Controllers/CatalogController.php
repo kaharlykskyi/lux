@@ -206,6 +206,8 @@ class CatalogController extends Controller
     private function getSearchResult($request){
         if ($request->type === 'articles'){
 
+            $request->search_str = $this->replaceRUonEN($request->search_str);
+
             if ($request->has('supplier')){
                 $this->list_product = $this->service->getCatalogProduct($request->search_str,$request->supplier);
                 $this->replace_product = $this->service->replaceProducts($request->search_str,$request->supplier,$this->tecdoc->connection);

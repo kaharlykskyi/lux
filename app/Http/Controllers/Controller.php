@@ -150,4 +150,13 @@ class Controller extends BaseController
 
         return $category;
     }
+
+    public function replaceRUonEN($str){
+        $rus = array('А','В','К','М','Е','Н','О','Р','С','Т','У','Х','а','в','е','к','м','н','о','р','с','т','у','х');
+        $lat = array('A','B','K','M','E','H','O','P','C','T','Y','X','a','b','e','k','m','h','o','p','c','t','y','x');
+
+        $transliterate_str = str_replace($rus,$lat, $str);
+
+        return $transliterate_str;
+    }
 }
