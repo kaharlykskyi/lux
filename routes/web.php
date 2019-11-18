@@ -13,47 +13,47 @@
 
 Auth::routes(['verify' => true]);
 
-Route::get('/', 'HomeController@index')->name('home');
-Route::get('/get-brands', 'HomeController@getBrands')->name('gat_brands');
-Route::get('/get-model', 'HomeController@getModel')->name('gat_model');
-Route::get('/get-modifications', 'HomeController@getModifications')->name('get_modifications');
+Route::get('/', 'HomeController@index')->middleware(['cache'])->name('home');
+Route::get('/get-brands', 'HomeController@getBrands')->middleware(['cache'])->name('gat_brands');
+Route::get('/get-model', 'HomeController@getModel')->middleware(['cache'])->name('gat_model');
+Route::get('/get-modifications', 'HomeController@getModifications')->middleware(['cache'])->name('get_modifications');
 Route::post('/get-section-part', 'HomeController@getSectionParts')->name('get_section_part');
-Route::get('/del-garage-car', 'HomeController@delGarageCar')->name('del_garage_car');
-Route::get('/brands/{rootcategory?}', 'HomeController@allBrands')->name('all_brands');
-Route::get('/modification-info', 'HomeController@modificationInfo')->name('modification_info');
+Route::get('/del-garage-car', 'HomeController@delGarageCar')->middleware(['cache'])->name('del_garage_car');
+Route::get('/brands/{rootcategory?}', 'HomeController@allBrands')->middleware(['cache'])->name('all_brands');
+Route::get('/modification-info', 'HomeController@modificationInfo')->middleware(['cache'])->name('modification_info');
 Route::post('/call-order', 'HomeController@callOrder')->name('call_order');
 
-Route::get('/track-order/{id}', 'TrackOrderController@index')->name('track_order');
+Route::get('/track-order/{id}', 'TrackOrderController@index')->middleware(['cache'])->name('track_order');
 
 /*-----LiqPay-------*/
 Route::prefix('liqpay')->middleware(['auth'])->group(function () {
-    Route::get('/', 'LiqPayController@index')->name('liqpay');
+    Route::get('/', 'LiqPayController@index')->middleware(['cache'])->name('liqpay');
     Route::post('/pay', 'LiqPayController@sendPayRequest')->name('liqpay.pay');
-    Route::get('/result-pay', 'LiqPayController@resultPay')->name('liqpay.result_pay');
-    Route::get('/status-pay', 'LiqPayController@checkPayStatus')->name('liqpay.status_pay');
+    Route::get('/result-pay', 'LiqPayController@resultPay')->middleware(['cache'])->name('liqpay.result_pay');
+    Route::get('/status-pay', 'LiqPayController@checkPayStatus')->middleware(['cache'])->name('liqpay.status_pay');
 });
 Route::post('/liqpay/response', 'LiqPayController@getLiqPayResponse')->name('liqpay.response');
 
 /*--------PROFILE---------*/
 Route::prefix('profile')->middleware(['auth'])->group(function () {
-    Route::get('/', 'ProfileController@index')->name('profile');
+    Route::get('/', 'ProfileController@index')->middleware(['cache'])->name('profile');
     Route::post('/add-car', 'ProfileController@addCar')->name('add_car');
     Route::post('/change-password', 'ProfileController@changePassword')->name('change_password');
     Route::post('/change-user-info', 'ProfileController@changeUserInfo')->name('change_user_info');
     Route::post('/change-delivery-info', 'ProfileController@deliveryInfo')->name('change_delivery_info');
     Route::post('/delete-car', 'ProfileController@deleteCar')->name('delete_car');
-    Route::get('/track-order', 'ProfileController@trackOrder')->name('profile.track_order');
+    Route::get('/track-order', 'ProfileController@trackOrder')->middleware(['cache'])->name('profile.track_order');
     Route::match(['get', 'post'],'/dop-user-phone','ProfileController@dopUserPhone')->name('dop_user_phone');
 });
 /*-------CART--------*/
 Route::prefix('cart')->group(function () {
-    Route::get('/', 'CartController@index')->name('cart');
+    Route::get('/', 'CartController@index')->middleware(['cache'])->name('cart');
     Route::post('/product-count', 'CartController@productCount')->name('product_count');
     Route::post('/product-delete', 'CartController@productDelete')->name('product_delete');
 });
 /*------PRODUCT-------*/
 Route::prefix('product')->group(function () {
-    Route::get('/{alias}', 'ProductController@index')->name('product');
+    Route::get('/{alias}', 'ProductController@index')->middleware(['cache'])->name('product');
     Route::post('/fast-buy/{id}', 'ProductController@fastBuy')->name('fast_buy');
     Route::post('/add-cart/{id}', 'ProductController@addCart')->name('add_cart');
     Route::post('/comment', 'ProductController@writeComment')->middleware(['auth'])->name('product.comment');
@@ -61,19 +61,19 @@ Route::prefix('product')->group(function () {
 });
 /*-----CHECKOUT------*/
 Route::prefix('checkout')->group(function () {
-    Route::get('/', 'CheckoutController@index')->name('checkout');
+    Route::get('/', 'CheckoutController@index')->middleware(['cache'])->name('checkout');
     Route::post('/new-user', 'CheckoutController@newUser')->name('checkout.new_user');
     Route::post('/old-user', 'CheckoutController@oldUser')->name('checkout.old_user');
     Route::post('/create-oder', 'CheckoutController@createOder')->middleware(['auth'])->name('checkout.create_oder');
 });
 /*------PAGES------*/
-Route::get('/page/{alias}','PageController@index')->name('page');
+Route::get('/page/{alias}','PageController@index')->middleware(['cache'])->name('page');
 /*------FEEDBACK------*/
 Route::post('/feedback','FeedBackController@index')->name('feedback');
 /*-------RUBRICS---------*/
 Route::prefix('rubric')->group(function () {
-    Route::get('/{category}','RubricaController@index')->name('rubric');
-    Route::get('/choose-car/{category}','RubricaController@chooseCar')->name('rubric.choose_car');
+    Route::get('/{category}','RubricaController@index')->middleware(['cache'])->name('rubric');
+    Route::get('/choose-car/{category}','RubricaController@chooseCar')->middleware(['cache'])->name('rubric.choose_car');
 });
 /*-----VIN DECODE-----*/
 Route::match(['get', 'post'],'/vin-decode','VinDecodeController@index')->name('vin_decode');
@@ -84,10 +84,10 @@ Route::get('/vin-decode/units','VinDecodeController@units')->name('vin_decode.un
 Route::get('/vin-decode/vin_car','VinDecodeController@vinCar')->name('vin_decode.vin_car');
 
 /*--------CATALOG--------*/
-Route::match(['get', 'post'],'/catalog/{category?}','CatalogController@index')->name('catalog');
-Route::get('/get-subcategory', 'HomeController@subcategory')->name('get_subcategory');
-Route::get('/filter', 'CatalogController@filter')->name('filter');
-Route::get('/alternate/{article}', 'CatalogController@replaceProducts')->name('alternate');
+Route::match(['get', 'post'],'/catalog/{category?}','CatalogController@index')->middleware(['cache'])->name('catalog');
+Route::get('/get-subcategory', 'HomeController@subcategory')->middleware(['cache'])->name('get_subcategory');
+Route::get('/filter', 'CatalogController@filter')->middleware(['cache'])->name('filter');
+Route::get('/alternate/{article}', 'CatalogController@replaceProducts')->middleware(['cache'])->name('alternate');
 
 /*!!--------ADMIN--------!!*/
 Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth','permission']],function (){
