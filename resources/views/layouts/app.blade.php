@@ -43,7 +43,7 @@
     <![endif]-->
 
     <script src="{{asset('js/vendors/jquery/jquery.min.js')}}"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" defer></script>
     <script src="{{asset('js/jquery.selectric.min.js')}}" defer></script>
     <script src="{{asset('js/jquery.colorbox.js')}}" defer></script>
     @yield('style')
