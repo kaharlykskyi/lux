@@ -44,7 +44,7 @@
                                         <label for="tecdoc_name" class=" form-control-label">{{__('Название в TecDoc')}}</label>
                                     </div>
                                     <div class="col-12 col-md-9">
-                                        <input type="text" id="tecdoc_name" name="tecdoc_name" value="{{isset($save_category->tecdoc_name)?$save_category->tecdoc_name:''}}" readonly>
+                                        <input type="text" id="tecdoc_name" style="width: 100%" name="tecdoc_name" value="{{isset($save_category->tecdoc_name)?$save_category->tecdoc_name:''}}" readonly>
                                     </div>
                                 </div>
 
