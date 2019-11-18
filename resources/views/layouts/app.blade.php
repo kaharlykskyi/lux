@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" media="none" onload="if(media!=='all')media='all'" />
 
     <!-- Fonts Online -->
-    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet" media="none" onload="if(media!=='all')media='all'">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet" media="all">
 
 
     <!-- JavaScripts -->
