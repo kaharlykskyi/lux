@@ -207,13 +207,14 @@ class Catalog
             ->table('articles')
             ->join('suppliers','suppliers.id','=','articles.supplierId')
             ->where([
-                ['articles.DataSupplierArticleNumber','LIKE',"%$article%",'OR'],
-                ['articles.FoundString','LIKE', "%$article%",'OR']
+                ['articles.DataSupplierArticleNumber','LIKE',"$article%",'OR'],
+                ['articles.FoundString','LIKE', "$article%",'OR']
             ])
-            ->select('articles.DataSupplierArticleNumber AS articles','suppliers.id AS supplierId','suppliers.description AS brand'
-                ,DB::raw('(SELECT p2.name FROM '
-                    .config('database.connections.mysql.database').
-                    '.products AS p2 WHERE p2.articles=articles.DataSupplierArticleNumber AND p2.brand=suppliers.id AND p2.count > 0 GROUP BY p2.name HAVING MIN(p2.price) LIMIT 1) AS name'))
+            ->select(
+                'articles.DataSupplierArticleNumber AS articles',
+                'suppliers.id AS supplierId',
+                'suppliers.description AS brand',
+                'articles.NormalizedDescription as name')
             ->distinct()
             ->get();
     }
