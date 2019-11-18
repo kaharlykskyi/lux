@@ -206,16 +206,14 @@ class Catalog
         return DB::connection($connection)
             ->table('articles')
             ->join('suppliers','suppliers.id','=','articles.supplierId')
-            ->join(DB::raw(config('database.connections.mysql.database') . '.products AS p'),function ($query){
-                $query->on('p.articles','=','articles.DataSupplierArticleNumber');
-                $query->on('p.brand','=','suppliers.id');
-            })
-            ->where('articles.DataSupplierArticleNumber',$article)
-            ->orWhere('articles.FoundString',$article)
-            ->select('p.articles','suppliers.id AS supplierId','suppliers.description AS brand'
+            ->where([
+                ['articles.DataSupplierArticleNumber','LIKE',"%$article%",'OR'],
+                ['articles.FoundString','LIKE', "%$article%",'OR']
+            ])
+            ->select('articles.DataSupplierArticleNumber AS articles','suppliers.id AS supplierId','suppliers.description AS brand'
                 ,DB::raw('(SELECT p2.name FROM '
                     .config('database.connections.mysql.database').
-                    '.products AS p2 WHERE p2.articles=p.articles AND p2.brand=suppliers.id AND p2.count > 0 GROUP BY p2.name HAVING MIN(p2.price) LIMIT 1) AS name'))
+                    '.products AS p2 WHERE p2.articles=articles.DataSupplierArticleNumber AND p2.brand=suppliers.id AND p2.count > 0 GROUP BY p2.name HAVING MIN(p2.price) LIMIT 1) AS name'))
             ->distinct()
             ->get();
     }
@@ -224,7 +222,7 @@ class Catalog
         $list_product_loc = Product::with('provider')
             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers sp'),'sp.id','=','products.brand')
             ->where('sp.id',(int)$supplerId)
-            ->where('products.articles',$article)
+            ->where('products.articles','LIKE',"".str_replace(' ','_',$article)."")
             ->select('products.*','sp.id AS SupplierId','sp.description AS brand',
                 DB::raw('(SELECT a_img.PictureName 
                             FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 

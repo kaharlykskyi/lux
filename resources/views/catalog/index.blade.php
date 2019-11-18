@@ -30,7 +30,7 @@
                     </div>
 
                     <!-- Products -->
-                    <div class="col-md-9">
+                    <div class="col-md-9" style="z-index: 0">
                         @if(isset($list_product) || isset($list_catalog))
                             @include('catalog.partirals.list_product')
                         @else
