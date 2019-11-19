@@ -70,6 +70,7 @@
                 $use_category = [];
             }
         @endphp
+        <div class="m-b-10" style="display: none;" id="root_name"></div>
         <ul class="connectedSortable" id="sortable4">
             @foreach ($root_all_category as $category)
                 @php
@@ -81,7 +82,7 @@
                 @endphp
                 <li data-id="{{$category->id}}" class="ui-state-default">
                     {{$category->name}}
-                    <span onclick="getChild({{$category->id}})">дочерние</span>
+                    <span onclick="getChild({{$category->id}},'{{$category->name}}')">дочерние</span>
                 </li>
             @endforeach
         </ul>
@@ -172,8 +173,9 @@
             $('#categories').val(use_category_str);
             $('#root_child').val(use_root_category_str);
         }
-        function getChild(id) {
+        function getChild(id,category_name) {
             const useTecDocIdsSave = JSON.parse('{{json_encode($uniq_category)}}');
+            $('#root_name').text(`Дочерние категории: ${category_name}`).show();
             $('#sortable4,#sortable3').hide();
             $('#sortable2').show();
             $('#sortable1').html('<li class="ui-state-default">загрузка...</li>').show()
@@ -198,6 +200,7 @@
         }
 
         function showRoot() {
+            $('#root_name').hide();
             $('#showRootBtn').toggleClass('hidden');
             $('#sortable4,#sortable3').show();
             $('#sortable1,#sortable2').hide();

@@ -222,8 +222,15 @@ class Catalog
     public function getCatalogProduct($article,$supplerId){
         $list_product_loc = Product::with('provider')
             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.suppliers sp'),'sp.id','=','products.brand')
+            ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.articles a'),function ($query){
+                $query->on('products.articles','=','a.DataSupplierArticleNumber')->orOn('products.articles','=','a.FoundString');
+                $query->on('products.brand','=','a.supplierId');
+            })
             ->where('sp.id',(int)$supplerId)
-            ->where('products.articles','LIKE',"".str_replace(' ','_',$article)."")
+            ->where([
+                ['a.DataSupplierArticleNumber','=',$article,'OR'],
+                ['a.FoundString','=',$article,'OR']
+            ])
             ->select('products.*','sp.id AS SupplierId','sp.description AS brand',
                 DB::raw('(SELECT a_img.PictureName 
                             FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 
