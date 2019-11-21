@@ -354,9 +354,17 @@ class ImportPriceList
 
                     $productInfo['price'] = $productInfo['price'] < 1?1:$productInfo['price'];
 
+                    $tec_doc_articles = DB::connection('mysql_tecdoc')->table('articles')
+                        ->where([
+                            ['articles.DataSupplierArticleNumber','=',trim($productInfo['articles']),'OR'],
+                            ['articles.FoundString','=',trim($productInfo['articles']),'OR']
+                        ])
+                        ->where('articles.supplierId','=',$productInfo['brand'])
+                        ->first();
+
                     $array_import = [
                         'name' => $productInfo['product_name'],
-                        'articles' => trim($productInfo['articles']),
+                        'articles' => isset($tec_doc_articles)?$tec_doc_articles->DataSupplierArticleNumber:trim($productInfo['articles']),
                         'brand' => $productInfo['brand'],
                         'short_description' => isset($productInfo['short_description'])? $productInfo['short_description']: null,
                         'full_description' => isset($productInfo['full_description'])? $productInfo['full_description']: null,
@@ -370,10 +378,9 @@ class ImportPriceList
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now(),
                         'stocks' => isset($productInfo['stocks'])?json_encode($productInfo['stocks']):null,
-                        'original' => $is_original?1:0
+                        'original' => $is_original?1:0,
+                        'provider_article' => trim($productInfo['articles'])
                     ];
-
-
 
                     if ($is_original || $is_supplier){
                         $insert_data = DB::table('products')->updateOrInsert(

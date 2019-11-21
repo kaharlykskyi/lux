@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\Artisan;
 use App\{Product,Provider,TecDoc\ImportPriceList,TecDoc\Tecdoc};
 use Exception;
 use Illuminate\Http\Request;
@@ -193,14 +194,12 @@ class ProductController extends Controller
             $file->move(storage_path('app') . '/import_ease/',$file_name);
         }
 
-        $data = (object)[
+        Artisan::call('easy-import:start',[
             'company' => $request->company,
             'file' => isset($file_name)?$file_name:null
-        ];
+        ]);
 
-        new ImportPriceList($data,true);
-
-        return back()->with('status','Импорт завершон');
+        return back()->with('status','Импорт запущен');
     }
 
     public function incognitoFile(Request $request){

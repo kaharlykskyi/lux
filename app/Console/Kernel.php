@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         '\App\Console\Commands\AutomaticDiscount',
-        '\App\Console\Commands\MakeImport'
+        '\App\Console\Commands\MakeImport',
+        '\App\Console\Commands\EasyImport'
     ];
 
     /**

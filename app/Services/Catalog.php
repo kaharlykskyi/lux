@@ -226,15 +226,17 @@ class Catalog
                 $query->on('products.articles','=','a.DataSupplierArticleNumber')->orOn('products.articles','=','a.FoundString');
                 $query->on('products.brand','=','a.supplierId');
             })
+            ->leftJoin(config('database.connections.mysql_tecdoc.database').'.article_images AS a_img',function ($query){
+                $query->on('a.DataSupplierArticleNumber','=','a_img.DataSupplierArticleNumber');
+                $query->on('a.supplierId','=','a_img.SupplierId');
+            })
             ->where('sp.id',(int)$supplerId)
             ->where([
                 ['a.DataSupplierArticleNumber','=',$article,'OR'],
                 ['a.FoundString','=',$article,'OR']
             ])
-            ->select('products.*','sp.id AS SupplierId','sp.description AS brand',
-                DB::raw('(SELECT a_img.PictureName 
-                            FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 
-                            WHERE a_img.DataSupplierArticleNumber=products.articles AND a_img.SupplierId=sp.id LIMIT 1) AS file'))
+            ->select('products.*','sp.id AS SupplierId','sp.description AS brand','a_img.PictureName')
+            ->groupBy('products.id')
             ->orderBy('products.price')
             ->get();
 

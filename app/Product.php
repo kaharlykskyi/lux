@@ -22,7 +22,8 @@ class Product extends Model
         'provider_price',
         'provider_currency',
         'stocks',
-        'original'
+        'original',
+        'provider_article'
     ];
 
     public function cart(){
