@@ -195,7 +195,7 @@ class ProductController extends Controller
         }
 
         if (isset($file_name) && isset($request->company)){
-            $command = "php ".base_path()."/artisan easy-import:start {$request->company} {$file_name} &";
+            $command = "php -f ".base_path()."/artisan easy-import:start {$request->company} {$file_name} >> /dev/null &";
             exec($command);
         }
 
