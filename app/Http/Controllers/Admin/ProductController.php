@@ -190,14 +190,14 @@ class ProductController extends Controller
 
         if ($request->hasFile('price_list')){
             $file = $request->file('price_list');
-            $file_name = time() . '_' . $file->getClientOriginalName();
+            $file_name = time() . '_' . str_replace([' ','/','\\'],'',$file->getClientOriginalName());
             $file->move(storage_path('app') . '/import_ease/',$file_name);
         }
 
-        Artisan::call('easy-import:start',[
-            'company' => $request->company,
-            'file' => isset($file_name)?$file_name:null
-        ]);
+        if (isset($file_name) && isset($request->company)){
+            $command = "php artisan easy-import:start {$request->company} {$file_name}";
+            exec($command);
+        }
 
         return back()->with('status','Импорт запущен');
     }
