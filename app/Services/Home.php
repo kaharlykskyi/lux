@@ -62,6 +62,16 @@ class Home
             }
         }
 
+        if ($request->hasCookie('defaultCar')){
+            foreach ($search_cars as $k => $search_car){
+                if ($search_car['cookie']->modification_auto === (int)$request->cookie('defaultCar')){
+                    $buff = $search_cars[0];
+                    $search_cars[0] = $search_car;
+                    $search_cars[$k] = $buff;
+                }
+            }
+        }
+
         return $search_cars;
     }
 

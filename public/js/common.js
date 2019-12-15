@@ -250,13 +250,13 @@ function makeTemplateCategoryCar(data,modification_auto,type_auto) {
         str_data += `<div class="col-xs-12 col-sm-6 col-lg-4 padding-0 margin-bottom-0">
                             <div class="panel panel-default">
                               <div class="panel-heading">
-                                <a class="h3" target="_blank" href="/brands/${item.id}?modification_auto=${modification_auto}">${item.title}</a>
+                                <a class="h3" href="/brands/${item.id}?modification_auto=${modification_auto}">${item.title}</a>
                               </div>
                               <div class="panel-body row">
                                 <div class="list-group" style="background-image: url('${(item.logo !== null)?'/images/catalog/'+item.logo:''}');">`;
         if (item.child_categories !== undefined){
             item.child_categories.forEach(function (sub) {
-                str_data += `<a href="/brands/${sub.id}?modification_auto=${modification_auto}" class="list-group-item text-primary border-0" target="_blank">${sub.title}</a>`
+                str_data += `<a href="/brands/${sub.id}?modification_auto=${modification_auto}" class="list-group-item text-primary border-0">${sub.title}</a>`
             });
         }
         str_data += '</div></div></div></div>';

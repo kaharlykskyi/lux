@@ -22,6 +22,7 @@ Route::get('/del-garage-car', 'HomeController@delGarageCar')->middleware(['cache
 Route::get('/brands/{rootcategory?}', 'HomeController@allBrands')->middleware(['cache'])->name('all_brands');
 Route::get('/modification-info', 'HomeController@modificationInfo')->middleware(['cache'])->name('modification_info');
 Route::post('/call-order', 'HomeController@callOrder')->name('call_order');
+Route::get('/default-car/{modification}', 'HomeController@defaultCar')->name('default_car');
 
 Route::get('/track-order/{id}', 'TrackOrderController@index')->middleware(['cache'])->name('track_order');
 

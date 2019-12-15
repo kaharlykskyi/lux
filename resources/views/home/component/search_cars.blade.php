@@ -9,6 +9,11 @@
                 @if(isset($search_cars))
                     @foreach($search_cars as $k => $item)
                         <div class="list-group relative" id="list-group{{$k}}">
+                            @if ($k)
+                                <button style="position: absolute;top: 60%;left: 2%;z-index: 1;padding: 10px;border: 0;border-radius: 5px;" onclick="location.href = '{{route('default_car',$item['cookie']['modification_auto'])}}'">
+                                    по умолчанию
+                                </button>
+                            @endif
                             <button class="delete-car-btn" onclick="deleteCarModal('{{$item['cookie']['modification_auto']}}',{{$k}} @if($k === 0) ,true @endif )" title="{{__('Удалить машину')}}">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                             </button>

@@ -47,6 +47,14 @@ class HomeController extends Controller
 
         $slides = Banner::all();
 
+        if ($request->has('reload')){
+            header('Expires: Sat, 03 Aug 2013 00:00:00 GMT');
+            header('Last-Modified: ' . gmdate( 'D, d M Y H:i:s') . ' GMT');
+            header('Cache-Control: no-store, no-cache, must-revalidate');
+            header('Cache-Control: post-check=0, pre-check=0', false);
+            header('Pragma: no-cache');
+        }
+
         return view('home.index',compact('search_cars','brands','popular_products','slides'));
     }
 
@@ -232,5 +240,11 @@ class HomeController extends Controller
             return response()->json(['Произошла ошибка!Попробуйте позже']);
         }
 
+    }
+
+    public function defaultCar(Request $request){
+        return redirect()
+            ->route('home',['reload' => true])
+            ->withCookie('defaultCar', $request->modification, 60*24*7);
     }
 }
