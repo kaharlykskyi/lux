@@ -631,7 +631,7 @@ header .logo img {
 }
 
 .category-img {
-    height: 200px;
+    height: 100px;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: 100% 0;

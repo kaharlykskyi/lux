@@ -103,9 +103,9 @@ class CategoresGroupForCarController extends Controller
     public function edit($id)
     {
         $car_categories = CategoresGroupForCar::with('childRootCategories')->find((int)$id);
-        $root_car_category = CategoresGroupForCar::whereNull('parent_id')->get();
-        $root_all_category = AllCategoryTree::whereNull('parent_category')->get();
-        $all_category = AllCategoryTree::where('level',1)->get();
+        $root_car_category = CategoresGroupForCar::whereNull('parent_id')->orderBy('name')->get();
+        $root_all_category = AllCategoryTree::whereNull('parent_category')->orderBy('name')->get();
+        $all_category = AllCategoryTree::where('level',1)->orderBy('name')->get();
         return view('admin.car_categories.edit',compact('car_categories','all_category','root_car_category','root_all_category'));
     }
 
@@ -192,6 +192,6 @@ class CategoresGroupForCarController extends Controller
     }
 
     public function getChildCategory(Request $request){
-        return response()->json(AllCategoryTree::where('parent_category',(int)$request->id)->get());
+        return response()->json(AllCategoryTree::where('parent_category',(int)$request->id)->orderBy('name')->get());
     }
 }
