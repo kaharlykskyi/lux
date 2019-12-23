@@ -18,7 +18,7 @@
                     <div class="col-xs-12">
                         <ul class="list-group">
                             @php $use_tecdoc_id = []; @endphp
-                            @if (!empty($root->sub_categories) && !empty($all_category_global))
+                            @if (!empty($root->sub_categories) && !empty($all_category_global) && empty($root->parent_id))
                                 <li class="list-group-item margin-bottom-15 row category-car">
                                     <h6 class="text-uppercase">{{$root->title}}</h6>
                                     <div class="list-group col-xs-12 col-sm-8 row">
