@@ -16,7 +16,7 @@ class DiscountController extends Controller
      */
     public function index()
     {
-        $discount = Discount::paginate(20);
+        $discount = Discount::orderBy('percent')->paginate(20);
         return view('admin.discount.index',compact('discount'));
     }
 
