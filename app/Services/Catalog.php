@@ -207,8 +207,8 @@ class Catalog
             ->table('articles')
             ->join('suppliers','suppliers.id','=','articles.supplierId')
             ->where([
-                ['articles.DataSupplierArticleNumber','LIKE',"$article%",'OR'],
-                ['articles.FoundString','LIKE', "$article%",'OR']
+                ['articles.DataSupplierArticleNumber','=',$article,'OR'],
+                ['articles.FoundString','=', str_pad($article,35,str_repeat(' ',35)),'OR']
             ])
             ->select(
                 'articles.DataSupplierArticleNumber AS articles',
@@ -233,7 +233,7 @@ class Catalog
             ->where('sp.id',(int)$supplerId)
             ->where([
                 ['a.DataSupplierArticleNumber','=',$article,'OR'],
-                ['a.FoundString','=',$article,'OR']
+                ['a.FoundString','=',str_pad($article,35,str_repeat(' ',35)),'OR']
             ])
             ->select('products.*','sp.id AS SupplierId','sp.description AS brand','a_img.PictureName')
             ->groupBy('products.id')
