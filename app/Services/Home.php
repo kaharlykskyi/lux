@@ -64,7 +64,8 @@ class Home
 
         if ($request->hasCookie('defaultCar') && isset($search_cars)){
             foreach ($search_cars as $k => $search_car){
-                if ($search_car['cookie']->modification_auto === (int)$request->cookie('defaultCar')){
+                if (isset($search_car['cookie']->modification_auto)
+                    && $search_car['cookie']->modification_auto === (int)$request->cookie('defaultCar')){
                     $buff = $search_cars[0];
                     $search_cars[0] = $search_car;
                     $search_cars[$k] = $buff;
