@@ -22,7 +22,7 @@
                         <strong>{{__('Редактирование ')}}</strong> <em>{{__('товара ' . $product->name)}}</em>
                     </div>
                     <div class="card-body card-block">
-                        <form action="{{route('admin.product.update',$product->id)}}" method="post" class="form-horizontal">
+                        <form action="{{route('admin.product.update',$product->id)}}" enctype="multipart/form-data" method="post" class="form-horizontal">
                             @method('PUT')
                             @csrf
 

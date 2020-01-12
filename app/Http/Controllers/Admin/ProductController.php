@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 use App\{Product,Provider,TecDoc\ImportPriceList,TecDoc\Tecdoc};
 use Exception;
 use Illuminate\Http\Request;
@@ -88,6 +88,11 @@ class ProductController extends Controller
 
         $product->fill($data);
         if($product->save()){
+            $file = $this->saveFile($request,$product);
+            if ($file){
+                $this->tecdoc->saveProductArt($product,$file,$request->file_description);
+            }
+
             return redirect()->route('admin.product.index')->with('status','Товар добавлен');
         } else {
             return redirect()->back()->with('status','Ошибка, попробуйте снова');
@@ -114,7 +119,8 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $providers = Provider::all();
-        return view('admin.product.edit',compact('product','providers'));
+        $files = $this->tecdoc->getArtFiles($product->articles,$product->brand);
+        return view('admin.product.edit',compact('product','providers','files'));
     }
 
     /**
@@ -139,6 +145,11 @@ class ProductController extends Controller
             return redirect()->back()
                 ->withErrors($validate)
                 ->withInput();
+        }
+
+        $file = $this->saveFile($request,$product);
+        if ($file){
+            $this->tecdoc->saveProductArt($product,$file,$request->file_description);
         }
 
         $product->update($data);
@@ -228,7 +239,31 @@ class ProductController extends Controller
         return view('admin.product.popular',compact('popular_products','providers','suppliers','manufacturers'));
     }
 
-    protected function filterProduct($request){
+    public function deleteFile(Request $request){
+        if (File::exists(public_path('/product_imags/' . $request->brand . '/' . $request->name_file))){
+            if ($this->tecdoc->deleteProductArt($request->brand,$request->article,$request->name_file)){
+                File::delete(public_path('/product_imags/' . $request->brand . '/' . $request->name_file));
+            }
+        }
+
+        return back();
+    }
+
+    protected function saveFile(Request $request, Product $product)
+    {
+        if($request->hasfile('product_file'))
+        {
+            $file = $request->file('product_file');
+            $extension = $file->getClientOriginalExtension();
+            $filename = $product->brand . '_' . time().'.'.$extension;
+            return $file->move('product_imags/' . $product->brand . '/', $filename);
+        }
+
+        return false;
+    }
+
+    protected function filterProduct($request)
+    {
         $filter = [];
 
         if (isset($request->prov_min_price) && !empty($request->prov_min_price)) $filter[] = ['provider_price','>=',(int)$request->prov_min_price];

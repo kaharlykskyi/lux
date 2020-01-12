@@ -278,7 +278,10 @@ class Catalog
         $list_product_loc = Product::with('provider')
             ->where('products.articles',$OENrb)
             ->join(DB::raw(config('database.connections.mysql_tecdoc.database').'.manufacturers m'),'m.id','=','products.brand')
-            ->select('products.*','m.description AS brand')
+            ->select('products.*','m.description AS brand',
+                DB::raw('(SELECT a_img.PictureName 
+                            FROM '.config('database.connections.mysql_tecdoc.database').'.article_images AS a_img 
+                            WHERE a_img.DataSupplierArticleNumber=products.articles AND a_img.SupplierId=products.brand LIMIT 1) AS file'))
             ->orderBy('products.price')
             ->get();
 

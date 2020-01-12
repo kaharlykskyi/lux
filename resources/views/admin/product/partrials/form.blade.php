@@ -131,6 +131,50 @@
     </div>
 </div>
 
+<hr class="m-t-20">
+<p class="h5">Картинки товара</p>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Описание</th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach ($files as $file)
+        <tr>
+            <td>
+                <img style="width: 100px;" src="{{asset('product_imags/' . $product->brand . '/' .str_ireplace(['.BMP','.JPG'],'.jpg',$file->PictureName))}}" alt="{{$file->Description}}">
+            </td>
+            <td>{{$file->Description}}</td>
+            <td>
+                <a href="{{route('admin.product.destroy_file',[$product->brand,$product->articles,$file->PictureName])}}">
+                    <i class="zmdi zmdi-delete"></i>
+                </a>
+            </td>
+        </tr>
+    @endforeach
+    </tbody>
+</table>
+
+<div class="row form-group m-t-10">
+    <div class="col col-md-3">
+        <label for="product_file" class=" form-control-label">{{__('Добавить картинку')}}</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <input type="file" onblur="toFloat($(this))" id="product_file" name="product_file" class="form-control">
+    </div>
+</div>
+<div class="row form-group m-b-20">
+    <div class="col col-md-3">
+        <label for="file_description" class=" form-control-label">{{__('Описание')}}</label>
+    </div>
+    <div class="col-12 col-md-9">
+        <input type="text" id="file_description" name="file_description" class="form-control">
+    </div>
+</div>
+
 @isset($product->stocks)
     <hr>
     <p class="h5">Запасы по складам</p>

@@ -175,6 +175,8 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     //STO pdf
     Route::get('/sto-pdf/{check}','STOCheackManagerController@pdfGenerator')->name('admin.sto_check_manager.pdf');
 
+    Route::get('product/delete-file/{brand}/{article}/{name_file}', 'ProductController@deleteFile')->name('admin.product.destroy_file');
+
     //MANAGE ALL CATEGORY TREE
     Route::group(['prefix' => 'all-category'],function (){
         Route::get('/','AllCategoryTreeController@index')->name('admin.all_category.index');

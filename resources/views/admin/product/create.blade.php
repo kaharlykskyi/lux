@@ -22,7 +22,7 @@
                         <strong>{{__('Создание ')}}</strong> {{__('товара')}}
                     </div>
                     <div class="card-body card-block">
-                        <form action="{{route('admin.product.store')}}" method="post" class="form-horizontal">
+                        <form action="{{route('admin.product.store')}}" enctype="multipart/form-data" method="post" class="form-horizontal">
                             @csrf
 
                             @include('admin.product.partrials.form')

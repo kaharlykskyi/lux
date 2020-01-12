@@ -2,8 +2,10 @@
 namespace App\TecDoc;
 
 use App\Http\Controllers\Controller;
+use App\Product;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\File\File;
 
 class Tecdoc
 {
@@ -624,7 +626,7 @@ class Tecdoc
      *
      * @param $number
      * @param $brand_id
-     * @return mixed
+     * @return array
      */
     public function getArtFiles($number, $brand_id)
     {
@@ -634,7 +636,7 @@ class Tecdoc
         }
 
         return DB::connection($this->connection)->select("
-            SELECT Description, PictureName FROM article_images WHERE DataSupplierArticleNumber='" . $number . "'" . $band_filter);
+            SELECT * FROM article_images WHERE DataSupplierArticleNumber='" . $number . "'" . $band_filter);
     }
 
     /**
@@ -1052,6 +1054,44 @@ class Tecdoc
 
     public function getPdrForId($id){
         return DB::connection($this->connection)->table('prd')->find((int)$id);
+    }
+
+    /**
+     * @param Product $product
+     * @param File $file
+     * @param string $desc
+     */
+    public function saveProductArt(Product $product, File $file, $desc = ''){
+        DB::connection($this->connection)
+            ->table('article_images')
+            ->insert([
+                "supplierId" => $product->brand,
+                "DataSupplierArticleNumber" => $product->articles,
+                "AdditionalDescription" => "",
+                "Description" => $desc,
+                "DocumentName" => "",
+                "DocumentType" => "Picture",
+                "NormedDescriptionID" => 1,
+                "PictureName" => $file->getFilename(),
+                "ShowImmediately" => "True",
+            ]);
+    }
+
+    /**
+     * @param $brand
+     * @param $articles
+     * @param $file_name
+     * @return int
+     */
+    public function deleteProductArt($brand, $articles, $file_name){
+        return DB::connection($this->connection)
+            ->table('article_images')
+            ->where([
+                ['supplierId','=',$brand],
+                ['DataSupplierArticleNumber','=',$articles],
+                ['PictureName','=',$file_name]
+            ])
+            ->delete();
     }
 
     private function getSortAttr($save_attr,$query_attr){
