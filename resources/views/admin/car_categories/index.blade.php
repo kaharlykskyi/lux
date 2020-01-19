@@ -18,7 +18,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        <h3 class="title-5 m-b-35 m-t-15">{{__('Групировка кетегорий при подборе по машинам')}}</h3>
+                        <h3 class="title-5 m-b-35 m-t-15">{{__('Категории горизонтального меню')}}</h3>
                     </div>
                     <div class="col-12 m-b-15 m-t-15 text-right">
                         <a href="{{route('admin.car_categories.create')}}" class="btn btn-primary">{{__('Создать')}}</a>
