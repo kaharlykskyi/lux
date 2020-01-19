@@ -11,7 +11,12 @@
 |
 */
 
+use Spatie\Crawler\Crawler;
+use Spatie\Sitemap\SitemapGenerator;
+
 Auth::routes(['verify' => true]);
+
+Route::get('robots.txt', 'Admin\RobotsController');
 
 Route::get('/', 'HomeController@index')->middleware(['cache'])->name('home');
 Route::get('/get-brands', 'HomeController@getBrands')->middleware(['cache'])->name('gat_brands');
@@ -194,4 +199,19 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
     });
 
     Route::get('/cache/clear','DashboardController@cacheClear')->name('admin.cache.clear');
+
+    Route::get('/sitemap/create', function (){
+        ini_set('max_execution_time', 3000);
+
+        if (\Illuminate\Support\Facades\File::exists(public_path('sitemap.xml'))){
+            \Illuminate\Support\Facades\File::delete(public_path('sitemap.xml'));
+        }
+
+        SitemapGenerator::create(\Illuminate\Support\Facades\Config::get('app.url'))
+            ->configureCrawler(function (Crawler $crawler) {
+                $crawler->ignoreRobots();
+            })
+            ->setMaximumCrawlCount(20)
+            ->writeToFile('sitemap.xml');
+    })->name('admin.sitemap');
 });
