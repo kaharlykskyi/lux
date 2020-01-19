@@ -211,7 +211,6 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
             ->configureCrawler(function (Crawler $crawler) {
                 $crawler->ignoreRobots();
             })
-            ->setMaximumCrawlCount(20)
             ->writeToFile('sitemap.xml');
     })->name('admin.sitemap');
 });

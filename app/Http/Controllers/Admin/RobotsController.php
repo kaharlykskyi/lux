@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
 use MadWeb\Robots\Robots;
 use App\Http\Controllers\Controller;
@@ -11,6 +13,8 @@ class RobotsController extends Controller
 {
     /**
      * Generate robots.txt
+     * @param Robots $robots
+     * @return ResponseFactory|Response
      */
     public function __invoke(Robots $robots)
     {
