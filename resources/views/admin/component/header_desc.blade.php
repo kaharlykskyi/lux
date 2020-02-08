@@ -4,7 +4,13 @@
             <div class="header-wrap">
                 <div class="form-header">
                     <a class="btn btn-primary" href="{{route('admin.cache.clear')}}" role="button">Очистить кеш сайта</a>
-                    <a class="btn btn-default m-l-15" href="{{route('admin.sitemap')}}" role="button">Сгенерить sitemap</a>
+                    <a class="btn btn-default m-l-15" href="{{route('admin.sitemap')}}" role="button">
+                        @if(Illuminate\Support\Facades\File::exists(public_path('sitemap.xml')))
+                            Обновить sitemap
+                        @else
+                            Создать sitemap
+                        @endif
+                    </a>
                 </div>
                 <div class="header-button" style="justify-content: flex-end;">
                     <div class="account-wrap">

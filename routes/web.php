@@ -11,9 +11,6 @@
 |
 */
 
-use Spatie\Crawler\Crawler;
-use Spatie\Sitemap\SitemapGenerator;
-
 Auth::routes(['verify' => true]);
 
 Route::get('robots.txt', 'Admin\RobotsController');
@@ -200,17 +197,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin', 'middleware' => ['auth
 
     Route::get('/cache/clear','DashboardController@cacheClear')->name('admin.cache.clear');
 
-    Route::get('/sitemap/create', function (){
-        ini_set('max_execution_time', 3000);
-
-        if (\Illuminate\Support\Facades\File::exists(public_path('sitemap.xml'))){
-            \Illuminate\Support\Facades\File::delete(public_path('sitemap.xml'));
-        }
-
-        SitemapGenerator::create(\Illuminate\Support\Facades\Config::get('app.url'))
-            ->configureCrawler(function (Crawler $crawler) {
-                $crawler->ignoreRobots();
-            })
-            ->writeToFile('sitemap.xml');
-    })->name('admin.sitemap');
+    Route::get('/sitemap/create', 'SiteMapController@index')->name('admin.sitemap');
 });
+
+Route::get('/sitemap/get-links', 'Admin\SiteMapController@getLinks')->name('sitemap.get_links');
